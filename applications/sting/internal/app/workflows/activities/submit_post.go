@@ -13,7 +13,7 @@ type SubmitPostInput struct {
 }
 
 type SubmitPostPayload struct {
-	ResourceIds []string
+	MediaIds []string
 }
 
 func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) (*SubmitPostPayload, error) {
@@ -26,14 +26,14 @@ func (h *Activities) SubmitPost(ctx context.Context, input SubmitPostInput) (*Su
 		return nil, err
 	}
 
-	var resourceIds []string
+	var mediaIds []string
 
 	for _, content := range pst.Content() {
 		// only grab the content that is not processed
-		if !content.Resource().IsProcessed() || content.Resource().Failed() {
-			resourceIds = append(resourceIds, content.Resource().ID())
+		if !content.Media().IsProcessed() || content.Media().IsFailed() {
+			mediaIds = append(mediaIds, content.Media().ID())
 		}
 	}
 
-	return &SubmitPostPayload{ResourceIds: resourceIds}, nil
+	return &SubmitPostPayload{MediaIds: mediaIds}, nil
 }

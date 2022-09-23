@@ -13,232 +13,232 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:92
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:92
 msgid "A triple. And you got a good post too. Lucky you."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:68
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:68
 msgid "At this rate, you'll never lose. Keep spinning."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:73
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:73
 msgid "Big green button. You know what to do."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:55
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:55
 msgid "Clicking the button again will skip the spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:75
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:75
 msgid "Come on. Just one more spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareDiscordButton/RouletteClosedShareDiscordButton.tsx:52
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareDiscordButton/RouletteClosedShareDiscordButton.tsx:52
 msgid "Copied Discord link! Send it in a channel or direct message!"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareDiscordButton/RouletteClosedShareDiscordButton.tsx:62
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareDiscordButton/RouletteClosedShareDiscordButton.tsx:62
 msgid "Copy Discord Link"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:69
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:69
 msgid "Don't get distracted now. Spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:170
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:170
 msgid "Error restarting game. Please try again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:139
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:139
 msgid "Error spinning. Please try again."
 msgstr ""
 
 #: src/domain/roulette/RootRoulette/Roulette/CreateRouletteSession/CreateRouletteSession.tsx:61
-msgid "Error. Retry Game Creation"
-msgstr ""
+#~ msgid "Error. Retry Game Creation"
+#~ msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:183
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:177
 msgid "Getting three unique numbers means you spin for a new post and three new dice"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:53
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:53
 msgid "How many spins are we on? I lost count."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:56
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:56
 msgid "I can't really say."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:82
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:82
 msgid "It's a double. Re-spin and hope you don't lose."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:90
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:90
 msgid "It's a triple. Don't back out. Lose to the post."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:59
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:59
 msgid "It's too much to handle."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:48
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:48
 msgid "Keep spinning. It's the only way."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:52
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:52
 msgid "Let's hope this works out for you."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/RouletteScreenLoading/RouletteScreenLoading.tsx:32
+#: src/domain/roulette/RootRoulette/DisposeRoulette/SuspenseRoulette/SuspenseRoulette.tsx:33
 msgid "Loading"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:154
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:154
 msgid "Lost to"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:85
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:85
 msgid "Lucky. Don't let it run out. Re-spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:62
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:62
 msgid "Maybe you'll get it this time."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:66
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:66
 msgid "No combos. Spin again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:77
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:77
 msgid "No harm in spinning again. Right?"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:51
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:51
 msgid "Not this time. Not again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:78
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:78
 msgid "Nothing yet. Again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:133
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:127
 msgid "Rule34 Roulette"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:186
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:186
 msgid "Score"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareRedditButton/RouletteClosedShareRedditButton.tsx:57
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareRedditButton/RouletteClosedShareRedditButton.tsx:57
 msgid "Share on Reddit"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareTwitterButton/RouletteClosedShareTwitterButton.tsx:58
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:235
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteClosedShareTwitterButton/RouletteClosedShareTwitterButton.tsx:58
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:235
 msgid "Share on Twitter"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:54
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:54
 msgid "Spin 3,842. Have to keep going."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRouletteButton/SpinRouletteButton.tsx:52
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRouletteButton/SpinRouletteButton.tsx:52
 msgid "Spin Roulette"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:145
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:139
 msgid "Spin your way through Rule34, Hentai, Furry, 3D Porn Videos and Images"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:71
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:71
 msgid "Spin. Spin. Spin. Spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:163
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:157
 msgid "Tap on the green button or hit <0>SPACE</0> to get a random post and spin three dice"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:84
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:84
 msgid "That was close! It's a re-spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:49
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:49
 msgid "The dice will lead the way."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:61
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:61
 msgid "The spins matter."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:74
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:74
 msgid "This is my favorite post. But you have to keep going."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:58
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:58
 msgid "This is the last straw."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:221
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:215
 msgid "Three of the same numbers (triple) means you HAVE to lose to the post you rolled to - no excuses"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:93
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:93
 msgid "Triple. Don't disappoint me."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:91
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:91
 msgid "Triple. You know what to do."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:202
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenInstructions/RouletteScreenInstructions.tsx:196
 msgid "Two of the same numbers (double) means you re-spin for three new dice but keep the same post"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:60
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:60
 msgid "Wait for it."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:50
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:50
 msgid "What do the dice tell you?"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:47
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:47
 msgid "What will you get this time?"
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:83
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:83
 msgid "You got a double. You can re-spin, at least for now."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:89
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:89
 msgid "You got a triple. You HAVE to lose to this post."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:57
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:57
 msgid "You know you can skip. But you won't."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRouletteButton/SpinRouletteButton.tsx:117
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRouletteButton/SpinRouletteButton.tsx:117
 msgid "You lost the roulette! Tap on the button or hit <0>SPACE</0> to start a new game."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:76
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:76
 msgid "You'll get it next time. Don't worry and keep spinning."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:72
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:72
 msgid "You're not focused. Get your head in the game. Spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:67
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:67
 msgid "You're safe, for now. Try spinning again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:70
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteSubtitleTrack/RouletteSubtitleTrack.tsx:70
 msgid "You're too close to quit now. Keep going."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:172
-#: src/domain/roulette/RootRoulette/Roulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenPostData/RouletteScreenPostData.tsx:59
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenClosed/RouletteScreenClosed.tsx:172
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionScreen/RouletteScreenPostData/RouletteScreenPostData.tsx:54
 msgid "by"
 msgstr ""

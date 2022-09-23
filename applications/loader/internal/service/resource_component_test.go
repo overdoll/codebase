@@ -1,19 +1,21 @@
 package service_test
 
 import (
+	"bytes"
 	"context"
 	"encoding/base64"
-	graphql2 "github.com/99designs/gqlgen/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/converter"
+	"google.golang.org/protobuf/types/known/emptypb"
+	"os/exec"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/applications/loader/internal/ports/graphql/types"
 	loader "overdoll/applications/loader/proto"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"strings"
@@ -22,440 +24,137 @@ import (
 
 type _Any map[string]interface{}
 
-type ResourceProgress struct {
+type MediaProgress struct {
 	Entities []struct {
-		ResourceProgress types.ResourceProgress `graphql:"... on ResourceProgress"`
+		MediaProgress types.MediaProgress `graphql:"... on MediaProgress"`
 	} `graphql:"_entities(representations: $representations)"`
 }
 
-func queryResourceProgress(t *testing.T, itemId, resourceId string) types.ResourceProgress {
+func queryMediaProgress(t *testing.T, itemId, resourceId string) types.MediaProgress {
 	client := getGraphqlClient(t)
 
-	var progress ResourceProgress
+	var progress MediaProgress
 
 	err := client.Query(context.Background(), &progress, map[string]interface{}{
 		"representations": []_Any{
 			{
-				"__typename": "ResourceProgress",
-				"id":         base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ResourceProgress{}, itemId, resourceId))),
+				"__typename": "MediaProgress",
+				"id":         base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.MediaProgress{}, itemId, resourceId))),
 			},
 		},
 	})
 
 	require.NoError(t, err)
 
-	return progress.Entities[0].ResourceProgress
+	return progress.Entities[0].MediaProgress
 }
 
-const previewRegex = "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$"
-
-func TestUploadResourcesAndProcessFailed(t *testing.T) {
-	t.Parallel()
-
+func TestUploadMediaAndProcessFailed(t *testing.T) {
 	// create an item ID to associate the resources with
 	itemId := uuid.New().String()
 
 	tusClient := getTusClient(t)
 	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1_broken.png")
 	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2_broken.mp4")
+	imageFileId2 := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1_360x360.jpg")
 
 	imageId := strings.Split(imageFileId, "+")[0]
 	videoId := strings.Split(videoFileId, "+")[0]
-
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
-
-	grpcClient := getGrpcClient(t)
-
-	// start processing of files by calling grpc endpoint
-	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{imageFileId, videoFileId},
-		Private:     true,
-		Source:      proto.SOURCE_STING,
-		Config: &loader.Config{
-			Width:  0,
-			Height: 0,
-		},
-	})
-
-	require.NoError(t, err, "no error creating new resources from uploads")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
-	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{res.Resources[0].Id, res.Resources[1].Id},
-	})
-
-	require.NoError(t, err, "no error getting resources")
-
-	require.Len(t, resourceResults.Resources, 2, "should have only 2 resources")
-	require.True(t, resourceResults.Resources[0].Failed, "should have failed processing image")
-	require.False(t, resourceResults.Resources[0].Processed, "should not be processed")
-
-	require.True(t, resourceResults.Resources[1].Failed, "should have failed processing video")
-	require.False(t, resourceResults.Resources[1].Processed, "should not be processed")
-}
-
-func TestUploadResourcesAndProcessPrivate_and_update_privacy(t *testing.T) {
-	t.Parallel()
-
-	// create an item ID to associate the resources with
-	itemId := uuid.New().String()
-
-	tusClient := getTusClient(t)
-	// upload some files
-	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
-	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
-
-	grpcClient := getGrpcClient(t)
-
-	imageId := strings.Split(imageFileId, "+")[0]
-	videoId := strings.Split(videoFileId, "+")[0]
-
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
-
-	videoEnv := getWorkflowEnvironment()
-
-	// start processing of files by calling grpc endpoint
-	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{imageFileId, videoFileId},
-		Private:     true,
-		Source:      proto.SOURCE_STING,
-		Config: &loader.Config{
-			Width:  0,
-			Height: 0,
-		},
-	})
-
-	didCheckResourceFirst := false
-	didCheckResourceSecond := false
-
-	videoEnv.SetOnActivityCompletedListener(func(activityInfo *activity.Info, details converter.EncodedValue, err error) {
-
-		if activityInfo.ActivityType.Name == "ProcessResources" {
-			result := queryResourceProgress(t, itemId, videoId)
-
-			if result.Progress == 100 {
-				require.Equal(t, types.ResourceProgressStateFinalizing, result.State, "should have the correct state")
-				require.Equal(t, float64(100), result.Progress, "should have the correct progress")
-			} else {
-				require.Equal(t, types.ResourceProgressStateStarted, result.State, "should have the correct state")
-				// we don't know what the progress will be - sometimes it can reach 100 but sometimes its 99, or 80, so we make sure it's just greater than 0
-				require.GreaterOrEqual(t, result.Progress, float64(0), "should have the correct progress")
-				didCheckResourceFirst = true
-			}
-
-			didCheckResourceFirst = true
-		}
-
-		if activityInfo.ActivityType.Name == "SendCallback" {
-			result := queryResourceProgress(t, itemId, videoId)
-			require.Equal(t, types.ResourceProgressStateFinalizing, result.State, "should have the correct state")
-			require.Equal(t, float64(100), result.Progress, "should have the correct progress")
-			didCheckResourceSecond = true
-		}
-	})
-
-	require.NoError(t, err, "no error creating new resources from uploads")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, videoEnv)
-
-	require.True(t, didCheckResourceFirst, "should have checked the resource")
-	require.True(t, didCheckResourceSecond, "should have checked the resource")
-
-	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{res.Resources[0].Id, res.Resources[1].Id},
-	})
-
-	require.NoError(t, err, "no error getting resources")
-
-	// create serializer instance
-	serializer := resource.NewSerializer()
-
-	unmarshalledResourcesOld, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resourceResults.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
-
-	// now, take the resources and change the privacy from private: true to private: false
-	updateResourcePrivacyResults, err := grpcClient.UpdateResourcePrivacy(
-		context.Background(),
-		&loader.UpdateResourcePrivacyRequest{
-			Resources: []*loader.ResourceIdentifier{
-				{
-					Id:     imageId,
-					ItemId: itemId,
-				},
-				{
-					Id:     videoId,
-					ItemId: itemId,
-				}},
-			Private: false,
-		},
-	)
-
-	require.NoError(t, err, "no error updating resource privacy")
-	require.Len(t, updateResourcePrivacyResults.Resources, 2, "should have 2 updated resources")
-
-	unmarshalledResources, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), updateResourcePrivacyResults.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
-
-	var assertions int
-
-	// validate all urls that the files are accessible, and check hashes
-	for _, entity := range unmarshalledResources {
-
-		require.False(t, entity.IsPrivate())
-
-		for _, u := range entity.FullUrls() {
-			assertions += 1
-			require.True(t, testing_tools.FileExists(u.FullUrl()), "file exists in bucket")
-		}
-
-		if entity.IsVideo() {
-			assertions += 1
-			require.True(t, testing_tools.FileExists(entity.VideoThumbnailFullUrl().FullUrl()), "video thumbnail file exists in bucket")
-		}
-	}
-
-	require.Equal(t, 4, assertions, "should have checked 3 urls in total")
-
-	assertions = 0
-
-	// check all previous URLS (after moving) to ensure that they are no longer valid
-	for _, entity := range unmarshalledResourcesOld {
-		for _, u := range entity.FullUrls() {
-			assertions += 1
-			require.False(t, testing_tools.FileExists(u.FullUrl()), "file does not exist in bucket")
-		}
-
-		if entity.IsVideo() {
-			assertions += 1
-			require.False(t, testing_tools.FileExists(entity.VideoThumbnailFullUrl().FullUrl()), "video thumbnail does not exist bucket")
-		}
-	}
-
-	require.Equal(t, 4, assertions, "should have checked 4 urls in total")
-
-	result := queryResourceProgress(t, itemId, videoId)
-	require.Equal(t, types.ResourceProgressStateFinalizing, result.State, "should have the correct state")
-	require.Equal(t, float64(100), result.Progress, "should have the correct progress")
-}
-
-func TestUploadResourcesAndApplyWidths(t *testing.T) {
-	t.Parallel()
-
-	itemId := uuid.New().String()
-
-	tusClient := getTusClient(t)
-	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
-
-	grpcClient := getGrpcClient(t)
-
-	imageId := strings.Split(imageFileId, "+")[0]
-
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, Width: 360, Height: 360, ResourceId: imageId, Source: "STING"})
-
-	// start processing of files by calling grpc endpoint
-	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{imageFileId},
-		Private:     true,
-		Config: &loader.Config{
-			Width:  360,
-			Height: 360,
-		},
-		Source: proto.SOURCE_STING,
-	})
-
-	require.NoError(t, err, "no error creating new resources from uploads")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
-	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{res.Resources[0].Id},
-	})
-
-	require.NoError(t, err, "no error getting resources")
-
-	require.Equal(t, int64(360), resourceResults.Resources[0].Width, "correct width for resource")
-	require.Equal(t, int64(360), resourceResults.Resources[0].Height, "correct height for resource")
-
-	serializer := resource.NewSerializer()
-	unmarshalledResources, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resourceResults.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
-
-	// validate all urls that the files are accessible, and check hashes
-	for _, entity := range unmarshalledResources {
-
-		require.NotEmpty(t, entity.Preview(), "preview not empty")
-
-		for _, u := range entity.FullUrls() {
-			checkImageHash(t, u.FullUrl(), u.MimeType(), "applications/loader/internal/service/file_fixtures/test_file_1_360x360.webp", "applications/loader/internal/service/file_fixtures/test_file_1_360x360.jpg")
-		}
-	}
-}
-
-func TestUploadResourcesAndProcessPrivate_and_apply_filter(t *testing.T) {
-	t.Parallel()
-
-	// create an item ID to associate the resources with
-	itemId := uuid.New().String()
-
-	tusClient := getTusClient(t)
-	// upload some files
-	imageFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_1.png")
-	videoFileId := uploadFileWithTus(t, tusClient, "applications/loader/internal/service/file_fixtures/test_file_2.mp4")
-
-	grpcClient := getGrpcClient(t)
-
-	imageId := strings.Split(imageFileId, "+")[0]
-	videoId := strings.Split(videoFileId, "+")[0]
-
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Width: 0, Height: 0, Source: "STING"})
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Width: 0, Height: 0, Source: "STING"})
-
-	// start processing of files by calling grpc endpoint
-	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{imageFileId, videoFileId},
-		Private:     true,
-		Config: &loader.Config{
-			Width:  0,
-			Height: 0,
-		},
-		Source: proto.SOURCE_STING,
-	})
-
-	require.NoError(t, err, "no error creating new resources from uploads")
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
-	resourceResults, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{res.Resources[0].Id, res.Resources[1].Id},
-	})
-
-	require.NoError(t, err, "no error getting resources")
-
-	require.True(t, resourceResults.Resources[0].Private, "should be private")
-
-	// create serializer instance
-	serializer := resource.NewSerializer()
-
-	unmarshalledResources, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resourceResults.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
-
-	var assertions int
-
-	// validate all urls that the files are accessible
-	for _, entity := range unmarshalledResources {
-
-		for _, u := range entity.FullUrls() {
-			assertions += 1
-			require.True(t, testing_tools.FileExists(u.FullUrl()), "file exists in bucket")
-		}
-
-		if entity.IsImage() {
-		}
-
-		if entity.IsVideo() {
-			assertions += 1
-			require.True(t, testing_tools.FileExists(entity.VideoThumbnailFullUrl().FullUrl()), "video thumbnail file exists in bucket")
-		}
-	}
-
-	require.Equal(t, 4, assertions, "should have checked 3 urls in total")
-
-	pixelate := 20
-
-	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResourcesWithFiltersFromCopy, mock.Anything)
-
-	// now, apply a filter
-	copyResourceResults, err := grpcClient.CopyResourcesAndApplyFilter(
-		context.Background(),
-		&loader.CopyResourcesAndApplyFilterRequest{
-			Resources: []*loader.ResourceIdentifier{
-				{
-					Id:     imageId,
-					ItemId: itemId,
-				},
-				{
-					Id:     videoId,
-					ItemId: itemId,
-				},
+	imageId2 := strings.Split(imageFileId2, "+")[0]
+
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
+		Source: "STING",
+		SourceMedia: &proto.Media{
+			Id:               imageId,
+			IsUpload:         true,
+			OriginalFileName: "test_file_1_broken.png",
+			Private:          true,
+			Link: &proto.MediaLink{
+				Id:   itemId,
+				Type: proto.MediaLinkType_POST_CONTENT,
 			},
-			NewItemId: itemId,
-			Private:   false,
-			Config: &loader.Config{
-				Width:  0,
-				Height: 0,
+			State: &proto.MediaState{
+				Processed: false,
+				Failed:    false,
 			},
-			Filters: &loader.Filters{
-				Pixelate: &loader.PixelateFilter{Size: int64(pixelate)},
-			}},
-	)
-
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-
-	require.NoError(t, err, "no error copying resources")
-
-	require.Len(t, copyResourceResults.Resources, 2, "should have 2 filtered resources")
-
-	var originalImageFileNewId string
-	var originalVideoFileNewId string
-
-	for _, r := range copyResourceResults.Resources {
-		if r.OldResource.Id == imageId {
-			originalImageFileNewId = r.NewResource.Id
-		} else if r.OldResource.Id == videoId {
-			originalVideoFileNewId = r.NewResource.Id
-		}
-	}
-
-	resourceResults, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{copyResourceResults.Resources[0].NewResource.Id, copyResourceResults.Resources[1].NewResource.Id},
+			Version: proto.MediaVersion_ONE,
+		},
 	})
 
-	require.NoError(t, err, "no error grabbing new filtered resource")
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			Source: "STING",
+			SourceMedia: &proto.Media{
+				Id:               videoId,
+				IsUpload:         true,
+				OriginalFileName: "test_file_2_broken.mp4",
+				Private:          true,
+				Link: &proto.MediaLink{
+					Id:   itemId,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				State: &proto.MediaState{
+					Processed: false,
+					Failed:    false,
+				},
+				Version: proto.MediaVersion_ONE,
+			},
+		})
 
-	require.Len(t, resourceResults.Resources, 2, "should have 2 entities")
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia,
+		workflows.ProcessMediaInput{
+			Source: "STING",
+			SourceMedia: &proto.Media{
+				Id:               imageId2,
+				IsUpload:         true,
+				OriginalFileName: "test_file_1_360x360.jpg",
+				Private:          true,
+				Link: &proto.MediaLink{
+					Id:   itemId,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				State: &proto.MediaState{
+					Processed: false,
+					Failed:    false,
+				},
+				Version: proto.MediaVersion_ONE,
+			},
+		})
 
-	unmarshalledResources, err = serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resourceResults.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
+	grpcClient := getGrpcClient(t)
 
-	// validate all urls that the files are accessible, and check hashes
-	for _, entity := range unmarshalledResources {
+	var finalMedia []*proto.Media
 
-		require.NotEmpty(t, entity.Preview(), "preview not empty")
+	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
+	}).Return(&emptypb.Empty{}, nil).Times(3)
 
-		if entity.ID() == originalImageFileNewId {
-			require.Regexp(t, previewRegex, entity.Preview(), "should be a hex code")
-			for _, u := range entity.FullUrls() {
-				checkImageHash(t, u.FullUrl(), u.MimeType(), "applications/loader/internal/service/file_fixtures/test_file_1_pixelated.webp", "applications/loader/internal/service/file_fixtures/test_file_1_pixelated.jpg")
-			}
-		}
+	// start processing of files by calling grpc endpoint
+	_, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{
+		Link: &proto.MediaLink{
+			Id:   itemId,
+			Type: proto.MediaLinkType_POST_CONTENT,
+		},
+		Source:    proto.SOURCE_STING,
+		UploadIds: []string{imageFileId, videoFileId, imageId2},
+	})
 
-		if entity.ID() == originalVideoFileNewId {
-			require.Regexp(t, previewRegex, entity.Preview(), "should be a hex code")
-			for _, u := range entity.FullUrls() {
-				checkImageHash(t, u.FullUrl(), u.MimeType(), "applications/loader/internal/service/file_fixtures/test_file_2_pixelated.webp", "applications/loader/internal/service/file_fixtures/test_file_2_pixelated.jpg")
-			}
-		}
-	}
+	require.NoError(t, err, "no error creating new resources from uploads")
+
+	require.NoError(t, err, "no error getting resources")
+
+	require.Len(t, finalMedia, 3, "should have 3 media")
+	require.True(t, finalMedia[0].State.Failed, "should have failed processing image")
+	require.False(t, finalMedia[0].State.Processed, "should not be processed")
+
+	require.True(t, finalMedia[1].State.Failed, "should have failed processing video")
+	require.False(t, finalMedia[1].State.Processed, "should not be processed")
+
+	require.False(t, finalMedia[2].State.Failed, "should have failed processing video")
+	require.True(t, finalMedia[2].State.Processed, "should be processed")
 }
 
-func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
-	t.Parallel()
-
+func TestUploadMedia(t *testing.T) {
 	// create an item ID to associate the resources with
 	itemId := uuid.New().String()
 
@@ -471,20 +170,95 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 
 	grpcClient := getGrpcClient(t)
 
-	workflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: imageId, Source: "STING"})
-	workflowExecution2 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId, Source: "STING"})
-	workflowExecution3 := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.ProcessResources, workflows.ProcessResourcesInput{ItemId: itemId, ResourceId: videoId2, Source: "STING"})
+	videoEnv := getWorkflowEnvironment()
 
-	// start processing of files by calling grpc endpoint
-	res, err := grpcClient.CreateOrGetResourcesFromUploads(context.Background(), &loader.CreateOrGetResourcesFromUploadsRequest{
-		ItemId:      itemId,
-		ResourceIds: []string{imageFileId, videoFileId, videoFileId2},
-		Private:     false,
-		Source:      proto.SOURCE_STING,
-		Config: &loader.Config{
-			Width:  0,
-			Height: 0,
+	didCheckResourceFirst := false
+
+	videoEnv.SetOnActivityCompletedListener(func(activityInfo *activity.Info, details converter.EncodedValue, err error) {
+		if activityInfo.ActivityType.Name == "ProcessMediaFromUpload" {
+			result := queryMediaProgress(t, itemId, videoId)
+			if result.Progress == 100 {
+				if result.State == types.MediaProgressStateFinalizing {
+					didCheckResourceFirst = true
+				}
+			} else {
+				if result.State == types.MediaProgressStateStarted {
+					didCheckResourceFirst = true
+				}
+			}
+		}
+	})
+
+	var finalMedia []*proto.Media
+
+	application.StingCallbackClient.On("UpdateMedia", mock.Anything, mock.Anything).Run(func(args mock.Arguments) {
+		finalMedia = append(finalMedia, args[1].(*proto.UpdateMediaRequest).Media)
+	}).Return(&emptypb.Empty{}, nil).Times(5)
+
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
+		Source: "STING",
+		SourceMedia: &proto.Media{
+			Id:               imageId,
+			IsUpload:         true,
+			OriginalFileName: "test_file_1.png",
+			Private:          true,
+			Link: &proto.MediaLink{
+				Id:   itemId,
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			State: &proto.MediaState{
+				Processed: false,
+				Failed:    false,
+			},
+			Version: proto.MediaVersion_ONE,
 		},
+	})
+
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, videoEnv, workflows.ProcessMedia, workflows.ProcessMediaInput{
+		Source: "STING",
+		SourceMedia: &proto.Media{
+			Id:               videoId,
+			IsUpload:         true,
+			OriginalFileName: "test_file_2.mp4",
+			Private:          true,
+			Link: &proto.MediaLink{
+				Id:   itemId,
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			State: &proto.MediaState{
+				Processed: false,
+				Failed:    false,
+			},
+			Version: proto.MediaVersion_ONE,
+		},
+	})
+
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, workflows.ProcessMediaInput{
+		Source: "STING",
+		SourceMedia: &proto.Media{
+			Id:               videoId2,
+			IsUpload:         true,
+			OriginalFileName: "test_file_3_audio.mp4",
+			Private:          true,
+			Link: &proto.MediaLink{
+				Id:   itemId,
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			State: &proto.MediaState{
+				Processed: false,
+				Failed:    false,
+			},
+			Version: proto.MediaVersion_ONE,
+		},
+	})
+
+	res, err := grpcClient.ProcessMediaFromUploads(context.Background(), &loader.ProcessMediaFromUploadsRequest{
+		Link: &proto.MediaLink{
+			Id:   itemId,
+			Type: proto.MediaLinkType_POST_CONTENT,
+		},
+		Source:    proto.SOURCE_STING,
+		UploadIds: []string{imageFileId, videoFileId, videoFileId2},
 	})
 
 	require.NoError(t, err, "no error creating new resources from uploads")
@@ -493,212 +267,213 @@ func TestUploadResourcesAndProcessAndDelete_non_private(t *testing.T) {
 	imageFileId = strings.Split(imageFileId, "+")[0]
 	videoFileId2 = strings.Split(videoFileId2, "+")[0]
 
-	resourceIds := []string{res.Resources[0].Id, res.Resources[1].Id, res.Resources[2].Id}
+	// should have 3 elements
+	require.Len(t, finalMedia, 3, "should have 3 elements in res")
 
-	// get resources and see that they are not processed yet (we did not run the workflow)
-	resources, err := grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: resourceIds,
-	})
+	var imageMedia *proto.Media
+	var videoMedia *proto.Media
 
-	require.NoError(t, err, "no error getting resources")
-
-	// should have 2 elements
-	require.Len(t, resources.Resources, 3, "should have 2 elements in res")
-
-	var imageResource *proto.Resource
-	var videoResource *proto.Resource
-
-	for _, res := range resources.Resources {
+	for _, res := range res.Media {
 		if res.Id == videoFileId {
-			videoResource = res
+			videoMedia = res
 		}
 
 		if res.Id == imageFileId {
-			imageResource = res
+			imageMedia = res
 		}
 	}
 
 	// first element is not processed
-	require.False(t, imageResource.Processed, "should not be processed #1")
-	require.Equal(t, imageResource.ItemId, itemId, "correct item ID #1")
+	require.False(t, imageMedia.State.Processed, "should not be processed #1")
+	require.Equal(t, imageMedia.Link.Id, itemId, "correct item ID #1")
 
 	// second element is not processed
-	require.False(t, videoResource.Processed, "should not be processed #2")
-	require.Equal(t, videoResource.ItemId, itemId, "correct item ID #2")
+	require.False(t, videoMedia.State.Processed, "should not be processed #2")
+	require.Equal(t, videoMedia.Link.Id, itemId, "correct item ID #2")
 
-	require.NoError(t, err, "no error grabbing entities")
+	require.True(t, didCheckResourceFirst, "should have checked the resource")
 
-	serializer := resource.NewSerializer()
-	unmarshalledResources, err := serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resources.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
+	var unmarshalledMedia []*media.Media
 
-	var assertions int
-
-	for _, entity := range unmarshalledResources {
-		for _, u := range entity.FullUrls() {
-			require.True(t, testing_tools.FileExists(u.FullUrl()), "uploaded file exists in bucket")
-			assertions += 1
-		}
+	for _, m := range finalMedia {
+		unmarshalledMedia = append(unmarshalledMedia, media.FromProto(m))
 	}
 
-	require.Equal(t, 3, assertions, "expected to have checked 3 files")
+	// should have 3 elements
+	require.Len(t, unmarshalledMedia, 3, "should have 3 elements")
 
-	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution2.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
-	workflowExecution3.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	var newImageMedia *media.Media
+	var newVideoMedia *media.Media
+	var newVideoMedia2 *media.Media
 
-	// then, run grpc call once again to make sure its processed
-	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: resourceIds,
-	})
-
-	require.NoError(t, err, "no error getting resources")
-
-	unmarshalledResources, err = serializer.UnmarshalResourcesFromProto(graphql2.WithOperationContext(context.Background(), &graphql2.OperationContext{}), resources.Resources)
-	require.NoError(t, err, "no error unmarshalling resources from proto")
-
-	// should have 2 elements
-	require.Len(t, unmarshalledResources, 3, "should have 2 elements")
-
-	var newImageResource *resource.Resource
-	var newVideoResource *resource.Resource
-	var newVideoResource2 *resource.Resource
-
-	for _, res := range unmarshalledResources {
+	for _, res := range unmarshalledMedia {
 		if res.ID() == videoFileId {
-			newVideoResource = res
+			newVideoMedia = res
 		}
 
 		if res.ID() == imageFileId {
-			newImageResource = res
+			newImageMedia = res
 		}
 
 		if res.ID() == videoFileId2 {
-			newVideoResource2 = res
+			newVideoMedia2 = res
 		}
 	}
 
 	// first element is processed
-	require.True(t, newImageResource.IsProcessed(), "should be processed #1")
+	require.True(t, newImageMedia.IsProcessed(), "should be processed #1")
 
 	// second element is processed
-	require.True(t, newVideoResource.IsProcessed(), "should be processed #2")
+	require.True(t, newVideoMedia.IsProcessed(), "should be processed #2")
 
 	// second element is processed
-	require.True(t, newVideoResource2.IsProcessed(), "should be processed #3")
+	require.True(t, newVideoMedia2.IsProcessed(), "should be processed #3")
 
-	// expect 2 urls for image
-	require.Len(t, newImageResource.FullUrls(), 2)
+	require.Equal(t, proto.MediaMimeType_ImageJpeg, newImageMedia.ImageMimeType(), "expected to be a png image")
 
-	require.Equal(t, "image/webp", newImageResource.FullUrls()[0].MimeType(), "expected first image to be webp")
-	require.Equal(t, "image/jpeg", newImageResource.FullUrls()[1].MimeType(), "expected second image to be jpg")
-
-	require.Regexp(t, previewRegex, newImageResource.Preview(), "should be a hex code")
+	require.Len(t, newImageMedia.ColorPalettes(), 3, "should have 2 color palettes")
 
 	// correct dimensions
-	require.Equal(t, 532, newImageResource.Height(), "should be the correct height")
-	require.Equal(t, 656, newImageResource.Width(), "should be the correct width")
+	require.Equal(t, 532, newImageMedia.LegacyImageHeight(), "should be the correct height")
+	require.Equal(t, 656, newImageMedia.LegacyImageWidth(), "should be the correct width")
 
-	// expect 1 url for video
-	require.Len(t, newVideoResource.FullUrls(), 1)
+	require.Len(t, newVideoMedia.VideoContainers(), 2, "should have 2 video containers")
+
+	require.Equal(t, proto.MediaMimeType_VideoMpegUrl, newVideoMedia.VideoContainers()[0].MimeType(), "should be the correct mime type")
+	require.Equal(t, proto.MediaDeviceType_Universal, *newVideoMedia.VideoContainers()[0].Device(), "should be the correct mime type")
 
 	// correct dimensions
-	require.Equal(t, 360, newVideoResource.Height(), "should be the correct height")
-	require.Equal(t, 640, newVideoResource.Width(), "should be the correct width")
+	require.Equal(t, 360, newVideoMedia.VideoContainers()[1].Height(), "should be the correct height")
+	require.Equal(t, 640, newVideoMedia.VideoContainers()[1].Width(), "should be the correct width")
+	require.Equal(t, proto.MediaMimeType_VideoMp4, newVideoMedia.VideoContainers()[1].MimeType(), "should be the correct mime type")
 
 	// correct duration
-	require.Equal(t, 13347, newVideoResource.VideoDuration(), "should be the correct duration")
+	require.Equal(t, 13347, newVideoMedia.VideoDuration(), "should be the correct duration")
 
-	require.Equal(t, "video/mp4", newVideoResource.FullUrls()[0].MimeType(), "expected video to be mp4")
-	require.Equal(t, "image/jpeg", newVideoResource.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
-	require.True(t, newVideoResource.VideoNoAudio(), "expected video to have no audio track")
+	require.Equal(t, proto.MediaMimeType_ImageJpeg, newVideoMedia.ImageMimeType(), "expected video thumbnail to be jpg")
+	require.False(t, newVideoMedia.HasAudio(), "expected video to have no audio track")
 
-	require.Regexp(t, previewRegex, newVideoResource.Preview(), "should be a hex code")
+	require.Len(t, newVideoMedia.ColorPalettes(), 3, "should have 3 color palettes")
 
-	// second video
-	require.Len(t, newVideoResource2.FullUrls(), 1)
+	require.Len(t, newVideoMedia2.VideoContainers(), 3, "should have 2 video containers")
+
+	require.Equal(t, proto.MediaMimeType_VideoMpegUrl, newVideoMedia2.VideoContainers()[0].MimeType(), "should be the correct mime type")
+	require.Equal(t, proto.MediaDeviceType_Desktop, *newVideoMedia2.VideoContainers()[0].Device(), "should be the correct mime type")
+	require.Equal(t, proto.MediaDeviceType_Mobile, *newVideoMedia2.VideoContainers()[1].Device(), "should be the correct mime type")
+	require.Equal(t, proto.MediaMimeType_VideoMpegUrl, newVideoMedia2.VideoContainers()[1].MimeType(), "should be the correct mime type")
 
 	// correct dimensions
-	require.Equal(t, 1080, newVideoResource2.Height(), "should be the correct height")
-	require.Equal(t, 1920, newVideoResource2.Width(), "should be the correct width")
+	require.Equal(t, 720, newVideoMedia2.VideoContainers()[2].Height(), "should be the correct height")
+	require.Equal(t, 1280, newVideoMedia2.VideoContainers()[2].Width(), "should be the correct width")
+	require.Equal(t, proto.MediaMimeType_VideoMp4, newVideoMedia2.VideoContainers()[2].MimeType(), "should be the correct mime type")
 
 	// correct duration
-	require.Equal(t, 5782, newVideoResource2.VideoDuration(), "should be the correct duration")
-	require.Equal(t, "video/mp4", newVideoResource2.FullUrls()[0].MimeType(), "expected video to be mp4")
-	require.Equal(t, "image/jpeg", newVideoResource2.VideoThumbnailMimeType(), "expected video thumbnail to be jpg")
-	require.False(t, newVideoResource2.VideoNoAudio(), "expected video to have an audio track")
+	require.GreaterOrEqual(t, newVideoMedia2.VideoDuration(), 5700, "should be the correct duration")
+	require.Equal(t, proto.MediaMimeType_ImageJpeg, newVideoMedia2.ImageMimeType(), "expected video thumbnail to be jpg")
+	require.True(t, newVideoMedia2.HasAudio(), "expected video to have an audio track")
 
-	require.Regexp(t, previewRegex, newVideoResource2.Preview(), "should be a hex code")
+	require.Len(t, newVideoMedia2.ColorPalettes(), 3, "should have 3 color palettes")
 
 	var processedAssertions int
 
 	// our list that we will check to make sure all files are deleted here
-	var resourceUrlsTo404 []string
 
 	// assert files existence
-	for _, entity := range unmarshalledResources {
-		for _, u := range entity.FullUrls() {
-			downloadUrl := u.FullUrl()
-			require.True(t, testing_tools.FileExists(downloadUrl), "processed file exists in bucket")
-			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
-			processedAssertions += 1
-		}
+	for _, entity := range unmarshalledMedia {
 
+		imageMediaUrl := entity.OriginalImageMediaAccess().Url()
+
+		require.True(t, testing_tools.FileExists(imageMediaUrl), "processed file exists in bucket")
+		processedAssertions += 1
 		if entity.IsVideo() {
-			downloadUrl := entity.VideoThumbnailFullUrl().FullUrl()
-			require.True(t, testing_tools.FileExists(downloadUrl), "video thumbnail file exists in bucket")
-			resourceUrlsTo404 = append(resourceUrlsTo404, downloadUrl)
-			processedAssertions += 1
+			for _, container := range entity.VideoContainers() {
+				require.True(t, testing_tools.FileExists(container.Url()), "video thumbnail file exists in bucket")
+
+				cmd := exec.CommandContext(context.Background(), "ffprobe", container.Url())
+				buf := bytes.NewBuffer(nil)
+				cmd.Stdout = buf
+				cmd.Stderr = buf
+				err := cmd.Run()
+				t.Log(string(buf.Bytes()))
+				require.NoError(t, err, "no error probing video file")
+
+				processedAssertions += 1
+			}
 		}
 
 		// check hashes of both video thumbnail + images for processed
 		if entity.IsVideo() {
 
 			if entity.ID() == videoFileId {
-				//checkVideoHash(t, entity.FullUrls()[0].FullUrl(), "applications/loader/internal/service/file_fixtures/test_file_2_processed.mp4")
-				checkImageHash(t, entity.VideoThumbnailFullUrl().FullUrl(), entity.VideoThumbnailFullUrl().MimeType(), "", "applications/loader/internal/service/file_fixtures/test_file_2_processed.jpg")
+				//	checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_2_processed.jpg")
 			}
 
 			if entity.ID() == videoFileId2 {
-				//checkVideoHash(t, entity.FullUrls()[0].FullUrl(), "applications/loader/internal/service/file_fixtures/test_file_3_audio_processed.mp4")
-				checkImageHash(t, entity.VideoThumbnailFullUrl().FullUrl(), entity.VideoThumbnailFullUrl().MimeType(), "", "applications/loader/internal/service/file_fixtures/test_file_3_audio_processed.jpg")
+				//	checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_3_audio_processed.jpg")
 			}
 
 		} else {
-			for _, u := range entity.FullUrls() {
-				checkImageHash(t, u.FullUrl(), u.MimeType(), "applications/loader/internal/service/file_fixtures/test_file_1_processed.webp", "applications/loader/internal/service/file_fixtures/test_file_1_processed.jpg")
-			}
+			checkImageHash(t, imageMediaUrl, "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_1_processed.jpg")
 		}
 	}
 
-	require.Equal(t, 6, processedAssertions, "expected to have checked 4 files")
+	pixelate := 20
 
-	deleteWorkflowExecution := testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteResources, mock.Anything)
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, mock.Anything)
+	testing_tools.NewEagerMockWorkflowWithArgs(t, application.TemporalClient, getWorkflowEnvironment(), workflows.ProcessMedia, mock.Anything)
 
-	// finally, delete all resources
-	_, err = grpcClient.DeleteResources(context.Background(), &loader.DeleteResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: resourceIds,
-	})
-	require.NoError(t, err)
+	copyMediaResults, err := grpcClient.GenerateImageFromMedia(
+		context.Background(),
+		&loader.GenerateImageFromMediaRequest{
+			Media: []*proto.Media{
+				finalMedia[0],
+				finalMedia[1],
+			},
+			Link: &proto.MediaLink{
+				Id:   itemId,
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			Source: 0,
+			Filters: &loader.Filters{
+				Pixelate: &loader.PixelateFilter{Size: int64(pixelate)},
+			},
+		},
+	)
 
-	// run workflow to delete resources
-	deleteWorkflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+	finalMedia = []*proto.Media{}
 
-	// run grpc and see that we didn't find any resources
-	resources, err = grpcClient.GetResources(context.Background(), &loader.GetResourcesRequest{
-		ItemId:      itemId,
-		ResourceIds: resourceIds,
-	})
+	require.NoError(t, err, "no error copying resources")
 
-	require.NoError(t, err)
-	require.Len(t, resources.Resources, 0, "should not have found any resources")
+	require.Len(t, copyMediaResults.Media, 2, "should have 2 filtered resources")
 
-	require.Len(t, resourceUrlsTo404, 6, "should have 6 urls to check for deletion")
+	var originalImageFileNewId string
+	var originalVideoFileNewId string
 
-	for _, u := range resourceUrlsTo404 {
-		require.False(t, testing_tools.FileExists(u), "file should no longer exist after being deleted")
+	for _, r := range copyMediaResults.Media {
+		if r.Source.SourceMediaId == imageId {
+			originalImageFileNewId = r.Id
+		} else if r.Source.SourceMediaId == videoId {
+			originalVideoFileNewId = r.Id
+		}
+	}
+
+	unmarshalledMedia = []*media.Media{}
+
+	for _, m := range finalMedia {
+		unmarshalledMedia = append(unmarshalledMedia, media.FromProto(m))
+	}
+
+	// validate all urls that the files are accessible, and check hashes
+	for _, entity := range unmarshalledMedia {
+
+		require.Len(t, entity.ColorPalettes(), 3, "contains previews")
+
+		if entity.ID() == originalImageFileNewId {
+			checkImageHash(t, entity.OriginalImageMediaAccess().Url(), "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_1_pixelated.jpg")
+		}
+
+		if entity.ID() == originalVideoFileNewId {
+			checkImageHash(t, entity.OriginalImageMediaAccess().Url(), "image/jpeg", "", "applications/loader/internal/service/file_fixtures/test_file_2_pixelated.jpg")
+		}
 	}
 }

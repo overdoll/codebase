@@ -1,7 +1,7 @@
 import { Box, Collapse, Heading, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { RuleTileOverlayFragment$key } from '@//:artifacts/RuleTileOverlayFragment.graphql'
-import RandomPattern from '../../../DataDisplay/RandomPattern/RandomPattern'
+import RandomPattern from '../../../PageLayout/Display/components/RandomPattern/RandomPattern'
 import TileOverlay from '../TileOverlay'
 
 interface Props {

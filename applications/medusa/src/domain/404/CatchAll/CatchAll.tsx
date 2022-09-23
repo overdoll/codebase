@@ -1,4 +1,4 @@
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { Center, Heading, Stack } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { PageWrapper } from '@//:modules/content/PageLayout'

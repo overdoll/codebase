@@ -13,9 +13,9 @@ import (
 	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
+	"overdoll/libraries/media"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -30,6 +30,8 @@ var clubTable = table.New(table.Metadata{
 		"name",
 		"thumbnail_resource",
 		"banner_resource",
+		"thumbnail_media",
+		"banner_media",
 		"characters_enabled",
 		"characters_limit",
 		"members_count",
@@ -59,7 +61,9 @@ type clubs struct {
 	Links                       []string          `db:"links"`
 	Name                        map[string]string `db:"name"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
+	ThumbnailMedia              *string           `db:"thumbnail_media"`
 	BannerResource              string            `db:"banner_resource"`
+	BannerMedia                 *string           `db:"banner_media"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
 	CharactersLimit             int               `db:"characters_limit"`
 	TotalLikes                  int               `db:"total_likes"`
@@ -147,28 +151,39 @@ type clubCharacters struct {
 }
 
 type ClubCassandraElasticsearchRepository struct {
-	session            gocqlx.Session
-	client             *elastic.Client
-	cache              *redis.Client
-	resourceSerializer *resource.Serializer
+	session gocqlx.Session
+	client  *elastic.Client
+	cache   *redis.Client
 }
 
-func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client, resourcesSerializer *resource.Serializer) ClubCassandraElasticsearchRepository {
-	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache, resourceSerializer: resourcesSerializer}
+func NewClubCassandraElasticsearchRepository(session gocqlx.Session, client *elastic.Client, cache *redis.Client) ClubCassandraElasticsearchRepository {
+	return ClubCassandraElasticsearchRepository{session: session, client: client, cache: cache}
 }
 
 func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(cl.ThumbnailResource())
+	marshalledThumbnail, err := media.MarshalMediaToDatabase(cl.ThumbnailMedia())
 
 	if err != nil {
 		return nil, err
 	}
 
-	marshalledBanner, err := resource.MarshalResourceToDatabase(cl.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(cl.BannerMedia())
 
 	if err != nil {
 		return nil, err
+	}
+
+	var bannerResource string
+
+	if cl.BannerMedia() != nil {
+		bannerResource = cl.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if cl.ThumbnailMedia() != nil {
+		thumbnailResource = cl.ThumbnailMedia().LegacyResource()
 	}
 
 	return &clubs{
@@ -176,8 +191,10 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		Slug:                        cl.Slug(),
 		SlugAliases:                 cl.SlugAliases(),
 		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
-		ThumbnailResource:           marshalled,
-		BannerResource:              marshalledBanner,
+		ThumbnailResource:           thumbnailResource,
+		BannerResource:              bannerResource,
+		ThumbnailMedia:              marshalledThumbnail,
+		BannerMedia:                 marshalledBanner,
 		SupporterOnlyPostsDisabled:  cl.SupporterOnlyPostsDisabled(),
 		MembersCount:                cl.MembersCount(),
 		CharactersLimit:             cl.CharactersLimit(),
@@ -200,16 +217,16 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 
 func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx context.Context, b *clubs) (*club.Club, error) {
 
-	unmarshalled, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.ThumbnailResource)
+	unmarshalled, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.ThumbnailResource, b.ThumbnailMedia)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal media from club")
 	}
 
-	unmarshalledBanner, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, b.BannerResource)
+	unmarshalledBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, b.BannerResource, b.BannerMedia)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal media from club")
 	}
 
 	return club.UnmarshalClubFromDatabase(
@@ -612,11 +629,11 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubName(ctx context.Context
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_resource"})
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_media"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubBanner(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
-	return r.updateClubRequest(ctx, clubId, updateFn, []string{"banner_resource"})
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"banner_media"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubSuspensionStatus(ctx context.Context, clubId string, updateFn func(club *club.Club) error) (*club.Club, error) {

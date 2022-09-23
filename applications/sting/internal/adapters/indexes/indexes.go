@@ -6,25 +6,22 @@ import (
 	"overdoll/applications/sting/internal/adapters/indexes/schema"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/cache"
-	"overdoll/libraries/resource"
 )
 
 func getPostRepository() adapters.PostsCassandraElasticsearchRepository {
-	serializer := resource.NewSerializer()
 	es := bootstrap.InitializeElasticSearchSession()
 	session := bootstrap.InitializeDatabaseSession()
 	aws := bootstrap.InitializeAWSSession()
 	ch := bootstrap.InitializeRedisSession()
 
-	return adapters.NewPostsCassandraRepository(session, es, serializer, aws, ch)
+	return adapters.NewPostsCassandraRepository(session, es, aws, ch)
 }
 
 func getClubRepository() adapters.ClubCassandraElasticsearchRepository {
-	serializer := resource.NewSerializer()
 	es := bootstrap.InitializeElasticSearchSession()
 	session := bootstrap.InitializeDatabaseSession()
 
-	return adapters.NewClubCassandraElasticsearchRepository(session, es, bootstrap.InitializeRedisSession(), serializer)
+	return adapters.NewClubCassandraElasticsearchRepository(session, es, bootstrap.InitializeRedisSession())
 }
 
 func registerIndexes() cache.IndexRegistry {

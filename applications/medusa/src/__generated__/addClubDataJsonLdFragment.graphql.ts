@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d1386617f8200cf15f34f159485c7cf3>>
+ * @generated SignedSource<<af09846407ba901eec11e2418cd268fa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,11 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type addClubDataJsonLdFragment$data = {
   readonly name: string;
   readonly slug: string;
-  readonly thumbnail: {
-    readonly urls: ReadonlyArray<{
-      readonly url: string;
-    }>;
-  } | null;
   readonly " $fragmentType": "addClubDataJsonLdFragment";
 };
 export type addClubDataJsonLdFragment$key = {
@@ -44,41 +39,12 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "slug",
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "thumbnail",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "ResourceUrl",
-          "kind": "LinkedField",
-          "name": "urls",
-          "plural": true,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "url",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "8ffa9ae596170416a58f0542bfbd3b6c";
+(node as any).hash = "92ce6c84efb6952a8175877eff9193d1";
 
 export default node;

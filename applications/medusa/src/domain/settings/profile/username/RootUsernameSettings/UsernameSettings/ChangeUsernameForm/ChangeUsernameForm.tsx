@@ -10,7 +10,8 @@ import {
   Box,
   HStack,
   Stack,
-  Text
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
@@ -20,7 +21,6 @@ import type { ChangeUsernameFormMutation } from '@//:artifacts/ChangeUsernameFor
 import { t, Trans } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
 import Username from '@//:modules/validation/Username'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import { useRef, useState } from 'react'
 import translateValidation from '@//:modules/validation/translateValidation'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
@@ -68,7 +68,7 @@ export default function ChangeUsernameForm ({ isDisabled }: Props): JSX.Element 
     isOpen: isConfirmationOpen,
     onOpen: onOpenConfirmation,
     onClose: onCloseConfirmation
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const cancelButtonRef = useRef(null)
 

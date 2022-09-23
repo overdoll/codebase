@@ -45,3 +45,27 @@ models:
     model: overdoll/libraries/graphql.ResourceURL
   ResourceType:
     model: overdoll/libraries/graphql.ResourceType
+  Media:
+    model: overdoll/libraries/graphql.Media
+  VideoMedia:
+    model: overdoll/libraries/graphql.VideoMedia
+  VideoContainer:
+    model: overdoll/libraries/graphql.VideoContainer
+  HLSVideoContainer:
+    model: overdoll/libraries/graphql.HLSVideoContainer
+  MP4VideoContainer:
+    model: overdoll/libraries/graphql.MP4VideoContainer
+  AspectRatio:
+    model: overdoll/libraries/graphql.AspectRatio
+  ImageMedia:
+    model: overdoll/libraries/graphql.ImageMedia
+  RawMedia:
+    model: overdoll/libraries/graphql.RawMedia
+  MediaProgress:
+    model: overdoll/libraries/graphql.MediaProgress
+  ColorPalette:
+    model: overdoll/libraries/graphql.ColorPalette
+  ImageMediaVariants:
+    model: overdoll/libraries/graphql.ImageMediaVariants
+  ImageMediaAccess:
+    model: overdoll/libraries/graphql.ImageMediaAccess

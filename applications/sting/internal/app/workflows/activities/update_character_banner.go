@@ -3,8 +3,7 @@ package activities
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/applications/sting/internal/domain/resource_options"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 )
 
 type UpdateCharacterBannerInput struct {
@@ -24,7 +23,7 @@ func (h *Activities) UpdateCharacterBanner(ctx context.Context, input UpdateChar
 			return err
 		}
 	} else {
-		pst, err = h.pr.GetFirstTopPostWithoutOccupiedResources(ctx, &input.CharacterId, nil, nil, nil)
+		pst, err = h.pr.GetFirstTopPostWithoutOccupiedMedias(ctx, &input.CharacterId, nil, nil, nil)
 
 		if err != nil {
 			return err
@@ -35,11 +34,11 @@ func (h *Activities) UpdateCharacterBanner(ctx context.Context, input UpdateChar
 		return nil
 	}
 
-	var selectedContentResource *resource.Resource
+	var selectedContentResource *media.Media
 
 	for _, cnt := range pst.Content() {
 		if !cnt.IsSupporterOnly() {
-			selectedContentResource = cnt.Resource()
+			selectedContentResource = cnt.Media()
 			break
 		}
 	}
@@ -50,18 +49,18 @@ func (h *Activities) UpdateCharacterBanner(ctx context.Context, input UpdateChar
 
 	_, err = h.pr.UpdateCharacterBannerOperator(ctx, input.CharacterId, func(character *post.Character) error {
 
-		newResource, err := h.loader.CopyResourceIntoImage(ctx, resource_options.NewResourceOptionsForCharacterBanner(selectedContentResource, character.ID()))
+		newResource, err := h.loader.GenerateImageFromMedia(ctx, []*media.Media{selectedContentResource}, media.NewCharacterBannerMediaLink(input.CharacterId), nil)
 
 		if err != nil {
 			return err
 		}
 
-		return character.UpdateBanner(newResource.NewResource())
+		return character.UpdateBanner(newResource[0])
 	})
 
 	if err != nil {
 		return err
 	}
 
-	return h.pr.AddPostOccupiedResource(ctx, pst, selectedContentResource)
+	return h.pr.AddPostOccupiedMedia(ctx, pst, selectedContentResource)
 }

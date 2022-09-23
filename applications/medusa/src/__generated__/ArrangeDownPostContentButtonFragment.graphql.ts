@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f05118fa110103d3182215d6a72871bd>>
+ * @generated SignedSource<<bd71e00b2b4a72df28201bc05e882d28>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,7 +12,6 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ArrangeDownPostContentButtonFragment$data = {
   readonly id: string;
-  readonly " $fragmentSpreads": FragmentRefs<"ResourceInfoFragment">;
   readonly " $fragmentType": "ArrangeDownPostContentButtonFragment";
 };
 export type ArrangeDownPostContentButtonFragment$key = {
@@ -32,17 +31,12 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "id",
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceInfoFragment"
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "d8cdc66503af384f7eee330a9196b6c8";
+(node as any).hash = "43813922209391a5f693dd15c20bebdb";
 
 export default node;

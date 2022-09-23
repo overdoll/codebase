@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 )
 
@@ -27,7 +28,7 @@ func (h UpdateClubThumbnailHandler) Handle(ctx context.Context, cmd UpdateClubTh
 	clb, err := h.cr.UpdateClubThumbnail(ctx, cmd.ClubId, func(clb *club.Club) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.ClubId, []string{cmd.Thumbnail}, false, "CLUB", true, 100, 0)
+		resourceIds, err := h.loader.ProcessMediaFromUploads(ctx, []string{cmd.Thumbnail}, media.NewClubThumbnailMediaLink(cmd.ClubId))
 
 		if err != nil {
 			return err

@@ -1,5 +1,5 @@
 import RootClubsFeed from './RootClubsFeed/RootClubsFeed'
-import ClubsFeedQuery from '@//:artifacts/ClubsFeedQuery.graphql'
+import ResultClubsFeedQuery from '@//:artifacts/ResultClubsFeedQuery.graphql'
 import ClubsLayout from '@//:common/components/Layouts/ClubsLayout/ClubsLayout'
 
 RootClubsFeed.getTranslationProps = async (ctx) => ({
@@ -9,7 +9,7 @@ RootClubsFeed.getTranslationProps = async (ctx) => ({
 RootClubsFeed.getRelayPreloadProps = () => ({
   queries: {
     clubsFeedQuery: {
-      params: ClubsFeedQuery.params,
+      params: ResultClubsFeedQuery.params,
       variables: {}
     }
   }

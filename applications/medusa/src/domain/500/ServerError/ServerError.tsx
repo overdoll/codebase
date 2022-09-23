@@ -1,4 +1,4 @@
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { PageWrapper } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'

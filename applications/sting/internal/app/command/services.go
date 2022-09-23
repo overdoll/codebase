@@ -2,10 +2,8 @@ package command
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/applications/sting/internal/domain/resource_options"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 )
 
 type EvaService interface {
@@ -13,9 +11,8 @@ type EvaService interface {
 }
 
 type LoaderService interface {
-	CopyResourceIntoImage(ctx context.Context, options *resource_options.ResourceOptions) (*post.NewResource, error)
-	CopyResourcesAndApplyPixelateFilter(ctx context.Context, itemId string, resourceIds []string, pixelate int, private bool, token string) ([]*post.NewResource, error)
-	CreateOrGetResourcesFromUploads(ctx context.Context, itemId string, resourceIds []string, private bool, token string, onlyImages bool, width uint64, height uint64) ([]*resource.Resource, error)
-	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
-	ReprocessResources(ctx context.Context, itemId string, resourceIds []string, width uint64, height uint64) error
+	ProcessMediaFromUploads(ctx context.Context, uploadIds []string, link *media.Link) ([]*media.Media, error)
+	GenerateImageFromMedia(ctx context.Context, sources []*media.Media, link *media.Link, pixelate *int64) ([]*media.Media, error)
+	CancelMediaProcessing(ctx context.Context, media []*media.Media) error
+	ConvertResourcesToMedia(ctx context.Context, sourceId string, legacyMedia []*media.Media) ([]*media.Media, error)
 }

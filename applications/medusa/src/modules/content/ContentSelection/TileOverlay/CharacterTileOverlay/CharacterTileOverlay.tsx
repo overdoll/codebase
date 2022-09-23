@@ -1,8 +1,8 @@
-import { Stack, Text } from '@chakra-ui/react'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
+import { Box, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CharacterTileOverlayFragment$key } from '@//:artifacts/CharacterTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
+import CharacterBanner from '../../../PageLayout/Display/fragments/Banner/CharacterBanner/CharacterBanner'
 
 interface Props {
   query: CharacterTileOverlayFragment$key
@@ -10,7 +10,6 @@ interface Props {
 
 const Fragment = graphql`
   fragment CharacterTileOverlayFragment on Character {
-    id
     name
     series {
       title
@@ -18,9 +17,7 @@ const Fragment = graphql`
     club {
       name
     }
-    banner {
-      ...ResourceItemFragment
-    }
+    ...CharacterBannerFragment
   }
 `
 
@@ -30,14 +27,16 @@ export default function CharacterTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay backdrop={
-      <ResourceItem
-        showBorder
-        seed={data.id}
-        query={data.banner}
-      />
-    }
-    >
+    <TileOverlay backdrop={<CharacterBanner characterQuery={data} />}>
+      {data.club != null && (
+        <Flex position='absolute' p={2} right={0} bottom={0} justify='flex-end'>
+          <Box bg='teal.300' borderRadius='xl' px={2} py={1}>
+            <Heading color='gray.00' fontSize='sm'>
+              OC
+            </Heading>
+          </Box>
+        </Flex>
+      )}
       <Stack px={1} py={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
           fontSize={{

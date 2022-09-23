@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e5cfdb1c7387e846f258ea2f2cc15883>>
- * @relayHash bd35b9385eac506b2ac4b3b1ae744f15
+ * @generated SignedSource<<12e9c10e444c261eab4c99a3071168fc>>
+ * @relayHash 0dc33f403b642460e4e18274d1caea66
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID bd35b9385eac506b2ac4b3b1ae744f15
+// @relayRequestID 0dc33f403b642460e4e18274d1caea66
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdatePostCategoriesInput = {
   categoryIds: ReadonlyArray<string>;
   id: string;
@@ -24,13 +23,6 @@ export type UpdateCategoryButtonMutation$data = {
   readonly updatePostCategories: {
     readonly post: {
       readonly categories: ReadonlyArray<{
-        readonly banner: {
-          readonly type: ResourceType;
-          readonly urls: ReadonlyArray<{
-            readonly mimeType: string;
-            readonly url: string;
-          }>;
-        } | null;
         readonly id: string;
         readonly slug: string;
         readonly title: string;
@@ -52,115 +44,58 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "title",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "UpdateCategoryButtonMutation",
+v2 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "UpdatePostCategoriesPayload",
+    "kind": "LinkedField",
+    "name": "updatePostCategories",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "UpdatePostCategoriesPayload",
+        "args": null,
+        "concreteType": "Post",
         "kind": "LinkedField",
-        "name": "updatePostCategories",
+        "name": "post",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Post",
+            "concreteType": "Category",
             "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
+            "name": "categories",
+            "plural": true,
             "selections": [
-              (v2/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "categories",
-                "plural": true,
-                "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/),
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "banner",
-                    "plural": false,
-                    "selections": [
-                      (v5/*: any*/),
-                      (v6/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
+                "kind": "ScalarField",
+                "name": "title",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "slug",
                 "storageKey": null
               }
             ],
@@ -170,6 +105,16 @@ return {
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "UpdateCategoryButtonMutation",
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -178,62 +123,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "UpdateCategoryButtonMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "UpdatePostCategoriesPayload",
-        "kind": "LinkedField",
-        "name": "updatePostCategories",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "categories",
-                "plural": true,
-                "selections": [
-                  (v2/*: any*/),
-                  (v3/*: any*/),
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "banner",
-                    "plural": false,
-                    "selections": [
-                      (v5/*: any*/),
-                      (v6/*: any*/),
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "bd35b9385eac506b2ac4b3b1ae744f15",
+    "id": "0dc33f403b642460e4e18274d1caea66",
     "metadata": {},
     "name": "UpdateCategoryButtonMutation",
     "operationKind": "mutation",
@@ -242,6 +135,6 @@ return {
 };
 })();
 
-(node as any).hash = "6dc4fbd6e490f1b4168493cc8dc1b10f";
+(node as any).hash = "c560d537f2373909ffca828e266d9714";
 
 export default node;

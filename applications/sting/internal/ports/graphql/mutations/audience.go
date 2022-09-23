@@ -69,31 +69,6 @@ func (r *MutationResolver) UpdateAudienceTitle(ctx context.Context, input types.
 	}, err
 }
 
-func (r *MutationResolver) UpdateAudienceThumbnail(ctx context.Context, input types.UpdateAudienceThumbnailInput) (*types.UpdateAudienceThumbnailPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	audience, err := r.App.Commands.UpdateAudienceThumbnail.
-		Handle(
-			ctx,
-			command.UpdateAudienceThumbnail{
-				Principal:  principal.FromContext(ctx),
-				AudienceId: input.ID.GetID(),
-				Thumbnail:  input.Thumbnail,
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.UpdateAudienceThumbnailPayload{
-		Audience: types.MarshalAudienceToGraphQL(ctx, audience),
-	}, err
-}
-
 func (r *MutationResolver) UpdateAudienceBanner(ctx context.Context, input types.UpdateAudienceBannerInput) (*types.UpdateAudienceBannerPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

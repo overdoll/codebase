@@ -1,7 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { UpdatePaymentMethodButtonFragment$key } from '@//:artifacts/UpdatePaymentMethodButtonFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import {
   Modal,
@@ -11,7 +10,8 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack
+  Stack,
+  useDisclosure
 } from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { MenuItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
@@ -42,7 +42,7 @@ export default function UpdatePaymentMethodButton ({ query }: Props): JSX.Elemen
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   return (
     <>

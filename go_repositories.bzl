@@ -1164,6 +1164,13 @@ def go_repositories():
         sum = "h1:10g/WnoRR+U+XXHWKBHeNy/+tZmM2kcAVGLOsz+yaDA=",
         version = "v0.0.1",
     )
+    go_repository(
+        name = "com_github_jellydator_ttlcache_v3",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/jellydator/ttlcache/v3",
+        sum = "h1:zmFhqrB/4sKiEiJHhtseJsNRE32IMVmJSs4++4gaQO4=",
+        version = "v3.0.0",
+    )
 
     go_repository(
         name = "com_github_jmespath_go_jmespath",

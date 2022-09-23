@@ -1,8 +1,8 @@
 import { Flex, Text } from '@chakra-ui/react'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { AudienceTileOverlayFragment$key } from '@//:artifacts/AudienceTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
+import AudienceBanner from '../../../PageLayout/Display/fragments/Banner/AudienceBanner/AudienceBanner'
 
 interface Props {
   query: AudienceTileOverlayFragment$key
@@ -10,11 +10,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment AudienceTileOverlayFragment on Audience {
-    id
     title
-    banner {
-      ...ResourceItemFragment
-    }
+    ...AudienceBannerFragment
   }
 `
 
@@ -25,13 +22,7 @@ export default function AudienceTileOverlay ({
 
   return (
     <TileOverlay
-      backdrop={
-        <ResourceItem
-          showBorder
-          seed={data.id}
-          query={data.banner}
-        />
-      }
+      backdrop={<AudienceBanner audienceQuery={data} />}
     >
       <Flex py={2} px={4} w='100%' h='100%' align='center' justify='center'>
         <Text

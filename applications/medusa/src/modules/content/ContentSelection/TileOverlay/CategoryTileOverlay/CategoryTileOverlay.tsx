@@ -1,8 +1,8 @@
 import { Stack, Text } from '@chakra-ui/react'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CategoryTileOverlayFragment$key } from '@//:artifacts/CategoryTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
+import CategoryBanner from '../../../PageLayout/Display/fragments/Banner/CategoryBanner/CategoryBanner'
 
 interface Props {
   query: CategoryTileOverlayFragment$key
@@ -10,11 +10,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment CategoryTileOverlayFragment on Category {
-    id
     title
-    banner {
-      ...ResourceItemFragment
-    }
+    ...CategoryBannerFragment
   }
 `
 
@@ -24,14 +21,7 @@ export default function CategoryTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay backdrop={
-      <ResourceItem
-        showBorder
-        seed={data.id}
-        query={data.banner}
-      />
-    }
-    >
+    <TileOverlay backdrop={<CategoryBanner categoryQuery={data} />}>
       <Stack whiteSpace='pre' p={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
           fontSize={{

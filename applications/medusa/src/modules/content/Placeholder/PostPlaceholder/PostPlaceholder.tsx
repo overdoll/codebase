@@ -17,7 +17,10 @@ export default function PostPlaceholder ({
         alignItems='center'
         justifyContent='center'
         textAlign='center'
-        height='500px'
+        height={{
+          lg: '700px',
+          base: '500px'
+        }}
         {...rest}
       >
         {children}

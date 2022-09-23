@@ -13,15 +13,13 @@ type Application struct {
 }
 
 type Commands struct {
-	TusComposer                        command.TusComposerHandler
-	NewCreateOrGetResourcesFromUploads command.CreateOrGetResourcesFromUploadsHandler
-	DeleteResources                    command.DeleteResourcesHandler
-	CopyResourcesAndApplyFilters       command.CopyResourcesAndApplyFiltersHandler
-	UpdateResourcePrivacy              command.UpdateResourcePrivacyHandler
-	ReprocessResource                  command.ReprocessResourceHandler
+	TusComposer             command.TusComposerHandler
+	ProcessMediaFromUploads command.ProcessMediaFromUploadsHandler
+	CancelMediaProcessing   command.CancelMediaProcessingHandler
+	GenerateImageFromMedia  command.GenerateImageFromMediaHandler
+	ConvertResourcesToMedia command.ConvertResourcesToMediaHandler
 }
 
 type Queries struct {
-	ResourcesByIds        query.ResourcesByIdsHandler
-	ResourceProgressByIds query.ResourceProgressByIdsHandler
+	MediaProgressByIds query.MediaProgressByIdsHandler
 }

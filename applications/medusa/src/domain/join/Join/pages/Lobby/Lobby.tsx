@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { Suspense, useEffect, useRef } from 'react'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
 import type { LobbyFragment$key } from '@//:artifacts/LobbyFragment.graphql'
 import { Trans } from '@lingui/macro'

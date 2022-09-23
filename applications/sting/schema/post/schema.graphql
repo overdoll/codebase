@@ -6,6 +6,15 @@ type PostContent {
   """The resource belonging to this content."""
   resource: Resource!
 
+  """The media belonging to this content."""
+  media: Media!
+
+  """If "viewerCanViewSupporterOnlyContent" is false, will contain the duration of the video, if the media is a video."""
+  supporterOnlyVideoMediaDuration: Int
+
+  """If "viewerCanViewSupporterOnlyContent" is false, will say if the video has audio, if the media is a video."""
+  supporterOnlyVideoMediaHasAudio: Boolean
+
   """
   The resource for the supporter-only content.
 

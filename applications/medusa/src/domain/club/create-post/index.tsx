@@ -1,12 +1,12 @@
-import CreatePost from './CreatePost/CreatePost'
-import PostCreatorQuery from '@//:artifacts/PostCreatorQuery.graphql'
+import RootCreatePost from './RootCreatePost/RootCreatePost'
+import ResultCreatePostQuery from '@//:artifacts/ResultCreatePostQuery.graphql'
 import ClubLayout from '../../../common/components/Layouts/ClubLayout/ClubLayout'
 
-CreatePost.getTranslationProps = async (ctx) => ({
+RootCreatePost.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
-CreatePost.getRelayPreloadProps = (ctx) => {
+RootCreatePost.getRelayPreloadProps = (ctx) => {
   const {
     query: {
       slug,
@@ -17,7 +17,7 @@ CreatePost.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       postCreatorQuery: {
-        params: PostCreatorQuery.params,
+        params: ResultCreatePostQuery.params,
         variables: {
           slug: slug,
           reference: post ?? ''
@@ -27,7 +27,7 @@ CreatePost.getRelayPreloadProps = (ctx) => {
   }
 }
 
-CreatePost.getLayout = (page) => {
+RootCreatePost.getLayout = (page) => {
   return (
     <ClubLayout>
       {page}
@@ -35,4 +35,4 @@ CreatePost.getLayout = (page) => {
   )
 }
 
-export default CreatePost
+export default RootCreatePost

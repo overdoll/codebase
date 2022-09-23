@@ -5,7 +5,10 @@ proto_library(
     name = "v1_proto",
     srcs = ["loader.proto"],
     visibility = ["//visibility:public"],
-    deps = ["//libraries/resource/proto:libraries_proto"],
+    deps = [
+        "//libraries/media/proto:libraries_proto",
+        "@com_google_protobuf//:empty_proto",
+    ],
 )
 
 go_proto_library(
@@ -14,5 +17,5 @@ go_proto_library(
     importpath = "overdoll/applications/loader/proto",
     proto = ":v1_proto",
     visibility = ["//visibility:public"],
-    deps = ["//libraries/resource/proto:libraries_go_proto"],
+    deps = ["//libraries/media/proto:libraries_go_proto"],
 )

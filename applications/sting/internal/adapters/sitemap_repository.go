@@ -432,7 +432,6 @@ func (r PostsCassandraElasticsearchRepository) GenerateSitemap(ctx context.Conte
 	sm := stm.NewSitemap(1)
 	sm.SetDefaultHost(os.Getenv("APP_URL"))
 	sm.SetSitemapsHost(os.Getenv("APP_URL"))
-	//	sm.SetSitemapsHost(os.Getenv("STATIC_RESOURCES_URL"))
 	sm.SetSitemapsPath("/sitemaps")
 	sm.SetFilename("sitemap")
 	sm.SetCompress(false)

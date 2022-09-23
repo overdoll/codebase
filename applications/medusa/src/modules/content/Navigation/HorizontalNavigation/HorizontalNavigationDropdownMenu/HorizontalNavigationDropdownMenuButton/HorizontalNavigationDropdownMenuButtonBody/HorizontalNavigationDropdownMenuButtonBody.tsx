@@ -1,5 +1,5 @@
 import { ButtonProps, Flex, Heading } from '@chakra-ui/react'
-import Icon from '../../../../../PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../../PageLayout/BuildingBlocks/Icon/Icon'
 import { ClickableBox } from '../../../../../PageLayout'
 import { forwardRef, ReactNode } from 'react'
 import { IconType } from '@//:types/components'

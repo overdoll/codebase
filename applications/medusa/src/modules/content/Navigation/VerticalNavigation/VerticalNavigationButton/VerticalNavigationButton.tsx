@@ -11,6 +11,7 @@ interface Props extends LinkProps {
   colorScheme?: string
   buttonType?: 'primary' | 'secondary'
   isExternal?: boolean
+  prefetch?: boolean
 }
 
 export default function VerticalNavigationButton ({
@@ -20,6 +21,7 @@ export default function VerticalNavigationButton ({
   buttonType = 'secondary',
   isExternal = false,
   href,
+  prefetch,
   ...rest
 }: Props): JSX.Element {
   const ButtonProps = {
@@ -34,6 +36,7 @@ export default function VerticalNavigationButton ({
     <NavLink
       passHref
       href={href}
+      prefetch={prefetch === false ? false : undefined}
       {...rest}
     >
       {({

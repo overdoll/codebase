@@ -1,55 +1,31 @@
-import { Suspense } from 'react'
 import type { PreloadedQuery } from 'react-relay/hooks'
 import { useQueryLoader } from 'react-relay/hooks'
 import type {
-  PublicClubCharacterQuery as PublicClubCharacterQueryType
-} from '@//:artifacts/PublicClubCharacterQuery.graphql'
-import PublicClubCharacterQuery from '@//:artifacts/PublicClubCharacterQuery.graphql'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { SkeletonStack } from '@//:modules/content/Placeholder'
-import { useRouter } from 'next/router'
+  ResultPublicClubCharacterQuery as ResultPublicClubCharacterQueryType
+} from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
+import ResultPublicClubCharacterQuery from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
 import { PageProps } from '@//:types/app'
-import PublicClubCharacter from './PublicClubCharacter/PublicClubCharacter'
-import useSearchSortArguments
-  from '../../../../common/components/PageHeader/SearchButton/support/useSearchSortArguments'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import { PageContainer } from '@//:modules/content/PageLayout'
+import DisposePublicClubCharacter from './DisposePublicClubCharacter/DisposePublicClubCharacter'
 
 interface Props {
   queryRefs: {
-    publicClubCharacterQuery: PreloadedQuery<PublicClubCharacterQueryType>
+    publicClubCharacterQuery: PreloadedQuery<ResultPublicClubCharacterQueryType>
   }
 }
 
 const RootPublicClubCharacter: PageProps<Props> = (props: Props) => {
-  const [queryRef, loadQuery] = useQueryLoader<PublicClubCharacterQueryType>(
-    PublicClubCharacterQuery,
-    props.queryRefs.publicClubCharacterQuery
+  const { queryRefs: { publicClubCharacterQuery } } = props
+
+  const params = useQueryLoader<ResultPublicClubCharacterQueryType>(
+    ResultPublicClubCharacterQuery,
+    publicClubCharacterQuery
   )
 
-  const {
-    query: {
-      slug,
-      characterSlug
-    }
-  } = useRouter()
-
-  useSearchSortArguments((params) => loadQuery(params))
-
   return (
-    <>
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({
-          clubSlug: slug as string,
-          characterSlug: characterSlug as string,
-          sortBy: 'ALGORITHM'
-        })}
-        >
-          <Suspense fallback={<SkeletonStack />}>
-            <PublicClubCharacter query={queryRef as PreloadedQuery<PublicClubCharacterQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
-    </>
+    <PageContainer>
+      <DisposePublicClubCharacter params={params} />
+    </PageContainer>
   )
 }
 

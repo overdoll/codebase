@@ -8,6 +8,7 @@ interface Props extends ButtonProps {
   children: ReactNode
   href: string | UrlObject
   isExternal?: boolean
+  prefetch?: boolean
 }
 
 const PagePanelWrap = forwardRef(({
@@ -15,6 +16,7 @@ const PagePanelWrap = forwardRef(({
   children,
   isExternal = false,
   isDisabled,
+  prefetch,
   ...rest
 }: Props, forwardRef): JSX.Element => {
   if (isExternal) {
@@ -31,6 +33,7 @@ const PagePanelWrap = forwardRef(({
     <Link
       href={href}
       isDisabled={isDisabled}
+      prefetch={prefetch === false ? false : undefined}
       passHref
     >
       <Box as='a'>

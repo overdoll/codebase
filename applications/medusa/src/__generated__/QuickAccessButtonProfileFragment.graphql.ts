@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<53b17798e5555687eac59d50b554f0a7>>
+ * @generated SignedSource<<0bda673f85a161a6beb45de23fcea30e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type QuickAccessButtonProfileFragment$data = {
-  readonly avatar: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-  } | null;
-  readonly id: string;
   readonly username: string;
+  readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
   readonly " $fragmentType": "QuickAccessButtonProfileFragment";
 };
 export type QuickAccessButtonProfileFragment$key = {
@@ -33,37 +30,19 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "username",
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "avatar",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceIconFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "AccountIconFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "3def39e331459c444453850d055afcb7";
+(node as any).hash = "afdbf2d4918e5f852825d67496fb6aa6";
 
 export default node;

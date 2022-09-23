@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fee5053acbf302e0a2d57d84bf3b1233>>
- * @relayHash 3a227144f83348a55b4188f171276b52
+ * @generated SignedSource<<18b888f5e85058309a3044263115ec8a>>
+ * @relayHash 319751929fd50edc809ff737bdcf1d00
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3a227144f83348a55b4188f171276b52
+// @relayRequestID 319751929fd50edc809ff737bdcf1d00
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -28,9 +28,6 @@ export type CancelSubscriptionButtonMutation$data = {
       readonly club?: {
         readonly name: string;
         readonly slug: string;
-        readonly thumbnail: {
-          readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-        } | null;
       };
       readonly endDate?: any;
       readonly id?: string;
@@ -124,13 +121,6 @@ v11 = {
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -174,23 +164,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v10/*: any*/),
-                      (v11/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Resource",
-                        "kind": "LinkedField",
-                        "name": "thumbnail",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "args": null,
-                            "kind": "FragmentSpread",
-                            "name": "ResourceIconFragment"
-                          }
-                        ],
-                        "storageKey": null
-                      }
+                      (v11/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -255,77 +229,6 @@ return {
                     "selections": [
                       (v10/*: any*/),
                       (v11/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": "Resource",
-                        "kind": "LinkedField",
-                        "name": "thumbnail",
-                        "plural": false,
-                        "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "preview",
-                            "storageKey": null
-                          },
-                          (v3/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "urls",
-                            "plural": true,
-                            "selections": [
-                              (v12/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "mimeType",
-                                "storageKey": null
-                              }
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "width",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "height",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ResourceUrl",
-                            "kind": "LinkedField",
-                            "name": "videoThumbnail",
-                            "plural": false,
-                            "selections": [
-                              (v12/*: any*/)
-                            ],
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "type",
-                            "storageKey": null
-                          }
-                        ],
-                        "storageKey": null
-                      },
                       (v3/*: any*/)
                     ],
                     "storageKey": null
@@ -349,7 +252,7 @@ return {
     ]
   },
   "params": {
-    "id": "3a227144f83348a55b4188f171276b52",
+    "id": "319751929fd50edc809ff737bdcf1d00",
     "metadata": {},
     "name": "CancelSubscriptionButtonMutation",
     "operationKind": "mutation",
@@ -358,6 +261,6 @@ return {
 };
 })();
 
-(node as any).hash = "27673c747eb7f63adbf500f0accd0dfe";
+(node as any).hash = "d21d1cae69be514c46b089ba2f42122f";
 
 export default node;

@@ -116,3 +116,148 @@ type Resource {
   """
   failed: Boolean!
 }
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The width of the image."""
+  width: Int!
+
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+}
+
+"""
+All variants available for an image.
+"""
+type ImageMediaVariants {
+  """50x50 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+  """100x100 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+  """150x150 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+  """680px width or height resize."""
+  small: ImageMediaAccess!
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+  """720px width or height resize."""
+  banner: ImageMediaAccess!
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
+}
+
+type ColorPalette {
+  percent: Float!
+  red: Int!
+  green: Int!
+  blue: Int!
+}
+
+extend type MediaProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
+type ImageMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+}
+
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The width."""
+  width: Int!
+  """The height."""
+  height: Int!
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
+}
+
+enum MediaDeviceType {
+  MOBILE
+  DESKTOP
+  UNIVERSAL
+}
+
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+}
+
+union Media = VideoMedia | ImageMedia | RawMedia

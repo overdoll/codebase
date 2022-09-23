@@ -8,13 +8,13 @@ export default function SiteLinkLogo (): JSX.Element {
     <Box h={8}>
       <LinkTile href='/'>
         <HStack spacing={1} align='center' justify='center'>
-          <Icon icon={OverdollLogo} fill='primary.400' w={8} h={8} />
+          <Icon icon={OverdollLogo} fill='orange.500' w={8} h={8} />
           <Flex direction='column' align='center'>
-            <Heading fontSize='sm' color='primary.400'>
+            <Heading fontSize='sm' color='orange.500'>
               overdoll
             </Heading>
             <Text lineHeight={1} fontSize='2xs' color='orange.300'>
-              beta
+              halloween edition
             </Text>
           </Flex>
         </HStack>

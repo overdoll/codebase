@@ -10,6 +10,7 @@ import (
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 	"strings"
 	"time"
@@ -23,41 +24,36 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, post *post.Post) error {
+func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, post *post.Post, media *media.Media) error {
 
-	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostPixelatedResourcesSignalChannel, true); err != nil {
-
-		if strings.Contains(err.Error(), "workflow execution already completed") {
+	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostPixelatedMediaSignalChannel, &workflows.PixelatedPostMediaFinished{
+		MediaId: media.ID(),
+	}); err != nil {
+		if strings.Contains(err.Error(), "Workflow execution already finished successfully") {
 			return nil
 		}
-
 		return errors.Wrap(err, "failed to signal submit post workflow")
 	}
 
 	return nil
 }
 
-func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context, post *post.Post, resourceId string, failed bool) error {
+func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context, post *post.Post, media *media.Media) error {
 
-	options := client.StartWorkflowOptions{
-		TaskQueue:             viper.GetString("temporal.queue"),
-		ID:                    "sting.SubmitPost_" + post.ID(),
-		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
-	}
+	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostMediaFinishedProcessingSignalChannel, &workflows.SubmitPostMediaFinished{
+		MediaId: media.ID(),
+		Failed:  media.IsFailed(),
+	}); err != nil {
 
-	_, err := r.client.SignalWithStartWorkflow(ctx, "sting.SubmitPost_"+post.ID(), workflows.SubmitPostResourcesFinishedProcessingSignalChannel, &workflows.SubmitPostResourceFinished{
-		ResourceId: resourceId,
-		Failed:     failed,
-	}, options, workflows.SubmitPost, workflows.SubmitPostInput{
-		PostId:   post.ID(),
-		PostDate: nil,
-	})
-
-	if err != nil {
-		if strings.Contains(err.Error(), "workflow execution already completed") {
+		// ignore not found
+		var notFound *serviceerror.NotFound
+		if errors.As(err, &notFound) {
 			return nil
 		}
 
+		if strings.Contains(err.Error(), "Workflow execution already finished successfully") {
+			return nil
+		}
 		return errors.Wrap(err, "failed to signal submit post workflow")
 	}
 
@@ -355,9 +351,9 @@ func (r EventTemporalRepository) SubmitPost(ctx context.Context, requester *prin
 		WorkflowIDReusePolicy: enums.WORKFLOW_ID_REUSE_POLICY_ALLOW_DUPLICATE_FAILED_ONLY,
 	}
 
-	_, err := r.client.SignalWithStartWorkflow(ctx, "sting.SubmitPost_"+pst.ID(), workflows.SubmitPostSignalChannel, submitTime, options, workflows.SubmitPost, workflows.SubmitPostInput{
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SubmitPost, workflows.SubmitPostInput{
 		PostId:   pst.ID(),
-		PostDate: &submitTime,
+		PostDate: submitTime,
 	})
 
 	if err != nil {

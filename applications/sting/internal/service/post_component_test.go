@@ -10,12 +10,26 @@ import (
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
 	"time"
 )
+
+// Represents content for a post.
+type PostContentModified struct {
+	ID    relay.ID
+	Media struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
+	SupporterOnlyVideoMediaDuration   *int
+	SupporterOnlyVideoMediaHasAudio   *bool
+	IsSupporterOnly                   bool
+	ViewerCanViewSupporterOnlyContent bool
+}
 
 type PostModified struct {
 	ID          relay.ID
@@ -28,7 +42,7 @@ type PostModified struct {
 	Characters          []CharacterModified
 	Audience            *AudienceModified
 	Categories          []CategoryModified
-	Content             []types.PostContent
+	Content             []PostContentModified
 	SupporterOnlyStatus types.SupporterOnlyStatus
 }
 
@@ -385,20 +399,20 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostResourcesFinishedProcessingSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostMediaFinishedProcessingSignalChannel, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostResourcesFinishedProcessingSignalChannel, args[3])
+				env.SignalWorkflow(workflows.SubmitPostMediaFinishedProcessingSignalChannel, args[4])
 			},
 		).
 		Return(nil, nil).
 		Twice()
 
 	// signal workflow that resources were processed
-	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedResourcesSignalChannel, true).
+	application.TemporalClient.On("SignalWorkflow", mock.Anything, mock.Anything, "", workflows.SubmitPostPixelatedMediaSignalChannel, mock.Anything).
 		Run(
 			func(args mock.Arguments) {
-				env.SignalWorkflow(workflows.SubmitPostPixelatedResourcesSignalChannel, args[4])
+				env.SignalWorkflow(workflows.SubmitPostPixelatedMediaSignalChannel, args[4])
 			},
 		).
 		Return(nil).
@@ -413,60 +427,6 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 		Return(nil).
 		Once()
 
-	application.TemporalClient.On("SignalWithStartWorkflow", mock.Anything, mock.Anything, workflows.SubmitPostSignalChannel, mock.Anything, mock.Anything, mock.Anything, mock.Anything).
-		Run(
-			func(args mock.Arguments) {
-				env.RegisterDelayedCallback(func() {
-
-					env.SignalWorkflow(workflows.SubmitPostSignalChannel, args[3])
-
-					for v, id := range resourceIds {
-						if v == 2 {
-							break
-						}
-
-						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-							Id:          id,
-							ItemId:      newPostReference,
-							Type:        proto.ResourceType_IMAGE,
-							Processed:   true,
-							ProcessedId: uuid.New().String(),
-							MimeTypes:   []string{"image/png"},
-							Private:     true,
-							Width:       100,
-							Height:      100,
-							Token:       "POST",
-						}}})
-						require.NoError(t, err, "no error updating resources")
-					}
-
-					env.RegisterDelayedCallback(func() {
-						pst := getPostFromAdapter(t, postId)
-						_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{
-							{
-								Id:          pst.Content()[1].ResourceHidden().ID(),
-								ItemId:      postId,
-								Processed:   true,
-								Type:        proto.ResourceType_IMAGE,
-								ProcessedId: uuid.New().String(),
-								Private:     false,
-								Width:       100,
-								Height:      100,
-								Token:       "POST_PRIVATE_CONTENT",
-							},
-						}})
-
-						require.NoError(t, err, "no error updating resource")
-					}, time.Second*2)
-
-				}, time.Second)
-
-				workflowExecution.FindAndExecuteWorkflow(t, env)
-			},
-		).
-		Return(nil, nil).
-		Once()
-
 	// finally, submit the post for review
 	var submitPost SubmitPost
 
@@ -475,6 +435,67 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 			ID: newPostId,
 		},
 	})
+
+	env.RegisterDelayedCallback(func() {
+
+		for v, id := range resourceIds {
+			if v == 2 {
+				break
+			}
+
+			_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+				Id: id,
+				Link: &proto.MediaLink{
+					Id:   newPostReference,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+					{
+						Width:  0,
+						Height: 0,
+					},
+				}},
+				State: &proto.MediaState{
+					Processed: true,
+					Failed:    false,
+				},
+			}})
+
+			require.NoError(t, err, "no error updating resources")
+		}
+
+		env.RegisterDelayedCallback(func() {
+			pst := getPostFromAdapter(t, postId)
+
+			_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+				Id: pst.Content()[1].MediaHidden().ID(),
+				Link: &proto.MediaLink{
+					Id:   postId,
+					Type: proto.MediaLinkType_POST_CONTENT,
+				},
+				ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+					{
+						Width:  0,
+						Height: 0,
+					},
+				}},
+				State: &proto.MediaState{
+					Processed: true,
+					Failed:    false,
+				},
+				Source: &proto.MediaSource{
+					SourceMediaId: pst.Content()[1].Media().ID(), Link: &proto.MediaLink{
+						Id:   newPostReference,
+						Type: proto.MediaLinkType_POST_CONTENT,
+					}},
+			}})
+
+			require.NoError(t, err, "no error updating resource")
+		}, time.Second*2)
+
+	}, time.Second)
+
+	workflowExecution.FindAndExecuteWorkflow(t, env)
 
 	require.NoError(t, err)
 
@@ -513,23 +534,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, post.Post.Content[0].ViewerCanViewSupporterOnlyContent, "can view first content because its free")
 	require.False(t, post.Post.Content[0].IsSupporterOnly, "can view content since its marked as non supporter")
 
-	require.Len(t, post.Post.Content[0].Resource.Urls, 1, "should have 1 url")
-	for _, urls := range post.Post.Content[0].Resource.Urls {
-		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
-	}
-
 	require.True(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "can view supporter only because they are a supporter")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
-	require.Nil(t, post.Post.Content[1].SupporterOnlyResource, "supporter only resource is nil")
-
-	require.Len(t, post.Post.Content[1].Resource.Urls, 1, "should have 1 url")
-	for _, urls := range post.Post.Content[1].Resource.Urls {
-		require.Contains(t, urls.URL, "Key-Pair-Id", "should be private content")
-	}
+	require.Empty(t, post.Post.Content[1].SupporterOnlyVideoMediaDuration, "supporter only resource is nil")
 
 	require.Equal(t, description, post.Post.Description, "should have the correct post description")
 
-	originalId := post.Post.Content[1].Resource.ID
+	originalId := post.Post.Content[1].Media.ImageMedia.Id
 
 	// make a random client so we can test post permissions
 	client = getGraphqlClientWithAuthenticatedAccount(t, testAccount)
@@ -541,13 +552,13 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 
 	require.False(t, post.Post.Content[1].ViewerCanViewSupporterOnlyContent, "cant view first content because its supporter only")
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
-	require.NotNil(t, post.Post.Content[1].SupporterOnlyResource, "can view supporter only resource")
+	require.NotEmpty(t, post.Post.Content[1].SupporterOnlyVideoMediaHasAudio, "can view supporter only resource")
 
-	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Resource.ID.GetID())
+	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Media.ImageMedia.Id.GetID())
 	resourceId := relay.ID(sDec).GetID()
 
 	require.NotEmpty(t, resourceId, "should not be empty")
-	require.NotEqual(t, originalId.GetID(), post.Post.Content[1].Resource.ID.GetID(), "should show a different id")
+	require.NotEqual(t, originalId.GetID(), post.Post.Content[1].Media.ImageMedia.Id.GetID(), "should show a different id")
 
 	client = getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
 
@@ -673,7 +684,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	clubViewer := getClub(t, client, clb.Slug())
 	require.True(t, clubViewer.Club.CanSupport, "should be able to support now that the club has created a new post")
 	require.NotNil(t, clubViewer.Club.NextSupporterPostTime, "should have a next supporter post time now")
-	require.NotNil(t, clubViewer.Club.Banner, "banner should now be present after creating a post")
+	require.NotNil(t, clubViewer.Club.BannerMedia, "banner should now be present after creating a post")
 	require.True(t, clubViewer.Club.CanCreateSupporterOnlyPosts, "should be able to create supporter only posts")
 
 	var disableSupporterOnlyPosts DisableClubSupporterOnlyPosts

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a9b85d1690795ebbbe8002996f40e13f>>
+ * @generated SignedSource<<71cde130b43cb57dd90577cd21ba7f23>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,9 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type UploadContentAddFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly resource: {
-      readonly id: string;
-    };
   }>;
   readonly id: string;
   readonly " $fragmentType": "UploadContentAddFragment";
@@ -48,19 +45,7 @@ return {
       "name": "content",
       "plural": true,
       "selections": [
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            (v0/*: any*/)
-          ],
-          "storageKey": null
-        }
+        (v0/*: any*/)
       ],
       "storageKey": null
     }
@@ -70,6 +55,6 @@ return {
 };
 })();
 
-(node as any).hash = "969b50aa541e70081583a0f764f594ac";
+(node as any).hash = "146dfe862b90f2d7c7d6fe74a05e90b4";
 
 export default node;

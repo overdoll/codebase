@@ -2,12 +2,12 @@ package event
 
 import (
 	"context"
-	"overdoll/applications/loader/internal/domain/resource"
+	"overdoll/libraries/media"
 )
 
 type Repository interface {
-	ProcessResourcesWithFiltersFromCopy(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config, filters *resource.ImageFilters) error
-	ProcessResources(ctx context.Context, itemId string, resourceIds []string, source string, config *resource.Config) error
-	DeleteResources(ctx context.Context, itemId string, resourceIds []string) error
-	SendProcessResourcesHeartbeat(ctx context.Context, token []byte, heartbeat int64) error
+	SendProcessMediaHeartbeat(ctx context.Context, token []byte, heartbeat int64) error
+	CancelMediaProcessing(ctx context.Context, media *media.Media) error
+	ProcessMediaForUpload(ctx context.Context, media *media.Media, source string) error
+	GenerateImageFromMedia(ctx context.Context, media *media.Media, newMedia *media.Media, source string, pixelate *int) error
 }

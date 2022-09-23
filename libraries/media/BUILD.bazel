@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "media",
+    srcs = [
+        "color_palette.go",
+        "image_media_access.go",
+        "marshal.go",
+        "media.go",
+        "media_link.go",
+        "serialize.go",
+        "video_container.go",
+    ],
+    importpath = "overdoll/libraries/media",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//libraries/errors",
+        "//libraries/errors/domainerror",
+        "//libraries/media/proto:libraries_go_proto",
+        "//libraries/support",
+        "@com_github_aws_aws_sdk_go//service/cloudfront/sign",
+        "@com_github_golang_protobuf//proto:go_default_library",
+        "@com_github_jellydator_ttlcache_v3//:ttlcache",
+        "@org_uber_go_zap//:zap",
+    ],
+)

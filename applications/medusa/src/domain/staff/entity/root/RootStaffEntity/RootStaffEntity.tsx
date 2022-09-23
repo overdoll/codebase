@@ -40,7 +40,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/character/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/character/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -51,7 +51,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/character/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/character/search'>
                     <PagePanelIcon icon={CharacterIdentifier} colorScheme='purple' />
                     <PagePanelText
                       title={
@@ -73,7 +73,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/series/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/series/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -84,7 +84,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/series/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/series/search'>
                     <PagePanelIcon icon={SeriesIdentifier} colorScheme='purple' />
                     <PagePanelText
                       title={
@@ -106,7 +106,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/category/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/category/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -117,7 +117,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/category/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/category/search'>
                     <PagePanelIcon icon={CategoryIdentifier} colorScheme='purple' />
                     <PagePanelText
                       title={
@@ -139,7 +139,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/topic/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/topic/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -150,7 +150,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/topic/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/topic/search'>
                     <PagePanelIcon icon={TopicIdentifier} colorScheme='purple' />
                     <PagePanelText
                       title={
@@ -172,7 +172,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/audience/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/audience/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -183,7 +183,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/audience/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/audience/search'>
                     <PagePanelIcon icon={ClubPeopleGroup} colorScheme='purple' />
                     <PagePanelText
                       title={
@@ -205,7 +205,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/rule/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/rule/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -216,7 +216,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/rule/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/rule/search'>
                     <PagePanelIcon icon={FlagReport} colorScheme='purple' />
                     <PagePanelText
                       title={
@@ -238,7 +238,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                   </Trans>
                 </PageSectionTitle>
                 <Stack spacing={2}>
-                  <PagePanelWrap href='/staff/entity/cancellation-reason/create'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/cancellation-reason/create'>
                     <PagePanelIcon icon={AddPlus} colorScheme='teal' />
                     <PagePanelText
                       title={
@@ -249,7 +249,7 @@ const RootStaffEntity: PageProps<{}> = () => {
                       )}
                     />
                   </PagePanelWrap>
-                  <PagePanelWrap href='/staff/entity/cancellation-reason/search'>
+                  <PagePanelWrap prefetch={false} href='/staff/entity/cancellation-reason/search'>
                     <PagePanelIcon icon={FlagReport} colorScheme='purple' />
                     <PagePanelText
                       title={

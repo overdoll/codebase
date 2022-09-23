@@ -7,6 +7,7 @@ go_library(
         "dataloader.go",
         "date.go",
         "locale.go",
+        "media.go",
         "new.go",
         "resource.go",
         "uri.go",
@@ -16,8 +17,9 @@ go_library(
     deps = [
         "//libraries/errors/apperror",
         "//libraries/graphql/relay",
+        "//libraries/media",
+        "//libraries/media/proto:libraries_go_proto",
         "//libraries/money",
-        "//libraries/resource",
         "//libraries/sentry_support",
         "@com_github_99designs_gqlgen//graphql",
         "@com_github_99designs_gqlgen//graphql/handler",

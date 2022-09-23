@@ -3,7 +3,7 @@ import { useQueryParam } from 'use-query-params'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import { WarningTriangle } from '@//:assets/icons'
-import Icon from '../../../../modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 
 export default function SafeModal (): JSX.Element {
   const [safe, setSafe] = useQueryParam<boolean | null | undefined>('safe')

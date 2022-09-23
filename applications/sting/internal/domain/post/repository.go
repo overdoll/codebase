@@ -2,10 +2,10 @@ package post
 
 import (
 	"context"
+	"overdoll/libraries/media"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 )
 
 type Repository interface {
@@ -19,8 +19,8 @@ type Repository interface {
 
 	GetPostWithRandomSeed(ctx context.Context, passport *passport.Passport, seed int64, audienceIds []string) (*Post, error)
 
-	GetFirstTopPostWithoutOccupiedResources(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*Post, error)
-	AddPostOccupiedResource(ctx context.Context, post *Post, resource *resource.Resource) error
+	GetFirstTopPostWithoutOccupiedMedias(ctx context.Context, characterId, categoryId, seriesId, audienceId *string) (*Post, error)
+	AddPostOccupiedMedia(ctx context.Context, post *Post, resource *media.Media) error
 
 	CreatePostLike(ctx context.Context, like *Like) error
 	DeletePostLike(ctx context.Context, postId string, accountId string) error
@@ -37,8 +37,13 @@ type Repository interface {
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
-	UpdatePostContentOperatorResource(ctx context.Context, id string, resources []*resource.Resource) (*Post, error)
+	UpdatePostContentOperatorMedia(ctx context.Context, id string, medias []*media.Media) (*Post, error)
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
+
+	ScanPosts(ctx context.Context, clubId, postId string, callback func(post *Post) error) error
+	ScanCharacters(ctx context.Context, characterId string, callback func(character *Character) error) error
+	ScanSeries(ctx context.Context, characterId string, callback func(character *Series) error) error
+	ScanCategories(ctx context.Context, categoryId string, callback func(category *Category) error) error
 
 	DeletePost(ctx context.Context, postId string) error
 
@@ -49,8 +54,6 @@ type Repository interface {
 	GetCharacterIdsFromSlugs(ctx context.Context, characterSlugs, seriesIds []string) ([]string, error)
 
 	UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
-	UpdateCharacterThumbnailOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
-	UpdateCharacterThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterSlug(ctx context.Context, id, slug string, keepOld bool) error
 
@@ -64,8 +67,6 @@ type Repository interface {
 	GetAudienceIdsFromSlugs(ctx context.Context, audienceSlugs []string) ([]string, error)
 
 	UpdateAudienceBannerOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
-	UpdateAudienceThumbnailOperator(ctx context.Context, id string, updateFn func(audience *Audience) error) (*Audience, error)
-	UpdateAudienceThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceBanner(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
 	UpdateAudienceIsStandard(ctx context.Context, requester *principal.Principal, id string, updateFn func(audience *Audience) error) (*Audience, error)
@@ -81,8 +82,6 @@ type Repository interface {
 	GetSeriesIdsFromSlugs(ctx context.Context, seriesIds []string) ([]string, error)
 
 	UpdateSeriesBannerOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
-	UpdateSeriesThumbnailOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
-	UpdateSeriesThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesSlug(ctx context.Context, id, slug string, keepOld bool) error
 
@@ -107,8 +106,6 @@ type Repository interface {
 
 	CreateCategory(ctx context.Context, requester *principal.Principal, category *Category) error
 	UpdateCategoryBannerOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
-	UpdateCategoryThumbnailOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
-	UpdateCategoryThumbnail(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTopic(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryAlternativeTitles(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)

@@ -3,7 +3,7 @@ export const TITLE_SEARCH_PREFIX = 'Search'
 export const TITLE_SUFFIX = 'overdoll'
 export const SEARCH_TITLE_SUFFIX = 'overdoll.com'
 
-export const DESCRIPTION_FEATURES = 'rule34, hentai, furry and 3d NSFW porn videos and images'
+export const DESCRIPTION_FEATURES = 'rule34, hentai, furry and 3d nsfw porn videos and images'
 export const DESCRIPTION_PREFIX = 'See and watch'
 export const DESCRIPTION_CONTENT_TYPES = 'Get access to free and exclusive videos and images'
 export const DESCRIPTION_CONTENT_DISCOVER = 'Discover the growing categories of free and exclusive high quality images and videos'

@@ -1,8 +1,7 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, useDisclosure } from '@chakra-ui/react'
 import Button from '@//:modules/form/Button/Button'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { SuspendedClubBannerFragment$key } from '@//:artifacts/SuspendedClubBannerFragment.graphql'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import { Trans } from '@lingui/macro'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents/Alert/Alert'
 import SuspendedClubModal from './SuspendedClubModal/SuspendedClubModal'
@@ -24,7 +23,7 @@ export default function SuspendedClubBanner ({ query }: Props): JSX.Element {
     isOpen,
     onToggle,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   return (
     <Box>

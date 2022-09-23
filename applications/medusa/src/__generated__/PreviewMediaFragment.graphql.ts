@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7a966fc782a3edbc76a14e951e7d24ef>>
+ * @generated SignedSource<<10e4965ce2cb8e7dcbbcbdcf585807ba>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,19 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PreviewMediaFragment$data = {
-  readonly type: ResourceType;
-  readonly " $fragmentSpreads": FragmentRefs<"ControlledVideoFragment" | "ImageSnippetFragment">;
+  readonly __typename: "ImageMedia";
+  readonly " $fragmentSpreads": FragmentRefs<"PreviewImageMediaFragment">;
+  readonly " $fragmentType": "PreviewMediaFragment";
+} | {
+  readonly __typename: "VideoMedia";
+  readonly " $fragmentSpreads": FragmentRefs<"PreviewVideoMediaFragment">;
+  readonly " $fragmentType": "PreviewMediaFragment";
+} | {
+  // This will never be '%other', but we need some
+  // value in case none of the concrete values match.
+  readonly __typename: "%other";
   readonly " $fragmentType": "PreviewMediaFragment";
 };
 export type PreviewMediaFragment$key = {
@@ -31,24 +39,38 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "type",
+      "name": "__typename",
       "storageKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ImageSnippetFragment"
+      "kind": "InlineFragment",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PreviewImageMediaFragment"
+        }
+      ],
+      "type": "ImageMedia",
+      "abstractKey": null
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ControlledVideoFragment"
+      "kind": "InlineFragment",
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "PreviewVideoMediaFragment"
+        }
+      ],
+      "type": "VideoMedia",
+      "abstractKey": null
     }
   ],
-  "type": "Resource",
-  "abstractKey": null
+  "type": "Media",
+  "abstractKey": "__isMedia"
 };
 
-(node as any).hash = "ba77f0d2714f40428ad1a8b6debc8804";
+(node as any).hash = "31b92b5a49b4f858487243bb8e4c75ba";
 
 export default node;

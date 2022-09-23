@@ -1,38 +1,28 @@
-import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import type { HomeQuery as HomeQueryType } from '@//:artifacts/HomeQuery.graphql'
-import HomeQuery from '@//:artifacts/HomeQuery.graphql'
-import Home from './Home/Home'
-import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import type { ResultHomeQuery as ResultHomeQueryType } from '@//:artifacts/ResultHomeQuery.graphql'
+import ResultHomeQuery from '@//:artifacts/ResultHomeQuery.graphql'
 import { PageProps } from '@//:types/app'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import RootHomeRichObject from '../../../common/rich-objects/home/RootHomeRichObject/RootHomeRichObject'
-import BrowseStructuredData from '@//:common/structured-data/browse/BrowseStructuredData/BrowseStructuredData'
+import { PageContainer } from '@//:modules/content/PageLayout'
+import DisposeHome from './DisposeHome/DisposeHome'
 
 interface Props {
   queryRefs: {
-    homeQuery: PreloadedQuery<HomeQueryType>
+    homeQuery: PreloadedQuery<ResultHomeQueryType>
   }
 }
 
 const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
-  const [queryRef, loadQuery] = useQueryLoader(
-    HomeQuery,
-    props.queryRefs.homeQuery)
+  const { queryRefs: { homeQuery } } = props
+
+  const params = useQueryLoader(
+    ResultHomeQuery,
+    homeQuery
+  )
 
   return (
-    <>
-      <RootHomeRichObject />
-      <BrowseStructuredData />
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonPost />}>
-            <Home query={queryRef as PreloadedQuery<HomeQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
-    </>
+    <PageContainer>
+      <DisposeHome params={params} />
+    </PageContainer>
   )
 }
 

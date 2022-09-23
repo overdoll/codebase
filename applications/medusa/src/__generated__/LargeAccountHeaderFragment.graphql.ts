@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ce0bed1ec29b352962608259d9449de5>>
+ * @generated SignedSource<<a53a897b26575ea4910635fd7db82b6c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type LargeAccountHeaderFragment$data = {
-  readonly avatar: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-  } | null;
-  readonly id: string;
   readonly username: string;
+  readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
   readonly " $fragmentType": "LargeAccountHeaderFragment";
 };
 export type LargeAccountHeaderFragment$key = {
@@ -33,37 +30,19 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "username",
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "avatar",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceIconFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "AccountIconFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "6b2b33e8f600279e45594ddecf12fd03";
+(node as any).hash = "bafe74c9bf38aed6c3d1b4ea748aeab0";
 
 export default node;

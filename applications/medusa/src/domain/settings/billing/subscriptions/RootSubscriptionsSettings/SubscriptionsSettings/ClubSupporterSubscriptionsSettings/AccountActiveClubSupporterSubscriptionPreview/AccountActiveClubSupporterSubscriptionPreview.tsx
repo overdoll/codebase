@@ -8,7 +8,7 @@ import { LinkTile, StackTile } from '@//:modules/content/ContentSelection'
 import AccountActiveClubSupporterSubscriptionDetails
   from '../../../../../subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails'
 import { ArrowButtonRight } from '@//:assets/icons'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 
 interface Props {
   query: AccountActiveClubSupporterSubscriptionPreviewFragment$key

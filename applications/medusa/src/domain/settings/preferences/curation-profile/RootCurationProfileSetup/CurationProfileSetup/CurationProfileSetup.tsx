@@ -11,7 +11,8 @@ import {
   ModalHeader,
   ModalOverlay,
   Stack,
-  Text
+  Text,
+  useDisclosure
 } from '@chakra-ui/react'
 import { CategoryIdentifier, ClubMembers } from '@//:assets/icons/interface'
 import {
@@ -22,7 +23,6 @@ import {
   FlowBuilderProgress
 } from '@//:modules/content/PageLayout/FlowBuilder'
 import DateOfBirthCurationStep from './DateOfBirthCurationStep/DateOfBirthCurationStep'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import AudiencesCurationStep from './AudiencesCurationStep/AudiencesCurationStep'
 import CategoriesCurationStep from './CategoriesCurationStep/CategoriesCurationStep'
 import CurationStepperFooter from './CurationStepperFooter/CurationStepperFooter'
@@ -125,7 +125,7 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const steps = ['dateOfBirth', 'audience', 'category']
 

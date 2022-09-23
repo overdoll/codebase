@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b1a718950dd6f139ac6f65414d94afde>>
+ * @generated SignedSource<<9211c07eb7d53e63d31c9dae2d2c7176>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,12 +13,6 @@ import { FragmentRefs } from "relay-runtime";
 export type UpdateCharacterButtonFragment$data = {
   readonly characters: ReadonlyArray<{
     readonly id: string;
-  }>;
-  readonly content: ReadonlyArray<{
-    readonly resource: {
-      readonly failed: boolean;
-      readonly processed: boolean;
-    };
   }>;
   readonly id: string;
   readonly " $fragmentType": "UpdateCharacterButtonFragment";
@@ -54,42 +48,6 @@ return {
         (v0/*: any*/)
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "PostContent",
-      "kind": "LinkedField",
-      "name": "content",
-      "plural": true,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "Resource",
-          "kind": "LinkedField",
-          "name": "resource",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "processed",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "failed",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
     }
   ],
   "type": "Post",
@@ -97,6 +55,6 @@ return {
 };
 })();
 
-(node as any).hash = "50307c13e4e18bba045bbbf282f54ebb";
+(node as any).hash = "1660c4ad3a45b27c61077ff7107034b8";
 
 export default node;

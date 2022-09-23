@@ -3,7 +3,7 @@ import { Flex } from '@chakra-ui/react'
 import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { QuickAccessButtonProfileFragment$key } from '@//:artifacts/QuickAccessButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { ResourceIcon } from '@//:modules/content/PageLayout'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
 
 interface Props {
   queryRef: QuickAccessButtonProfileFragment$key | null
@@ -11,11 +11,8 @@ interface Props {
 
 const QuickAccessButtonProfileGQL = graphql`
   fragment QuickAccessButtonProfileFragment on Account {
-    id
     username
-    avatar {
-      ...ResourceIconFragment
-    }
+    ...AccountIconFragment
   }
 `
 
@@ -39,13 +36,7 @@ export default function QuickAccessButtonProfile ({ queryRef }: Props): JSX.Elem
         align='center'
         justify='center'
       >
-        <ResourceIcon
-          showBorder
-          seed={data?.id}
-          h='38px'
-          w='38px'
-          query={data?.avatar}
-        />
+        <AccountIcon size='md' accountQuery={data} />
       </Flex>
     </HorizontalNavigation.Button>
   )

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<13975cc1aea058191e4fbb6f41dc0283>>
+ * @generated SignedSource<<793ffea191e964d8ce697f2bf7adaabb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -88,12 +88,12 @@ const node: ReaderFragment = {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "RouletteScreenBackgroundFragment"
+                "name": "RouletteScreenPostDataFragment"
               },
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "RouletteScreenPostDataFragment"
+                "name": "RouletteScreenBackgroundFragment"
               }
             ],
             "storageKey": null
@@ -114,6 +114,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "8f2eaf00d159f23d2a9f2594a065d79f";
+(node as any).hash = "110d3e861e71501fcec47474b9d358c9";
 
 export default node;

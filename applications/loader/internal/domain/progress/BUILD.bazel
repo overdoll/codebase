@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "progress",
+    srcs = [
+        "progress.go",
+        "progress_state.go",
+        "repository.go",
+    ],
+    importpath = "overdoll/applications/loader/internal/domain/progress",
+    visibility = ["//applications/loader:__subpackages__"],
+    deps = ["//libraries/media"],
+)

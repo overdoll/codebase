@@ -18,7 +18,7 @@ import {
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import Icon from '../../../../../../modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '../../../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { Barcode } from '@//:assets/icons'
 import useGrantCleanup from '../../../support/useGrantCleanup'
 
@@ -47,10 +47,7 @@ const RecoveryCodeMutationGQL = graphql`
         lock {
           __typename
         }
-        avatar {
-          ...ResourceIconFragment
-          ...ResourceItemFragment
-        }
+        ...AccountIconFragment
       }
     }
   }

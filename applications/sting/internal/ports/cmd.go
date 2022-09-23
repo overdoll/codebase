@@ -245,23 +245,80 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
-	reprocessCmd := &cobra.Command{
-		Use: "reprocess",
+	migrateResources := &cobra.Command{
+		Use: "migrate-resources",
 	}
 
-	reprocessPostCmd := &cobra.Command{
-		Use: "post [post_id]",
+	migratePostsResources := &cobra.Command{
+		Use: "posts",
 		Run: func(cmd *cobra.Command, args []string) {
-
-			if err := app().Commands.ReprocessPostContent.Handle(context.Background(), command.ReprocessPostContent{
-				PostId: args[0],
+			postId, _ := cmd.Flags().GetString("post_id")
+			clubId, _ := cmd.Flags().GetString("club_id")
+			if err := app().Commands.MigratePostsResources.Handle(context.Background(), command.MigratePostsResources{
+				PostId: postId,
+				ClubId: clubId,
 			}); err != nil {
-				zap.S().Fatalw("failed to reprocess post content", zap.Error(err))
+				zap.S().Fatalw("failed to migrate posts", zap.Error(err))
 			}
 		},
 	}
+	migratePostsResources.PersistentFlags().String("post_id", "", "Select a specific post for migration.")
+	migratePostsResources.PersistentFlags().String("club_id", "", "Select a specific club to perform the migration for.")
+	migrateResources.AddCommand(migratePostsResources)
 
-	reprocessCmd.AddCommand(reprocessPostCmd)
+	migrateResources.AddCommand(&cobra.Command{
+		Use: "categories [category_id]",
+		Run: func(cmd *cobra.Command, args []string) {
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, reprocessCmd}
+			var id string
+
+			if len(args) == 1 {
+				id = args[0]
+			}
+
+			if err := app().Commands.MigrateCategoryResources.Handle(context.Background(), command.MigrateCategoriesResources{
+				CategoryId: id,
+			}); err != nil {
+				zap.S().Fatalw("failed to migrate categories", zap.Error(err))
+			}
+		},
+	})
+
+	migrateResources.AddCommand(&cobra.Command{
+		Use: "characters [character_id]",
+		Run: func(cmd *cobra.Command, args []string) {
+
+			var id string
+
+			if len(args) == 1 {
+				id = args[0]
+			}
+
+			if err := app().Commands.MigrateCharactersResources.Handle(context.Background(), command.MigrateCharactersResources{
+				CharacterId: id,
+			}); err != nil {
+				zap.S().Fatalw("failed to migrate characters", zap.Error(err))
+			}
+		},
+	})
+
+	migrateResources.AddCommand(&cobra.Command{
+		Use: "series [series_id]",
+		Run: func(cmd *cobra.Command, args []string) {
+
+			var id string
+
+			if len(args) == 1 {
+				id = args[0]
+			}
+
+			if err := app().Commands.MigrateSeriesResources.Handle(context.Background(), command.MigrateSeriesResources{
+				SeriesId: id,
+			}); err != nil {
+				zap.S().Fatalw("failed to migrate series", zap.Error(err))
+			}
+		},
+	})
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources}
 }

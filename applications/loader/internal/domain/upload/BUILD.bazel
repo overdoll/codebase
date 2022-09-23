@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "upload",
+    srcs = [
+        "repository.go",
+        "upload.go",
+    ],
+    importpath = "overdoll/applications/loader/internal/domain/upload",
+    visibility = ["//applications/loader:__subpackages__"],
+    deps = ["@com_github_tus_tusd//pkg/handler"],
+)

@@ -1,10 +1,9 @@
 import { ClickableBox } from '@//:modules/content/PageLayout'
-import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from '@chakra-ui/react'
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { ReactNode, Suspense } from 'react'
 import ClubListSelector from './ClubListSelector/ClubListSelector'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import { QueryErrorBoundary, SkeletonStack } from '@//:modules/content/Placeholder'
 
 interface Props {
@@ -18,7 +17,7 @@ export default function MultipleClubsModal ({
     isOpen,
     onOpen,
     onClose
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   return (
     <>

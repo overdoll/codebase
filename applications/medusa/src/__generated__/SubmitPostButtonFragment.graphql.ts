@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8f65c496c579fedeb2757c19600ddafa>>
+ * @generated SignedSource<<ca4026f7128d8ab716a5f8692b7cf6b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type SubmitPostButtonFragment$data = {
     readonly isSupporterOnly: boolean;
   }>;
   readonly id: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PublishedPostFragment" | "ReviewPostFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PublishedPostFragment" | "ReviewPostFragment" | "isFailedFragment">;
   readonly " $fragmentType": "SubmitPostButtonFragment";
 };
 export type SubmitPostButtonFragment$key = {
@@ -84,12 +84,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ReviewPostFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "isFailedFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "e6bc98a6a6f66a5b7f62526b765c3415";
+(node as any).hash = "25d301bbeda51c6fe1d338ef47acff7e";
 
 export default node;

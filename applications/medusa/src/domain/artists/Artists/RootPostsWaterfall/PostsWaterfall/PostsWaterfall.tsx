@@ -1,7 +1,8 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { PostsWaterfallQuery } from '@//:artifacts/PostsWaterfallQuery.graphql'
 import { Grid, GridItem } from '@chakra-ui/react'
-import ResourceInfo from '@//:modules/content/DataDisplay/ResourceInfo/ResourceInfo'
+import RawPostContentBanner
+  from '@//:modules/content/HookedComponents/Post/fragments/PostContent/RawPostContentBanner/RawPostContentBanner'
 
 const Query = graphql`
   query PostsWaterfallQuery {
@@ -10,10 +11,7 @@ const Query = graphql`
         node {
           id
           content {
-            resource {
-              preview
-            }
-            ...ResourceInfoFragment
+            ...RawPostContentBannerFragment
           }
         }
       }
@@ -33,13 +31,10 @@ export default function PostsWaterfall (): JSX.Element {
         xl: 'repeat(7, 1fr)'
       }}
     >
-      {data.postsFeed.edges.map((item) => {
-        return (
-          <GridItem bg={item.node.content[0].resource.preview} key={item.node.id}>
-            <ResourceInfo cover query={item.node.content[0]} />
-          </GridItem>
-        )
-      })}
+      {data.postsFeed.edges.map((item) => (
+        <GridItem key={item.node.id}>
+          <RawPostContentBanner postContentQuery={item.node.content[0]} />
+        </GridItem>))}
     </Grid>
   )
 }

@@ -8,7 +8,7 @@ import (
 	"overdoll/applications/sting/internal/adapters/seeders"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/libraries/cache"
-	resource_proto "overdoll/libraries/resource/proto"
+	media_proto "overdoll/libraries/media/proto"
 	"time"
 
 	"github.com/spf13/cobra"
@@ -105,6 +105,6 @@ func RunGrpc(cmd *cobra.Command, args []string) {
 
 	bootstrap.InitializeGRPCServer("0.0.0.0:8080", func(server *grpc.Server) {
 		sting.RegisterStingServer(server, s)
-		resource_proto.RegisterResourceCallbackServer(server, s)
+		media_proto.RegisterMediaCallbackServer(server, s)
 	})
 }

@@ -67,28 +67,3 @@ func (r *MutationResolver) UpdateSeriesTitle(ctx context.Context, input types.Up
 		Series: types.MarshalSeriesToGraphQL(ctx, series),
 	}, err
 }
-
-func (r *MutationResolver) UpdateSeriesThumbnail(ctx context.Context, input types.UpdateSeriesThumbnailInput) (*types.UpdateSeriesThumbnailPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	series, err := r.App.Commands.UpdateSeriesThumbnail.
-		Handle(
-			ctx,
-			command.UpdateSeriesThumbnail{
-				Principal: principal.FromContext(ctx),
-				SeriesId:  input.ID.GetID(),
-				Thumbnail: input.Thumbnail,
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.UpdateSeriesThumbnailPayload{
-		Series: types.MarshalSeriesToGraphQL(ctx, series),
-	}, err
-}

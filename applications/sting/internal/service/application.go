@@ -12,7 +12,7 @@ import (
 	"overdoll/applications/sting/internal/app/workflows/activities"
 	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/clients"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/testing_tools/mocks"
 )
 
@@ -23,13 +23,11 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 	carrierClient, cleanup3 := clients.NewCarrierClient(ctx, os.Getenv("CARRIER_SERVICE"))
 	loaderClient, cleanup4 := clients.NewLoaderClient(ctx, os.Getenv("LOADER_SERVICE"))
 
-	serializer := resource.NewSerializer()
-
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewCarrierGrpc(carrierClient),
-			adapters.NewLoaderGrpc(loaderClient, serializer),
+			adapters.NewLoaderGrpc(loaderClient),
 			clients.NewTemporalClient(ctx)),
 		func() {
 			cleanup()
@@ -57,15 +55,13 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	carrierClient := &mocks.MockCarrierClient{}
 	temporalClient := &temporalmocks.Client{}
 
-	serializer := resource.NewSerializer()
-
 	return &ComponentTestApplication{
 		App: createApplication(
 			ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewParleyGrpc(parleyClient),
 			adapters.NewCarrierGrpc(carrierClient),
-			adapters.NewLoaderGrpc(loaderClient, serializer),
+			adapters.NewLoaderGrpc(loaderClient),
 			temporalClient,
 		),
 		TemporalClient: temporalClient,
@@ -77,7 +73,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 }
 
 func createApplication(ctx context.Context, eva command.EvaService, parley activities.ParleyService, carrier activities.CarrierService, loader command.LoaderService, client client.Client) *app.Application {
-
+	media.InitSerializer()
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
 	awsSession := bootstrap.InitializeAWSSession()
@@ -85,18 +81,16 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	eventRepo := adapters.NewEventTemporalRepository(client)
 
 	cache := bootstrap.InitializeRedisSession()
-	resourceSerializer := resource.NewSerializer()
+	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache)
 
-	clubRepo := adapters.NewClubCassandraElasticsearchRepository(session, esClient, cache, resourceSerializer)
-
-	postRepo := adapters.NewPostsCassandraRepository(session, esClient, resourceSerializer, awsSession, cache)
+	postRepo := adapters.NewPostsCassandraRepository(session, esClient, awsSession, cache)
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 	gamesRepo := adapters.NewGamesCassandraRepository(session)
 
 	return &app.Application{
 		Commands: app.Commands{
 			TransferClubOwnership: command.NewTransferClubOwnershipHandler(clubRepo, eventRepo, eva),
-			UpdateResources:       command.NewUpdateResourcesHandler(postRepo, clubRepo, eventRepo),
+			UpdateMedia:           command.NewUpdateMediaHandler(postRepo, clubRepo, eventRepo),
 			CreatePost:            command.NewCreatePostHandler(postRepo, clubRepo),
 			PublishPost:           command.NewPublishPostHandler(postRepo, eventRepo),
 			DiscardPost:           command.NewDiscardPostHandler(postRepo, eventRepo),
@@ -138,7 +132,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CreateAudience:           command.NewCreateAudienceHandler(postRepo),
 			UpdateAudienceSlug:       command.NewUpdateAudienceSlugHandler(postRepo),
 			UpdateAudienceTitle:      command.NewUpdateAudienceTitleHandler(postRepo),
-			UpdateAudienceThumbnail:  command.NewUpdateAudienceThumbnailHandler(postRepo, loader),
 			UpdateAudienceIsStandard: command.NewUpdateAudienceIsStandardHandler(postRepo),
 			UpdateAudienceBanner:     command.NewUpdateAudienceBannerHandler(postRepo, loader),
 
@@ -147,21 +140,18 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UpdateCategoryTopic:            command.NewUpdateCategoryTopicHandler(postRepo),
 			AddCategoryAlternativeTitle:    command.NewAddCategoryAlternativeTitleHandler(postRepo),
 			RemoveCategoryAlternativeTitle: command.NewRemoveCategoryAlternativeTitleHandler(postRepo),
-			UpdateCategoryThumbnail:        command.NewUpdateCategoryThumbnailHandler(postRepo, loader),
 			UpdateCategoryTitle:            command.NewUpdateCategoryTitleHandler(postRepo),
 			GenerateCategoryBanner:         command.NewGenerateCategoryBannerHandler(postRepo, eventRepo),
 
-			CreateCharacter:          command.NewCreateCharacterHandler(postRepo, clubRepo),
-			UpdateCharacterSlug:      command.NewUpdateCharacterSlugHandler(postRepo),
-			UpdateCharacterName:      command.NewUpdateCharacterNameHandler(postRepo),
-			UpdateCharacterThumbnail: command.NewUpdateCharacterThumbnailHandler(postRepo, loader),
-			GenerateCharacterBanner:  command.NewGenerateCharacterBannerHandler(postRepo, eventRepo),
+			CreateCharacter:         command.NewCreateCharacterHandler(postRepo, clubRepo),
+			UpdateCharacterSlug:     command.NewUpdateCharacterSlugHandler(postRepo),
+			UpdateCharacterName:     command.NewUpdateCharacterNameHandler(postRepo),
+			GenerateCharacterBanner: command.NewGenerateCharacterBannerHandler(postRepo, eventRepo),
 
-			CreateSeries:          command.NewCreateSeriesHandler(postRepo),
-			UpdateSeriesSlug:      command.NewUpdateSeriesSlugHandler(postRepo),
-			UpdateSeriesTitle:     command.NewUpdateSeriesTitleHandler(postRepo),
-			UpdateSeriesThumbnail: command.NewUpdateSeriesThumbnailHandler(postRepo, loader),
-			GenerateSeriesBanner:  command.NewGenerateSeriesBannerHandler(postRepo, eventRepo),
+			CreateSeries:         command.NewCreateSeriesHandler(postRepo),
+			UpdateSeriesSlug:     command.NewUpdateSeriesSlugHandler(postRepo),
+			UpdateSeriesTitle:    command.NewUpdateSeriesTitleHandler(postRepo),
+			GenerateSeriesBanner: command.NewGenerateSeriesBannerHandler(postRepo, eventRepo),
 
 			CreateTopic:            command.NewCreateTopicHandler(postRepo),
 			UpdateTopicSlug:        command.NewUpdateTopicSlugHandler(postRepo),
@@ -196,7 +186,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			IndexClub: command.NewIndexClubHandler(clubRepo),
 
-			ReprocessPostContent: command.NewReprocessPostContentHandler(postRepo, loader),
+			MigratePostsResources:      command.NewMigratePostsResourcesHandler(postRepo, loader),
+			MigrateSeriesResources:     command.NewMigrateSeriesResourcesHandler(postRepo, loader),
+			MigrateCharactersResources: command.NewMigrateCharactersResourcesHandler(postRepo, loader),
+			MigrateCategoryResources:   command.NewMigrateCategoriesResourcesHandler(postRepo, loader),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),

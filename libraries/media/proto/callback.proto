@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package overdoll.libraries;
+
+import "libraries/media/proto/media.proto";
+import "google/protobuf/empty.proto";
+
+enum SOURCE {
+  STING = 0;
+}
+
+message UpdateMediaRequest {
+  overdoll.libraries.Media media = 1;
+}
+
+service MediaCallback {
+  rpc UpdateMedia(UpdateMediaRequest) returns (google.protobuf.Empty);
+}

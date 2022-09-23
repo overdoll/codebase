@@ -1,4 +1,4 @@
-import { SwiperProps } from 'swiper/react/swiper-react'
+import { SwiperProps } from 'swiper/react'
 import { ArrayParam, StringParam } from 'serialize-query-params'
 
 export const SEARCH_SWIPER_PROPS: SwiperProps = {

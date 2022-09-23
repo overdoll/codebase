@@ -1,9 +1,11 @@
 package testing_tools
 
 import (
+	"context"
 	"fmt"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	client2 "go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/mocks"
 	"go.temporal.io/sdk/testsuite"
 	"testing"
@@ -13,6 +15,45 @@ type MockWorkflow struct {
 	args   []interface{}
 	method interface{}
 	client *mocks.Client
+}
+
+func NewEagerMockWorkflowWithArgs(t *testing.T, client *mocks.Client, env *testsuite.TestWorkflowEnvironment, method interface{}, args ...interface{}) *MockWorkflow {
+	var ret []interface{}
+
+	ret = append(ret, mock.Anything)
+	ret = append(ret, mock.Anything)
+	ret = append(ret, mock.IsType(method))
+	ret = append(ret, args...)
+
+	m := &MockWorkflow{
+		args:   args,
+		method: method,
+		client: client,
+	}
+
+	m.onWorkflowExecution().Run(
+		func(args mock.Arguments) {
+			env.ExecuteWorkflow(method, args[3:]...)
+		},
+	).
+		Return(func(context.Context, client2.StartWorkflowOptions, interface{}, ...interface{}) client2.WorkflowRun {
+
+			if !env.IsWorkflowCompleted() {
+				return nil
+			}
+
+			return &mocks.WorkflowRun{}
+		},
+			func(context.Context, client2.StartWorkflowOptions, interface{}, ...interface{}) error {
+
+				if !env.IsWorkflowCompleted() {
+					return env.GetWorkflowError()
+				}
+
+				return nil
+			})
+
+	return m
 }
 
 func NewMockWorkflowWithArgs(client *mocks.Client, method interface{}, args ...interface{}) *MockWorkflow {

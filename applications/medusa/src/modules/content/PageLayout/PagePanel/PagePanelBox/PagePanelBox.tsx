@@ -1,6 +1,6 @@
 import { ClickableBox } from '../../index'
 import { ButtonProps, Flex, HStack } from '@chakra-ui/react'
-import Icon from '../../Flair/Icon/Icon'
+import Icon from '../../BuildingBlocks/Icon/Icon'
 import { ArrowButtonRight, ShareExternalLink } from '@//:assets/icons'
 import { forwardRef, ReactNode } from 'react'
 

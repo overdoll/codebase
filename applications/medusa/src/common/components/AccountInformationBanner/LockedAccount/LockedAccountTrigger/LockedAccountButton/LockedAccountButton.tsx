@@ -1,12 +1,12 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { LockedAccountButtonQuery } from '@//:artifacts/LockedAccountButtonQuery.graphql'
-import { useHistoryDisclosure } from '@//:modules/hooks'
 import { t } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { WarningTriangle } from '@//:assets/icons'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
 import LockedAccountModal from '../../LockedAccountModal/LockedAccountModal'
+import { useDisclosure } from '@chakra-ui/react'
 
 const Query = graphql`
   query LockedAccountButtonQuery {
@@ -26,7 +26,7 @@ export default function LockedAccountButton (): JSX.Element | null {
     isOpen,
     onClose,
     onOpen
-  } = useHistoryDisclosure()
+  } = useDisclosure()
 
   const { i18n } = useLingui()
 

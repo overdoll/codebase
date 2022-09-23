@@ -34,11 +34,17 @@ type Club implements Node @key(fields: "id") {
   """A list of links for this club."""
   links: [ClubLink!]!
 
-  """A resource of the club's thumbnail."""
+  """A URL pointing to the object's thumbnail."""
   thumbnail: Resource
 
-  """A resource of the club's banner."""
+  """A URL pointing to the object's thumbnail."""
+  thumbnailMedia: Media
+
+  """A URL pointing to the object's banner."""
   banner: Resource
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
 
   """A name for this club."""
   name: String!

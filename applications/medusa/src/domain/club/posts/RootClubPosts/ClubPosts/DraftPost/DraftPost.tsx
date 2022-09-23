@@ -2,15 +2,16 @@ import { graphql, useFragment } from 'react-relay'
 import type { DraftPostFragment$key } from '@//:artifacts/DraftPostFragment.graphql'
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent from '@//:modules/content/Posts/components/PostData/PostPreviewContent/PostPreviewContent'
-import { PostMenu } from '@//:modules/content/Posts'
+import PostPreviewContent
+  from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
+import PostMenu from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostMenu'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostModerateButton/PostModerateButton'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostModerateButton/PostModerateButton'
 import { MenuLinkItem } from '@//:modules/content/ThemeComponents/Menu/Menu'
 import { ContentBrushPen } from '@//:assets/icons'
 import PostDeleteButton
-  from '@//:modules/content/Posts/components/PostInteraction/PostMenu/PostDeleteButton/PostDeleteButton'
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostDeleteButton/PostDeleteButton'
 import { useRouter } from 'next/router'
 import { ConnectionProp } from '@//:types/components'
 

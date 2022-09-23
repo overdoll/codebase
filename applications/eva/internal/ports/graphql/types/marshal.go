@@ -26,12 +26,6 @@ func MarshalAccountToGraphQL(ctx context.Context, result *account.Account) *Acco
 		return nil
 	}
 
-	var res *graphql.Resource
-
-	if result.AvatarResource() != nil {
-		res = graphql.MarshalResourceToGraphQL(ctx, result.AvatarResource())
-	}
-
 	var accountDeleting *AccountDeleting
 
 	if result.ScheduledDeletionAt() != nil {
@@ -41,7 +35,6 @@ func MarshalAccountToGraphQL(ctx context.Context, result *account.Account) *Acco
 	return &Account{
 		ID:                      relay.NewID(Account{}, result.ID()),
 		Reference:               result.ID(),
-		Avatar:                  res,
 		Username:                result.Username(),
 		IsSecure:                result.IsSecure(),
 		IsStaff:                 result.IsStaff(),

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<383d89745be7576031aa47112691fb46>>
+ * @generated SignedSource<<eecd8b3fce32a7841c432c99d76fb3bf>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type TopicTileOverlayFragment$data = {
-  readonly banner: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceItemFragment">;
-  } | null;
-  readonly id: string;
   readonly title: string;
+  readonly " $fragmentSpreads": FragmentRefs<"TopicBannerFragment">;
   readonly " $fragmentType": "TopicTileOverlayFragment";
 };
 export type TopicTileOverlayFragment$key = {
@@ -33,37 +30,19 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "title",
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "banner",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceItemFragment"
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "TopicBannerFragment"
     }
   ],
   "type": "Topic",
   "abstractKey": null
 };
 
-(node as any).hash = "2bc0d0d6e02a159c6af899ae74afa6b9";
+(node as any).hash = "c84b64eeba06c5a46a6565c6d980b3b8";
 
 export default node;

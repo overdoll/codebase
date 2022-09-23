@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<af9c14f1f956f9e477fa43b962c04ed2>>
+ * @generated SignedSource<<4afb32a8064f7f32d5d7ff8a307a03b3>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostReviewFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"PostClickableCategoriesFragment" | "PostClickableCharactersFragment" | "PostDescriptionFragment" | "PostGalleryStaffDetailedFragment" | "PostHeaderClubFragment" | "PostPrivateHeaderFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostStaticAudienceFragment" | "PostStaticCategoriesFragment" | "PostStaticCharactersFragment" | "RawCinematicContentFragment" | "isFailedFragment" | "isProcessedFragment">;
   readonly " $fragmentType": "PostReviewFragment";
 };
 export type PostReviewFragment$key = {
@@ -28,38 +28,38 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostGalleryStaffDetailedFragment"
+      "name": "RawCinematicContentFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostHeaderClubFragment"
+      "name": "isProcessedFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostClickableCharactersFragment"
+      "name": "isFailedFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostClickableCategoriesFragment"
+      "name": "PostStaticAudienceFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostDescriptionFragment"
+      "name": "PostStaticCharactersFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "PostPrivateHeaderFragment"
+      "name": "PostStaticCategoriesFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "d13b6c78b693afead6b229a1fa292509";
+(node as any).hash = "82c4cbdeff340ed572e02187f4648b3f";
 
 export default node;

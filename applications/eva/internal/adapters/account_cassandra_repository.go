@@ -10,7 +10,6 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/support"
 	"strings"
 	"time"
@@ -118,19 +117,12 @@ func NewAccountCassandraRedisRepository(session gocqlx.Session, cache *redis.Cli
 }
 
 func marshalUserToDatabase(usr *account.Account) (*accounts, error) {
-
-	marshalled, err := resource.MarshalResourceToDatabase(usr.AvatarResource())
-
-	if err != nil {
-		return nil, err
-	}
-
 	return &accounts{
 		Id:                          usr.ID(),
 		Email:                       usr.Email(),
 		Username:                    usr.Username(),
 		Roles:                       usr.RolesAsString(),
-		AvatarResource:              marshalled,
+		AvatarResource:              usr.AvatarResource(),
 		LockedUntil:                 usr.LockedUntil(),
 		Locked:                      usr.IsLocked(),
 		Deleting:                    usr.IsDeleting(),
@@ -181,7 +173,7 @@ func (r AccountCassandraRepository) GetRawAccountById(ctx context.Context, id st
 		accountInstance.Username,
 		accountInstance.Email,
 		accountInstance.Roles,
-		nil,
+		accountInstance.AvatarResource,
 		accountInstance.Locked,
 		accountInstance.LockedUntil,
 		accountInstance.Deleting,
@@ -219,7 +211,7 @@ func (r AccountCassandraRepository) GetAccountsById(ctx context.Context, ids []s
 			accountInstance.Username,
 			accountInstance.Email,
 			accountInstance.Roles,
-			nil,
+			accountInstance.AvatarResource,
 			accountInstance.Locked,
 			accountInstance.LockedUntil,
 			accountInstance.Deleting,

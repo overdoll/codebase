@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<8cbe5d7d5b5924f270970600fc80f531>>
+ * @generated SignedSource<<583379f72d02907984a0aa21ed94881f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,11 +11,8 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RoulettePostCharacterFragment$data = {
-  readonly banner: {
-    readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-  } | null;
-  readonly id: string;
   readonly name: string;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterIconFragment">;
   readonly " $fragmentType": "RoulettePostCharacterFragment";
 };
 export type RoulettePostCharacterFragment$key = {
@@ -33,37 +30,19 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "Resource",
-      "kind": "LinkedField",
-      "name": "banner",
-      "plural": false,
-      "selections": [
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "ResourceIconFragment"
-        }
-      ],
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "name",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CharacterIconFragment"
     }
   ],
   "type": "Character",
   "abstractKey": null
 };
 
-(node as any).hash = "ed8bc41bc69f0c3be1de254b6d92849b";
+(node as any).hash = "f4c4e0cc668ddd33426a36bee5730841";
 
 export default node;

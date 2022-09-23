@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e69d636920aff01cdd031a4c6b8b2744>>
- * @relayHash 9d525423c15017ff1651c87bdb3c7b4e
+ * @generated SignedSource<<ade26c8096cf73150d7c3b082545c565>>
+ * @relayHash 33bbb1c56a99d37741267989a651fc95
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9d525423c15017ff1651c87bdb3c7b4e
+// @relayRequestID 33bbb1c56a99d37741267989a651fc95
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdatePostContentIsSupporterOnlyInput = {
@@ -24,10 +24,8 @@ export type SupporterPostContentButtonMutation$data = {
   readonly updatePostContentIsSupporterOnly: {
     readonly post: {
       readonly content: ReadonlyArray<{
+        readonly id: string;
         readonly isSupporterOnly: boolean;
-        readonly resource: {
-          readonly id: string;
-        };
         readonly viewerCanViewSupporterOnlyContent: boolean;
       }>;
       readonly id: string;
@@ -48,90 +46,65 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = [
-  {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "reference",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "viewerCanViewSupporterOnlyContent",
-  "storageKey": null
-},
-v5 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "isSupporterOnly",
-  "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "resource",
-  "plural": false,
-  "selections": [
-    (v2/*: any*/)
-  ],
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "SupporterPostContentButtonMutation",
+v2 = [
+  {
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "UpdatePostContentIsSupporterOnlyPayload",
+    "kind": "LinkedField",
+    "name": "updatePostContentIsSupporterOnly",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "UpdatePostContentIsSupporterOnlyPayload",
+        "args": null,
+        "concreteType": "Post",
         "kind": "LinkedField",
-        "name": "updatePostContentIsSupporterOnly",
+        "name": "post",
         "plural": false,
         "selections": [
+          (v1/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "Post",
+            "kind": "ScalarField",
+            "name": "reference",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "PostContent",
             "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
+            "name": "content",
+            "plural": true,
             "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
+              (v1/*: any*/),
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "PostContent",
-                "kind": "LinkedField",
-                "name": "content",
-                "plural": true,
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  (v6/*: any*/)
-                ],
+                "kind": "ScalarField",
+                "name": "viewerCanViewSupporterOnlyContent",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isSupporterOnly",
                 "storageKey": null
               }
             ],
@@ -141,6 +114,16 @@ return {
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "SupporterPostContentButtonMutation",
+    "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -149,50 +132,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "SupporterPostContentButtonMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "UpdatePostContentIsSupporterOnlyPayload",
-        "kind": "LinkedField",
-        "name": "updatePostContentIsSupporterOnly",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Post",
-            "kind": "LinkedField",
-            "name": "post",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "PostContent",
-                "kind": "LinkedField",
-                "name": "content",
-                "plural": true,
-                "selections": [
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  (v6/*: any*/),
-                  (v2/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "9d525423c15017ff1651c87bdb3c7b4e",
+    "id": "33bbb1c56a99d37741267989a651fc95",
     "metadata": {},
     "name": "SupporterPostContentButtonMutation",
     "operationKind": "mutation",
@@ -201,6 +144,6 @@ return {
 };
 })();
 
-(node as any).hash = "6aa3bcc8e5c3a0181693707be20e7c57";
+(node as any).hash = "a86bba1fa5950bc5bc6f14ac07ea1a99";
 
 export default node;

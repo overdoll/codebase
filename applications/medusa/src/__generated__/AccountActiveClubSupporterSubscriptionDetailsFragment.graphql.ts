@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2b7f3fed1213bfd72d19d0b9ccb1f1d3>>
+ * @generated SignedSource<<0a131ea30dda436673cc7c2f8195cbaa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,7 +17,7 @@ export type AccountActiveClubSupporterSubscriptionDetailsFragment$data = {
     readonly suspension: {
       readonly expires: any;
     } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
   };
   readonly nextBillingDate: any;
   readonly supporterSince: any;
@@ -91,7 +91,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ClubThumbnailFragment"
+          "name": "ClubIconFragment"
         }
       ],
       "storageKey": null
@@ -101,6 +101,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "415dee9e8c1a092dea74b151c71fe4e9";
+(node as any).hash = "9b78fbfd5b76066b142ea59818e9dc0e";
 
 export default node;

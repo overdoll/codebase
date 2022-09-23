@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c7f2fdccc21a480ebafb4d9ca57342b5>>
- * @relayHash d5e8bede0fcd6153f272464ac89c5aa7
+ * @generated SignedSource<<74e031af8233dbe5f7f67bd1fc055826>>
+ * @relayHash 943eef4cce5aa4205d3df579020328bd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,10 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d5e8bede0fcd6153f272464ac89c5aa7
+// @relayRequestID 943eef4cce5aa4205d3df579020328bd
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
+import { FragmentRefs } from "relay-runtime";
 export type UpdateTopicBannerInput = {
   banner: string;
   id: string;
@@ -23,14 +23,8 @@ export type ChangeTopicBannerFormMutation$variables = {
 export type ChangeTopicBannerFormMutation$data = {
   readonly updateTopicBanner: {
     readonly topic: {
-      readonly banner: {
-        readonly type: ResourceType;
-        readonly urls: ReadonlyArray<{
-          readonly mimeType: string;
-          readonly url: string;
-        }>;
-      } | null;
       readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"TopicBannerFragment">;
     } | null;
   } | null;
 };
@@ -61,38 +55,84 @@ v2 = {
   "name": "id",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-};
+v3 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ColorPalette",
+    "kind": "LinkedField",
+    "name": "colorPalettes",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "red",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "green",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "blue",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ImageMediaVariants",
+    "kind": "LinkedField",
+    "name": "variants",
+    "plural": false,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "ImageMediaAccess",
+        "kind": "LinkedField",
+        "name": "banner",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "url",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "width",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "height",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
+  (v2/*: any*/)
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -118,17 +158,9 @@ return {
             "selections": [
               (v2/*: any*/),
               {
-                "alias": null,
                 "args": null,
-                "concreteType": "Resource",
-                "kind": "LinkedField",
-                "name": "banner",
-                "plural": false,
-                "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
+                "kind": "FragmentSpread",
+                "name": "TopicBannerFragment"
               }
             ],
             "storageKey": null
@@ -166,14 +198,54 @@ return {
               {
                 "alias": null,
                 "args": null,
-                "concreteType": "Resource",
+                "concreteType": null,
                 "kind": "LinkedField",
-                "name": "banner",
+                "name": "bannerMedia",
                 "plural": false,
                 "selections": [
-                  (v3/*: any*/),
-                  (v4/*: any*/),
-                  (v2/*: any*/)
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "__typename",
+                    "storageKey": null
+                  },
+                  {
+                    "kind": "TypeDiscriminator",
+                    "abstractKey": "__isMedia"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v3/*: any*/),
+                    "type": "ImageMedia",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ImageMedia",
+                        "kind": "LinkedField",
+                        "name": "cover",
+                        "plural": false,
+                        "selections": (v3/*: any*/),
+                        "storageKey": null
+                      },
+                      (v2/*: any*/)
+                    ],
+                    "type": "VideoMedia",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v2/*: any*/)
+                    ],
+                    "type": "RawMedia",
+                    "abstractKey": null
+                  }
                 ],
                 "storageKey": null
               }
@@ -186,7 +258,7 @@ return {
     ]
   },
   "params": {
-    "id": "d5e8bede0fcd6153f272464ac89c5aa7",
+    "id": "943eef4cce5aa4205d3df579020328bd",
     "metadata": {},
     "name": "ChangeTopicBannerFormMutation",
     "operationKind": "mutation",
@@ -195,6 +267,6 @@ return {
 };
 })();
 
-(node as any).hash = "e2de54ffd48e08b68045f29e5794a7db";
+(node as any).hash = "5ddea81418228286166d619a09647823";
 
 export default node;

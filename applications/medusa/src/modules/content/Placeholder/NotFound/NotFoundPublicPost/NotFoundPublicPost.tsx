@@ -3,7 +3,7 @@ import { Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../NotFoundFooter/NotFoundFooter'
 import RootPublicPostRichObject
-  from '../../../../../common/rich-objects/slug/RootPublicPostRichObject/RootPublicPostRichObject'
+  from '../../../../../domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/EmptyPublicPost/RootPublicPostRichObject/RootPublicPostRichObject'
 
 export default function NotFoundPublicPost (): JSX.Element {
   return (

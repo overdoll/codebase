@@ -7,6 +7,7 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import { ExternalLink } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
 import trackFathomEvent from '@//:modules/support/trackFathomEvent'
+import { FEEDBACK_LINK } from '@//:modules/constants/links'
 
 interface Props {
   onClose: () => void
@@ -21,7 +22,7 @@ export default function RatingToast (props: Props): JSX.Element {
 
   const onClickRate = (): void => {
     onClose()
-    trackFathomEvent('WAXAG3AM', 0)
+    trackFathomEvent('WAXAG3AM', 1)
   }
 
   return (
@@ -36,7 +37,7 @@ export default function RatingToast (props: Props): JSX.Element {
           <CloseButton onClick={onForget} />
         </HStack>
         <ExternalLink
-          href='https://docs.google.com/forms/d/e/1FAIpQLSeMFhhpZi4N70m8vR2DCtOGNQ7x0PdBd-fWH1gmLhmeQH_UFQ/viewform'
+          href={FEEDBACK_LINK}
         >
           <Button
             w='100%'

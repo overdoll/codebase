@@ -1,7 +1,7 @@
-import { Box, Center, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
 import { ReactNode, useContext } from 'react'
 import { VerticalNavigationContext } from '../VerticalNavigation'
-import { LargeBackgroundBox, PageWrapper } from '../../../PageLayout'
+import { LargeBackgroundBox, MobileContainer, PageContainer } from '../../../PageLayout'
 
 interface Props {
   children: ReactNode
@@ -14,9 +14,49 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
 
   if (isExtended) {
     return (
-      <PageWrapper>
-        <LargeBackgroundBox>
-          <Stack spacing={2}>
+      <PageContainer>
+        <MobileContainer>
+          <LargeBackgroundBox>
+            <Stack spacing={2}>
+              <Stack spacing={1}>
+                {props.title != null &&
+                  <Flex justify='center' align='center' px={2} pt={2}>
+                    <Heading fontSize='xl' color='gray.00'>
+                      {props.title}
+                    </Heading>
+                  </Flex>}
+                {props.outsideElements != null &&
+                  <Box px={2}>
+                    {props.outsideElements}
+                  </Box>}
+              </Stack>
+              <Stack spacing={3}>
+                {props.children}
+              </Stack>
+            </Stack>
+          </LargeBackgroundBox>
+        </MobileContainer>
+      </PageContainer>
+    )
+  }
+
+  return (
+    <>
+      <PageContainer
+        display={{
+          base: 'flex',
+          md: 'none'
+        }}
+        mt={4}
+        mb={undefined}
+      >
+        <MobileContainer>
+          <Flex
+            direction='column'
+            bg='gray.800'
+            borderRadius='base'
+            zIndex='sidebar'
+          >
             <Stack spacing={1}>
               {props.title != null &&
                 <Flex justify='center' align='center' px={2} pt={2}>
@@ -29,51 +69,12 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
                   {props.outsideElements}
                 </Box>}
             </Stack>
-            <Stack spacing={3}>
+            <HStack p={2} overflowX='auto' spacing={3}>
               {props.children}
-            </Stack>
-          </Stack>
-        </LargeBackgroundBox>
-      </PageWrapper>
-    )
-  }
-
-  return (
-    <>
-      <Center
-        display={{
-          base: 'flex',
-          md: 'none'
-        }}
-        mt={4}
-      >
-        <Flex
-          w={['full', 'md', 'lg']}
-          pl={[1, 0]}
-          pr={[1, 0]}
-          direction='column'
-          bg='gray.800'
-          borderRadius='base'
-          zIndex='sidebar'
-
-        >
-          <Stack spacing={1}>
-            {props.title != null &&
-              <Flex justify='center' align='center' px={2} pt={2}>
-                <Heading fontSize='xl' color='gray.00'>
-                  {props.title}
-                </Heading>
-              </Flex>}
-            {props.outsideElements != null &&
-              <Box px={2}>
-                {props.outsideElements}
-              </Box>}
-          </Stack>
-          <HStack p={2} overflowX='auto' spacing={3}>
-            {props.children}
-          </HStack>
-        </Flex>
-      </Center>
+            </HStack>
+          </Flex>
+        </MobileContainer>
+      </PageContainer>
       <Box
         bg='gray.800'
         w='300px'

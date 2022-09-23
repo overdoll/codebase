@@ -18,8 +18,8 @@ msgstr ""
 msgid "Audience Standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:30
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:104
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:28
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:98
 msgid "Audience Thumbnail"
 msgstr ""
 
@@ -44,7 +44,7 @@ msgstr ""
 msgid "Change Standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:47
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnail.tsx:39
 msgid "Change Thumbnail"
 msgstr ""
 
@@ -65,7 +65,7 @@ msgid "Standard"
 msgstr ""
 
 #: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceStandard/ChangeAudienceStandardForm/ChangeAudienceStandardForm.tsx:122
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:116
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:110
 #: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceTitle/ChangeAudienceTitleForm/ChangeAudienceTitleForm.tsx:143
 msgid "Submit"
 msgstr ""
@@ -74,7 +74,7 @@ msgstr ""
 msgid "Successfully updated audience standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:80
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:74
 msgid "Successfully updated audience thumbnail"
 msgstr ""
 
@@ -82,7 +82,7 @@ msgstr ""
 msgid "There was an error updating audience standard"
 msgstr ""
 
-#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:86
+#: src/domain/staff/entity/audience/view/RootStaffViewAudience/StaffViewAudience/ChangeAudienceThumbnail/ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm.tsx:80
 msgid "There was an error updating the audience thumbnail"
 msgstr ""
 

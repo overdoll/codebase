@@ -50,9 +50,11 @@ export default function SmallGenericButton ({
   const BUTTON_PROPS = {
     size: 'sm',
     variant: 'solid',
-    leftIcon: IconItem,
+    rightIcon: IconItem,
     children: children,
-    colorScheme
+    borderRadius: 'base',
+    colorScheme,
+    color: colorScheme != null ? 'gray.00' : undefined
   }
 
   if (href != null) {

@@ -10,9 +10,8 @@ import (
 	"overdoll/applications/sting/internal/app/workflows"
 	"overdoll/applications/sting/internal/ports/graphql/types"
 	sting "overdoll/applications/sting/proto"
-	graphql2 "overdoll/libraries/graphql"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -32,8 +31,16 @@ type ClubModified struct {
 	SlugAliases []struct {
 		Slug string
 	}
-	Thumbnail                   *graphql2.Resource
-	Banner                      *graphql2.Resource
+	ThumbnailMedia *struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
+	BannerMedia *struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
 	ViewerIsOwner               bool
 	CanSupport                  bool
 	CanCreateSupporterOnlyPosts bool
@@ -422,27 +429,32 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 
 	// make sure thumbnail is set
 	updatedClb := getClub(t, client, clb.Slug())
-	require.NotNil(t, updatedClb.Club.Thumbnail, "thumbnail is not nil")
-	require.False(t, updatedClb.Club.Thumbnail.Processed, "thumbnail is not yet processed")
+	require.Empty(t, updatedClb.Club.ThumbnailMedia.ImageMedia.Id, "thumbnail is not nil")
 
 	grpcClient := getGrpcCallbackClient(t)
 
-	_, err = grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		Id:          thumbnailId,
-		ItemId:      clb.ID(),
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Width:       100,
-		Height:      100,
-		Token:       "CLUB",
-	}}})
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: thumbnailId,
+		Link: &proto.MediaLink{
+			Id:   clb.ID(),
+			Type: proto.MediaLinkType_CLUB_THUMBNAIL,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
 	updatedClb = getClub(t, client, clb.Slug())
-	require.True(t, updatedClb.Club.Thumbnail.Processed, "thumbnail is should be processed now")
+	require.NotEmpty(t, updatedClb.Club.ThumbnailMedia.ImageMedia.Id, "thumbnail is should be processed now")
 }
 
 // TestCreateClub_edit_banner - create a club and edit the banner
@@ -465,25 +477,32 @@ func TestCreateClub_edit_banner(t *testing.T) {
 	require.NoError(t, env.GetWorkflowError(), "no error generating banner")
 
 	updatedClb := getClub(t, client, clb.Slug())
-	require.False(t, updatedClb.Club.Banner.Processed, "banner not yet processed initially")
+	require.Empty(t, updatedClb.Club.BannerMedia.ImageMedia.Id, "banner not yet processed initially")
 
 	grpcClient := getGrpcCallbackClient(t)
 
 	cat := getClubFromAdapter(t, clb.ID())
 
-	_, err := grpcClient.UpdateResources(context.Background(), &proto.UpdateResourcesRequest{Resources: []*proto.Resource{{
-		// we know which resource to access since it will always use the first one
-		Id:          cat.BannerResource().ID(),
-		ItemId:      clb.ID(),
-		Processed:   true,
-		Type:        proto.ResourceType_IMAGE,
-		ProcessedId: uuid.New().String(),
-		Private:     false,
-		Token:       "CLUB_BANNER",
-	}}})
+	_, err := grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: cat.BannerMedia().ID(),
+		Link: &proto.MediaLink{
+			Id:   clb.ID(),
+			Type: proto.MediaLinkType_CLUB_BANNER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
 
 	require.NoError(t, err, "no error updating resource")
 
 	updatedClb = getClub(t, client, clb.Slug())
-	require.True(t, updatedClb.Club.Banner.Processed, "banner should be processed now")
+	require.NotEmpty(t, updatedClb.Club.BannerMedia.ImageMedia.Id, "banner should be processed now")
 }

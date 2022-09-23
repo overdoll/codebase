@@ -3,8 +3,8 @@ package post
 import (
 	"github.com/go-playground/validator/v10"
 	"overdoll/libraries/errors/domainerror"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
-	"overdoll/libraries/resource"
 	"overdoll/libraries/uuid"
 	"time"
 
@@ -26,10 +26,12 @@ type Category struct {
 
 	title             *localization.Translation
 	alternativeTitles []*localization.LocalizedDataTag
-	thumbnailResource *resource.Resource
-	bannerResource    *resource.Resource
-	totalLikes        int
-	totalPosts        int
+
+	thumbnailMedia *media.Media
+	bannerMedia    *media.Media
+
+	totalLikes int
+	totalPosts int
 
 	createdAt time.Time
 	updatedAt time.Time
@@ -67,16 +69,14 @@ func NewCategory(requester *principal.Principal, slug, title string, topic *Topi
 	}
 
 	return &Category{
-		id:                uuid.New().String(),
-		slug:              slug,
-		title:             lc,
-		topicId:           topicId,
-		thumbnailResource: nil,
-		bannerResource:    nil,
-		totalLikes:        0,
-		totalPosts:        0,
-		createdAt:         time.Now(),
-		updatedAt:         time.Now(),
+		id:         uuid.New().String(),
+		slug:       slug,
+		title:      lc,
+		topicId:    topicId,
+		totalLikes: 0,
+		totalPosts: 0,
+		createdAt:  time.Now(),
+		updatedAt:  time.Now(),
 	}, nil
 }
 
@@ -100,12 +100,12 @@ func (c *Category) AlternativeTitles() []*localization.LocalizedDataTag {
 	return c.alternativeTitles
 }
 
-func (c *Category) ThumbnailResource() *resource.Resource {
-	return c.thumbnailResource
+func (c *Category) ThumbnailMedia() *media.Media {
+	return c.thumbnailMedia
 }
 
-func (c *Category) BannerResource() *resource.Resource {
-	return c.bannerResource
+func (c *Category) BannerMedia() *media.Media {
+	return c.bannerMedia
 }
 
 func (c *Category) TotalLikes() int {
@@ -216,44 +216,44 @@ func (c *Category) UpdateTitle(requester *principal.Principal, title, locale str
 	return nil
 }
 
-func (c *Category) UpdateThumbnail(requester *principal.Principal, thumbnail *resource.Resource) error {
+func (c *Category) UpdateThumbnail(requester *principal.Principal, thumbnail *media.Media) error {
 
 	if err := c.canUpdate(requester); err != nil {
 		return err
 	}
 
-	c.thumbnailResource = thumbnail
+	c.thumbnailMedia = thumbnail
 
 	return nil
 }
 
-func (c *Category) UpdateThumbnailExisting(thumbnail *resource.Resource) error {
+func (c *Category) UpdateThumbnailExisting(thumbnail *media.Media) error {
 
-	if err := validateExistingResource(c.thumbnailResource, thumbnail); err != nil {
+	if err := validateExistingResource(c.thumbnailMedia, thumbnail); err != nil {
 		return err
 	}
 
-	c.thumbnailResource = thumbnail
+	c.thumbnailMedia = thumbnail
 	c.update()
 
 	return nil
 }
 
-func (c *Category) UpdateBannerExisting(thumbnail *resource.Resource) error {
+func (c *Category) UpdateBannerExisting(thumbnail *media.Media) error {
 
-	if err := validateExistingResource(c.bannerResource, thumbnail); err != nil {
+	if err := validateExistingResource(c.bannerMedia, thumbnail); err != nil {
 		return err
 	}
 
-	c.bannerResource = thumbnail
+	c.bannerMedia = thumbnail
 	c.update()
 
 	return nil
 }
 
-func (c *Category) UpdateBanner(thumbnail *resource.Resource) error {
+func (c *Category) UpdateBanner(thumbnail *media.Media) error {
 
-	c.bannerResource = thumbnail
+	c.bannerMedia = thumbnail
 	c.update()
 
 	return nil
@@ -272,14 +272,14 @@ func (c *Category) canUpdate(requester *principal.Principal) error {
 	return nil
 }
 
-func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail, banner *resource.Resource, totalLikes, totalPosts int, createdAt, updatedAt time.Time, topicId *string, alternativeTitles []map[string]string) *Category {
+func UnmarshalCategoryFromDatabase(id, slug string, title map[string]string, thumbnail, banner *media.Media, totalLikes, totalPosts int, createdAt, updatedAt time.Time, topicId *string, alternativeTitles []map[string]string) *Category {
 	return &Category{
 		id:                id,
 		slug:              slug,
 		title:             localization.UnmarshalTranslationFromDatabase(title),
 		alternativeTitles: localization.UnmarshalLocalizedDataTagsFromDatabase(alternativeTitles),
-		thumbnailResource: thumbnail,
-		bannerResource:    banner,
+		thumbnailMedia:    thumbnail,
+		bannerMedia:       banner,
 		totalLikes:        totalLikes,
 		totalPosts:        totalPosts,
 		createdAt:         createdAt,

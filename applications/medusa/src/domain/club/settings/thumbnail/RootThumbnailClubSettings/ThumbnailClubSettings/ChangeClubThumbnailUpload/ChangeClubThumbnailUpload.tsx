@@ -21,19 +21,7 @@ const Mutation = graphql`
     updateClubThumbnail(input: $input) {
       club {
         id
-        name
-        thumbnail {
-          type
-          urls {
-            url
-            mimeType
-          }
-          preview
-          width
-          height
-          ...ResourceIconFragment
-          ...ResourceItemFragment
-        }
+        ...ClubIconFragment
       }
     }
   }

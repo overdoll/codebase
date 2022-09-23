@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<028085dd63a0e4c0673f150292c44469>>
+ * @generated SignedSource<<149ee5b219b68177adf47e41256a4549>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,19 +12,15 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RouletteScreenPostDataFragment$data = {
   readonly characters: ReadonlyArray<{
-    readonly banner: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
     readonly id: string;
     readonly name: string;
+    readonly " $fragmentSpreads": FragmentRefs<"CharacterIconFragment">;
   }>;
   readonly club: {
-    readonly banner: {
-      readonly " $fragmentSpreads": FragmentRefs<"ResourceIconFragment">;
-    } | null;
     readonly id: string;
     readonly name: string;
     readonly slug: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
   };
   readonly reference: string;
   readonly " $fragmentType": "RouletteScreenPostDataFragment";
@@ -47,22 +43,6 @@ v1 = {
   "args": null,
   "kind": "ScalarField",
   "name": "name",
-  "storageKey": null
-},
-v2 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Resource",
-  "kind": "LinkedField",
-  "name": "banner",
-  "plural": false,
-  "selections": [
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "ResourceIconFragment"
-    }
-  ],
   "storageKey": null
 };
 return {
@@ -88,7 +68,11 @@ return {
       "selections": [
         (v0/*: any*/),
         (v1/*: any*/),
-        (v2/*: any*/)
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "CharacterIconFragment"
+        }
       ],
       "storageKey": null
     },
@@ -109,7 +93,11 @@ return {
           "storageKey": null
         },
         (v1/*: any*/),
-        (v2/*: any*/)
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ClubIconFragment"
+        }
       ],
       "storageKey": null
     }
@@ -119,6 +107,6 @@ return {
 };
 })();
 
-(node as any).hash = "5683a1c019838f6cfd41f65d434bfc01";
+(node as any).hash = "78b20aef8551530916e29c888ba72235";
 
 export default node;

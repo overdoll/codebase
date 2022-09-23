@@ -72,6 +72,11 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	AspectRatio struct {
+		Height func(childComplexity int) int
+		Width  func(childComplexity int) int
+	}
+
 	Club struct {
 		ID                func(childComplexity int) int
 		InfractionHistory func(childComplexity int, after *string, before *string, first *int, last *int) int
@@ -97,6 +102,13 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	ColorPalette struct {
+		Blue    func(childComplexity int) int
+		Green   func(childComplexity int) int
+		Percent func(childComplexity int) int
+		Red     func(childComplexity int) int
+	}
+
 	CreateRulePayload struct {
 		Rule func(childComplexity int) int
 	}
@@ -111,6 +123,35 @@ type ComplexityRoot struct {
 		FindRuleByID                  func(childComplexity int, id relay.ID) int
 	}
 
+	HLSVideoContainer struct {
+		TargetDevice func(childComplexity int) int
+		URL          func(childComplexity int) int
+	}
+
+	ImageMedia struct {
+		ColorPalettes func(childComplexity int) int
+		ID            func(childComplexity int) int
+		Variants      func(childComplexity int) int
+	}
+
+	ImageMediaAccess struct {
+		Height func(childComplexity int) int
+		URL    func(childComplexity int) int
+		Width  func(childComplexity int) int
+	}
+
+	ImageMediaVariants struct {
+		Banner      func(childComplexity int) int
+		Hd          func(childComplexity int) int
+		Icon        func(childComplexity int) int
+		Large       func(childComplexity int) int
+		Medium      func(childComplexity int) int
+		Mini        func(childComplexity int) int
+		Small       func(childComplexity int) int
+		SmallBanner func(childComplexity int) int
+		Thumbnail   func(childComplexity int) int
+	}
+
 	IssueClubInfractionPayload struct {
 		ClubInfractionHistory func(childComplexity int) int
 	}
@@ -118,6 +159,17 @@ type ComplexityRoot struct {
 	Language struct {
 		Locale func(childComplexity int) int
 		Name   func(childComplexity int) int
+	}
+
+	MP4VideoContainer struct {
+		Bitrate func(childComplexity int) int
+		Height  func(childComplexity int) int
+		URL     func(childComplexity int) int
+		Width   func(childComplexity int) int
+	}
+
+	MediaProgress struct {
+		ID func(childComplexity int) int
 	}
 
 	ModeratorSettings struct {
@@ -218,6 +270,13 @@ type ComplexityRoot struct {
 		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
 	}
 
+	RawMedia struct {
+		Failed           func(childComplexity int) int
+		ID               func(childComplexity int) int
+		OriginalFileName func(childComplexity int) int
+		Progress         func(childComplexity int) int
+	}
+
 	RejectPostPayload struct {
 		Post func(childComplexity int) int
 	}
@@ -302,6 +361,15 @@ type ComplexityRoot struct {
 
 	UpdateRuleTitlePayload struct {
 		Rule func(childComplexity int) int
+	}
+
+	VideoMedia struct {
+		AspectRatio func(childComplexity int) int
+		Containers  func(childComplexity int) int
+		Cover       func(childComplexity int) int
+		Duration    func(childComplexity int) int
+		HasAudio    func(childComplexity int) int
+		ID          func(childComplexity int) int
 	}
 
 	_Service struct {
@@ -434,6 +502,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ApprovePostPayload.Post(childComplexity), true
 
+	case "AspectRatio.height":
+		if e.complexity.AspectRatio.Height == nil {
+			break
+		}
+
+		return e.complexity.AspectRatio.Height(childComplexity), true
+
+	case "AspectRatio.width":
+		if e.complexity.AspectRatio.Width == nil {
+			break
+		}
+
+		return e.complexity.AspectRatio.Width(childComplexity), true
+
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
 			break
@@ -530,6 +612,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ClubInfractionHistoryEdge.Node(childComplexity), true
 
+	case "ColorPalette.blue":
+		if e.complexity.ColorPalette.Blue == nil {
+			break
+		}
+
+		return e.complexity.ColorPalette.Blue(childComplexity), true
+
+	case "ColorPalette.green":
+		if e.complexity.ColorPalette.Green == nil {
+			break
+		}
+
+		return e.complexity.ColorPalette.Green(childComplexity), true
+
+	case "ColorPalette.percent":
+		if e.complexity.ColorPalette.Percent == nil {
+			break
+		}
+
+		return e.complexity.ColorPalette.Percent(childComplexity), true
+
+	case "ColorPalette.red":
+		if e.complexity.ColorPalette.Red == nil {
+			break
+		}
+
+		return e.complexity.ColorPalette.Red(childComplexity), true
+
 	case "CreateRulePayload.rule":
 		if e.complexity.CreateRulePayload.Rule == nil {
 			break
@@ -621,6 +731,125 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Entity.FindRuleByID(childComplexity, args["id"].(relay.ID)), true
 
+	case "HLSVideoContainer.targetDevice":
+		if e.complexity.HLSVideoContainer.TargetDevice == nil {
+			break
+		}
+
+		return e.complexity.HLSVideoContainer.TargetDevice(childComplexity), true
+
+	case "HLSVideoContainer.url":
+		if e.complexity.HLSVideoContainer.URL == nil {
+			break
+		}
+
+		return e.complexity.HLSVideoContainer.URL(childComplexity), true
+
+	case "ImageMedia.colorPalettes":
+		if e.complexity.ImageMedia.ColorPalettes == nil {
+			break
+		}
+
+		return e.complexity.ImageMedia.ColorPalettes(childComplexity), true
+
+	case "ImageMedia.id":
+		if e.complexity.ImageMedia.ID == nil {
+			break
+		}
+
+		return e.complexity.ImageMedia.ID(childComplexity), true
+
+	case "ImageMedia.variants":
+		if e.complexity.ImageMedia.Variants == nil {
+			break
+		}
+
+		return e.complexity.ImageMedia.Variants(childComplexity), true
+
+	case "ImageMediaAccess.height":
+		if e.complexity.ImageMediaAccess.Height == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaAccess.Height(childComplexity), true
+
+	case "ImageMediaAccess.url":
+		if e.complexity.ImageMediaAccess.URL == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaAccess.URL(childComplexity), true
+
+	case "ImageMediaAccess.width":
+		if e.complexity.ImageMediaAccess.Width == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaAccess.Width(childComplexity), true
+
+	case "ImageMediaVariants.banner":
+		if e.complexity.ImageMediaVariants.Banner == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Banner(childComplexity), true
+
+	case "ImageMediaVariants.hd":
+		if e.complexity.ImageMediaVariants.Hd == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Hd(childComplexity), true
+
+	case "ImageMediaVariants.icon":
+		if e.complexity.ImageMediaVariants.Icon == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Icon(childComplexity), true
+
+	case "ImageMediaVariants.large":
+		if e.complexity.ImageMediaVariants.Large == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Large(childComplexity), true
+
+	case "ImageMediaVariants.medium":
+		if e.complexity.ImageMediaVariants.Medium == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Medium(childComplexity), true
+
+	case "ImageMediaVariants.mini":
+		if e.complexity.ImageMediaVariants.Mini == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Mini(childComplexity), true
+
+	case "ImageMediaVariants.small":
+		if e.complexity.ImageMediaVariants.Small == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Small(childComplexity), true
+
+	case "ImageMediaVariants.smallBanner":
+		if e.complexity.ImageMediaVariants.SmallBanner == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.SmallBanner(childComplexity), true
+
+	case "ImageMediaVariants.thumbnail":
+		if e.complexity.ImageMediaVariants.Thumbnail == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Thumbnail(childComplexity), true
+
 	case "IssueClubInfractionPayload.clubInfractionHistory":
 		if e.complexity.IssueClubInfractionPayload.ClubInfractionHistory == nil {
 			break
@@ -641,6 +870,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Language.Name(childComplexity), true
+
+	case "MP4VideoContainer.bitrate":
+		if e.complexity.MP4VideoContainer.Bitrate == nil {
+			break
+		}
+
+		return e.complexity.MP4VideoContainer.Bitrate(childComplexity), true
+
+	case "MP4VideoContainer.height":
+		if e.complexity.MP4VideoContainer.Height == nil {
+			break
+		}
+
+		return e.complexity.MP4VideoContainer.Height(childComplexity), true
+
+	case "MP4VideoContainer.url":
+		if e.complexity.MP4VideoContainer.URL == nil {
+			break
+		}
+
+		return e.complexity.MP4VideoContainer.URL(childComplexity), true
+
+	case "MP4VideoContainer.width":
+		if e.complexity.MP4VideoContainer.Width == nil {
+			break
+		}
+
+		return e.complexity.MP4VideoContainer.Width(childComplexity), true
+
+	case "MediaProgress.id":
+		if e.complexity.MediaProgress.ID == nil {
+			break
+		}
+
+		return e.complexity.MediaProgress.ID(childComplexity), true
 
 	case "ModeratorSettings.isInModeratorQueue":
 		if e.complexity.ModeratorSettings.IsInModeratorQueue == nil {
@@ -1129,6 +1393,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve_entities(childComplexity, args["representations"].([]map[string]interface{})), true
 
+	case "RawMedia.failed":
+		if e.complexity.RawMedia.Failed == nil {
+			break
+		}
+
+		return e.complexity.RawMedia.Failed(childComplexity), true
+
+	case "RawMedia.id":
+		if e.complexity.RawMedia.ID == nil {
+			break
+		}
+
+		return e.complexity.RawMedia.ID(childComplexity), true
+
+	case "RawMedia.originalFileName":
+		if e.complexity.RawMedia.OriginalFileName == nil {
+			break
+		}
+
+		return e.complexity.RawMedia.OriginalFileName(childComplexity), true
+
+	case "RawMedia.progress":
+		if e.complexity.RawMedia.Progress == nil {
+			break
+		}
+
+		return e.complexity.RawMedia.Progress(childComplexity), true
+
 	case "RejectPostPayload.post":
 		if e.complexity.RejectPostPayload.Post == nil {
 			break
@@ -1404,6 +1696,48 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.UpdateRuleTitlePayload.Rule(childComplexity), true
+
+	case "VideoMedia.aspectRatio":
+		if e.complexity.VideoMedia.AspectRatio == nil {
+			break
+		}
+
+		return e.complexity.VideoMedia.AspectRatio(childComplexity), true
+
+	case "VideoMedia.containers":
+		if e.complexity.VideoMedia.Containers == nil {
+			break
+		}
+
+		return e.complexity.VideoMedia.Containers(childComplexity), true
+
+	case "VideoMedia.cover":
+		if e.complexity.VideoMedia.Cover == nil {
+			break
+		}
+
+		return e.complexity.VideoMedia.Cover(childComplexity), true
+
+	case "VideoMedia.duration":
+		if e.complexity.VideoMedia.Duration == nil {
+			break
+		}
+
+		return e.complexity.VideoMedia.Duration(childComplexity), true
+
+	case "VideoMedia.hasAudio":
+		if e.complexity.VideoMedia.HasAudio == nil {
+			break
+		}
+
+		return e.complexity.VideoMedia.HasAudio(childComplexity), true
+
+	case "VideoMedia.id":
+		if e.complexity.VideoMedia.ID == nil {
+			break
+		}
+
+		return e.complexity.VideoMedia.ID(childComplexity), true
 
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
@@ -2298,6 +2632,151 @@ type Resource {
   """
   failed: Boolean!
 }
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The width of the image."""
+  width: Int!
+
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+}
+
+"""
+All variants available for an image.
+"""
+type ImageMediaVariants {
+  """50x50 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+  """100x100 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+  """150x150 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+  """680px width or height resize."""
+  small: ImageMediaAccess!
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+  """720px width or height resize."""
+  banner: ImageMediaAccess!
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
+}
+
+type ColorPalette {
+  percent: Float!
+  red: Int!
+  green: Int!
+  blue: Int!
+}
+
+extend type MediaProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
+type ImageMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+}
+
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The width."""
+  width: Int!
+  """The height."""
+  height: Int!
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
+}
+
+enum MediaDeviceType {
+  MOBILE
+  DESKTOP
+  UNIVERSAL
+}
+
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+}
+
+union Media = VideoMedia | ImageMedia | RawMedia
 `, BuiltIn: false},
 	{Name: "../../../../../libraries/graphql/relay/schema.graphql", Input: `type PageInfo {
   hasNextPage: Boolean!
@@ -2327,7 +2806,7 @@ interface Node {
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 # a union of all types that use the @key directive
-union _Entity = Account | Club | ClubInfractionHistory | Post | PostAuditLog | PostReport | ResourceProgress | Rule
+union _Entity = Account | Club | ClubInfractionHistory | MediaProgress | Post | PostAuditLog | PostReport | ResourceProgress | Rule
 
 # fake type to build resolver interfaces for users to implement
 type Entity {
@@ -3462,6 +3941,94 @@ func (ec *executionContext) fieldContext_ApprovePostPayload_post(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _AspectRatio_width(ctx context.Context, field graphql.CollectedField, obj *graphql1.AspectRatio) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AspectRatio_width(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Width, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AspectRatio_width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AspectRatio",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _AspectRatio_height(ctx context.Context, field graphql.CollectedField, obj *graphql1.AspectRatio) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AspectRatio_height(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Height, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AspectRatio_height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AspectRatio",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Club_infractionHistory(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Club_infractionHistory(ctx, field)
 	if err != nil {
@@ -4117,6 +4684,182 @@ func (ec *executionContext) fieldContext_ClubInfractionHistoryEdge_cursor(ctx co
 	return fc, nil
 }
 
+func (ec *executionContext) _ColorPalette_percent(ctx context.Context, field graphql.CollectedField, obj *graphql1.ColorPalette) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ColorPalette_percent(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Percent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(float64)
+	fc.Result = res
+	return ec.marshalNFloat2float64(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ColorPalette_percent(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ColorPalette",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Float does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ColorPalette_red(ctx context.Context, field graphql.CollectedField, obj *graphql1.ColorPalette) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ColorPalette_red(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Red, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ColorPalette_red(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ColorPalette",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ColorPalette_green(ctx context.Context, field graphql.CollectedField, obj *graphql1.ColorPalette) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ColorPalette_green(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Green, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ColorPalette_green(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ColorPalette",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ColorPalette_blue(ctx context.Context, field graphql.CollectedField, obj *graphql1.ColorPalette) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ColorPalette_blue(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Blue, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ColorPalette_blue(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ColorPalette",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CreateRulePayload_rule(ctx context.Context, field graphql.CollectedField, obj *types.CreateRulePayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CreateRulePayload_rule(ctx, field)
 	if err != nil {
@@ -4647,6 +5390,856 @@ func (ec *executionContext) fieldContext_Entity_findRuleByID(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _HLSVideoContainer_url(ctx context.Context, field graphql.CollectedField, obj *graphql1.HLSVideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_HLSVideoContainer_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.URI)
+	fc.Result = res
+	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_HLSVideoContainer_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HLSVideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type URI does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _HLSVideoContainer_targetDevice(ctx context.Context, field graphql.CollectedField, obj *graphql1.HLSVideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_HLSVideoContainer_targetDevice(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.TargetDevice, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.MediaDeviceType)
+	fc.Result = res
+	return ec.marshalNMediaDeviceType2overdollᚋlibrariesᚋgraphqlᚐMediaDeviceType(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_HLSVideoContainer_targetDevice(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "HLSVideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type MediaDeviceType does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMedia_id(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMedia_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMedia_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMedia_variants(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMedia_variants(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Variants, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaVariants)
+	fc.Result = res
+	return ec.marshalNImageMediaVariants2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaVariants(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMedia_variants(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "mini":
+				return ec.fieldContext_ImageMediaVariants_mini(ctx, field)
+			case "icon":
+				return ec.fieldContext_ImageMediaVariants_icon(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_ImageMediaVariants_thumbnail(ctx, field)
+			case "small":
+				return ec.fieldContext_ImageMediaVariants_small(ctx, field)
+			case "medium":
+				return ec.fieldContext_ImageMediaVariants_medium(ctx, field)
+			case "large":
+				return ec.fieldContext_ImageMediaVariants_large(ctx, field)
+			case "hd":
+				return ec.fieldContext_ImageMediaVariants_hd(ctx, field)
+			case "banner":
+				return ec.fieldContext_ImageMediaVariants_banner(ctx, field)
+			case "smallBanner":
+				return ec.fieldContext_ImageMediaVariants_smallBanner(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaVariants", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMedia_colorPalettes(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMedia_colorPalettes(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ColorPalettes, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*graphql1.ColorPalette)
+	fc.Result = res
+	return ec.marshalNColorPalette2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐColorPaletteᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMedia_colorPalettes(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "percent":
+				return ec.fieldContext_ColorPalette_percent(ctx, field)
+			case "red":
+				return ec.fieldContext_ColorPalette_red(ctx, field)
+			case "green":
+				return ec.fieldContext_ColorPalette_green(ctx, field)
+			case "blue":
+				return ec.fieldContext_ColorPalette_blue(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ColorPalette", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaAccess_width(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaAccess) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaAccess_width(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Width, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaAccess_width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaAccess",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaAccess_height(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaAccess) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaAccess_height(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Height, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaAccess_height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaAccess",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaAccess_url(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaAccess) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaAccess_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.URI)
+	fc.Result = res
+	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaAccess_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaAccess",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type URI does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_mini(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_mini(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Mini, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_mini(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_icon(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_icon(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Icon, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_icon(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_thumbnail(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_thumbnail(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Thumbnail, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_thumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_small(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_small(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Small, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_small(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_medium(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_medium(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Medium, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_medium(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_large(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_large(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Large, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_large(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_hd(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_hd(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Hd, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_hd(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_banner(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_banner(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Banner, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_banner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_smallBanner(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_smallBanner(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.SmallBanner, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_smallBanner(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _IssueClubInfractionPayload_clubInfractionHistory(ctx context.Context, field graphql.CollectedField, obj *types.IssueClubInfractionPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_IssueClubInfractionPayload_clubInfractionHistory(ctx, field)
 	if err != nil {
@@ -4787,6 +6380,226 @@ func (ec *executionContext) fieldContext_Language_name(ctx context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MP4VideoContainer_url(ctx context.Context, field graphql.CollectedField, obj *graphql1.MP4VideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MP4VideoContainer_url(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.URL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.URI)
+	fc.Result = res
+	return ec.marshalNURI2overdollᚋlibrariesᚋgraphqlᚐURI(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MP4VideoContainer_url(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MP4VideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type URI does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MP4VideoContainer_bitrate(ctx context.Context, field graphql.CollectedField, obj *graphql1.MP4VideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MP4VideoContainer_bitrate(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Bitrate, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MP4VideoContainer_bitrate(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MP4VideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MP4VideoContainer_width(ctx context.Context, field graphql.CollectedField, obj *graphql1.MP4VideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MP4VideoContainer_width(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Width, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MP4VideoContainer_width(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MP4VideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MP4VideoContainer_height(ctx context.Context, field graphql.CollectedField, obj *graphql1.MP4VideoContainer) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MP4VideoContainer_height(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Height, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MP4VideoContainer_height(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MP4VideoContainer",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _MediaProgress_id(ctx context.Context, field graphql.CollectedField, obj *graphql1.MediaProgress) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_MediaProgress_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_MediaProgress_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "MediaProgress",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
 		},
 	}
 	return fc, nil
@@ -7843,6 +9656,183 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _RawMedia_id(ctx context.Context, field graphql.CollectedField, obj *graphql1.RawMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RawMedia_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RawMedia_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RawMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RawMedia_originalFileName(ctx context.Context, field graphql.CollectedField, obj *graphql1.RawMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RawMedia_originalFileName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.OriginalFileName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RawMedia_originalFileName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RawMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RawMedia_failed(ctx context.Context, field graphql.CollectedField, obj *graphql1.RawMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RawMedia_failed(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Failed, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RawMedia_failed(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RawMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RawMedia_progress(ctx context.Context, field graphql.CollectedField, obj *graphql1.RawMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RawMedia_progress(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Progress, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.MediaProgress)
+	fc.Result = res
+	return ec.marshalOMediaProgress2ᚖoverdollᚋlibrariesᚋgraphqlᚐMediaProgress(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RawMedia_progress(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RawMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_MediaProgress_id(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type MediaProgress", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _RejectPostPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.RejectPostPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_RejectPostPayload_post(ctx, field)
 	if err != nil {
@@ -9686,6 +11676,284 @@ func (ec *executionContext) fieldContext_UpdateRuleTitlePayload_rule(ctx context
 				return ec.fieldContext_Rule_infraction(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Rule", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VideoMedia_id(ctx context.Context, field graphql.CollectedField, obj *graphql1.VideoMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_VideoMedia_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_VideoMedia_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VideoMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VideoMedia_cover(ctx context.Context, field graphql.CollectedField, obj *graphql1.VideoMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_VideoMedia_cover(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Cover, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMedia)
+	fc.Result = res
+	return ec.marshalNImageMedia2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMedia(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_VideoMedia_cover(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VideoMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_ImageMedia_id(ctx, field)
+			case "variants":
+				return ec.fieldContext_ImageMedia_variants(ctx, field)
+			case "colorPalettes":
+				return ec.fieldContext_ImageMedia_colorPalettes(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMedia", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VideoMedia_aspectRatio(ctx context.Context, field graphql.CollectedField, obj *graphql1.VideoMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_VideoMedia_aspectRatio(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.AspectRatio, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.AspectRatio)
+	fc.Result = res
+	return ec.marshalNAspectRatio2ᚖoverdollᚋlibrariesᚋgraphqlᚐAspectRatio(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_VideoMedia_aspectRatio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VideoMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_AspectRatio_width(ctx, field)
+			case "height":
+				return ec.fieldContext_AspectRatio_height(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type AspectRatio", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VideoMedia_containers(ctx context.Context, field graphql.CollectedField, obj *graphql1.VideoMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_VideoMedia_containers(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Containers, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]graphql1.VideoContainer)
+	fc.Result = res
+	return ec.marshalNVideoContainer2ᚕoverdollᚋlibrariesᚋgraphqlᚐVideoContainerᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_VideoMedia_containers(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VideoMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type VideoContainer does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VideoMedia_duration(ctx context.Context, field graphql.CollectedField, obj *graphql1.VideoMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_VideoMedia_duration(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Duration, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_VideoMedia_duration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VideoMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _VideoMedia_hasAudio(ctx context.Context, field graphql.CollectedField, obj *graphql1.VideoMedia) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_VideoMedia_hasAudio(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.HasAudio, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_VideoMedia_hasAudio(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "VideoMedia",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
 		},
 	}
 	return fc, nil
@@ -11928,6 +14196,36 @@ func (ec *executionContext) unmarshalInputUpdateRuleTitleInput(ctx context.Conte
 
 // region    ************************** interface.gotpl ***************************
 
+func (ec *executionContext) _Media(ctx context.Context, sel ast.SelectionSet, obj graphql1.Media) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case graphql1.VideoMedia:
+		return ec._VideoMedia(ctx, sel, &obj)
+	case *graphql1.VideoMedia:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._VideoMedia(ctx, sel, obj)
+	case graphql1.ImageMedia:
+		return ec._ImageMedia(ctx, sel, &obj)
+	case *graphql1.ImageMedia:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._ImageMedia(ctx, sel, obj)
+	case graphql1.RawMedia:
+		return ec._RawMedia(ctx, sel, &obj)
+	case *graphql1.RawMedia:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._RawMedia(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj relay.Node) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -11965,6 +14263,29 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 	}
 }
 
+func (ec *executionContext) _VideoContainer(ctx context.Context, sel ast.SelectionSet, obj graphql1.VideoContainer) graphql.Marshaler {
+	switch obj := (obj).(type) {
+	case nil:
+		return graphql.Null
+	case graphql1.HLSVideoContainer:
+		return ec._HLSVideoContainer(ctx, sel, &obj)
+	case *graphql1.HLSVideoContainer:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._HLSVideoContainer(ctx, sel, obj)
+	case graphql1.MP4VideoContainer:
+		return ec._MP4VideoContainer(ctx, sel, &obj)
+	case *graphql1.MP4VideoContainer:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._MP4VideoContainer(ctx, sel, obj)
+	default:
+		panic(fmt.Errorf("unexpected type %T", obj))
+	}
+}
+
 func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, obj fedruntime.Entity) graphql.Marshaler {
 	switch obj := (obj).(type) {
 	case nil:
@@ -11990,6 +14311,13 @@ func (ec *executionContext) __Entity(ctx context.Context, sel ast.SelectionSet, 
 			return graphql.Null
 		}
 		return ec._ClubInfractionHistory(ctx, sel, obj)
+	case graphql1.MediaProgress:
+		return ec._MediaProgress(ctx, sel, &obj)
+	case *graphql1.MediaProgress:
+		if obj == nil {
+			return graphql.Null
+		}
+		return ec._MediaProgress(ctx, sel, obj)
 	case types.Post:
 		return ec._Post(ctx, sel, &obj)
 	case *types.Post:
@@ -12161,6 +14489,41 @@ func (ec *executionContext) _ApprovePostPayload(ctx context.Context, sel ast.Sel
 
 			out.Values[i] = ec._ApprovePostPayload_post(ctx, field, obj)
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var aspectRatioImplementors = []string{"AspectRatio"}
+
+func (ec *executionContext) _AspectRatio(ctx context.Context, sel ast.SelectionSet, obj *graphql1.AspectRatio) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, aspectRatioImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("AspectRatio")
+		case "width":
+
+			out.Values[i] = ec._AspectRatio_width(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "height":
+
+			out.Values[i] = ec._AspectRatio_height(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12358,6 +14721,55 @@ func (ec *executionContext) _ClubInfractionHistoryEdge(ctx context.Context, sel 
 		case "cursor":
 
 			out.Values[i] = ec._ClubInfractionHistoryEdge_cursor(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var colorPaletteImplementors = []string{"ColorPalette"}
+
+func (ec *executionContext) _ColorPalette(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ColorPalette) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, colorPaletteImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ColorPalette")
+		case "percent":
+
+			out.Values[i] = ec._ColorPalette_percent(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "red":
+
+			out.Values[i] = ec._ColorPalette_red(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "green":
+
+			out.Values[i] = ec._ColorPalette_green(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "blue":
+
+			out.Values[i] = ec._ColorPalette_blue(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -12589,6 +15001,209 @@ func (ec *executionContext) _Entity(ctx context.Context, sel ast.SelectionSet) g
 	return out
 }
 
+var hLSVideoContainerImplementors = []string{"HLSVideoContainer", "VideoContainer"}
+
+func (ec *executionContext) _HLSVideoContainer(ctx context.Context, sel ast.SelectionSet, obj *graphql1.HLSVideoContainer) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, hLSVideoContainerImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("HLSVideoContainer")
+		case "url":
+
+			out.Values[i] = ec._HLSVideoContainer_url(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "targetDevice":
+
+			out.Values[i] = ec._HLSVideoContainer_targetDevice(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var imageMediaImplementors = []string{"ImageMedia", "Media"}
+
+func (ec *executionContext) _ImageMedia(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ImageMedia) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, imageMediaImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ImageMedia")
+		case "id":
+
+			out.Values[i] = ec._ImageMedia_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "variants":
+
+			out.Values[i] = ec._ImageMedia_variants(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "colorPalettes":
+
+			out.Values[i] = ec._ImageMedia_colorPalettes(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var imageMediaAccessImplementors = []string{"ImageMediaAccess"}
+
+func (ec *executionContext) _ImageMediaAccess(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ImageMediaAccess) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, imageMediaAccessImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ImageMediaAccess")
+		case "width":
+
+			out.Values[i] = ec._ImageMediaAccess_width(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "height":
+
+			out.Values[i] = ec._ImageMediaAccess_height(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "url":
+
+			out.Values[i] = ec._ImageMediaAccess_url(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var imageMediaVariantsImplementors = []string{"ImageMediaVariants"}
+
+func (ec *executionContext) _ImageMediaVariants(ctx context.Context, sel ast.SelectionSet, obj *graphql1.ImageMediaVariants) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, imageMediaVariantsImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ImageMediaVariants")
+		case "mini":
+
+			out.Values[i] = ec._ImageMediaVariants_mini(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "icon":
+
+			out.Values[i] = ec._ImageMediaVariants_icon(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "thumbnail":
+
+			out.Values[i] = ec._ImageMediaVariants_thumbnail(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "small":
+
+			out.Values[i] = ec._ImageMediaVariants_small(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "medium":
+
+			out.Values[i] = ec._ImageMediaVariants_medium(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "large":
+
+			out.Values[i] = ec._ImageMediaVariants_large(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hd":
+
+			out.Values[i] = ec._ImageMediaVariants_hd(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "banner":
+
+			out.Values[i] = ec._ImageMediaVariants_banner(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "smallBanner":
+
+			out.Values[i] = ec._ImageMediaVariants_smallBanner(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var issueClubInfractionPayloadImplementors = []string{"IssueClubInfractionPayload"}
 
 func (ec *executionContext) _IssueClubInfractionPayload(ctx context.Context, sel ast.SelectionSet, obj *types.IssueClubInfractionPayload) graphql.Marshaler {
@@ -12634,6 +15249,83 @@ func (ec *executionContext) _Language(ctx context.Context, sel ast.SelectionSet,
 		case "name":
 
 			out.Values[i] = ec._Language_name(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mP4VideoContainerImplementors = []string{"MP4VideoContainer", "VideoContainer"}
+
+func (ec *executionContext) _MP4VideoContainer(ctx context.Context, sel ast.SelectionSet, obj *graphql1.MP4VideoContainer) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mP4VideoContainerImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MP4VideoContainer")
+		case "url":
+
+			out.Values[i] = ec._MP4VideoContainer_url(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "bitrate":
+
+			out.Values[i] = ec._MP4VideoContainer_bitrate(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "width":
+
+			out.Values[i] = ec._MP4VideoContainer_width(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "height":
+
+			out.Values[i] = ec._MP4VideoContainer_height(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var mediaProgressImplementors = []string{"MediaProgress", "_Entity"}
+
+func (ec *executionContext) _MediaProgress(ctx context.Context, sel ast.SelectionSet, obj *graphql1.MediaProgress) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, mediaProgressImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("MediaProgress")
+		case "id":
+
+			out.Values[i] = ec._MediaProgress_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -13486,6 +16178,52 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
+var rawMediaImplementors = []string{"RawMedia", "Media"}
+
+func (ec *executionContext) _RawMedia(ctx context.Context, sel ast.SelectionSet, obj *graphql1.RawMedia) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, rawMediaImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RawMedia")
+		case "id":
+
+			out.Values[i] = ec._RawMedia_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "originalFileName":
+
+			out.Values[i] = ec._RawMedia_originalFileName(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "failed":
+
+			out.Values[i] = ec._RawMedia_failed(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "progress":
+
+			out.Values[i] = ec._RawMedia_progress(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var rejectPostPayloadImplementors = []string{"RejectPostPayload"}
 
 func (ec *executionContext) _RejectPostPayload(ctx context.Context, sel ast.SelectionSet, obj *types.RejectPostPayload) graphql.Marshaler {
@@ -14084,6 +16822,69 @@ func (ec *executionContext) _UpdateRuleTitlePayload(ctx context.Context, sel ast
 	return out
 }
 
+var videoMediaImplementors = []string{"VideoMedia", "Media"}
+
+func (ec *executionContext) _VideoMedia(ctx context.Context, sel ast.SelectionSet, obj *graphql1.VideoMedia) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, videoMediaImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("VideoMedia")
+		case "id":
+
+			out.Values[i] = ec._VideoMedia_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "cover":
+
+			out.Values[i] = ec._VideoMedia_cover(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "aspectRatio":
+
+			out.Values[i] = ec._VideoMedia_aspectRatio(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "containers":
+
+			out.Values[i] = ec._VideoMedia_containers(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "duration":
+
+			out.Values[i] = ec._VideoMedia_duration(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "hasAudio":
+
+			out.Values[i] = ec._VideoMedia_hasAudio(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var _ServiceImplementors = []string{"_Service"}
 
 func (ec *executionContext) __Service(ctx context.Context, sel ast.SelectionSet, obj *fedruntime.Service) graphql.Marshaler {
@@ -14451,6 +17252,16 @@ func (ec *executionContext) unmarshalNApprovePostInput2overdollᚋapplications�
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNAspectRatio2ᚖoverdollᚋlibrariesᚋgraphqlᚐAspectRatio(ctx context.Context, sel ast.SelectionSet, v *graphql1.AspectRatio) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._AspectRatio(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNBCP472string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -14587,9 +17398,78 @@ func (ec *executionContext) marshalNClubInfractionHistorySource2overdollᚋappli
 	return v
 }
 
+func (ec *executionContext) marshalNColorPalette2ᚕᚖoverdollᚋlibrariesᚋgraphqlᚐColorPaletteᚄ(ctx context.Context, sel ast.SelectionSet, v []*graphql1.ColorPalette) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNColorPalette2ᚖoverdollᚋlibrariesᚋgraphqlᚐColorPalette(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNColorPalette2ᚖoverdollᚋlibrariesᚋgraphqlᚐColorPalette(ctx context.Context, sel ast.SelectionSet, v *graphql1.ColorPalette) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ColorPalette(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNCreateRuleInput2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateRuleInput(ctx context.Context, v interface{}) (types.CreateRuleInput, error) {
 	res, err := ec.unmarshalInputCreateRuleInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNFloat2float64(ctx context.Context, v interface{}) (float64, error) {
+	res, err := graphql.UnmarshalFloatContext(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNFloat2float64(ctx context.Context, sel ast.SelectionSet, v float64) graphql.Marshaler {
+	res := graphql.MarshalFloatContext(v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return graphql.WrapContextMarshaler(ctx, res)
 }
 
 func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, v interface{}) (relay.ID, error) {
@@ -14600,6 +17480,36 @@ func (ec *executionContext) unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelay�
 
 func (ec *executionContext) marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx context.Context, sel ast.SelectionSet, v relay.ID) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) marshalNImageMedia2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMedia(ctx context.Context, sel ast.SelectionSet, v *graphql1.ImageMedia) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ImageMedia(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx context.Context, sel ast.SelectionSet, v *graphql1.ImageMediaAccess) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ImageMediaAccess(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNImageMediaVariants2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaVariants(ctx context.Context, sel ast.SelectionSet, v *graphql1.ImageMediaVariants) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ImageMediaVariants(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
@@ -14630,6 +17540,16 @@ func (ec *executionContext) marshalNLanguage2ᚖoverdollᚋlibrariesᚋgraphql�
 		return graphql.Null
 	}
 	return ec._Language(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNMediaDeviceType2overdollᚋlibrariesᚋgraphqlᚐMediaDeviceType(ctx context.Context, v interface{}) (graphql1.MediaDeviceType, error) {
+	var res graphql1.MediaDeviceType
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNMediaDeviceType2overdollᚋlibrariesᚋgraphqlᚐMediaDeviceType(ctx context.Context, sel ast.SelectionSet, v graphql1.MediaDeviceType) graphql.Marshaler {
+	return v
 }
 
 func (ec *executionContext) marshalNModeratorSettings2overdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐModeratorSettings(ctx context.Context, sel ast.SelectionSet, v types.ModeratorSettings) graphql.Marshaler {
@@ -15207,6 +18127,60 @@ func (ec *executionContext) unmarshalNUpdateRuleTitleInput2overdollᚋapplicatio
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNVideoContainer2overdollᚋlibrariesᚋgraphqlᚐVideoContainer(ctx context.Context, sel ast.SelectionSet, v graphql1.VideoContainer) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._VideoContainer(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNVideoContainer2ᚕoverdollᚋlibrariesᚋgraphqlᚐVideoContainerᚄ(ctx context.Context, sel ast.SelectionSet, v []graphql1.VideoContainer) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNVideoContainer2overdollᚋlibrariesᚋgraphqlᚐVideoContainer(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalN_Any2map(ctx context.Context, v interface{}) (map[string]interface{}, error) {
 	res, err := graphql.UnmarshalMap(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -15668,6 +18642,13 @@ func (ec *executionContext) marshalOIssueClubInfractionPayload2ᚖoverdollᚋapp
 		return graphql.Null
 	}
 	return ec._IssueClubInfractionPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOMediaProgress2ᚖoverdollᚋlibrariesᚋgraphqlᚐMediaProgress(ctx context.Context, sel ast.SelectionSet, v *graphql1.MediaProgress) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._MediaProgress(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPost2ᚖoverdollᚋapplicationsᚋparleyᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx context.Context, sel ast.SelectionSet, v *types.Post) graphql.Marshaler {

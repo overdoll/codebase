@@ -7,7 +7,7 @@ import (
 	"overdoll/libraries/cache"
 	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
 	"overdoll/libraries/support"
 	"time"
 
@@ -25,6 +25,7 @@ type characterDocument struct {
 	Slug              string            `json:"slug"`
 	ThumbnailResource string            `json:"thumbnail_resource"`
 	BannerResource    string            `json:"banner_resource"`
+	BannerMedia       *string           `json:"banner_media"`
 	Name              map[string]string `json:"name"`
 	Series            *seriesDocument   `json:"series"`
 	ClubId            *string           `json:"club_id"`
@@ -41,13 +42,7 @@ var characterWriterIndex = cache.WriteAlias(CachePrefix, CharacterIndexName)
 
 func marshalCharacterToDocument(char *post.Character) (*characterDocument, error) {
 
-	marshalled, err := resource.MarshalResourceToDatabase(char.ThumbnailResource())
-
-	if err != nil {
-		return nil, err
-	}
-
-	marshalledBanner, err := resource.MarshalResourceToDatabase(char.BannerResource())
+	marshalledBanner, err := media.MarshalMediaToDatabase(char.BannerMedia())
 
 	if err != nil {
 		return nil, err
@@ -59,10 +54,23 @@ func marshalCharacterToDocument(char *post.Character) (*characterDocument, error
 		return nil, err
 	}
 
+	var bannerResource string
+
+	if char.BannerMedia() != nil {
+		bannerResource = char.BannerMedia().LegacyResource()
+	}
+
+	var thumbnailResource string
+
+	if char.ThumbnailMedia() != nil {
+		thumbnailResource = char.ThumbnailMedia().LegacyResource()
+	}
+
 	return &characterDocument{
 		Id:                char.ID(),
-		ThumbnailResource: marshalled,
-		BannerResource:    marshalledBanner,
+		BannerMedia:       marshalledBanner,
+		BannerResource:    bannerResource,
+		ThumbnailResource: thumbnailResource,
 		Name:              localization.MarshalTranslationToDatabase(char.Name()),
 		ClubId:            char.ClubId(),
 		Slug:              char.Slug(),
@@ -84,13 +92,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		return nil, errors.Wrap(err, "failed to unmarshal character document")
 	}
 
-	unmarshalledCharacterResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.ThumbnailResource)
+	unmarshalledCharacterThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.ThumbnailResource, nil)
 
 	if err != nil {
 		return nil, err
 	}
 
-	unmarshalledCharacterBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.BannerResource)
+	unmarshalledCharacterBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.BannerResource, chr.BannerMedia)
 
 	if err != nil {
 		return nil, err
@@ -100,13 +108,13 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 
 	if chr.Series != nil {
 
-		unmarshalledSeriesResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.ThumbnailResource)
+		unmarshalledSeriesThumbnail, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.Series.ThumbnailResource, nil)
 
 		if err != nil {
 			return nil, err
 		}
 
-		unmarshalledSeriesBannerResource, err := r.resourceSerializer.UnmarshalResourceFromDatabase(ctx, chr.Series.BannerResource)
+		unmarshalledSeriesBanner, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, chr.Series.BannerResource, chr.Series.BannerMedia)
 
 		if err != nil {
 			return nil, err
@@ -116,8 +124,8 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 			chr.Series.Id,
 			chr.Series.Slug,
 			chr.Series.Title,
-			unmarshalledSeriesResource,
-			unmarshalledSeriesBannerResource,
+			unmarshalledSeriesThumbnail,
+			unmarshalledSeriesBanner,
 			chr.Series.TotalLikes,
 			chr.Series.TotalPosts,
 			chr.Series.CreatedAt,
@@ -129,8 +137,8 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCharacterDocument(ctx co
 		chr.Id,
 		chr.Slug,
 		chr.Name,
-		unmarshalledCharacterResource,
-		unmarshalledCharacterBannerResource,
+		unmarshalledCharacterThumbnail,
+		unmarshalledCharacterBanner,
 		chr.TotalLikes,
 		chr.TotalPosts,
 		chr.CreatedAt,
@@ -163,6 +171,46 @@ func (r PostsCassandraElasticsearchRepository) indexCharacter(ctx context.Contex
 
 	if err != nil {
 		return errors.Wrap(support.ParseElasticError(err), "failed to index character")
+	}
+
+	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) ScanCharacters(ctx context.Context, characterId string, callback func(character *post.Character) error) error {
+
+	builder := r.client.Search().
+		Index(CharacterReaderIndex)
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	if characterId != "" {
+		filterQueries = append(filterQueries, elastic.NewTermQuery("id", characterId))
+	}
+
+	query.Filter(filterQueries...)
+
+	builder.Query(query)
+	builder.Size(10000)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to search characters")
+	}
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := r.unmarshalCharacterDocument(ctx, hit.Source, hit.Sort)
+
+		if err != nil {
+			return err
+		}
+
+		if err := callback(createdPost); err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -34,7 +34,7 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
     return (
       <HorizontalNavigation.Button
         exact
-        colorScheme='teal'
+        colorScheme='primary'
         href='/clubs/create-club'
         icon={AddPlus}
         label={i18n._(t`Create a Club`)}
@@ -47,7 +47,7 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
   return (
     <HorizontalNavigation.Button
       exact
-      colorScheme='teal'
+      colorScheme='primary'
       href={{
         pathname: '/club/[slug]/create-post',
         query: { slug: selectedClub.slug }

@@ -3,7 +3,6 @@ import { StaffViewCharacterQuery } from '@//:artifacts/StaffViewCharacterQuery.g
 import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import ChangeCharacterName from '../../../../../../../../common/components/ChangeCharacterName/ChangeCharacterName'
-import ChangeCharacterThumbnail from '../../../../../../../../common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnail'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import TagBadgeHeader from '@//:common/components/TagBadgeHeader/TagBadgeHeader'
@@ -19,7 +18,6 @@ const Query = graphql`
         title
       }
       ...ChangeCharacterNameFragment
-      ...ChangeCharacterThumbnailFragment
     }
   }
 `
@@ -38,9 +36,6 @@ export default function StaffViewCharacter ({ query }: Props): JSX.Element {
     <Stack spacing={8}>
       <Box>
         <ChangeCharacterName query={queryData?.character} />
-      </Box>
-      <Box>
-        <ChangeCharacterThumbnail query={queryData?.character} />
       </Box>
       <Box>
         <PageSectionWrap>

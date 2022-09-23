@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<58b18eef1f3ddd8d92510c0ae15e593d>>
- * @relayHash 8be5ac29e148d1b03cef559c1e51ca07
+ * @generated SignedSource<<0290222299e0c29811ec6080c1b4405b>>
+ * @relayHash d8beefb35c6cf9e015e76411c11022d3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8be5ac29e148d1b03cef559c1e51ca07
+// @relayRequestID d8beefb35c6cf9e015e76411c11022d3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -87,14 +87,7 @@ v7 = [
     "name": "first",
     "value": 20
   }
-],
-v8 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
-};
+];
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -245,106 +238,8 @@ return {
                             "name": "avatar",
                             "plural": false,
                             "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "preview",
-                                "storageKey": null
-                              },
-                              (v6/*: any*/),
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "urls",
-                                "plural": true,
-                                "selections": [
-                                  (v8/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "mimeType",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "width",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "height",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceUrl",
-                                "kind": "LinkedField",
-                                "name": "videoThumbnail",
-                                "plural": false,
-                                "selections": [
-                                  (v8/*: any*/)
-                                ],
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "type",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "processed",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "failed",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "concreteType": "ResourceProgress",
-                                "kind": "LinkedField",
-                                "name": "progress",
-                                "plural": false,
-                                "selections": [
-                                  (v6/*: any*/),
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "progress",
-                                    "storageKey": null
-                                  },
-                                  {
-                                    "alias": null,
-                                    "args": null,
-                                    "kind": "ScalarField",
-                                    "name": "state",
-                                    "storageKey": null
-                                  }
-                                ],
-                                "storageKey": null
-                              }
+                              (v5/*: any*/),
+                              (v6/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -428,7 +323,7 @@ return {
     ]
   },
   "params": {
-    "id": "8be5ac29e148d1b03cef559c1e51ca07",
+    "id": "d8beefb35c6cf9e015e76411c11022d3",
     "metadata": {},
     "name": "ClubMembersQuery",
     "operationKind": "query",

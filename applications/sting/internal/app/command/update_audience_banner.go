@@ -3,6 +3,7 @@ package command
 import (
 	"context"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/media"
 	"overdoll/libraries/principal"
 )
 
@@ -26,7 +27,7 @@ func (h UpdateAudienceBannerHandler) Handle(ctx context.Context, cmd UpdateAudie
 	aud, err := h.pr.UpdateAudienceBanner(ctx, cmd.Principal, cmd.AudienceId, func(audience *post.Audience) error {
 
 		// create resources from content
-		resourceIds, err := h.loader.CreateOrGetResourcesFromUploads(ctx, cmd.AudienceId, []string{cmd.Banner}, false, "AUDIENCE_BANNER", true, 480, 0)
+		resourceIds, err := h.loader.ProcessMediaFromUploads(ctx, []string{cmd.Banner}, media.NewAudienceBannerMediaLink(cmd.AudienceId))
 
 		if err != nil {
 			return err

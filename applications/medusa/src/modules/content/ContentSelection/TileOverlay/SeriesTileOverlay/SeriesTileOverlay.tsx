@@ -1,8 +1,8 @@
 import { Stack, Text } from '@chakra-ui/react'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { SeriesTileOverlayFragment$key } from '@//:artifacts/SeriesTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
+import SeriesBanner from '../../../PageLayout/Display/fragments/Banner/SeriesBanner/SeriesBanner'
 
 interface Props {
   query: SeriesTileOverlayFragment$key
@@ -10,11 +10,8 @@ interface Props {
 
 const Fragment = graphql`
   fragment SeriesTileOverlayFragment on Series {
-    id
     title
-    banner {
-      ...ResourceItemFragment
-    }
+    ...SeriesBannerFragment
   }
 `
 
@@ -24,13 +21,7 @@ export default function SeriesTileOverlay ({
   const data = useFragment(Fragment, query)
 
   return (
-    <TileOverlay backdrop={(
-      <ResourceItem
-        showBorder
-        query={data.banner}
-        seed={data.id}
-      />)}
-    >
+    <TileOverlay backdrop={<SeriesBanner seriesQuery={data} />}>
       <Stack p={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
         <Text
           fontSize={{

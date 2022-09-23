@@ -30,10 +30,7 @@ const GrantAction = graphql`
         lock {
           __typename
         }
-        avatar {
-          ...ResourceIconFragment
-          ...ResourceItemFragment
-        }
+        ...AccountIconFragment
       }
     }
   }

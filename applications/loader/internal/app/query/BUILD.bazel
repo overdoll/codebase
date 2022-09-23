@@ -2,11 +2,8 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 go_library(
     name = "query",
-    srcs = [
-        "resource_progress_by_id.go",
-        "resources_by_ids.go",
-    ],
+    srcs = ["media_progress_by_id.go"],
     importpath = "overdoll/applications/loader/internal/app/query",
     visibility = ["//applications/loader:__subpackages__"],
-    deps = ["//applications/loader/internal/domain/resource"],
+    deps = ["//applications/loader/internal/domain/progress"],
 )

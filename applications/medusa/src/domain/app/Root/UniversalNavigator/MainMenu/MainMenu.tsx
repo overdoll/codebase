@@ -13,7 +13,7 @@ export default function MainMenu (): JSX.Element {
     <>
       <HorizontalNavigation.Button
         exact
-        colorScheme='primary'
+        colorScheme='orange'
         href='/'
         icon={BirdHouse}
         label={i18n._(t`Home`)}

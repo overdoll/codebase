@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ffdcd78379502da336a401cc3b5bc360>>
+ * @generated SignedSource<<fd5dad6284e571c918deb3e417685cd5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,16 +13,20 @@ import { FragmentRefs } from "relay-runtime";
 export type ProcessContentDisplayFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
-    readonly resource: {
-      readonly failed: boolean;
-      readonly processed: boolean;
+    readonly media: {
+      readonly __typename: "RawMedia";
       readonly progress: {
         readonly progress: number;
       } | null;
+    } | {
+      // This will never be '%other', but we need some
+      // value in case none of the concrete values match.
+      readonly __typename: "%other";
     };
     readonly " $fragmentSpreads": FragmentRefs<"ExpandableResourceInfoFragment">;
   }>;
   readonly id: string;
+  readonly " $fragmentSpreads": FragmentRefs<"isFailedFragment" | "isProcessedFragment">;
   readonly " $fragmentType": "ProcessContentDisplayFragment";
 };
 export type ProcessContentDisplayFragment$key = {
@@ -57,42 +61,42 @@ return {
         {
           "alias": null,
           "args": null,
-          "concreteType": "Resource",
+          "concreteType": null,
           "kind": "LinkedField",
-          "name": "resource",
+          "name": "media",
           "plural": false,
           "selections": [
             {
               "alias": null,
               "args": null,
               "kind": "ScalarField",
-              "name": "failed",
+              "name": "__typename",
               "storageKey": null
             },
             {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "processed",
-              "storageKey": null
-            },
-            {
-              "alias": null,
-              "args": null,
-              "concreteType": "ResourceProgress",
-              "kind": "LinkedField",
-              "name": "progress",
-              "plural": false,
+              "kind": "InlineFragment",
               "selections": [
                 {
                   "alias": null,
                   "args": null,
-                  "kind": "ScalarField",
+                  "concreteType": "MediaProgress",
+                  "kind": "LinkedField",
                   "name": "progress",
+                  "plural": false,
+                  "selections": [
+                    {
+                      "alias": null,
+                      "args": null,
+                      "kind": "ScalarField",
+                      "name": "progress",
+                      "storageKey": null
+                    }
+                  ],
                   "storageKey": null
                 }
               ],
-              "storageKey": null
+              "type": "RawMedia",
+              "abstractKey": null
             }
           ],
           "storageKey": null
@@ -104,6 +108,16 @@ return {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "isFailedFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "isProcessedFragment"
     }
   ],
   "type": "Post",
@@ -111,6 +125,6 @@ return {
 };
 })();
 
-(node as any).hash = "1b94f207b2fd3da2bcacf21a531ab700";
+(node as any).hash = "110ce141928ba33a0077f5ad8ce7534e";
 
 export default node;

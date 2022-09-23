@@ -1086,6 +1086,15 @@ type ArchivePostPayload {
   post: Post
 }
 
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The height."""
+  height: Int!
+
+  """The width."""
+  width: Int!
+}
+
 """Input to assign account to a arist role"""
 input AssignAccountArtistRole {
   """The account ID that the role needs to be assigned to"""
@@ -1128,6 +1137,9 @@ type Audience implements Node
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media @join__field(graph: STING)
 
   """An ID pointing to this audience."""
   id: ID! @join__field(graph: STING)
@@ -1603,6 +1615,9 @@ type Category implements Node
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media @join__field(graph: STING)
+
   """An ID pointing to this category."""
   id: ID! @join__field(graph: STING)
 
@@ -1704,6 +1719,9 @@ type Character implements Node
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media @join__field(graph: STING)
 
   """The club linked to this character, if it was created by a club."""
   club: Club @join__field(graph: STING)
@@ -1811,8 +1829,11 @@ type Club implements Node
   """The current balance of this club."""
   balance: Balance! @join__field(graph: RINGER)
 
-  """A resource of the club's banner."""
+  """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media @join__field(graph: STING)
 
   """
   Whether creating supporter-only posts is enabled or disabled for this club.
@@ -2087,8 +2108,11 @@ type Club implements Node
   """Whether or not this club is terminated."""
   termination: ClubTermination @join__field(graph: STING)
 
-  """A resource of the club's thumbnail."""
+  """A URL pointing to the object's thumbnail."""
   thumbnail: Resource @join__field(graph: STING)
+
+  """A URL pointing to the object's thumbnail."""
+  thumbnailMedia: Media @join__field(graph: STING)
 
   """The total number of likes for this club."""
   totalLikes: Int! @join__field(graph: STING)
@@ -2568,6 +2592,13 @@ type ClubTransactionMetricEdge {
 enum ClubsSort {
   """Clubs by popularity"""
   POPULAR
+}
+
+type ColorPalette {
+  blue: Int!
+  green: Int!
+  percent: Float!
+  red: Int!
 }
 
 """Input for confirming the account email"""
@@ -3446,6 +3477,15 @@ enum GrantAuthenticationTokenValidation {
   INVALID_EMAIL
 }
 
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+
+  """The URL used to access the container."""
+  url: URI!
+}
+
 interface IAccountClubSupporterSubscription {
   """The account linked to this subscription."""
   account: Account!
@@ -3509,6 +3549,59 @@ interface IAccountClubSupporterSubscription {
 interface IAccountPayoutMethod {
   """The ID linked to this payout method"""
   id: ID!
+}
+
+type ImageMedia {
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+}
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+
+  """The width of the image."""
+  width: Int!
+}
+
+"""All variants available for an image."""
+type ImageMediaVariants {
+  """720px width or height resize."""
+  banner: ImageMediaAccess!
+
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+
+  """100x100 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+
+  """50x50 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+
+  """680px width or height resize."""
+  small: ImageMediaAccess!
+
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
+
+  """150x150 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
 }
 
 """Initiate a payout for a specific club."""
@@ -3633,6 +3726,58 @@ input LockAccountInput {
 type LockAccountPayload {
   """Account that was locked"""
   account: Account
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The height of the video."""
+  height: Int!
+
+  """The URL used to access the container."""
+  url: URI!
+
+  """The width of the video."""
+  width: Int!
+}
+
+union Media = ImageMedia | RawMedia | VideoMedia
+
+enum MediaDeviceType {
+  DESKTOP
+  MOBILE
+  UNIVERSAL
+}
+
+type MediaProgress
+  @join__owner(graph: LOADER)
+  @join__type(graph: LOADER, key: "id")
+  @join__type(graph: EVA, key: "id")
+  @join__type(graph: HADES, key: "id")
+  @join__type(graph: PARLEY, key: "id")
+  @join__type(graph: RINGER, key: "id")
+  @join__type(graph: STING, key: "id")
+{
+  id: ID! @join__field(graph: LOADER)
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float! @join__field(graph: LOADER)
+
+  """The state at which this media is at."""
+  state: MediaProgressState! @join__field(graph: LOADER)
+}
+
+enum MediaProgressState {
+  """Media is finalizing processing."""
+  FINALIZING
+
+  """Media has started processing."""
+  STARTED
+
+  """Media is waiting to be processed."""
+  WAITING
 }
 
 """General moderator settings."""
@@ -4110,9 +4255,6 @@ type Mutation {
   """Update audience standard"""
   updateAudienceIsStandard(input: UpdateAudienceIsStandardInput!): UpdateAudienceIsStandardPayload @join__field(graph: STING)
 
-  """Update audience thumbnail"""
-  updateAudienceThumbnail(input: UpdateAudienceThumbnailInput!): UpdateAudienceThumbnailPayload @join__field(graph: STING)
-
   """Update audience title"""
   updateAudienceTitle(input: UpdateAudienceTitleInput!): UpdateAudienceTitlePayload @join__field(graph: STING)
 
@@ -4122,9 +4264,6 @@ type Mutation {
   """Update a reason title."""
   updateCancellationReasonTitle(input: UpdateCancellationReasonTitleInput!): UpdateCancellationReasonTitlePayload @join__field(graph: HADES)
 
-  """Update category thumbnail"""
-  updateCategoryThumbnail(input: UpdateCategoryThumbnailInput!): UpdateCategoryThumbnailPayload @join__field(graph: STING)
-
   """Update category title"""
   updateCategoryTitle(input: UpdateCategoryTitleInput!): UpdateCategoryTitlePayload @join__field(graph: STING)
 
@@ -4133,13 +4272,6 @@ type Mutation {
 
   """Update character title"""
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload @join__field(graph: STING)
-
-  """
-  Update character thumbnail
-  
-  Note that this is Staff+ only for now - even if the character is a club character.
-  """
-  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload @join__field(graph: STING)
 
   """
   Set the amount of characters that a club can create.
@@ -4220,9 +4352,6 @@ type Mutation {
 
   """Update a rule title."""
   updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload @join__field(graph: PARLEY)
-
-  """Update series thumbnail"""
-  updateSeriesThumbnail(input: UpdateSeriesThumbnailInput!): UpdateSeriesThumbnailPayload @join__field(graph: STING)
 
   """Update series title"""
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload @join__field(graph: STING)
@@ -4456,6 +4585,9 @@ type PostContent {
   """Whether or not this content is supporter only."""
   isSupporterOnly: Boolean!
 
+  """The media belonging to this content."""
+  media: Media!
+
   """The resource belonging to this content."""
   resource: Resource!
 
@@ -4467,6 +4599,16 @@ type PostContent {
   This field will be nil if "viewerCanViewSupporterOnlyContent" is true
   """
   supporterOnlyResource: Resource
+
+  """
+  If "viewerCanViewSupporterOnlyContent" is false, will contain the duration of the video, if the media is a video.
+  """
+  supporterOnlyVideoMediaDuration: Int
+
+  """
+  If "viewerCanViewSupporterOnlyContent" is false, will say if the video has audio, if the media is a video.
+  """
+  supporterOnlyVideoMediaHasAudio: Boolean
 
   """Whether or not the viewer is able to see this content."""
   viewerCanViewSupporterOnlyContent: Boolean!
@@ -5159,6 +5301,25 @@ type Query {
   viewer: Account @join__field(graph: EVA)
 }
 
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
 """Refund an account transaction."""
 input RefundAccountTransactionInput {
   """The id of the subscription."""
@@ -5618,6 +5779,9 @@ type Series implements Node
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media @join__field(graph: STING)
+
   """Get or search all characters for this series."""
   characters(
     """Returns the elements in the list that come after the specified cursor."""
@@ -5821,6 +5985,9 @@ type Topic implements Node
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
+
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media @join__field(graph: STING)
 
   """All categories linked to this topic."""
   categories(
@@ -6063,21 +6230,6 @@ type UpdateAudienceIsStandardPayload {
 }
 
 """Update audience."""
-input UpdateAudienceThumbnailInput {
-  """The audience to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating audience"""
-type UpdateAudienceThumbnailPayload {
-  """The audience after update"""
-  audience: Audience
-}
-
-"""Update audience."""
 input UpdateAudienceTitleInput {
   """The audience to update"""
   id: ID!
@@ -6130,21 +6282,6 @@ input UpdateCancellationReasonTitleInput {
 type UpdateCancellationReasonTitlePayload {
   """The updated reason."""
   cancellationReason: CancellationReason
-}
-
-"""Update category."""
-input UpdateCategoryThumbnailInput {
-  """The category to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating category"""
-type UpdateCategoryThumbnailPayload {
-  """The category after update"""
-  category: Category
 }
 
 """Update category."""
@@ -6206,21 +6343,6 @@ input UpdateCharacterNameInput {
 
 """Payload for updating character"""
 type UpdateCharacterNamePayload {
-  """The character after update"""
-  character: Character
-}
-
-"""Update character."""
-input UpdateCharacterThumbnailInput {
-  """The character to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating character"""
-type UpdateCharacterThumbnailPayload {
   """The character after update"""
   character: Character
 }
@@ -6538,21 +6660,6 @@ type UpdateRuleTitlePayload {
 }
 
 """Update series."""
-input UpdateSeriesThumbnailInput {
-  """The series to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
-"""Payload for updating series"""
-type UpdateSeriesThumbnailPayload {
-  """The category after update"""
-  series: Series
-}
-
-"""Update series."""
 input UpdateSeriesTitleInput {
   """The series to update"""
   id: ID!
@@ -6673,6 +6780,33 @@ type VerifyAuthenticationTokenPayload {
 """Validation for granting account access"""
 enum VerifyAuthenticationTokenValidation {
   TOKEN_INVALID
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+  
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+
+  """An ID uniquely identifying this media."""
+  id: ID!
 }
 
 enum core__Purpose {

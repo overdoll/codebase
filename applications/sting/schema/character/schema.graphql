@@ -14,6 +14,9 @@ type Character implements Node @key(fields: "id") {
   """A URL pointing to the object's banner."""
   banner: Resource
 
+  """A URL pointing to the object's banner."""
+  bannerMedia: Media
+
   """
   A name for this character.
 
@@ -237,23 +240,8 @@ input UpdateCharacterNameInput {
   locale: BCP47!
 }
 
-"""Update character."""
-input UpdateCharacterThumbnailInput {
-  """The character to update"""
-  id: ID!
-
-  """The thumbnail"""
-  thumbnail: String!
-}
-
 """Payload for updating character"""
 type UpdateCharacterNamePayload {
-  """The character after update"""
-  character: Character
-}
-
-"""Payload for updating character"""
-type UpdateCharacterThumbnailPayload {
   """The character after update"""
   character: Character
 }
@@ -273,11 +261,4 @@ extend type Mutation {
   Update character title
   """
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
-
-  """
-  Update character thumbnail
-
-  Note that this is Staff+ only for now - even if the character is a club character.
-  """
-  updateCharacterThumbnail(input: UpdateCharacterThumbnailInput!): UpdateCharacterThumbnailPayload
 }

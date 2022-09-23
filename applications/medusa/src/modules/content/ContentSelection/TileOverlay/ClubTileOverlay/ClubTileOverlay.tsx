@@ -1,9 +1,9 @@
 import { Heading, Stack } from '@chakra-ui/react'
-import ResourceItem from '../../../DataDisplay/ResourceItem/ResourceItem'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ClubTileOverlayFragment$key } from '@//:artifacts/ClubTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
-import ClubThumbnail from '../../../DataDisplay/Club/ClubThumbnail/ClubThumbnail'
+import ClubIcon from '../../../PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
+import ClubBanner from '../../../PageLayout/Display/fragments/Banner/ClubBanner/ClubBanner'
 
 interface Props {
   query: ClubTileOverlayFragment$key
@@ -13,10 +13,8 @@ const Fragment = graphql`
   fragment ClubTileOverlayFragment on Club {
     id
     name
-    ...ClubThumbnailFragment
-    banner {
-      ...ResourceItemFragment
-    }
+    ...ClubIconFragment
+    ...ClubBannerFragment
   }
 `
 
@@ -27,22 +25,10 @@ export default function ClubTileOverlay ({
 
   return (
     <TileOverlay
-      backdrop={
-        <ResourceItem showBorder seed={data.id} h='100%' query={data.banner} />
-      }
+      backdrop={<ClubBanner clubQuery={data} />}
     >
       <Stack p={2} w='100%' spacing={2} h='100%' align='center' justify='center'>
-        <ClubThumbnail
-          h={{
-            base: 8,
-            md: 12
-          }}
-          w={{
-            base: 8,
-            md: 12
-          }}
-          query={data}
-        />
+        <ClubIcon size='md' clubQuery={data} />
         <Heading
           textAlign='center'
           color='gray.00'

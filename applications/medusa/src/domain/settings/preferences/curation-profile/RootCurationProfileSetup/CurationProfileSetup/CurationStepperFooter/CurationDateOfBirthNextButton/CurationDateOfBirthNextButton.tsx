@@ -62,7 +62,7 @@ export default function CurationDateOfBirthNextButton ({
         skipped: false
       },
       onCompleted () {
-        trackFathomEvent('RGTGYUWP', 0)
+        trackFathomEvent('RGTGYUWP', 1)
         nextStep()
       },
       onError () {
@@ -84,7 +84,7 @@ export default function CurationDateOfBirthNextButton ({
           status: 'info',
           title: t`Age preference was skipped`
         })
-        trackFathomEvent('WHE1FRD2', 0)
+        trackFathomEvent('WHE1FRD2', 1)
         nextStep()
       },
       onError () {

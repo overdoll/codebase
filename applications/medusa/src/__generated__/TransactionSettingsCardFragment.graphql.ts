@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<887b68522e3152503d3d5b5b2621a2aa>>
+ * @generated SignedSource<<70bbeba8865898e7a11c5bc162cf523f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type TransactionSettingsCardFragment$data = {
   readonly clubSupporterSubscription: {
     readonly club?: {
       readonly name: string;
-      readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
     };
   } | null;
   readonly createdAt: any;
@@ -109,7 +109,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "ClubThumbnailFragment"
+                  "name": "ClubIconFragment"
                 }
               ],
               "storageKey": null
@@ -158,6 +158,6 @@ return {
 };
 })();
 
-(node as any).hash = "8a76c696d66354a873a0fed21ad6e347";
+(node as any).hash = "83995024133b511c07b50e25e9177c77";
 
 export default node;

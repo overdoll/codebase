@@ -36,7 +36,7 @@ const securityHeaders = [
   },
   {
     key: 'Content-Security-Policy',
-    value: 'default-src https://s3.amazonaws.com/sandbox-overdoll-uploads/ https://sandbox-overdoll-resources.s3.amazonaws.com https://s3.amazonaws.com/overdoll-uploads/ https://static.dollycdn.net https://resources.dollycdn.net https://private-resources.dollycdn.net https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://cdn.usefathom.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src https://cdn.usefathom.com/script.js https://static.dollycdn.net \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com https://static.dollycdn.net data: \'self\' \'unsafe-inline\';connect-src https://cdn.usefathom.com/ https://s3.amazonaws.com/sandbox-overdoll-uploads https://s3.amazonaws.com/overdoll-uploads https://dcd9vpqfvvgum.cloudfront.net https://resources.dollycdn.net https://private-resources.dollycdn.net https://overdoll-uploads.s3.amazonaws.com https://sandbox-overdoll-resources.s3.amazonaws.com https://static.dollycdn.net \'self\' https://o1273644.ingest.sentry.io ws://localhost:* blob: ;media-src https://static.dollycdn.net https://s3.amazonaws.com/sandbox-overdoll-uploads https://s3.amazonaws.com/overdoll-uploads https://dcd9vpqfvvgum.cloudfront.net https://resources.dollycdn.net https://private-resources.dollycdn.net https://overdoll-uploads.s3.amazonaws.com https://sandbox-overdoll-resources.s3.amazonaws.com blob: \'self\' data:;frame-src \'none\' ;object-src blob: data: ;worker-src \'self\' blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
+    value: 'default-src https://df585ia2rkn55.cloudfront.net https://media.dollycdn.net https://s3.amazonaws.com/sandbox-overdoll-uploads/ https://sandbox-overdoll-resources.s3.amazonaws.com https://s3.amazonaws.com/overdoll-uploads/ https://static.dollycdn.net https://resources.dollycdn.net https://private-resources.dollycdn.net https://fonts.gstatic.com https://dcd9vpqfvvgum.cloudfront.net https://cdn.usefathom.com data: blob: \'self\' \'unsafe-inline\' \'unsafe-eval\' ;script-src https://cdn.usefathom.com/script.js https://static.dollycdn.net \'unsafe-inline\' \'unsafe-eval\' blob: data: \'self\';style-src https://fonts.googleapis.com https://static.dollycdn.net data: \'self\' \'unsafe-inline\';connect-src https://df585ia2rkn55.cloudfront.net https://cdn.usefathom.com/ https://s3.amazonaws.com/sandbox-overdoll-uploads https://s3.amazonaws.com/overdoll-uploads https://dcd9vpqfvvgum.cloudfront.net https://resources.dollycdn.net https://private-resources.dollycdn.net https://overdoll-uploads.s3.amazonaws.com https://sandbox-overdoll-resources.s3.amazonaws.com https://static.dollycdn.net \'self\' https://o1273644.ingest.sentry.io ws://localhost:* blob: ;media-src https://df585ia2rkn55.cloudfront.net https://media.dollycdn.net https://static.dollycdn.net https://s3.amazonaws.com/sandbox-overdoll-uploads https://s3.amazonaws.com/overdoll-uploads https://dcd9vpqfvvgum.cloudfront.net https://resources.dollycdn.net https://private-resources.dollycdn.net https://overdoll-uploads.s3.amazonaws.com https://sandbox-overdoll-resources.s3.amazonaws.com blob: \'self\' data:;frame-src \'none\' ;object-src blob: data: ;worker-src \'self\' blob: data:;block-all-mixed-content;upgrade-insecure-requests;'
   }
 ]
 
@@ -213,6 +213,19 @@ const moduleExports = withBundleAnalyzer({
         destination: '/artists',
         permanent: true
       },
+      // this causes an error where it says it redirected you too many times so we should just leave it
+      // {
+      //   source: '/join',
+      //   has: [
+      //     {
+      //       type: 'query',
+      //       key: 'redirect',
+      //       value: '/LewyNsfw'
+      //     }
+      //   ],
+      //   destination: '/join',
+      //   permanent: true
+      // },
       {
         source: '/roll',
         destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',

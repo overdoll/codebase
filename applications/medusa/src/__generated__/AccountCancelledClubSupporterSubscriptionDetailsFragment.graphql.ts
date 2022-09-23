@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26601171f5402a24fe29ab9c5523ff01>>
+ * @generated SignedSource<<72ba5fb06456fdb0f17d24c93e532c99>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type AccountCancelledClubSupporterSubscriptionDetailsFragment$data = {
   readonly club: {
     readonly name: string;
     readonly slug: string;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubThumbnailFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
   };
   readonly supporterSince: any;
   readonly " $fragmentType": "AccountCancelledClubSupporterSubscriptionDetailsFragment";
@@ -70,7 +70,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ClubThumbnailFragment"
+          "name": "ClubIconFragment"
         }
       ],
       "storageKey": null
@@ -80,6 +80,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "254ac000ece3e96a0e800715a810ff30";
+(node as any).hash = "204cc556382883b52f1ad9ad10037e0a";
 
 export default node;

@@ -1,41 +1,32 @@
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Suspense } from 'react'
-import PublicPost from './PublicPost/PublicPost'
-import type { PublicPostQuery as PublicPostQueryType } from '@//:artifacts/PublicPostQuery.graphql'
-import PublicPostQuery from '@//:artifacts/PublicPostQuery.graphql'
-import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
-import { PageWrapper } from '@//:modules/content/PageLayout'
+import type { ResultPublicPostQuery as ResultPublicPostQueryType } from '@//:artifacts/ResultPublicPostQuery.graphql'
+import ResultPublicPostQuery from '@//:artifacts/ResultPublicPostQuery.graphql'
+import { PageContainer } from '@//:modules/content/PageLayout'
 import { PageProps } from '@//:types/app'
-import { useRouter } from 'next/router'
+import DisposePublicPost from './DisposePublicPost/DisposePublicPost'
 
 interface Props {
   queryRefs: {
-    publicPostQuery: PreloadedQuery<PublicPostQueryType>
+    publicPostQuery: PreloadedQuery<ResultPublicPostQueryType>
   }
 }
 
+// If we need to use nextjs page functions, we can keep this clean and define their usage here
 const RootPublicPost: PageProps<Props> = (props: Props) => {
-  const [queryRef, loadQuery] = useQueryLoader(
-    PublicPostQuery,
-    props.queryRefs.publicPostQuery
-  )
+  const { queryRefs: { publicPostQuery } } = props
 
-  const { query: { reference } } = useRouter()
+  const params = useQueryLoader(
+    ResultPublicPostQuery,
+    publicPostQuery
+  )
 
   return (
     <>
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({ reference: reference as string ?? '' })}>
-          <Suspense fallback={(
-            <SkeletonPost />
-          )}
-          >
-            <PublicPost query={queryRef as PreloadedQuery<PublicPostQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
+      <PageContainer>
+        <DisposePublicPost params={params} />
+      </PageContainer>
     </>
+
   )
 }
 

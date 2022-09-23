@@ -1,10 +1,11 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeTopicBannerFragment$key } from '@//:artifacts/ChangeTopicBannerFragment.graphql'
 import { Flex, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeTopicBannerForm from './ChangeTopicBannerForm/ChangeTopicBannerForm'
+import TopicIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/TopicIcon/TopicIcon'
 
 interface Props {
   query: ChangeTopicBannerFragment$key
@@ -12,10 +13,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ChangeTopicBannerFragment on Topic {
-    id
-    banner {
-      ...ResourceIconFragment
-    }
+    ...TopicIconFragment
     ...ChangeTopicBannerFormFragment
   }
 `
@@ -34,13 +32,7 @@ export default function ChangeTopicBanner ({ query }: Props): JSX.Element {
       </PageSectionWrap>
       <Stack spacing={2}>
         <Flex w='100%' align='center' justify='center'>
-          <ResourceIcon
-            showBorder
-            seed={data.id}
-            w={16}
-            h={16}
-            query={data.banner}
-          />
+          <TopicIcon topicQuery={data} />
         </Flex>
         <Collapse>
           <CollapseButton>

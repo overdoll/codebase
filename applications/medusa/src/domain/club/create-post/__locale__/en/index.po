@@ -13,23 +13,27 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:172
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostAddDescription.tsx:45
+msgid "Add Caption"
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:172
 msgid "Add Categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:126
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:126
 msgid "Add Categories From Post"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostAddDescription.tsx:45
-msgid "Add Shout"
-msgstr ""
+#~ msgid "Add Shout"
+#~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:103
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:103
 msgid "Add categories from previous posts"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:52
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:64
 msgid "Add some categories"
 msgstr ""
 
@@ -41,7 +45,7 @@ msgstr ""
 #~ msgid "Added categories from selected post"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:20
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFooter/CreatePostFooter.tsx:20
 msgid "All characters must be depicted as 18 or older"
 msgstr ""
 
@@ -49,15 +53,15 @@ msgstr ""
 #~ msgid "All characters must be of legal age"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:93
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/UploadFlowHeader.tsx:93
 msgid "Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any time."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:12
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFooter/CreatePostFooter.tsx:12
 msgid "As a reminder of the guidelines"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSearchTopicsSelector/UploadSearchTopicCategories/UploadSearchTopicCategories.tsx:92
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSearchTopicsSelector/UploadSearchTopicCategories/UploadSearchTopicCategories.tsx:92
 msgid "Back To Topics"
 msgstr ""
 
@@ -65,7 +69,7 @@ msgstr ""
 #~ msgid "Cancel"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:28
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFooter/CreatePostFooter.tsx:28
 msgid "Cannot contain themes of incest, non-consensual sexual behaviour, non-consensual mutilation, or bestiality"
 msgstr ""
 
@@ -73,11 +77,11 @@ msgstr ""
 #~ msgid "Cannot upload while rearranging"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:174
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:174
 msgid "Clear Description"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/ClubRestricted/ClubRestricted.tsx:29
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/RestrictedClubCreatePost/RestrictedClubCreatePost.tsx:33
 msgid "Club Restricted"
 msgstr ""
 
@@ -85,15 +89,19 @@ msgstr ""
 #~ msgid "Club Suspended"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/PostContentPreviewMenu.tsx:43
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/PostReview/PostReview.tsx:79
+msgid "Contains the following characters"
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/PostContentPreviewMenu.tsx:43
 msgid "Content Menu"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:139
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFlow/CreatePostFlow.tsx:145
 msgid "Creating Your Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:70
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:84
 msgid "Creating supporter only posts has been disabled for your club. All content must not be marked as supporter only."
 msgstr ""
 
@@ -113,15 +121,15 @@ msgstr ""
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/PostUpdateDescription/PostUpdateDescription.tsx:72
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/PostUpdateDescription/PostUpdateDescription.tsx:71
 msgid "Edit Description"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentAdd/ContentUpdateDisplay/ContentUpdateDisplay.tsx:39
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentAdd/ContentUpdateDisplay/ContentUpdateDisplay.tsx:39
 msgid "Error adding uploaded files to post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:82
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:77
 msgid "Error marking content as supporter only"
 msgstr ""
 
@@ -129,11 +137,11 @@ msgstr ""
 #~ msgid "Error marking content {id} as supporter only"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeDownPostContentButton/ArrangeDownPostContentButton.tsx:77
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeDownPostContentButton/ArrangeDownPostContentButton.tsx:76
 msgid "Error moving content down"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeUpPostContentButton/ArrangeUpPostContentButton.tsx:75
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeUpPostContentButton/ArrangeUpPostContentButton.tsx:74
 msgid "Error moving content up"
 msgstr ""
 
@@ -141,32 +149,31 @@ msgstr ""
 #~ msgid "Error removing content {id}"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:92
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:79
 msgid "Error removing post content"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:69
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/UploadFlowHeader.tsx:69
 msgid "Exit Creator"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:84
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/UploadFlowHeader.tsx:84
 msgid "Exit Post Creator"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:30
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:30
 msgid "Free content should be first"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostNotDraft/PostNotDraft.tsx:34
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:100
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/UploadFlowHeader.tsx:100
 msgid "Go back"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:196
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:200
 msgid "Go to Content step"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:70
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:70
 msgid "Got it"
 msgstr ""
 
@@ -174,7 +181,7 @@ msgstr ""
 #~ msgid "Have a category suggestion? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:89
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:89
 msgid "Have a character suggestion or want your character listed? Contact us!"
 msgstr ""
 
@@ -182,7 +189,7 @@ msgstr ""
 #~ msgid "Have a character suggestion or want your character listed? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:109
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:102
 msgid "Help"
 msgstr ""
 
@@ -190,7 +197,11 @@ msgstr ""
 #~ msgid "If uploading supporter only content, it's recommended that you upload two pieces of content to encourage conversions. The first one should be free and a reduced version of the original content and the second should be the original version."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:49
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/PostReview/PostReview.tsx:83
+msgid "Is relevant to the following categories"
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:61
 msgid "Make sure you like what you see before you submit the post"
 msgstr ""
 
@@ -202,27 +213,28 @@ msgstr ""
 #~ msgid "Mark this content as Supporter Only"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeDownPostContentButton/ArrangeDownPostContentButton.tsx:91
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeDownPostContentButton/ArrangeDownPostContentButton.tsx:90
 msgid "Move Down"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeUpPostContentButton/ArrangeUpPostContentButton.tsx:89
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/ArrangeUpPostContentButton/ArrangeUpPostContentButton.tsx:88
 msgid "Move Up"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:11
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadEmptyCategories/UploadEmptyCategories.tsx:11
 msgid "No categories were found with the title {0}"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:37
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFooter/CreatePostFooter.tsx:37
 msgid "Nothing extremely offensive, shocking, or illegal"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostOpening/CreatePostOpening.tsx:10
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFlow/CreatePostFlow.tsx:133
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/SuspenseCreatePost/SuspenseCreatePost.tsx:11
 msgid "Opening Post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:115
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:119
 msgid "Post Content Processed"
 msgstr ""
 
@@ -238,7 +250,7 @@ msgstr ""
 #~ msgid "Posting {0} media"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:106
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:110
 msgid "Preview Processed Content"
 msgstr ""
 
@@ -250,13 +262,12 @@ msgstr ""
 #~ msgid "Processing Content"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:116
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:88
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:94
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:92
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:87
 msgid "Processing Failed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:97
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/ProcessContent/ProcessContentDisplay/ProcessContentDisplay.tsx:101
 msgid "Processing Post Content"
 msgstr ""
 
@@ -264,9 +275,9 @@ msgstr ""
 #~ msgid "Rearrange Uploads"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:106
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:117
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:124
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:93
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:104
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreviewMenu/RemovePostContentButton/RemovePostContentButton.tsx:111
 msgid "Remove Content"
 msgstr ""
 
@@ -278,15 +289,15 @@ msgstr ""
 #~ msgid "Remove Upload"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentAdd/ContentUpdateDisplay/ContentUpdateDisplay.tsx:45
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentAdd/ContentUpdateDisplay/ContentUpdateDisplay.tsx:45
 msgid "Retry"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:44
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:56
 msgid "Review your selections"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:110
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:110
 msgid "Rewind Categories"
 msgstr ""
 
@@ -294,27 +305,27 @@ msgstr ""
 #~ msgid "Save Order"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadSearchCategories.tsx:54
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadSearchCategories.tsx:54
 msgid "Search Results"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadSearchCategories.tsx:47
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadSearchCategories/UploadSearchCategories.tsx:47
 msgid "Search for a category"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:77
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:90
 msgid "Search for a character by name"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindSingleSelector/UploadRewindSingleSelector.tsx:89
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindSingleSelector/UploadRewindSingleSelector.tsx:89
 msgid "Select a post to see the available categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:57
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadCategoryStep.tsx:69
 msgid "Select a topic to see the available categories you can add, or search for a category by name."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:68
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:81
 msgid "Select one or more characters that appear in all of the content"
 msgstr ""
 
@@ -338,19 +349,19 @@ msgstr ""
 #~ msgid "Select the character(s) that are the primary focus in your content. You must select at least one to continue."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:48
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:60
 msgid "Select the most relevant description of what is depicted in your content. You can only select one."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:64
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:76
 msgid "Selecting an audience allows us to filter out content that someone would otherwise not prefer to see. We only show a person content they are interested in seeing."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:108
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:103
 msgid "Set Free"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:95
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/SupporterPostContentButton/SupporterPostContentButton.tsx:90
 msgid "Set Supporter Only"
 msgstr ""
 
@@ -358,35 +369,41 @@ msgstr ""
 #~ msgid "Show Your Club Characters"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:86
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:99
 msgid "Show all characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:86
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:99
 msgid "Show only original characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:112
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:116
 msgid "Submit"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:29
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/PostSubmitted/PostSubmitted.tsx:29
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/SubmittedCreatePost/SubmittedCreatePost.tsx:29
 msgid "Submitted For Review"
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/PostReview/PostReview.tsx:74
+msgid "Suitable for an audience that looks for this content"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/ArrangeUploads/DraggableContent/DraggableContent.tsx:140
 #~ msgid "Supporter Only"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:49
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:49
 msgid "Supporter content should not be the first slide"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:163
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:163
 msgid "Tell your fans what it's really all about"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:37
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/PostSubmitted/PostSubmitted.tsx:37
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/SubmittedCreatePost/SubmittedCreatePost.tsx:37
 msgid "Thanks for posting! Your post was submitted for review. Once approved, it will be visible to the public."
 msgstr ""
 
@@ -402,19 +419,19 @@ msgstr ""
 #~ msgid "The audience is the group of people that you intended this post for. This will determine whether or not a user can see your post based on their set preferences. You can only select one audience."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:76
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:76
 msgid "The description cannot contain links"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:75
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:75
 msgid "The description length cannot exceed {MAXIMUM_CHARACTER_COUNT} characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:160
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindCategories.tsx:160
 msgid "The selected post has no categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFlow/CreatePostFlow.tsx:100
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFlow/CreatePostFlow.tsx:99
 msgid "There was an error creating a draft post"
 msgstr ""
 
@@ -422,27 +439,27 @@ msgstr ""
 #~ msgid "There was an error processing your files"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:133
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:133
 msgid "There was an error removing the description"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateAudienceButton/UpdateAudienceButton.tsx:68
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/UpdateAudienceButton/UpdateAudienceButton.tsx:68
 msgid "There was an error saving the audience"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCategoryButton/UpdateCategoryButton.tsx:85
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/UpdateCategoryButton/UpdateCategoryButton.tsx:78
 msgid "There was an error saving the categories"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:97
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/UpdateCharacterButton/UpdateCharacterButton.tsx:79
 msgid "There was an error saving the characters"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:98
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:102
 msgid "There was an error submitting your post"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:112
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:112
 msgid "There was an error updating the description"
 msgstr ""
 
@@ -450,15 +467,15 @@ msgstr ""
 #~ msgid "There was an error updating the post content"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:97
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:90
 msgid "This content failed to process. Please remove the content and try uploading it again."
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostNotDraft/PostNotDraft.tsx:23
-msgid "This post was already submitted"
-msgstr ""
+#~ msgid "This post was already submitted"
+#~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSelectTopics.tsx:29
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSelectTopics.tsx:29
 msgid "Topics"
 msgstr ""
 
@@ -470,7 +487,7 @@ msgstr ""
 #~ msgid "Up"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:193
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/UploadPostOptions/PostAddDescription/PostDescriptionModal/UpdatePostDescriptionForm/UpdatePostDescriptionForm.tsx:193
 msgid "Update Description"
 msgstr ""
 
@@ -486,11 +503,11 @@ msgstr ""
 #~ msgid "Upload one or more files by dragging and dropping them or by tapping here"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:59
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/UploadReviewStep.tsx:73
 msgid "Upon submission, your post will be reviewed by our moderation team to ensure it does not violate any club guidelines. Your post should be visible to the public within a day of submission."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/CreatePostFooter/CreatePostFooter.tsx:46
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFooter/CreatePostFooter.tsx:46
 msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully before posting"
 msgstr ""
 
@@ -498,19 +515,23 @@ msgstr ""
 #~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully. Creating and submitting a post also means you agree to these guidelines."
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:116
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/PostReview/PostReview.tsx:63
+msgid "We ran into an error processing your content. Please remove it and try again before submitting your post."
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:109
 msgid "We were not able to process your upload through our system. This could be because the format of the file is invalid or a completely separate issue. Please remove the content and try uploading files that are as close to the source file as possible."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:43
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadAudienceStep/UploadAudienceStep.tsx:55
 msgid "What does the content contain?"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:54
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentSuggestions/UploadSupporterContentOptimization/UploadSupporterContentOptimization.tsx:54
 msgid "When uploading any kind of supporter content, it's recommended that the first slide in your post is not supporter content and contains either a censored image or a reduced video to encourage your fans to become supporters."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:63
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:76
 msgid "Who is in your post?"
 msgstr ""
 
@@ -523,19 +544,19 @@ msgstr ""
 #~ msgid "Why is this required"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/RequiredPrompt/RequiredPrompt.tsx:16
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadAudienceStep/RequiredPrompt/RequiredPrompt.tsx:16
 msgid "Why is this required?"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowHeader/UploadFlowHeader.tsx:105
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowHeader/UploadFlowHeader.tsx:105
 msgid "Yes, exit"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostState.tsx:94
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/BannerCreatePost/BannerCreatePost.tsx:45
 msgid "You are editing this post as a staff member"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/ClubRestricted/ClubRestricted.tsx:34
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/RestrictedClubCreatePost/RestrictedClubCreatePost.tsx:38
 msgid "You cannot post at this time due to a restriction on your club"
 msgstr ""
 
@@ -543,7 +564,7 @@ msgstr ""
 #~ msgid "You cannot post until your club is no longer suspended"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/ClubDraftPostsAlert/ClubDraftPostsAlert.tsx:44
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/ClubDraftPostsAlert/ClubDraftPostsAlert.tsx:44
 msgid "You have unpublished draft posts"
 msgstr ""
 
@@ -555,11 +576,15 @@ msgstr ""
 #~ msgid "You'll need to upload at least one file to continue"
 #~ msgstr ""
 
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/PostReview/PostReview.tsx:50
+msgid "Your content is still processing. You may submit your post. We'll notify you via email if we run into any processing errors after submission."
+msgstr ""
+
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:57
 #~ msgid "Your post is now visible to the public"
 #~ msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/UpdatePostFlow/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:85
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:89
 msgid "Your post was submitted!"
 msgstr ""
 

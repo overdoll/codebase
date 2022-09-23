@@ -1,37 +1,28 @@
-import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import type { ClubsFeedQuery as ClubsFeedQueryType } from '@//:artifacts/ClubsFeedQuery.graphql'
-import ClubsFeedQuery from '@//:artifacts/ClubsFeedQuery.graphql'
-import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import type { ResultClubsFeedQuery as ResultClubsFeedQueryType } from '@//:artifacts/ResultClubsFeedQuery.graphql'
+import ResultClubsFeedQuery from '@//:artifacts/ResultClubsFeedQuery.graphql'
 import { PageProps } from '@//:types/app'
-import ClubsFeed from './ClubsFeed/ClubsFeed'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import FeedRichObject from '../../../../common/rich-objects/clubs/feed/FeedRichObject/FeedRichObject'
+import { PageContainer } from '@//:modules/content/PageLayout'
+import DisposeClubsFeed from './DisposeClubsFeed/DisposeClubsFeed'
 
 interface Props {
   queryRefs: {
-    clubsFeedQuery: PreloadedQuery<ClubsFeedQueryType>
+    clubsFeedQuery: PreloadedQuery<ResultClubsFeedQueryType>
   }
 }
 
 const RootClubsFeed: PageProps<Props> = (props: Props) => {
-  const [queryRef, loadQuery] = useQueryLoader(
-    ClubsFeedQuery,
-    props.queryRefs.clubsFeedQuery
+  const { queryRefs: { clubsFeedQuery } } = props
+
+  const params = useQueryLoader(
+    ResultClubsFeedQuery,
+    clubsFeedQuery
   )
 
   return (
-    <>
-      <FeedRichObject />
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonPost />}>
-            <ClubsFeed query={queryRef as PreloadedQuery<ClubsFeedQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
-    </>
+    <PageContainer>
+      <DisposeClubsFeed params={params} />
+    </PageContainer>
   )
 }
 

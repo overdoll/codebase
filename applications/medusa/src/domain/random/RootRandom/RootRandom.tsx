@@ -1,58 +1,28 @@
-import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import type { RandomQuery as RandomQueryType } from '@//:artifacts/RandomQuery.graphql'
-import RandomQuery from '@//:artifacts/RandomQuery.graphql'
-import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import type { ResultRandomQuery as ResultRandomQueryType } from '@//:artifacts/ResultRandomQuery.graphql'
+import ResultRandomQuery from '@//:artifacts/ResultRandomQuery.graphql'
 import { PageProps } from '@//:types/app'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import BrowseStructuredData from '@//:common/structured-data/browse/BrowseStructuredData/BrowseStructuredData'
-import Random from './Random/Random'
-import RandomRichObject from '@//:common/rich-objects/random/RandomRichObject/RandomRichObject'
-import { useQueryParam } from 'use-query-params'
-import { useUpdateEffect } from 'usehooks-ts'
-import RandomizeButton from './RandomizeButton/RandomizeButton'
-import { Box } from '@chakra-ui/react'
+import { PageContainer } from '@//:modules/content/PageLayout'
+import DisposeRandom from './DisposeRandom/DisposeRandom'
 
 interface Props {
   queryRefs: {
-    randomQuery: PreloadedQuery<RandomQueryType>
+    randomQuery: PreloadedQuery<ResultRandomQueryType>
   }
 }
 
 const RootRandom: PageProps<Props> = (props: Props): JSX.Element => {
-  const [queryRef, loadQuery] = useQueryLoader(
-    RandomQuery,
-    props.queryRefs.randomQuery)
+  const { queryRefs: { randomQuery } } = props
 
-  const [postSeed] = useQueryParam<string | null | undefined>('seed')
-
-  useUpdateEffect(() => {
-    if (postSeed == null) return
-    loadQuery({
-      seed: postSeed
-    })
-    window.scrollTo(0, 0)
-  }, [postSeed])
+  const params = useQueryLoader(
+    ResultRandomQuery,
+    randomQuery
+  )
 
   return (
-    <>
-      <RandomRichObject />
-      <BrowseStructuredData />
-      <PageWrapper>
-        <RandomizeButton />
-        <Box mt={4}>
-          <QueryErrorBoundary loadQuery={() => loadQuery({
-            seed: postSeed
-          })}
-          >
-            <Suspense fallback={<SkeletonPost />}>
-              <Random query={queryRef as PreloadedQuery<RandomQueryType>} />
-            </Suspense>
-          </QueryErrorBoundary>
-        </Box>
-      </PageWrapper>
-    </>
+    <PageContainer>
+      <DisposeRandom params={params} />
+    </PageContainer>
   )
 }
 

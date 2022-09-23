@@ -5,10 +5,12 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/zap"
+	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/bootstrap"
 	"overdoll/libraries/errors/apperror"
-	"overdoll/libraries/resource"
-	"overdoll/libraries/resource/proto"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"sync"
@@ -28,17 +30,23 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 
 	postId := uuid.New().String()
 
-	var resources []*resource.Resource
+	var resources []*media.Media
 	var resourceIds []string
 
 	for i := 0; i < workersCount; i++ {
 		resourceId := uuid.New().String()
 		resourceIds = append(resourceIds, resourceId)
 
-		resources = append(resources, resource.UnmarshalResourceFromProto(context.Background(), &proto.Resource{
-			Id:        resourceId,
-			ItemId:    postId,
-			Processed: false,
+		resources = append(resources, media.FromProto(&proto.Media{
+			Id: resourceId,
+			Link: &proto.MediaLink{
+				Id:   postId,
+				Type: proto.MediaLinkType_POST_CONTENT,
+			},
+			State: &proto.MediaState{
+				Processed: false,
+				Failed:    false,
+			},
 		}))
 	}
 
@@ -84,13 +92,21 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 			defer workersDone.Done()
 			<-startWorkers
 
-			resources := []*resource.Resource{resource.UnmarshalResourceFromProto(context.Background(), &proto.Resource{
-				Id:        resourceIds[workerNum],
-				ItemId:    postId,
-				Processed: true,
-			})}
+			medias := []*media.Media{
+				media.FromProto(&proto.Media{
+					Id: resourceIds[workerNum],
+					Link: &proto.MediaLink{
+						Id:   postId,
+						Type: proto.MediaLinkType_POST_CONTENT,
+					},
+					State: &proto.MediaState{
+						Processed: true,
+						Failed:    false,
+					},
+				}),
+			}
 
-			_, err := repo.UpdatePostContentOperatorResource(ctx, postId, resources)
+			_, err := repo.UpdatePostContentOperatorMedia(ctx, postId, medias)
 
 			if err == nil {
 				// user is only created when an error is not returned
@@ -120,8 +136,26 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 
 	// ensure all resources are now "processed"
 	for _, res := range pst.Content() {
-		require.True(t, res.Resource().IsProcessed(), "resource should be processed")
+		require.True(t, res.Media().IsProcessed(), "resource should be processed")
 	}
+
+	require.Len(t, pst.Content(), 20, "should have 20 posts")
+
+	// refresh posts index
+	es := bootstrap.InitializeElasticSearchSession()
+	_, err = es.Refresh(adapters.PostReaderIndex).Do(context.Background())
+	require.NoError(t, err)
+
+	posts, err := repo.GetPostsByIds(context.Background(), nil, []string{postId})
+	require.NoError(t, err, "no error getting post by id")
+	require.Len(t, posts, 1, "should have found 1 post")
+
+	for _, res := range posts[0].Content() {
+		require.True(t, res.Media().IsProcessed(), "resource should be processed")
+	}
+
+	require.Len(t, posts[0].Content(), 20, "should have 20 posts")
+
 }
 
 func TestPostRepository_failure(t *testing.T) {

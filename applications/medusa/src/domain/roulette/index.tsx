@@ -1,5 +1,5 @@
 import RootRoulette from './RootRoulette/RootRoulette'
-import RouletteQuery from '@//:artifacts/RouletteQuery.graphql'
+import ResultRouletteQuery from '@//:artifacts/ResultRouletteQuery.graphql'
 
 RootRoulette.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -15,7 +15,7 @@ RootRoulette.getRelayPreloadProps = (ctx) => {
   return ({
     queries: {
       rouletteQuery: {
-        params: RouletteQuery.params,
+        params: ResultRouletteQuery.params,
         variables: {
           reference: gameSessionId ?? ''
         }

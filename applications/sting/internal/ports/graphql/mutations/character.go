@@ -82,28 +82,3 @@ func (r *MutationResolver) UpdateCharacterName(ctx context.Context, input types.
 		Character: types.MarshalCharacterToGraphQL(ctx, character),
 	}, err
 }
-
-func (r *MutationResolver) UpdateCharacterThumbnail(ctx context.Context, input types.UpdateCharacterThumbnailInput) (*types.UpdateCharacterThumbnailPayload, error) {
-
-	if err := passport.FromContext(ctx).Authenticated(); err != nil {
-		return nil, err
-	}
-
-	character, err := r.App.Commands.UpdateCharacterThumbnail.
-		Handle(
-			ctx,
-			command.UpdateCharacterThumbnail{
-				Principal:   principal.FromContext(ctx),
-				CharacterId: input.ID.GetID(),
-				Thumbnail:   input.Thumbnail,
-			},
-		)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &types.UpdateCharacterThumbnailPayload{
-		Character: types.MarshalCharacterToGraphQL(ctx, character),
-	}, err
-}

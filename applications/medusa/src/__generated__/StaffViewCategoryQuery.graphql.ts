@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9caee5fd0a4947686f47fbb87caea03e>>
- * @relayHash 4965c7844e4041d83b0c1b52ae944a4f
+ * @generated SignedSource<<8c9c182fd90d72b8545dd809ab0b7c07>>
+ * @relayHash ac8cd79e9cdbb5889613cca643bdd129
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4965c7844e4041d83b0c1b52ae944a4f
+// @relayRequestID ac8cd79e9cdbb5889613cca643bdd129
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,7 +18,7 @@ export type StaffViewCategoryQuery$variables = {
 };
 export type StaffViewCategoryQuery$data = {
   readonly category: {
-    readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryThumbnailFragment" | "ChangeCategoryTitleFragment" | "ChangeCategoryTopicFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ChangeCategoryTitleFragment" | "ChangeCategoryTopicFragment">;
   } | null;
 };
 export type StaffViewCategoryQuery = {
@@ -54,13 +54,6 @@ v3 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "url",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -81,11 +74,6 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "ChangeCategoryTitleFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "ChangeCategoryThumbnailFragment"
           },
           {
             "args": null,
@@ -161,77 +149,6 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "banner",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "preview",
-                "storageKey": null
-              },
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "urls",
-                "plural": true,
-                "selections": [
-                  (v4/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "mimeType",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "width",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "height",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "ResourceUrl",
-                "kind": "LinkedField",
-                "name": "videoThumbnail",
-                "plural": false,
-                "selections": [
-                  (v4/*: any*/)
-                ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "type",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
             "concreteType": "Topic",
             "kind": "LinkedField",
             "name": "topic",
@@ -248,7 +165,7 @@ return {
     ]
   },
   "params": {
-    "id": "4965c7844e4041d83b0c1b52ae944a4f",
+    "id": "ac8cd79e9cdbb5889613cca643bdd129",
     "metadata": {},
     "name": "StaffViewCategoryQuery",
     "operationKind": "query",
@@ -257,7 +174,7 @@ return {
 };
 })();
 
-(node as any).hash = "0fe49a3101e2a600633b5a35b0884281";
+(node as any).hash = "9a10351431cf73cd6e82c04ec89bf03c";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

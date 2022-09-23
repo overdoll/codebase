@@ -17,6 +17,6 @@ msgstr ""
 msgid "Back to search"
 msgstr ""
 
-#: src/domain/staff/entity/character/view/club/RootStaffViewClubCharacter/StaffViewClubCharacter/StaffViewClubCharacter.tsx:49
+#: src/domain/staff/entity/character/view/club/RootStaffViewClubCharacter/StaffViewClubCharacter/StaffViewClubCharacter.tsx:43
 msgid "Character Club"
 msgstr ""

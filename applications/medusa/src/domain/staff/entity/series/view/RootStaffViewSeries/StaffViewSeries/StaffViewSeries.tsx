@@ -3,7 +3,6 @@ import { StaffViewSeriesQuery } from '@//:artifacts/StaffViewSeriesQuery.graphql
 import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import ChangeSeriesTitle from './ChangeSeriesTitle/ChangeSeriesTitle'
-import ChangeSeriesThumbnail from './ChangeSeriesThumbnail/ChangeSeriesThumbnail'
 import StaffSeriesSearchCharacters from './StaffSeriesSearchCharacters/StaffSeriesSearchCharacters'
 
 interface Props {
@@ -14,7 +13,6 @@ const Query = graphql`
   query StaffViewSeriesQuery($slug: String!) {
     serial(slug: $slug) {
       ...ChangeSeriesTitleFragment
-      ...ChangeSeriesThumbnailFragment
       ...StaffSeriesSearchCharactersFragment
     }
   }
@@ -34,9 +32,6 @@ export default function StaffViewSeries ({ query }: Props): JSX.Element {
     <Stack spacing={8}>
       <Box>
         <ChangeSeriesTitle query={queryData?.serial} />
-      </Box>
-      <Box>
-        <ChangeSeriesThumbnail query={queryData?.serial} />
       </Box>
       <Box>
         <StaffSeriesSearchCharacters query={queryData.serial} />

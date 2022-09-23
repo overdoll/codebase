@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<532235ad1fd52749426885173c3168fa>>
- * @relayHash 99f4d2b665f548fa1b3a27cfce21dc2c
+ * @generated SignedSource<<558dfb850414763618fa9a2c11deedea>>
+ * @relayHash 8974c9d2dde911943f63491c59c4c090
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,10 +9,9 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 99f4d2b665f548fa1b3a27cfce21dc2c
+// @relayRequestID 8974c9d2dde911943f63491c59c4c090
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
-export type ResourceType = "IMAGE" | "VIDEO" | "%future added value";
 export type UpdatePostCharactersInput = {
   characterIds: ReadonlyArray<string>;
   id: string;
@@ -24,13 +23,6 @@ export type UpdateCharacterButtonMutation$data = {
   readonly updatePostCharacters: {
     readonly post: {
       readonly characters: ReadonlyArray<{
-        readonly banner: {
-          readonly type: ResourceType;
-          readonly urls: ReadonlyArray<{
-            readonly mimeType: string;
-            readonly url: string;
-          }>;
-        } | null;
         readonly id: string;
         readonly name: string;
         readonly series: {
@@ -89,38 +81,6 @@ v5 = {
   "kind": "ScalarField",
   "name": "slug",
   "storageKey": null
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "type",
-  "storageKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ResourceUrl",
-  "kind": "LinkedField",
-  "name": "urls",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "mimeType",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "url",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -168,20 +128,7 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "banner",
-                    "plural": false,
-                    "selections": [
-                      (v6/*: any*/),
-                      (v7/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -241,21 +188,7 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v5/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Resource",
-                    "kind": "LinkedField",
-                    "name": "banner",
-                    "plural": false,
-                    "selections": [
-                      (v6/*: any*/),
-                      (v7/*: any*/),
-                      (v2/*: any*/)
-                    ],
-                    "storageKey": null
-                  }
+                  (v5/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -268,7 +201,7 @@ return {
     ]
   },
   "params": {
-    "id": "99f4d2b665f548fa1b3a27cfce21dc2c",
+    "id": "8974c9d2dde911943f63491c59c4c090",
     "metadata": {},
     "name": "UpdateCharacterButtonMutation",
     "operationKind": "mutation",
@@ -277,6 +210,6 @@ return {
 };
 })();
 
-(node as any).hash = "f190cdcfd03b78001c4dfe7dfbf71fba";
+(node as any).hash = "2770a2746541cc55a7f46f5d4da47119";
 
 export default node;

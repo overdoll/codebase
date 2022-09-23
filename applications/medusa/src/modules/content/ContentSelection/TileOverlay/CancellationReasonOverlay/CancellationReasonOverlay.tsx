@@ -2,7 +2,7 @@ import { Flex, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CancellationReasonOverlayFragment$key } from '@//:artifacts/CancellationReasonOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
-import RandomPattern from '../../../DataDisplay/RandomPattern/RandomPattern'
+import RandomPattern from '../../../PageLayout/Display/components/RandomPattern/RandomPattern'
 
 interface Props {
   query: CancellationReasonOverlayFragment$key

@@ -1,10 +1,11 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { ChangeAudienceThumbnailFragment$key } from '@//:artifacts/ChangeAudienceThumbnailFragment.graphql'
 import { Flex, Stack } from '@chakra-ui/react'
-import { PageSectionTitle, PageSectionWrap, ResourceIcon } from '@//:modules/content/PageLayout'
+import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import ChangeAudienceThumbnailForm from './ChangeAudienceThumbnailForm/ChangeAudienceThumbnailForm'
+import AudienceIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AudienceIcon/AudienceIcon'
 
 interface Props {
   query: ChangeAudienceThumbnailFragment$key
@@ -12,10 +13,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment ChangeAudienceThumbnailFragment on Audience {
-    id
-    banner {
-      ...ResourceIconFragment
-    }
+    ...AudienceIconFragment
     ...ChangeAudienceThumbnailFormFragment
   }
 `
@@ -34,13 +32,7 @@ export default function ChangeAudienceThumbnail ({ query }: Props): JSX.Element 
       </PageSectionWrap>
       <Stack spacing={2}>
         <Flex w='100%' align='center' justify='center'>
-          <ResourceIcon
-            showBorder
-            seed={data.id}
-            w={16}
-            h={16}
-            query={data.banner}
-          />
+          <AudienceIcon size='xl' audienceQuery={data} />
         </Flex>
         <Collapse>
           <CollapseButton>

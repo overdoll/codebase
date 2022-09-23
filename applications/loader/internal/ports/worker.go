@@ -18,11 +18,9 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 
 	client := clients.NewTemporalClient(context.Background())
 
-	w := bootstrap.NewWorker(client, 2)
+	w := bootstrap.NewWorker(client, 1)
 
-	w.RegisterWorkflow(workflows.ProcessResources)
-	w.RegisterWorkflow(workflows.DeleteResources)
-	w.RegisterWorkflow(workflows.ProcessResourcesWithFiltersFromCopy)
+	w.RegisterWorkflow(workflows.ProcessMedia)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

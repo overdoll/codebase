@@ -27,6 +27,7 @@ go_library(
         "@com_github_stretchr_testify//mock",
         "@com_github_stretchr_testify//require",
         "@io_bazel_rules_go//go/tools/bazel:go_default_library",
+        "@io_temporal_go_sdk//client",
         "@io_temporal_go_sdk//log",
         "@io_temporal_go_sdk//mocks",
         "@io_temporal_go_sdk//testsuite",

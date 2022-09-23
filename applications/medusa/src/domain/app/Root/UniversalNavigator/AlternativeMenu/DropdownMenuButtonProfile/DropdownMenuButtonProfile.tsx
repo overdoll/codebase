@@ -1,10 +1,11 @@
-import { Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
 import { DropdownMenuButtonProfileFragment$key } from '@//:artifacts/DropdownMenuButtonProfileFragment.graphql'
 import { Trans } from '@lingui/macro'
-import { RenderOnDesktop, RenderOnMobile, ResourceIcon } from '@//:modules/content/PageLayout'
+import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
+import AccountIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/AccountIcon/AccountIcon'
 
 interface Props {
   queryRef: DropdownMenuButtonProfileFragment$key | null
@@ -14,9 +15,7 @@ const DropdownMenuButtonProfileGQL = graphql`
   fragment DropdownMenuButtonProfileFragment on Account {
     id
     username
-    avatar {
-      ...ResourceIconFragment
-    }
+    ...AccountIconFragment
   }
 `
 
@@ -31,19 +30,10 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
       }}
     >
       <RenderOnDesktop>
-        <Flex
-          my={1}
+        <HStack
           align='center'
         >
-          <ResourceIcon
-            showBorder
-            seed={data?.id}
-            w='60px'
-            pointerEvents='none'
-            h='60px'
-            mr={4}
-            query={data?.avatar}
-          />
+          <AccountIcon size='xl' accountQuery={data} />
           <Flex direction='column'>
             <Text
               color='gray.00'
@@ -61,18 +51,11 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
               </Trans>
             </Text>
           </Flex>
-        </Flex>
+        </HStack>
       </RenderOnDesktop>
       <RenderOnMobile>
-        <Flex direction='column' align='center'>
-          <ResourceIcon
-            showBorder
-            seed={data?.id}
-            w={8}
-            h={8}
-            query={data?.avatar}
-            mb={2}
-          />
+        <Stack spacing={1} align='center'>
+          <AccountIcon size='md' accountQuery={data} />
           <Heading
             color='gray.100'
             fontSize='lg'
@@ -82,7 +65,7 @@ export default function DropdownMenuButtonProfile ({ queryRef }: Props): JSX.Ele
               My Profile
             </Trans>
           </Heading>
-        </Flex>
+        </Stack>
       </RenderOnMobile>
     </HorizontalNavigationDropdownMenu.Button>
   )

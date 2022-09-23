@@ -9,7 +9,6 @@ import PostModerationQueue from './PostModerationQueue/PostModerationQueue'
 import { PageSectionDescription, PageSectionTitle, PageSectionWrap, PageWrapper } from '@//:modules/content/PageLayout'
 import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
 import { Trans } from '@lingui/macro'
-import { GlobalVideoManagerProvider } from '@//:modules/content/Posts'
 import Head from 'next/head'
 import { PageProps } from '@//:types/app'
 import { SkeletonPost } from '@//:modules/content/Placeholder'
@@ -49,12 +48,10 @@ const RootPostModerationQueue: PageProps<Props> = (props: Props) => {
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({})}>
           <Suspense fallback={<SkeletonPost />}>
-            <GlobalVideoManagerProvider>
-              <PostModerationQueue
-                loadQuery={loadQuery}
-                query={queryRef as PreloadedQuery<PostModerationQueueQueryType>}
-              />
-            </GlobalVideoManagerProvider>
+            <PostModerationQueue
+              loadQuery={loadQuery}
+              query={queryRef as PreloadedQuery<PostModerationQueueQueryType>}
+            />
           </Suspense>
         </QueryErrorBoundary>
       </PageWrapper>

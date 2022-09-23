@@ -1,5 +1,5 @@
 import RootPublicPost from './RootPublicPost/RootPublicPost'
-import PublicPostQuery from '@//:artifacts/PublicPostQuery.graphql'
+import ResultPublicPostQuery from '@//:artifacts/ResultPublicPostQuery.graphql'
 
 RootPublicPost.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -8,7 +8,7 @@ RootPublicPost.getTranslationProps = async (ctx) => ({
 RootPublicPost.getRelayPreloadProps = (ctx) => ({
   queries: {
     publicPostQuery: {
-      params: PublicPostQuery.params,
+      params: ResultPublicPostQuery.params,
       variables: {
         reference: ctx.query.reference
       }

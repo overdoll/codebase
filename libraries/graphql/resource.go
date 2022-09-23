@@ -5,7 +5,8 @@ import (
 	"fmt"
 	"io"
 	"overdoll/libraries/graphql/relay"
-	"overdoll/libraries/resource"
+	"overdoll/libraries/media"
+	"overdoll/libraries/media/proto"
 	"strconv"
 )
 
@@ -101,60 +102,105 @@ func (e ResourceType) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
-func MarshalResourceToGraphQL(ctx context.Context, res *resource.Resource) *Resource {
+func MarshaMediaToLegacyResourceGraphQL(ctx context.Context, res *media.Media) *Resource {
 
 	if res == nil {
 		return nil
 	}
 
-	var urls []*ResourceURL
-	var videoUrl *ResourceURL
-
-	if res.FullUrls() != nil {
-		for _, url := range res.FullUrls() {
-			urls = append(urls, &ResourceURL{
-				URL:      URI(url.FullUrl()),
-				MimeType: url.MimeType(),
-			})
-		}
-	}
-
 	var tp ResourceType
-
-	if res.IsImage() {
-		tp = ResourceTypeImage
-	}
 
 	if res.IsVideo() {
 		tp = ResourceTypeVideo
-		url := res.VideoThumbnailFullUrl()
-
-		if url != nil {
-			videoUrl = &ResourceURL{
-				URL:      URI(url.FullUrl()),
-				MimeType: url.MimeType(),
-			}
-		}
+	} else {
+		tp = ResourceTypeImage
 	}
 
 	var progress *ResourceProgress
 
-	if !res.IsProcessed() && !res.Failed() {
-		progress = &ResourceProgress{ID: relay.NewID(ResourceProgress{}, res.ItemId(), res.ID())}
+	if !res.IsProcessed() {
+		progress = &ResourceProgress{ID: relay.NewID(ResourceProgress{}, res.LinkedId(), res.ID())}
+	}
+
+	var urls []*ResourceURL
+
+	if res.IsProcessed() {
+		if res.IsVideo() {
+			for _, container := range res.VideoContainers() {
+				if container.MimeType() == proto.MediaMimeType_VideoMp4 {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(container.Url()),
+						MimeType: "video/mp4",
+					})
+				}
+			}
+		} else {
+			if res.IsLegacy() {
+				urls = append(urls, &ResourceURL{
+					URL:      URI(res.LegacyWebpMediaAccess().Url()),
+					MimeType: "image/webp",
+				})
+
+				if res.ImageMimeType() == proto.MediaMimeType_ImageJpeg {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.LegacyImageMediaAccess().Url()),
+						MimeType: "image/jpeg",
+					})
+				} else {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.LegacyImageMediaAccess().Url()),
+						MimeType: "image/png",
+					})
+				}
+			} else {
+				urls = append(urls, &ResourceURL{
+					URL:      URI(res.OriginalImageMediaAccess().Url()),
+					MimeType: "image/webp",
+				})
+				if res.ImageMimeType() == proto.MediaMimeType_ImageJpeg {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.OriginalImageMediaAccess().Url()),
+						MimeType: "image/jpeg",
+					})
+				} else {
+					urls = append(urls, &ResourceURL{
+						URL:      URI(res.OriginalImageMediaAccess().Url()),
+						MimeType: "image/png",
+					})
+				}
+
+			}
+		}
+	}
+
+	var videoThumbnail *ResourceURL
+
+	if res.IsProcessed() && res.IsVideo() {
+		if res.IsLegacy() {
+			videoThumbnail = &ResourceURL{
+				URL:      URI(res.LegacyImageMediaAccess().Url()),
+				MimeType: "image/jpeg",
+			}
+		} else {
+			videoThumbnail = &ResourceURL{
+				URL:      URI(res.OriginalImageMediaAccess().Url()),
+				MimeType: "image/jpeg",
+			}
+		}
 	}
 
 	return &Resource{
-		ID:             relay.NewID(Resource{}, res.ItemId(), res.ID()),
-		Processed:      res.IsProcessed(),
+		ID:             relay.NewID(Resource{}, res.LinkedId(), res.ID()),
 		Type:           tp,
+		Processed:      res.IsProcessed(),
 		Urls:           urls,
-		Width:          res.Width(),
-		Progress:       progress,
-		Height:         res.Height(),
+		Width:          res.LegacyImageWidth(),
+		Height:         res.LegacyImageHeight(),
 		VideoDuration:  res.VideoDuration(),
-		VideoThumbnail: videoUrl,
-		Preview:        res.Preview(),
-		Failed:         res.Failed(),
+		VideoThumbnail: videoThumbnail,
+		Preview:        res.LegacyPreview(),
+		Failed:         res.IsFailed(),
 		VideoNoAudio:   res.VideoNoAudio(),
+		Progress:       progress,
 	}
 }

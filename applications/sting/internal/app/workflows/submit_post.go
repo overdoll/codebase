@@ -1,7 +1,6 @@
 package workflows
 
 import (
-	"errors"
 	"go.temporal.io/api/enums/v1"
 	"go.temporal.io/sdk/temporal"
 	"time"
@@ -12,16 +11,19 @@ import (
 
 type SubmitPostInput struct {
 	PostId   string
-	PostDate *time.Time
+	PostDate time.Time
 }
 
-const SubmitPostPixelatedResourcesSignalChannel = "submit-post-pixelated-resources"
-const SubmitPostResourcesFinishedProcessingSignalChannel = "submit-post-resources-finish-processing"
-const SubmitPostSignalChannel = "submit-post"
+const SubmitPostPixelatedMediaSignalChannel = "submit-post-pixelated-media"
+const SubmitPostMediaFinishedProcessingSignalChannel = "submit-post-media-finish-processing"
 
-type SubmitPostResourceFinished struct {
-	ResourceId string
-	Failed     bool
+type SubmitPostMediaFinished struct {
+	MediaId string
+	Failed  bool
+}
+
+type PixelatedPostMediaFinished struct {
+	MediaId string
 }
 
 func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
@@ -31,43 +33,33 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	var a *activities.Activities
 
-	var pixelatedResourcesCompleted bool
-	var postDate *time.Time
 	var hasFailed bool
-	var resources []SubmitPostResourceFinished
+	var media []SubmitPostMediaFinished
+	var pixelatedMedia []PixelatedPostMediaFinished
 
 	postPixelatedSelector := workflow.NewSelector(ctx)
 
+	postPixelatedProcessingChannel := workflow.GetSignalChannel(ctx, SubmitPostPixelatedMediaSignalChannel)
+
 	// here we wait until pixelated resources were called with a callback - since we need to wait for them to generate
-	postPixelatedSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostPixelatedResourcesSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
-		channel.Receive(ctx, &pixelatedResourcesCompleted)
-	})
-
-	postSubmissionSelector := workflow.NewSelector(ctx)
-
-	// wait for post to be submitted
-	postSubmissionSelector.AddReceive(workflow.GetSignalChannel(ctx, SubmitPostSignalChannel), func(channel workflow.ReceiveChannel, more bool) {
-		channel.Receive(ctx, &postDate)
+	postPixelatedSelector.AddReceive(postPixelatedProcessingChannel, func(channel workflow.ReceiveChannel, more bool) {
+		var receivedPayload PixelatedPostMediaFinished
+		for channel.ReceiveAsync(&receivedPayload) {
+			pixelatedMedia = append(pixelatedMedia, receivedPayload)
+		}
 	})
 
 	postResourceProcessingSelector := workflow.NewSelector(ctx)
 
-	postResourcesProcessingChannel := workflow.GetSignalChannel(ctx, SubmitPostResourcesFinishedProcessingSignalChannel)
+	postResourcesProcessingChannel := workflow.GetSignalChannel(ctx, SubmitPostMediaFinishedProcessingSignalChannel)
 
 	// wait for resources to finish processing
 	postResourceProcessingSelector.AddReceive(postResourcesProcessingChannel, func(channel workflow.ReceiveChannel, more bool) {
-		var receivedPayload SubmitPostResourceFinished
+		var receivedPayload SubmitPostMediaFinished
 		for channel.ReceiveAsync(&receivedPayload) {
-			resources = append(resources, receivedPayload)
+			media = append(media, receivedPayload)
 		}
 	})
-
-	// wait for post to be "submitted"
-	postSubmissionSelector.Select(ctx)
-
-	if postDate == nil {
-		postDate = input.PostDate
-	}
 
 	var postDetails *activities.SubmitPostPayload
 
@@ -75,7 +67,7 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	if err := workflow.ExecuteActivity(ctx, a.SubmitPost,
 		activities.SubmitPostInput{
 			PostId:   input.PostId,
-			PostDate: *postDate,
+			PostDate: input.PostDate,
 		},
 	).Get(ctx, &postDetails); err != nil {
 		logger.Error("failed to submit post", "Error", err)
@@ -84,20 +76,20 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 
 	// wait for at least 1 resource to finish processing
 	// only block if we are waiting for at least 1 resource
-	if len(postDetails.ResourceIds) > 0 {
+	if len(postDetails.MediaIds) > 0 {
 		postResourceProcessingSelector.Select(ctx)
 	}
 
 	// check our signal channels to see if we have a failed resource waiting
-	var receivedPayload SubmitPostResourceFinished
+	var receivedPayload SubmitPostMediaFinished
 	for postResourcesProcessingChannel.ReceiveAsync(&receivedPayload) {
-		resources = append(resources, receivedPayload)
+		media = append(media, receivedPayload)
 	}
 
-	for _, resourceId := range postDetails.ResourceIds {
-		for _, resource := range resources {
+	for _, resourceId := range postDetails.MediaIds {
+		for _, resource := range media {
 			// check for a failed resource
-			if resourceId == resource.ResourceId {
+			if resourceId == resource.MediaId {
 				if resource.Failed {
 					hasFailed = true
 					break
@@ -116,10 +108,18 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 			return err
 		}
 
-		// continue workflow as new to restart the flow since we submitted a post with errors
-		return workflow.NewContinueAsNewError(ctx, SubmitPost, SubmitPostInput{
-			PostId:   input.PostId,
-			PostDate: postDate,
+		if err := workflow.ExecuteActivity(ctx, a.CancelSubmitPost,
+			activities.CancelSubmitPostInput{
+				PostId: input.PostId,
+			},
+		).Get(ctx, nil); err != nil {
+			logger.Error("failed to cancel submit post", "Error", err)
+			return err
+		}
+
+		// workflow is marked as cancelled
+		return workflow.Await(ctx, func() bool {
+			return false
 		})
 	}
 
@@ -128,26 +128,26 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	// if we find all IDs then the post has finished processing
 	if err := workflow.Await(ctx, func() bool {
 
-		var finds int
+		var foundRegularMedia int
 
-		var receivedPayload SubmitPostResourceFinished
+		var receivedPayload SubmitPostMediaFinished
 		for postResourcesProcessingChannel.ReceiveAsync(&receivedPayload) {
-			resources = append(resources, receivedPayload)
+			media = append(media, receivedPayload)
 		}
 
-		for _, resourceId := range postDetails.ResourceIds {
-			for _, resource := range resources {
+		for _, resourceId := range postDetails.MediaIds {
+			for _, resource := range media {
 				// check for a failed resource
-				if resourceId == resource.ResourceId {
+				if resourceId == resource.MediaId {
 					if !resource.Failed {
-						finds++
+						foundRegularMedia++
 						break
 					}
 				}
 			}
 		}
 
-		return finds >= len(postDetails.ResourceIds)
+		return foundRegularMedia >= len(postDetails.MediaIds)
 	}); err != nil {
 		logger.Error("failed to await condition", "Error", err)
 		return err
@@ -167,9 +167,30 @@ func SubmitPost(ctx workflow.Context, input SubmitPostInput) error {
 	// only wait for postPixelatedSelector if we have created pixelated resources
 	if createdPayload.CreatedResources {
 		postPixelatedSelector.Select(ctx)
-		if !pixelatedResourcesCompleted {
-			return errors.New("pixelated resources not yet completed")
+	}
+
+	// check for the condition that all pixelated resources have been generated
+	if err := workflow.Await(ctx, func() bool {
+
+		var foundPixelatedMedia int
+
+		var receivedPayload2 PixelatedPostMediaFinished
+		for postPixelatedProcessingChannel.ReceiveAsync(&receivedPayload2) {
+			pixelatedMedia = append(pixelatedMedia, receivedPayload2)
 		}
+
+		for _, resourceId := range createdPayload.PixelatedMediaIds {
+			for _, resource := range pixelatedMedia {
+				if resourceId == resource.MediaId {
+					foundPixelatedMedia++
+				}
+			}
+		}
+
+		return foundPixelatedMedia >= len(createdPayload.PixelatedMediaIds)
+	}); err != nil {
+		logger.Error("failed to await condition", "Error", err)
+		return err
 	}
 
 	var inReview bool

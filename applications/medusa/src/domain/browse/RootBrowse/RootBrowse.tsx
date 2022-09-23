@@ -1,38 +1,28 @@
-import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import type { BrowseQuery as BrowseQueryType } from '@//:artifacts/BrowseQuery.graphql'
-import BrowseQuery from '@//:artifacts/BrowseQuery.graphql'
-import SkeletonPost from '@//:modules/content/Placeholder/Loading/SkeletonPost/SkeletonPost'
+import type { ResultBrowseQuery as ResultBrowseQueryType } from '@//:artifacts/ResultBrowseQuery.graphql'
+import ResultBrowseQuery from '@//:artifacts/ResultBrowseQuery.graphql'
 import { PageProps } from '@//:types/app'
-import { PageWrapper } from '@//:modules/content/PageLayout'
-import BrowseStructuredData from '@//:common/structured-data/browse/BrowseStructuredData/BrowseStructuredData'
-import Browse from './Browse/Browse'
-import BrowseRichObject from '@//:common/rich-objects/browse/BrowseRichObject/BrowseRichObject'
+import { PageContainer } from '@//:modules/content/PageLayout'
+import DisposeBrowse from './DisposeBrowse/DisposeBrowse'
 
 interface Props {
   queryRefs: {
-    browseQuery: PreloadedQuery<BrowseQueryType>
+    browseQuery: PreloadedQuery<ResultBrowseQueryType>
   }
 }
 
 const RootBrowse: PageProps<Props> = (props: Props): JSX.Element => {
-  const [queryRef, loadQuery] = useQueryLoader(
-    BrowseQuery,
-    props.queryRefs.browseQuery)
+  const { queryRefs: { browseQuery } } = props
+
+  const params = useQueryLoader(
+    ResultBrowseQuery,
+    browseQuery
+  )
 
   return (
-    <>
-      <BrowseRichObject />
-      <BrowseStructuredData />
-      <PageWrapper>
-        <QueryErrorBoundary loadQuery={() => loadQuery({})}>
-          <Suspense fallback={<SkeletonPost />}>
-            <Browse query={queryRef as PreloadedQuery<BrowseQueryType>} />
-          </Suspense>
-        </QueryErrorBoundary>
-      </PageWrapper>
-    </>
+    <PageContainer>
+      <DisposeBrowse params={params} />
+    </PageContainer>
   )
 }
 

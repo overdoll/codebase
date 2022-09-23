@@ -7,7 +7,7 @@ import { HStack } from '@chakra-ui/react'
 import { LinkTile, StackTile } from '@//:modules/content/ContentSelection'
 import AccountCancelledClubSupporterSubscriptionDetails
   from '../../../../../subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails'
-import Icon from '@//:modules/content/PageLayout/Flair/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { ArrowButtonRight } from '@//:assets/icons'
 
 interface Props {

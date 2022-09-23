@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<77c18307ffc4b7613a0b23561ec800a9>>
+ * @generated SignedSource<<a8d0905411523f91636dd7402d881582>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -27,12 +27,7 @@ export type SearchSeriesRecommendationsFragment$key = {
 };
 
 const node: ReaderFragment = {
-  "argumentDefinitions": [
-    {
-      "kind": "RootArgument",
-      "name": "seriesSlug"
-    }
-  ],
+  "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "SearchSeriesRecommendationsFragment",
@@ -44,11 +39,6 @@ const node: ReaderFragment = {
           "kind": "Literal",
           "name": "first",
           "value": 3
-        },
-        {
-          "kind": "Variable",
-          "name": "seriesSlug",
-          "variableName": "seriesSlug"
         }
       ],
       "concreteType": "CharacterConnection",
@@ -91,13 +81,13 @@ const node: ReaderFragment = {
           "storageKey": null
         }
       ],
-      "storageKey": null
+      "storageKey": "characters(first:3)"
     }
   ],
-  "type": "Query",
+  "type": "Series",
   "abstractKey": null
 };
 
-(node as any).hash = "bd130c2d8d13c770b86b7bb3239a0788";
+(node as any).hash = "dc74f73be1c8c44a3196ba7c01f4c6a5";
 
 export default node;
