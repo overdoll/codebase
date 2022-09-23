@@ -47,8 +47,7 @@ spec:
                 name: medusa
                 port:
                   number: 8000
-    - host: overdoll.test
-      http:
+    - http:
         paths:
           - path: /api/upload/
             pathType: Prefix
