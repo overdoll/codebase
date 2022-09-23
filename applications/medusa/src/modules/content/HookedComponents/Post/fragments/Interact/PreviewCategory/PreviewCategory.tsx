@@ -28,8 +28,8 @@ export default function PreviewCategory (props: Props): JSX.Element {
       <Stack px={2} align='center' justify='center' minH={50} h='100%'>
         <Heading
           fontSize={{
-            base: '2xs',
-            md: 'xs'
+            base: 'sm',
+            md: 'md'
           }}
           wordBreak='break-all'
           color='whiteAlpha.800'

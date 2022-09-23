@@ -47,8 +47,8 @@ export default function PreviewVideoMedia (props: Props): JSX.Element {
         ...videoProps
       }}
       observerProps={{
-        width: data.aspectRatio.width,
-        height: data.aspectRatio.height,
+        width: data?.aspectRatio?.width ?? 100,
+        height: data?.aspectRatio?.height ?? 100,
         ...observerProps
       }}
     />

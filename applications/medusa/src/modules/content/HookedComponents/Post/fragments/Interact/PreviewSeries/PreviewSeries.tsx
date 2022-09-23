@@ -28,8 +28,8 @@ export default function PreviewSeries (props: Props): JSX.Element {
       <Stack overflow='hidden' px={2} align='center' justify='center' h='100%'>
         <Heading
           fontSize={{
-            base: '2xs',
-            md: 'xs'
+            base: 'sm',
+            md: 'md'
           }}
           wordBreak='break-all'
           color='whiteAlpha.800'
