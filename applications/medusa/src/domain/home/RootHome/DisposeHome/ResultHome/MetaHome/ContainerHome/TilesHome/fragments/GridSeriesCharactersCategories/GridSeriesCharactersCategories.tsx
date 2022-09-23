@@ -82,7 +82,7 @@ export default function GridSeriesCharactersCategories (props: Props): JSX.Eleme
         <PreviewCategoryTileHome categoryQuery={data.categories.edges[1].node} />
       </GridItem>
       <GridItem>
-        <PreviewSeriesTileHome seriesQuery={data.series.edges[1].node} />
+        <PreviewSeriesTileHome seriesQuery={data.series.edges[0].node} />
       </GridItem>
       <GridItem>
         <PreviewCharacterTileHome characterQuery={data.characters.edges[1].node} />
