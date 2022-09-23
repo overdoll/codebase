@@ -269,6 +269,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		maxFps  int
 		profile string
 		level   string
+		crf     string
 	}
 
 	resolutionTargets := []resolutionTarget{
@@ -280,6 +281,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			maxFps:  60,
 			profile: "high",
 			level:   "4.2",
+			crf:     "23",
 		},
 		{
 			high:    1280,
@@ -289,6 +291,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			maxFps:  60,
 			profile: "high",
 			level:   "3.2",
+			crf:     "23",
 		},
 		{
 			high:    854,
@@ -298,6 +301,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			maxFps:  30,
 			profile: "main",
 			level:   "3.1",
+			crf:     "23",
 		},
 		{
 			high:    640,
@@ -307,6 +311,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			maxFps:  30,
 			profile: "main",
 			level:   "3.0",
+			crf:     "23",
 		},
 	}
 
@@ -378,6 +383,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 					maxFps:  60,
 					profile: "high",
 					level:   "4.2",
+					crf:     "23",
 				}}, scales...)
 			}
 		}
@@ -496,7 +502,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			"maxrate":                scale.rate,
 			"bufsize":                scale.rate,
 			"tune":                   "animation",
-			"crf":                    "23",
+			"crf":                    scale.crf,
 			"profile:v":              scale.profile,
 			"force_key_frames":       "expr:gte(t,n_forced*3)",
 			"preset":                 defaultPreset,

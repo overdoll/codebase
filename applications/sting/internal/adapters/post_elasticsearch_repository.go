@@ -4,7 +4,6 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/json"
-	"fmt"
 	"go.uber.org/zap"
 	"hash/fnv"
 	"math"
@@ -243,8 +242,6 @@ func (r PostsCassandraElasticsearchRepository) ScanPosts(ctx context.Context, cl
 	if err != nil {
 		return errors.Wrap(support.ParseElasticError(err), "failed to search posts")
 	}
-
-	fmt.Println(response.Hits.Hits)
 
 	for _, hit := range response.Hits.Hits {
 
