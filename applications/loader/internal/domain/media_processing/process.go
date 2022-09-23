@@ -57,7 +57,7 @@ var (
 
 const (
 	jpegQuality   = 85
-	defaultPreset = "veryslow"
+	defaultPreset = "slow"
 )
 
 func init() {
