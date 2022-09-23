@@ -136,6 +136,16 @@ type ffmpegProbeStream struct {
 	} `json:"format"`
 }
 
+type ffmpegPacket struct {
+	Size         string `json:"size"`
+	DurationTime string `json:"duration_time"`
+	PtsTime      string `json:"pts_time"`
+}
+
+type ffmpegPacketsProbe struct {
+	Packets []ffmpegPacket `json:"packets"`
+}
+
 func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	fileName := uuid.New().String()
@@ -621,6 +631,8 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			finalStreamList[i], finalStreamList[j] = finalStreamList[j], finalStreamList[i]
 		}
 
+		var videoStreamWidth, videoStreamHeight int
+
 		for i, stream := range finalStreamList {
 
 			parsedInt, err := strconv.ParseInt(stream.BitRate, 10, 64)
@@ -632,6 +644,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 
 			if stream.CodecTagString == "mp4a" {
 				codecs += "mp4a.40.2"
+
 			} else if stream.CodecTagString == "avc1" {
 				codecs += "avc1"
 
@@ -647,6 +660,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 					return errors.New("unknown level with codec: " + stream.CodecTagString + " - " + stream.Profile + ": " + strconv.Itoa(stream.Level))
 				}
 
+				videoStreamWidth = stream.Width
+				videoStreamHeight = stream.Height
+
 			} else {
 				return errors.New("unknown codec: " + stream.CodecTagString)
 			}
@@ -656,11 +672,114 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			}
 		}
 
+		packets, err := ffmpeg_go.Probe(path, map[string]interface{}{
+			"hide_banner":    "",
+			"v":              "error",
+			"select_streams": "v:0",
+			"show_packets":   "",
+			"show_entries":   "packet=pts_time,dts_time,duration_time,size,flags",
+		})
+
+		if err != nil {
+			return errors.Wrap(err, "failed to probe packets")
+		}
+
+		var probePackets *ffmpegPacketsProbe
+
+		if err := json.Unmarshal([]byte(packets), &probePackets); err != nil {
+			return errors.Wrap(err, "failed to unmarshal playlist probe")
+		}
+
+		var defaultDuration float64
+
+		// get the first duration that's not empty
+		for _, packet := range probePackets.Packets {
+			if packet.DurationTime != "" {
+				parsedTime, err := strconv.ParseFloat(packet.DurationTime, 64)
+				if err != nil {
+					return errors.Wrap(err, "failed to parse first duration time")
+				}
+				defaultDuration = parsedTime
+				break
+			}
+		}
+
+		var aggregateDuration float64
+		var currentList []ffmpegPacket
+		var aggregation [][]ffmpegPacket
+
+		// bucket up packets, so we can get peak bit-rates
+		for _, packet := range probePackets.Packets {
+			var currentDuration float64
+			if packet.DurationTime != "" {
+				parsedTime, err := strconv.ParseFloat(packet.DurationTime, 64)
+				if err != nil {
+					return errors.Wrap(err, "failed to parse duration time")
+				}
+				currentDuration = parsedTime
+			} else {
+				currentDuration = defaultDuration
+			}
+
+			// our bucket here is 1 second-intervals of the video
+			if aggregateDuration < 3 {
+				currentList = append(currentList, packet)
+				aggregateDuration += currentDuration
+			} else {
+				fmt.Println(aggregateDuration)
+				if len(currentList) > 0 {
+					aggregation = append(aggregation, currentList)
+				}
+
+				currentList = []ffmpegPacket{packet}
+				aggregateDuration = currentDuration
+			}
+		}
+
+		aggregation = append(aggregation, currentList)
+
+		fmt.Println(aggregation)
+
+		var peakBitrate float64
+
+		if len(aggregation) > 1 {
+			// go through our bucketed list and get the largest bitrate in the bucket
+			for _, aggregate := range aggregation {
+
+				lastFrame, err := strconv.ParseFloat(aggregate[len(aggregate)-1].PtsTime, 64)
+				if err != nil {
+					return errors.Wrap(err, "failed to parse last frame time")
+				}
+
+				firstFrame, err := strconv.ParseFloat(aggregate[0].PtsTime, 64)
+				if err != nil {
+					return errors.Wrap(err, "failed to parse first frame time")
+				}
+
+				duration := lastFrame - firstFrame
+				var totalSize float64
+				for _, frame := range aggregate {
+					parsedSize, err := strconv.ParseFloat(frame.Size, 64)
+					if err != nil {
+						return errors.Wrap(err, "failed to parse frame size")
+					}
+					totalSize += parsedSize
+				}
+
+				bitrateForFrame := ((totalSize * 8) / 1000) / duration * 1000
+
+				if bitrateForFrame > peakBitrate {
+					peakBitrate = bitrateForFrame
+				}
+			}
+		} else {
+			peakBitrate = float64(bitrate)
+		}
+
 		playlist := &playlist{
-			bitrateInt:     int(bitrate),
-			bitrate:        strconv.Itoa(int(bitrate)),
+			bitrate:        strconv.Itoa(int(peakBitrate)),
 			averageBitrate: strconv.Itoa(int(bitrate)),
-			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
+			resolution:     strconv.Itoa(videoStreamWidth) + "x" + strconv.Itoa(videoStreamHeight),
 			uri:            path,
 			codecs:         "\"" + codecs + "\"",
 		}

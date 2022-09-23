@@ -76,6 +76,13 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 				Green:   uint32(uint8((values >> 8) & 0xFF)),
 				Blue:    uint32(uint8(values & 0xFF)),
 			})
+		} else {
+			palette = append(palette, &proto.ColorPalette{
+				Percent: 100,
+				Red:     255,
+				Green:   255,
+				Blue:    255,
+			})
 		}
 
 		lastMimeType := re.MimeTypes[len(re.MimeTypes)-1]
