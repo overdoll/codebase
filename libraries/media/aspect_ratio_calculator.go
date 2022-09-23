@@ -22,6 +22,10 @@ func CalculateAspectRatio(width, height int) (w int, h int) {
 		divisor = height
 	}
 
+	if divisor == 0 {
+		return 0, 0
+	}
+
 	gcd := -1
 
 	for gcd == -1 {
