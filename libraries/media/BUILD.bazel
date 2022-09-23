@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library")
 go_library(
     name = "media",
     srcs = [
+        "aspect_ratio_calculator.go",
         "color_palette.go",
         "image_media_access.go",
         "marshal.go",

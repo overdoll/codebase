@@ -136,7 +136,7 @@ type ffmpegProbeStream struct {
 	} `json:"format"`
 }
 
-func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
+func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	fileName := uuid.New().String()
 	targetFileName := file.Name()
@@ -147,7 +147,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		Output: *new([]byte),
 	}
 
-	validationSocket, err, cleanupValidationSocket := createFFMPEGTempSocket(media.RawProto().Id, 0, true)
+	validationSocket, err, cleanupValidationSocket := createFFMPEGTempSocket(target.RawProto().Id, 0, true)
 
 	if err != nil {
 		return nil, err
@@ -383,7 +383,7 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 		}
 	}
 
-	processSocket, err, processCleanup := createFFMPEGTempSocket(media.RawProto().Id, parsedDuration, false)
+	processSocket, err, processCleanup := createFFMPEGTempSocket(target.RawProto().Id, parsedDuration, false)
 
 	if err != nil {
 		return nil, err
@@ -848,50 +848,21 @@ func processVideo(media *media.Media, file *os.File) (*ProcessResponse, error) {
 			return nil, errors.Wrap(err, "failed to parse aspect ratio split height")
 		}
 	} else {
+
 		// calculate aspect ratio manually, since it's not available
-		width := probeResult.Streams[0].Width
-		height := probeResult.Streams[0].Height
+		newWidth, newHeight := media.CalculateAspectRatio(probeResult.Streams[0].Width, probeResult.Streams[0].Height)
 
-		if height == width {
-			widthAspect = 1
-			heightAspect = 1
-		}
-
-		var dividend, divisor int
-
-		if width > height {
-			dividend = height
-			divisor = width
-		}
-
-		if height > width {
-			dividend = width
-			divisor = height
-		}
-
-		gcd := -1
-
-		for gcd == -1 {
-			remainder := dividend % divisor
-			if remainder == 0 {
-				gcd = divisor
-			} else {
-				dividend = divisor
-				divisor = remainder
-			}
-		}
-
-		widthAspect = int64(width / gcd)
-		heightAspect = int64(height / gcd)
+		widthAspect = int64(newWidth)
+		heightAspect = int64(newHeight)
 	}
 
-	processedResponses, err := processImageWithSizes(media, img)
+	processedResponses, err := processImageWithSizes(target, img)
 
 	if err != nil {
 		return nil, err
 	}
 
-	media.RawProto().VideoData = &proto.VideoData{
+	target.RawProto().VideoData = &proto.VideoData{
 		Id: fileName,
 		Containers: append(videoContainers, &proto.VideoContainer{
 			Id:       mp4ActualFileName,
