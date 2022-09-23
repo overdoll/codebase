@@ -849,7 +849,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		}
 	} else {
 
-		// calculate aspect ratio manually, since it's not available
+		// calculate aspect ratio manually since it's not available
 		newWidth, newHeight := media.CalculateAspectRatio(probeResult.Streams[0].Width, probeResult.Streams[0].Height)
 
 		widthAspect = int64(newWidth)
