@@ -41,6 +41,7 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 	var imageData *proto.ImageData
 
 	if re.Processed && re.VideoThumbnailMimeType != "" {
+		newWidth, newHeight := CalculateAspectRatio(re.Width, re.Height)
 		videoData = &proto.VideoData{
 			Id: re.ProcessedId,
 			Containers: []*proto.VideoContainer{{
@@ -51,8 +52,8 @@ func unmarshalLegacyResourceFromDatabase(ctx context.Context, resource string) (
 				Width:    uint32(re.Width),
 			}},
 			AspectRatio: &proto.VideoAspectRatio{
-				Width:  0,
-				Height: 0,
+				Width:  uint32(newWidth),
+				Height: uint32(newHeight),
 			},
 			DurationMilliseconds: int64(re.VideoDuration),
 			HasAudio:             !re.VideoNoAudio,
