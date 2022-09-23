@@ -14,6 +14,6 @@ const Fragment = graphql`
 export default function isProcessed (postQuery: isProcessedFragment$key): boolean {
   const data = useFragment(Fragment, postQuery)
 
-  const processed = data.content.map((item) => item.media.__typename !== 'RawMedia') as boolean[]
+  const processed = data.content.map((item) => item.media.__typename !== 'RawMedia')
   return processed.every(x => x)
 }

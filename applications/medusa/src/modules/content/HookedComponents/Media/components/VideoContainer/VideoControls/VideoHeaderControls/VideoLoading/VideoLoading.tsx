@@ -22,7 +22,7 @@ export default function VideoLoading (props: Props): JSX.Element {
     hasAudio
   } = props
 
-  const [playing, setPlaying] = useState(player?.video?.paused !== true)
+  const [playing, setPlaying] = useState(!player?.video?.paused)
   const [time, setTime] = useState(player.currentTime)
   const [isLoading, setLoading] = useState(false)
 

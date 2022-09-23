@@ -9,9 +9,9 @@ import { FurryFox, HentaiSkirt, ThreeDRender } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import StaticTile from '../../components/Tiles/StaticTile/StaticTile'
-import PreviewCategoryTileHome from '../../components/Tiles/PreviewCategoryTileHome/PreviewCategoryTileHome'
-import PreviewCharacterTileHome from '../../components/Tiles/PreviewCharacterTileHome/PreviewCharacterTileHome'
-import PreviewSeriesTileHome from '../../components/Tiles/PreviewSeriesTileHome/PreviewSeriesTileHome'
+import PreviewCategoryTileHome from '../PreviewCategoryTileHome/PreviewCategoryTileHome'
+import PreviewCharacterTileHome from '../PreviewCharacterTileHome/PreviewCharacterTileHome'
+import PreviewSeriesTileHome from '../PreviewSeriesTileHome/PreviewSeriesTileHome'
 
 interface Props {
   rootQuery: GridSeriesCharactersCategoriesFragment$key

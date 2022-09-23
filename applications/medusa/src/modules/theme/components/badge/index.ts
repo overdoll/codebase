@@ -10,13 +10,11 @@ const baseStyle: SystemStyleObject = {
 
 const variantSolid: SystemStyleFunction = (props) => {
   const {
-    colorScheme: c,
-    theme
+    colorScheme: c
   } = props
-  const dark = transparentize(`${c}.500`, 0.3)(theme)
   return {
-    bg: mode(`${c}.500`, dark)(props),
-    color: mode('white', 'whiteAlpha.800')(props)
+    bg: mode(`${c}.500`, `${c}.500`)(props),
+    color: mode('white', `${c}.100`)(props)
   }
 }
 

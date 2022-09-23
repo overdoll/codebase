@@ -12,6 +12,7 @@ import CharacterLinkTile
   from '@//:modules/content/PageLayout/Display/fragments/Link/CharacterLinkTile/CharacterLinkTile'
 import { useUpdateEffect } from 'usehooks-ts'
 import { CHARACTER_LIMIT } from '../TagsPublicPost'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   postQuery: PostPreviewCharactersFragment$key
@@ -60,7 +61,7 @@ export default function PostPreviewCharacters (props: Props): JSX.Element {
       >
         {constructedData.map((item) =>
           <GridItem key={item.id}>
-            <CharacterLinkTile query={item}>
+            <CharacterLinkTile onClick={() => trackFathomEvent('YXVASDA7', 1)} query={item}>
               <PreviewCharacter characterQuery={item} />
             </CharacterLinkTile>
           </GridItem>

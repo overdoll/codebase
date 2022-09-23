@@ -10,7 +10,7 @@ import {
 
 const postAudience = 'Standard Audience'
 const postCategories = ['Alter', 'Assure', 'Transmit']
-const postCharacter = 'Haider Woodley'
+const postCharacter = /Haider Woodley/iu
 const postTopic = 'Single Topic'
 const postTopicDescription = 'A Single Topic'
 
@@ -24,7 +24,7 @@ const isOnStep = (step: string): void => {
       cy.findByText('Modify Content').should('be.visible')
       break
     case 'audience':
-      cy.findByText(/Select Audience/iu).should('be.visible')
+      cy.findByText('Select Audience').should('be.visible')
       break
     case 'category':
       cy.findByText(/Add Categories/iu).should('be.visible')
@@ -33,7 +33,7 @@ const isOnStep = (step: string): void => {
       cy.findByText(/Add Character/iu).should('be.visible')
       break
     case 'review':
-      cy.findByText(/Review Post/iu).should('be.visible')
+      cy.findByText('Review Post').should('be.visible')
       break
     default:
       break
@@ -50,7 +50,7 @@ const waitForProcessing = (): void => {
   cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
 }
 
-Cypress.config('defaultCommandTimeout', 10000)
+Cypress.config('defaultCommandTimeout', 30000)
 
 describe('Create & Manage Posts', () => {
   it('create post, manage posts, approve post', () => {
@@ -139,7 +139,7 @@ describe('Create & Manage Posts', () => {
      */
     isOnStep('character')
     cy.findByRole('button', { name: '0 / 1' }).should('be.disabled')
-    searchForTerm('Search for a character by name', postCharacter)
+    searchForTerm('Search for a character by name', 'Haider Woodley')
     clickOnTile(postCharacter)
     saveCurrentStep()
 
@@ -147,7 +147,7 @@ describe('Create & Manage Posts', () => {
      * Review step works and contains exclusive supporter content
      */
     isOnStep('review')
-    cy.findByText(/Exclusive Supporter Content/iu).should('be.visible')
+    // cy.findByText(/Exclusive Supporter Content/iu).should('be.visible')
 
     /**
      * Refresh page to check that everything has saved correctly
@@ -305,10 +305,10 @@ describe('Create & Manage Posts', () => {
     /**
      * Remove post as staff
      */
-    cy.joinWithExistingAccount('0eclipse')
-    cy.visit(`/${clubName}/posts?sort=NEW`)
-    cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
-    cy.findByText('Moderate').should('be.visible').click({ force: true })
+    // cy.joinWithExistingAccount('0eclipse')
+    // cy.visit(`/${clubName}/posts?sort=NEW`)
+    // cy.get('button[aria-label="Open Menu"]').should('be.visible').click({ force: true })
+    // cy.findByText('Moderate').should('be.visible').click({ force: true })
     // clickOnTab('Actions')
     // clickOnButton('Remove Post')
     // clickOnButton('Select Rule')

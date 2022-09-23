@@ -16,7 +16,7 @@ export default function VideoPlayPause (props: Props): JSX.Element {
 
   const [player, setPlayer] = useState<PlayerType>(inheritedPlayer)
 
-  const [playing, setPlaying] = useState(((player?.video?.paused) === false) ?? false)
+  const [playing, setPlaying] = useState((!player?.video?.paused))
 
   syncPlayerPlayPause(player, setPlaying, setPlayer)
 

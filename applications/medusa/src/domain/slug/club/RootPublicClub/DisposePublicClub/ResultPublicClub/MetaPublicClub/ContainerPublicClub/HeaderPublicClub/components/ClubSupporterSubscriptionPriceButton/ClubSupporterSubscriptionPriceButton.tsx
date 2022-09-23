@@ -1,5 +1,5 @@
 import type {
-  ClubSupporterSubscriptionPriceButtonFragment$key,
+  ClubSupporterSubscriptionPriceButtonFragment$key
 } from '@//:artifacts/ClubSupporterSubscriptionPriceButtonFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'

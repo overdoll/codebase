@@ -70,7 +70,7 @@ export default function ViewPostReports ({ searchArguments }: Props): JSX.Elemen
   return (
     <EmptyBoundary
       fallback={<SmallBackgroundBox><Trans>No reports found</Trans></SmallBackgroundBox>}
-      condition={data.reports?.edges?.length < 1}
+      condition={data?.reports?.edges == null || data?.reports?.edges?.length < 1}
     >
       <Table>
         <TableHeader>
@@ -88,7 +88,7 @@ export default function ViewPostReports ({ searchArguments }: Props): JSX.Elemen
           </TableHeaderRow>
         </TableHeader>
         <TableBody>
-          {data.reports.edges.map((item) => (
+          {data?.reports?.edges?.map((item) => (
             <TableBodyRowBackground key={item.node.id}>
               <TableBodyRow columns={6}>
                 <TableBodyColumn column={2}>

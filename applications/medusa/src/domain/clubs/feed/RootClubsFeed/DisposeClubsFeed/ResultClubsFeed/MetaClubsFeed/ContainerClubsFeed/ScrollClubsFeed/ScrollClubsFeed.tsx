@@ -4,7 +4,7 @@ import { ResultClubsFeedQuery } from '@//:artifacts/ResultClubsFeedQuery.graphql
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
-  viewerQuery: ScrollClubsFeedFragment$key
+  viewerQuery: ScrollClubsFeedFragment$key | null
 }
 
 const ViewerFragment = graphql`

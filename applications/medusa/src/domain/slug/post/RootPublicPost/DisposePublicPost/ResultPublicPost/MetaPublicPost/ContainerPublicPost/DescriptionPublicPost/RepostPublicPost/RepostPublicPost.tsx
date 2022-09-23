@@ -4,7 +4,6 @@ import { RepostPublicPostFragment$key } from '@//:artifacts/RepostPublicPostFrag
 import { Stack } from '@chakra-ui/react'
 import CopyLinkPublicPost from './CopyLinkPublicPost/CopyLinkPublicPost'
 import SocialRepostPublicPost from './SocialRepostPublicPost/SocialRepostPublicPost'
-import ClubPublicPost from '../ClubPublicPost/ClubPublicPost'
 
 interface Props {
   postQuery: RepostPublicPostFragment$key

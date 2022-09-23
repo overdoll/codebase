@@ -69,7 +69,7 @@ export default function Profile (props: Props): JSX.Element {
           >
             <Flex p={2} h='100%' w='100%' align='center' justify='center' position='relative'>
               <Stack align='center' p={4} spacing={2}>
-                <AccountIcon accountQuery={queryData?.account} />
+                <AccountIcon size='xl' accountQuery={queryData?.account} />
                 <Heading fontFamily='mono' color='gray.00' fontSize='4xl'>
                   {queryData?.account?.username}
                 </Heading>

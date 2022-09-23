@@ -226,11 +226,15 @@ msgstr ""
 #~ msgid "Error {0}"
 #~ msgstr ""
 
+#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:37
+msgid "Error {errorMessage}"
+msgstr ""
+
 #: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContent.tsx:51
 #~ msgid "Exclusive Supporter Content"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterUnlocked/SupporterUnlocked.tsx:42
+#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterUnlocked/SupporterUnlocked.tsx:41
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
@@ -612,6 +616,7 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/components/LazyPostsErrorBoundary/PostsErrorFallback/PostsErrorFallback.tsx:57
 #: src/modules/content/HookedComponents/Post/components/VerticalPaginationScroller/VerticalPaginationFooter/ErrorButton/ErrorButton.tsx:36
+#: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:54
 #: src/modules/content/Placeholder/Fallback/PageErrorFallback/PageErrorFallback.tsx:57
 msgid "Retry"
 msgstr ""
@@ -790,7 +795,7 @@ msgstr ""
 msgid "Tap"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Media/components/ImageContainer/ImageControlContainer/ImageControls/ImageFooterControls/Controls/ImageExpandModal/ImageExpandModal.tsx:91
+#: src/modules/content/HookedComponents/Media/components/ImageContainer/ImageControlContainer/ImageControls/ImageFooterControls/Controls/ImageExpandModal/ImageExpandModal.tsx:97
 msgid "Tap anywhere or hit <0>ESC</0> to close"
 msgstr ""
 
@@ -1067,12 +1072,12 @@ msgid "Your club has been un-suspended"
 msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:37
-msgid "message.fallback.error.message"
-msgstr ""
+#~ msgid "message.fallback.error.message"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Fallback/ErrorFallback/ErrorFallback.tsx:59
-msgid "message.fallback.error.retry"
-msgstr ""
+#~ msgid "message.fallback.error.retry"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyAudiences/EmptyAudiences.tsx:7
 #~ msgid "message.placeholder.empty.audiences.one"

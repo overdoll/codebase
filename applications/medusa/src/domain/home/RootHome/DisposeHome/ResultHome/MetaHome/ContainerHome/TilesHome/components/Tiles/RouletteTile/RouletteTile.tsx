@@ -5,11 +5,17 @@ import React from 'react'
 import { ControlPlayButton, RandomizeDice } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 export default function RouletteTile (): JSX.Element {
+  const onClick = (): void => {
+    trackFathomEvent('G4FFP8ZQ', 1)
+  }
+
   return (
     <Flex w='100%' h='100%' position='relative'>
       <LinkTile
+        onClick={onClick}
         href='/roulette'
       >
         <Flex h='100%' w='100%' borderRadius='lg' position='relative'>

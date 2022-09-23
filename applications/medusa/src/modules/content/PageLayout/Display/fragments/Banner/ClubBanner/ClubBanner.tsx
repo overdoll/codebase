@@ -27,8 +27,6 @@ export default function ClubBanner (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, clubQuery)
 
-  console.log(data)
-
   if (data.bannerMedia == null || data.bannerMedia.__typename === 'RawMedia') {
     return (
       <CoverImage>

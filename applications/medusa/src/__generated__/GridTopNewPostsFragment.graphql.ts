@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c5903c27cf64411cdd57e8d973235015>>
+ * @generated SignedSource<<3b8807d140f443b762d51a1f8a3ef722>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -79,7 +79,7 @@ return {
         {
           "kind": "Literal",
           "name": "sortBy",
-          "value": "TOP"
+          "value": "ALGORITHM"
         }
       ],
       "concreteType": "PostConnection",
@@ -87,7 +87,7 @@ return {
       "name": "posts",
       "plural": false,
       "selections": (v0/*: any*/),
-      "storageKey": "posts(first:4,sortBy:\"TOP\")"
+      "storageKey": "posts(first:4,sortBy:\"ALGORITHM\")"
     },
     {
       "alias": "newPosts",
@@ -116,6 +116,6 @@ return {
 };
 })();
 
-(node as any).hash = "0c81b7ad441729597d26ca057f36a4a5";
+(node as any).hash = "0d5628228ffb915b878098a409ffe729";
 
 export default node;

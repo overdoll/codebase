@@ -17,6 +17,6 @@ const Fragment = graphql`
 export default function isFailed (postQuery: isFailedFragment$key): boolean {
   const data = useFragment(Fragment, postQuery)
 
-  const failed = data.content.map((item) => item.media.__typename === 'RawMedia' && item.media.failed) as boolean[]
+  const failed = data.content.map((item) => item.media.__typename === 'RawMedia' && item.media.failed)
   return failed.some(x => x)
 }

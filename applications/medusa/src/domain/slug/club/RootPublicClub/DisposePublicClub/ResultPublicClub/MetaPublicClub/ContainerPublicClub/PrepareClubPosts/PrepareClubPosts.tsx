@@ -19,6 +19,7 @@ export interface PreparePrepareClubPostsLazyProps {
 
 const Fragment = graphql`
   fragment PrepareClubPostsFragment on Club {
+    id
     slug
   }
 `
@@ -26,7 +27,7 @@ const Fragment = graphql`
 export default function PrepareClubPosts (props: Props): JSX.Element {
   const { clubQuery } = props
 
-  const postData = useFragment(
+  const data = useFragment(
     Fragment,
     clubQuery
   )
@@ -36,7 +37,7 @@ export default function PrepareClubPosts (props: Props): JSX.Element {
     loadQuery
   } = useLazyArguments<PreparePrepareClubPostsLazyProps>({
     defaultValue: {
-      slug: postData.slug,
+      slug: data.slug,
       ...getSeedFromCookie()
     }
   })

@@ -49,7 +49,6 @@ export default function ClubPublicPost (props: Props): JSX.Element {
   return (
     <Flex position='relative'>
       <Link
-        onClick={onClick}
         passHref
         href={{
           pathname: '/[slug]',
@@ -58,7 +57,7 @@ export default function ClubPublicPost (props: Props): JSX.Element {
           }
         }}
       >
-        <Box position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
+        <Box onClick={onClick} position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
       </Link>
       <Flex w='100%' align='center' direction='column'>
         <HStack w='100%' align='center' justify='space-between'>

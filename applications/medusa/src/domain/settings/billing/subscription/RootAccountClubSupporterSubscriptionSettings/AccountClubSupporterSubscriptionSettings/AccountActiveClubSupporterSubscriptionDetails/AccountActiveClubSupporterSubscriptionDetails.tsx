@@ -10,7 +10,6 @@ import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { WarningTriangle } from '@//:assets/icons'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {

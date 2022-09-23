@@ -1,9 +1,6 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerSearchCharacterFragment$key } from '@//:artifacts/ContainerSearchCharacterFragment.graphql'
-import {
-  ContainerSearchCharacterViewerFragment$key
-} from '@//:artifacts/ContainerSearchCharacterViewerFragment.graphql'
 import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchCharacter from './HeaderSearchCharacter/HeaderSearchCharacter'
 import ScrollSearchCharacter from './ScrollSearchCharacter/ScrollSearchCharacter'

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bf4141c7dc13dc329585ff8b65e9b8d2>>
- * @relayHash 6bdcb1522f0a194e4790183bd7112656
+ * @generated SignedSource<<0c040eabc836a02ce86b8aaeceddeed1>>
+ * @relayHash 9eb0755a06499136cefc89a2bcaee817
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6bdcb1522f0a194e4790183bd7112656
+// @relayRequestID 9eb0755a06499136cefc89a2bcaee817
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -382,6 +382,7 @@ return {
             ],
             "storageKey": null
           },
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -423,7 +424,6 @@ return {
             "name": "viewerIsOwner",
             "storageKey": null
           },
-          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -702,7 +702,7 @@ return {
     ]
   },
   "params": {
-    "id": "6bdcb1522f0a194e4790183bd7112656",
+    "id": "9eb0755a06499136cefc89a2bcaee817",
     "metadata": {},
     "name": "ResultPublicClubQuery",
     "operationKind": "query",

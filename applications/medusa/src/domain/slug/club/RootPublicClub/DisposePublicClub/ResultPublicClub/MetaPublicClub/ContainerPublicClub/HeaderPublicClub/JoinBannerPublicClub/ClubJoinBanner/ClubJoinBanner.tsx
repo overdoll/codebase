@@ -46,7 +46,7 @@ export default function ClubJoinBanner ({
     <ClubJoinConditionWrapper clubQuery={clubData} viewerQuery={viewerData}>
       {props => (
         <Stack spacing={4}>
-          <HStack spacing={2} h='100%' align='center' justify='flex-start'>
+          <HStack spacing={2} align='center' justify='flex-start'>
             <Icon fill='whiteAlpha.900' icon={MagicBall} w={6} h={6} />
             <Box>
               <Heading fontSize='md' color='whiteAlpha.900'>

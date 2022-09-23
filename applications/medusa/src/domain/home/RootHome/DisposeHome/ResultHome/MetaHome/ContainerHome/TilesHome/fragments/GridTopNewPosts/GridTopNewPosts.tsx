@@ -3,7 +3,7 @@ import { graphql } from 'react-relay'
 import { GridItem } from '@chakra-ui/react'
 import GridLayoutHome from '../../components/GridsHome/GridLayoutHome/GridLayoutHome'
 import { useFragment } from 'react-relay/hooks'
-import PreviewPostTileHome from '../../components/Tiles/PreviewPostTileHome/PreviewPostTileHome'
+import PreviewPostTileHome from '../PreviewPostTileHome/PreviewPostTileHome'
 
 interface Props {
   rootQuery: GridTopNewPostsFragment$key
@@ -11,7 +11,7 @@ interface Props {
 
 const RootFragment = graphql`
   fragment GridTopNewPostsFragment on Query {
-    topPosts: posts(first: 4, sortBy: TOP) {
+    topPosts: posts(first: 4, sortBy: ALGORITHM) {
       edges {
         node {
           ...PreviewPostTileHomeFragment
@@ -49,31 +49,31 @@ export default function GridTopNewPosts (props: Props): JSX.Element {
   return (
     <GridLayoutHome columns={6} rows={2}>
       <GridItem>
-        <PreviewPostTileHome postQuery={topPostData[0]} />
+        <PreviewPostTileHome badge='trending' postQuery={topPostData[0]} />
       </GridItem>
       <GridItem>
-        <PreviewPostTileHome postQuery={newPostData[0]} />
+        <PreviewPostTileHome badge='new' postQuery={newPostData[0]} />
       </GridItem>
       <GridItem colSpan={2}>
-        <PreviewPostTileHome postQuery={topPostData[1]} />
+        <PreviewPostTileHome badge='trending' postQuery={topPostData[1]} />
       </GridItem>
       <GridItem>
-        <PreviewPostTileHome postQuery={topPostData[2]} />
+        <PreviewPostTileHome badge='trending' postQuery={topPostData[2]} />
       </GridItem>
       <GridItem>
-        <PreviewPostTileHome postQuery={newPostData[1]} />
+        <PreviewPostTileHome badge='new' postQuery={newPostData[1]} />
       </GridItem>
       <GridItem colSpan={2}>
-        <PreviewPostTileHome postQuery={newPostData[2]} />
+        <PreviewPostTileHome badge='new' postQuery={newPostData[2]} />
       </GridItem>
       <GridItem>
-        <PreviewPostTileHome postQuery={newPostData[3]} />
+        <PreviewPostTileHome badge='new' postQuery={newPostData[3]} />
       </GridItem>
       <GridItem>
-        <PreviewPostTileHome postQuery={newPostData[4]} />
+        <PreviewPostTileHome badge='new' postQuery={newPostData[4]} />
       </GridItem>
       <GridItem colSpan={2}>
-        <PreviewPostTileHome postQuery={topPostData[3]} />
+        <PreviewPostTileHome badge='trending' postQuery={topPostData[3]} />
       </GridItem>
     </GridLayoutHome>
   )

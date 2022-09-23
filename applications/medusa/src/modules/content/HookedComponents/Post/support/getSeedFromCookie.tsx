@@ -7,9 +7,8 @@ interface GetPostSeedProps {
 export default function getSeedFromCookie (): GetPostSeedProps {
   const [cookies] = useCookies<string>(['postSeed'])
   const postSeed = cookies.postSeed
-  const time = `${Date.now()}`
 
   return {
-    seed: postSeed ?? time
+    seed: postSeed ?? null
   }
 }

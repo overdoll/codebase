@@ -16,6 +16,7 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment ContainerPublicClubFragment on Club {
+    id
     ...BannerPublicClubFragment
     ...HeaderPublicClubFragment
     ...ButtonsPublicClubFragment

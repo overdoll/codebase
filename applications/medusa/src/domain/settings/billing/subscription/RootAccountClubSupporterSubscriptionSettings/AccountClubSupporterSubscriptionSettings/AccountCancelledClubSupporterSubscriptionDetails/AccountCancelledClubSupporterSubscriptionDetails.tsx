@@ -8,7 +8,6 @@ import format from 'date-fns/format'
 import { dateFormat } from '@//:modules/constants/format'
 import { useLingui } from '@lingui/react'
 import { dateFnsLocaleFromI18n } from '@//:modules/locale'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {

@@ -3,7 +3,6 @@ import { StaffViewCharacterQuery } from '@//:artifacts/StaffViewCharacterQuery.g
 import { Box, Stack } from '@chakra-ui/react'
 import { NotFoundGeneric } from '@//:modules/content/Placeholder'
 import ChangeCharacterName from '../../../../../../../../common/components/ChangeCharacterName/ChangeCharacterName'
-import ChangeCharacterThumbnail from '../../../../../../../../common/components/ChangeCharacterThumbnail/ChangeCharacterThumbnail'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
 import TagBadgeHeader from '@//:common/components/TagBadgeHeader/TagBadgeHeader'

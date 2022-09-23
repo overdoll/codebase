@@ -20,26 +20,20 @@ export default function UploadFlowStickyFooter ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const STICKY_PROPS = {
-    bg: 'dimmers.200',
-    p: 2,
-    backdropFilter: 'auto',
-    backdropBlur: '2px',
-    borderTopRadius: 'lg'
-  }
-
   return (
     <Flex
+      pt={4}
       bottom={{
-        base: 66,
+        base: 54,
         md: 0
       }}
-      position='fixed'
-      w='100%'
+      left={0}
+      right={0}
+      position='sticky'
       zIndex='sidebar'
     >
       <MobileContainer>
-        <Flex {...STICKY_PROPS}>
+        <Flex>
           <FlowBuilderFooter>
             {({
               currentStep,

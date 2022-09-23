@@ -14,6 +14,7 @@ interface Props {
   bg?: string
   color?: string
   isExternal?: boolean
+  onClick?: () => void
 }
 
 export default function StaticTile (props: Props): JSX.Element {
@@ -24,12 +25,19 @@ export default function StaticTile (props: Props): JSX.Element {
     footer,
     bg,
     color,
-    isExternal = false
+    isExternal = false,
+    onClick
   } = props
 
   return (
-    <LinkTile isExternal={isExternal} linkProps={{ prefetch: false }} href={href}>
-      <Flex h='100%' w='100%' borderRadius='lg' overflow='hidden' position='relative'>
+    <LinkTile onClick={onClick} isExternal={isExternal} linkProps={{ prefetch: false }} href={href}>
+      <Flex
+        h='100%'
+        w='100%'
+        borderRadius='lg'
+        overflow='hidden'
+        position='relative'
+      >
         <Flex bg={color} borderRadius='inherit' right={0} left={0} bottom={0} top={0} position='absolute'>
           {bg != null && (
             <StaticImageCover url={bg} />

@@ -22,7 +22,7 @@ export default function RatingToast (props: Props): JSX.Element {
 
   const onClickRate = (): void => {
     onClose()
-    trackFathomEvent('WAXAG3AM', 0)
+    trackFathomEvent('WAXAG3AM', 1)
   }
 
   return (

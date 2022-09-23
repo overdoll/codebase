@@ -11,7 +11,6 @@ import {
 } from '../../../../../../staff/billing/subscription/RootStaffAccountClubSupporterSubscription/StaffAccountClubSupporterSubscription/StaffSubscriptionTransactions/StaffTransactionsList/StaffTransactionCard/StaffTransactionCard'
 import format from 'date-fns/format'
 import { dateFormatWithTimeSimple } from '@//:modules/constants/format'
-import ClubThumbnail from '@//:modules/content/DataDisplay/Club/ClubThumbnail/ClubThumbnail'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {

@@ -5,6 +5,7 @@ import PreviewCharacter
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PreviewCharacter/PreviewCharacter'
 import CharacterLinkTile
   from '@//:modules/content/PageLayout/Display/fragments/Link/CharacterLinkTile/CharacterLinkTile'
+import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 const Fragment = graphql`
   fragment PreviewCharacterTileHomeFragment on Character {
@@ -24,8 +25,12 @@ export default function PreviewCharacterTileHome (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, characterQuery)
 
+  const onClick = (): void => {
+    trackFathomEvent('AXC8TOWZ', 1)
+  }
+
   return (
-    <CharacterLinkTile query={data}>
+    <CharacterLinkTile onClick={onClick} query={data}>
       <PreviewCharacter characterQuery={data} />
     </CharacterLinkTile>
   )

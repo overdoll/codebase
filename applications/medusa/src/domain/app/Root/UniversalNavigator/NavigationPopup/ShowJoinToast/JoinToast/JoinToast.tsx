@@ -26,7 +26,7 @@ export default function JoinToast (props: Props): JSX.Element {
 
   const onClickJoin = (): void => {
     onClose()
-    trackFathomEvent('VVNXUKFX', 0)
+    trackFathomEvent('VVNXUKFX', 1)
   }
 
   return (

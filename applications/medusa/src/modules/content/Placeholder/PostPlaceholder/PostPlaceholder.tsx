@@ -18,7 +18,7 @@ export default function PostPlaceholder ({
         justifyContent='center'
         textAlign='center'
         height={{
-          md: '700px',
+          lg: '700px',
           base: '500px'
         }}
         {...rest}

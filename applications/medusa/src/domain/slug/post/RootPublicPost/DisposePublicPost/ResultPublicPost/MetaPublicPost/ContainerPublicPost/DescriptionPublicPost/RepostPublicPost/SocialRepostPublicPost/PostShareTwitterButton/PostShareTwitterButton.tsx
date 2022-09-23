@@ -5,7 +5,6 @@ import { PostShareTwitterButtonFragment$key } from '@//:artifacts/PostShareTwitt
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import { getCharacterNames } from '@//:modules/support/metaHelpers'
-import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import useTwitterShare from '@//:modules/support/useTwitterShare'
 import urlSlug, { TITLECASE_TRANSFORMER } from 'url-slug'
 import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'

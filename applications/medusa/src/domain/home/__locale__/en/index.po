@@ -13,11 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:41
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:70
 msgid "3D Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:46
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:75
 msgid "3D renders and animations pornography"
 msgstr ""
 
@@ -25,7 +25,7 @@ msgstr ""
 #~ msgid "Account Locked"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:76
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:121
 msgid "Anthro and furry character pornography"
 msgstr ""
 
@@ -33,15 +33,51 @@ msgstr ""
 #~ msgid "Are you an artist looking to post your content?"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:33
-msgid "Browse Category"
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:37
+msgid "ArhoAngel Archive"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:71
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:42
+msgid "ArhoAngel's content archive"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:33
+#~ msgid "Browse Category"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:62
+msgid "Discover"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:67
+msgid "Discover clubs posting content"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:96
+msgid "Follow Twitter"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:101
+msgid "Follow us on Twitter"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:116
 msgid "Furry Porn"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:56
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:19
+msgid "GeneralButch Archive"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:24
+msgid "GeneralButch's content archive"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:114
+msgid "Give Feedback"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:96
 msgid "Hentai Porn"
 msgstr ""
 
@@ -57,8 +93,24 @@ msgstr ""
 #~ msgid "I promise to be better and to follow the community guidelines more closely"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:61
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:101
 msgid "Japanese-style pornography"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:78
+msgid "Join Discord"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:83
+msgid "Join our community Discord"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:41
+msgid "Join overdoll"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:46
+msgid "Join overdoll to curate your content and save posts"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:72
@@ -69,6 +121,10 @@ msgstr ""
 #~ msgid "Looks like you messed up. Something you did here violated our community guidelines. If you keep this up, the bans will become longer."
 #~ msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:73
+msgid "New Content"
+msgstr ""
+
 #: src/domain/home/RootHome/CurationProfileAlert/CurationProfileAlert.tsx:85
 #~ msgid "No thanks"
 #~ msgstr ""
@@ -77,7 +133,7 @@ msgstr ""
 #~ msgid "Open Lock Info"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HomeGameTile/HomeGameTile.tsx:104
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/components/Tiles/RouletteTile/RouletteTile.tsx:76
 msgid "Play Now"
 msgstr ""
 
@@ -85,23 +141,39 @@ msgstr ""
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:104
-msgid "Randomize Porn"
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:60
+msgid "Post Content"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:109
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:65
+msgid "Post your adult content"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:26
+msgid "Randomize"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:104
+#~ msgid "Randomize Porn"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:31
 msgid "Randomly browse hentai, 3d, furry porn"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:21
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/components/Tiles/RouletteTile/RouletteTile.tsx:61
 msgid "Rule34 Roulette"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:89
-msgid "Search Porn"
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:44
+msgid "Search"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:94
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:89
+#~ msgid "Search Porn"
+#~ msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:49
 msgid "Search for any kind of porn"
 msgstr ""
 
@@ -109,8 +181,16 @@ msgstr ""
 #~ msgid "See All Posts"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/PrepareHomePosts/LazyHomePosts/ScrollHomePosts/ScrollHomePosts.tsx:56
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/PrepareHomePosts/LazyHomePosts/ScrollHomePosts/ScrollHomePosts.tsx:56
 msgid "See More Posts"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:78
+msgid "See fresh content"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:60
+msgid "See the best content"
 msgstr ""
 
 #: src/domain/home/RootHome/NewAccountModal/NewAccountModal.tsx:75
@@ -133,25 +213,41 @@ msgstr ""
 #~ msgid "Show By Category"
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:26
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/components/Tiles/RouletteTile/RouletteTile.tsx:67
 msgid "Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:119
+msgid "Tell us what you really think"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84
 #~ msgid "There was an error unlocking your account"
 #~ msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:55
+msgid "Top Content"
+msgstr ""
+
 #: src/domain/home/RootHome/Home/Home.tsx:150
 #~ msgid "Trending Posts"
 #~ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:115
-msgid "Trending content"
-msgstr ""
+#~ msgid "Trending content"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:114
 #~ msgid "Unlock Account"
 #~ msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:24
+msgid "Update Preferences"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:29
+msgid "Update your curation profile"
+msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountBanner/LockedAccountBanner.tsx:58
 #~ msgid "View Details"

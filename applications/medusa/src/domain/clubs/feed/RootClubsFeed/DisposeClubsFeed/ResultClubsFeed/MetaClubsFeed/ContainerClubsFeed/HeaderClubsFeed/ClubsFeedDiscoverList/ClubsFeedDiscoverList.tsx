@@ -1,7 +1,7 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { LinkTile } from '@//:modules/content/ContentSelection'
 import { ClubsFeedDiscoverListFragment$key } from '@//:artifacts/ClubsFeedDiscoverListFragment.graphql'
-import type { ClubsFeedQuery } from '@//:artifacts/ClubsFeedQuery.graphql'
+import type { ResultClubsFeedQuery } from '@//:artifacts/ResultClubsFeedQuery.graphql'
 import ClubJoinTile from '@//:common/components/ClubJoinTile/ClubJoinTile'
 import { Trans } from '@lingui/macro'
 import { Box, Flex, Heading, useBreakpointValue } from '@chakra-ui/react'
@@ -44,7 +44,7 @@ export default function ClubsFeedDiscoverList ({
   const {
     data,
     hasNext
-  } = usePaginationFragment<ClubsFeedQuery, any>(
+  } = usePaginationFragment<ResultClubsFeedQuery, any>(
     Fragment,
     query
   )

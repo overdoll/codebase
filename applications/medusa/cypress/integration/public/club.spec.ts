@@ -1,9 +1,8 @@
-import { clickOnAriaLabelButton, clickOnButton } from '../../support/user_actions'
+import { clickOnButton } from '../../support/user_actions'
 import { generateUsernameAndEmail } from '../../support/generate'
 
 Cypress.config('defaultCommandTimeout', 20000)
 
-const ClubName = 'Test Club'
 const ClubSlug = 'TestClub'
 
 describe('Club Page', () => {
@@ -14,7 +13,7 @@ describe('Club Page', () => {
      * Join/support as club owner
      */
     cy.visit(`/${ClubSlug}`)
-    clickOnButton(`Join ${ClubName}`)
+    clickOnButton('Join')
     cy.findByText(/you are already a member/iu).should('be.visible')
     clickOnButton(/Become a Supporter/iu)
     cy.findByText(/you are a supporter/iu).should('be.visible')
@@ -27,10 +26,10 @@ describe('Club Page', () => {
     const [newUsername] = generateUsernameAndEmail()
     cy.joinWithNewAccount(newUsername)
     cy.visit(`/${ClubSlug}`)
-    cy.findAllByRole('button', { name: `Join ${ClubName}` }).first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findAllByRole('button', { name: 'Join' }).first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.findByText(/You are now a member of/iu).should('be.visible')
     clickOnButton(/Leave/iu)
-    cy.findByText(/Join this club to see/iu).should('be.visible')
+    cy.findByText(/See their newly/iu).should('be.visible')
 
     /**
      * Join from club page
@@ -42,8 +41,6 @@ describe('Club Page', () => {
 
   it('click club buttons', () => {
     cy.visit(`/${ClubSlug}`)
-    clickOnAriaLabelButton('Copy Club Link')
-    cy.findByText(/Copied to clipboard/iu).should('be.visible')
     clickOnButton('All Posts')
     cy.url().should('contain', `/${ClubSlug}/posts`)
   })
@@ -54,7 +51,7 @@ describe('Club Page', () => {
      */
 
     cy.visit(`/${ClubSlug}`)
-    cy.findAllByRole('button', { name: `Join ${ClubName}` }).first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findAllByRole('button', { name: 'Join' }).first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.url().should('include', '/join')
 
     /**

@@ -9,7 +9,7 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
-  viewerQuery: ScrollLikedPostsFragment$key
+  viewerQuery: ScrollLikedPostsFragment$key | null
 }
 
 const ViewerFragment = graphql`

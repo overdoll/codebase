@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<47994214251ad8a51b9b9919f5a6f9be>>
- * @relayHash d2d11d40ce9a2a3f5520815727ff14de
+ * @generated SignedSource<<aaed4feefb64100a0744c2e0666b96e9>>
+ * @relayHash 5a698c7d451f431530fb3ceee859d668
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d2d11d40ce9a2a3f5520815727ff14de
+// @relayRequestID 5a698c7d451f431530fb3ceee859d668
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -314,7 +314,7 @@ return {
           {
             "kind": "Literal",
             "name": "sortBy",
-            "value": "TOP"
+            "value": "ALGORITHM"
           }
         ],
         "concreteType": "PostConnection",
@@ -322,7 +322,7 @@ return {
         "name": "posts",
         "plural": false,
         "selections": (v10/*: any*/),
-        "storageKey": "posts(first:4,sortBy:\"TOP\")"
+        "storageKey": "posts(first:4,sortBy:\"ALGORITHM\")"
       },
       {
         "alias": "newPosts",
@@ -486,7 +486,7 @@ return {
     ]
   },
   "params": {
-    "id": "d2d11d40ce9a2a3f5520815727ff14de",
+    "id": "5a698c7d451f431530fb3ceee859d668",
     "metadata": {},
     "name": "LazyNewTopPostsHomeQuery",
     "operationKind": "query",

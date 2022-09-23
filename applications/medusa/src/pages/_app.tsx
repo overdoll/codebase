@@ -252,9 +252,16 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     )
   )
 
+  const postSeedCookie = new Cookies()
+  postSeedCookie.set('postSeed', `${Date.now()}`, {
+    path: '/',
+    secure: true,
+    sameSite: 'lax'
+  })
+
   // pass down specific cookies into the cookie provider
   const chosenCookies = {
-    postSeed: app.ctx.cookies.get('postSeed')
+    postSeed: app.ctx.cookies.get('postSeed') ?? postSeedCookie.get('postSeed')
   }
 
   const props: CustomAppProps = {

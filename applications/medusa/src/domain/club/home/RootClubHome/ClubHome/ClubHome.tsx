@@ -50,7 +50,7 @@ export default function ClubHome ({ query }: Props): JSX.Element {
     return <NotFoundClub />
   }
 
-  const number = queryData.club.membersCount.toLocaleString()
+  const number = (queryData?.club?.membersCount ?? 0).toLocaleString()
 
   return (
     <>

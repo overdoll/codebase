@@ -1,7 +1,6 @@
 import { Center, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../NotFoundFooter/NotFoundFooter'
-import RootSearchRichObject from '../../../../../common/rich-objects/RootSearchRichObject/RootSearchRichObject'
 
 export default function NotFoundCharacter (): JSX.Element {
   return (
