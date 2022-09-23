@@ -61,7 +61,7 @@ const (
 )
 
 func init() {
-	// not ideal but we need to disable the log messages from ffmpeg-go
+	// not ideal but we need to disable the log messages from: ffmpeg-go
 	log.SetOutput(ioutil.Discard)
 }
 
