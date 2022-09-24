@@ -60,7 +60,7 @@ const (
 	defaultPreset         = "slow"
 	defaultIntensityLevel = "-23.0"
 	defaultLoudnessRange  = "+7.0"
-	defaultTruePeak       = "-2"
+	defaultTruePeak       = "-2.0"
 )
 
 func init() {
