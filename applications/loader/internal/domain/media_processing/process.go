@@ -304,8 +304,8 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			crf:     "23",
 		},
 		{
-			high:    640,
-			low:     360,
+			high:    480,
+			low:     270,
 			ar:      "48k",
 			rate:    "500k",
 			maxFps:  30,
@@ -614,7 +614,14 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		var codecs string
 		var bitrate int64
 
-		for i, stream := range probeResult.Streams {
+		finalStreamList := probeResult.Streams
+
+		// reverse the stream list
+		for i, j := 0, len(finalStreamList)-1; i < j; i, j = i+1, j-1 {
+			finalStreamList[i], finalStreamList[j] = finalStreamList[j], finalStreamList[i]
+		}
+
+		for i, stream := range finalStreamList {
 
 			parsedInt, err := strconv.ParseInt(stream.BitRate, 10, 64)
 			if err != nil {
