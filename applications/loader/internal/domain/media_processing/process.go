@@ -140,6 +140,7 @@ type ffmpegPacket struct {
 	Size         string `json:"size"`
 	DurationTime string `json:"duration_time"`
 	PtsTime      string `json:"pts_time"`
+	Flags        string `json:"flags"`
 }
 
 type ffmpegPacketsProbe struct {
@@ -690,55 +691,22 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			return errors.Wrap(err, "failed to unmarshal playlist probe")
 		}
 
-		var defaultDuration float64
-
-		// get the first duration that's not empty
-		for _, packet := range probePackets.Packets {
-			if packet.DurationTime != "" {
-				parsedTime, err := strconv.ParseFloat(packet.DurationTime, 64)
-				if err != nil {
-					return errors.Wrap(err, "failed to parse first duration time")
-				}
-				defaultDuration = parsedTime
-				break
-			}
-		}
-
-		var aggregateDuration float64
 		var currentList []ffmpegPacket
 		var aggregation [][]ffmpegPacket
 
 		// bucket up packets, so we can get peak bit-rates
 		for _, packet := range probePackets.Packets {
-			var currentDuration float64
-			if packet.DurationTime != "" {
-				parsedTime, err := strconv.ParseFloat(packet.DurationTime, 64)
-				if err != nil {
-					return errors.Wrap(err, "failed to parse duration time")
-				}
-				currentDuration = parsedTime
-			} else {
-				currentDuration = defaultDuration
-			}
-
-			// our bucket here is 1 second-intervals of the video
-			if aggregateDuration < 3 {
-				currentList = append(currentList, packet)
-				aggregateDuration += currentDuration
-			} else {
-				fmt.Println(aggregateDuration)
+			// is an I-frame
+			if packet.Flags == "K_" {
 				if len(currentList) > 0 {
 					aggregation = append(aggregation, currentList)
 				}
-
 				currentList = []ffmpegPacket{packet}
-				aggregateDuration = currentDuration
+			} else {
+				// Not an I-frame
+				currentList = append(currentList, packet)
 			}
 		}
-
-		aggregation = append(aggregation, currentList)
-
-		fmt.Println(aggregation)
 
 		var peakBitrate float64
 
