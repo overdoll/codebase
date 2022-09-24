@@ -34,7 +34,7 @@ export default function Complete ({ query }: Props): JSX.Element {
   const router = useRouter()
 
   const cookieText = UAParser(
-    data.userAgent
+    data.userAgent,
   )
 
   // when the token is verified, the user might close the original tab, either by accident or
@@ -116,7 +116,7 @@ export default function Complete ({ query }: Props): JSX.Element {
                         If you closed the original tab, just open it back up!
                       </Trans>
                     </Heading>
-                    )}
+                  )}
               </Stack>
             </AdvertBoxWrapper>
           </Center>

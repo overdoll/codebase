@@ -14,7 +14,6 @@ import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
 import SafeModal from './SafeModal/SafeModal'
 import RootRichObject from '../../../common/rich-objects/default/RootRichObject/RootRichObject'
-import CookieEvents from './CookieEvents/CookieEvents'
 import LocalStorageEvents from './LocalStorageEvents/LocalStorageEvents'
 
 interface Props {
@@ -53,7 +52,6 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
         <PageContents>
           {props.children}
           <SafeModal />
-          <CookieEvents />
           <LocalStorageEvents />
         </PageContents>
         <NoScript />

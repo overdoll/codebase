@@ -9,7 +9,8 @@ export default function StaticImageCover (props: Props): JSX.Element {
     url,
     width,
     height,
-    color
+    color,
+    ...rest
   } = props
 
   return (
@@ -18,6 +19,7 @@ export default function StaticImageCover (props: Props): JSX.Element {
       height={height}
       url={url}
       rgb={color}
+      {...rest}
     />
   )
 }

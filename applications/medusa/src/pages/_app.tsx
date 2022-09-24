@@ -13,6 +13,7 @@ import NextQueryParamProvider from '@//:modules/next/NextQueryParamProvider'
 import { CookiesProvider } from 'react-cookie'
 import { FlashProvider } from '@//:modules/flash'
 import Cookies from 'universal-cookie'
+import ServerCookies from 'cookies'
 import { useRouter } from 'next/router'
 import { initializeLocaleData } from '@//:modules/locale'
 import { CustomAppProps, CustomPageAppProps, GetRelayPreloadPropsReturn, RequestProps } from '@//:types/app'
@@ -181,7 +182,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     }
 
     environment = createEnvironment(serverFetch(app.ctx.req, app.ctx.res), null)
-    app.ctx.cookies = new Cookies(app.ctx.req.headers.cookie)
+    app.ctx.cookies = new ServerCookies(app.ctx.req, app.ctx.res, { secure: true })
   } else {
     securityToken = securityTokenCache
     environment = globalRelayEnvironment
@@ -197,10 +198,15 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
 
   let queries: GetRelayPreloadPropsReturn = {}
   let translationProps = {}
+  let cookieProps = {}
 
   for (const component of componentLoadTargets) {
     if (component == null) {
       continue
+    }
+
+    if (component?.getCookieProps != null) {
+      cookieProps = { ...cookieProps, ...component.getCookieProps(app.ctx).cookies }
     }
 
     if (component?.getRelayPreloadProps != null) {
@@ -252,16 +258,22 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     )
   )
 
-  const postSeedCookie = new Cookies()
-  postSeedCookie.set('postSeed', `${Date.now()}`, {
-    path: '/',
-    secure: true,
-    sameSite: 'lax'
-  })
+  const chosenCookies = {}
+  const chosenCookiePrefix = 'od.local.'
 
-  // pass down specific cookies into the cookie provider
-  const chosenCookies = {
-    postSeed: app.ctx.cookies.get('postSeed') ?? postSeedCookie.get('postSeed')
+  for (let [key, value] of Object.entries(cookieProps)) {
+    key = `${chosenCookiePrefix}${key}`
+    let cookieValue = app.ctx.cookies.get(key)
+
+    if (cookieValue == null) {
+      app.ctx.cookies.set(key, value, {
+        httpOnly: false,
+        path: '/'
+      })
+      cookieValue = value
+    }
+
+    chosenCookies[key] = cookieValue
   }
 
   const props: CustomAppProps = {

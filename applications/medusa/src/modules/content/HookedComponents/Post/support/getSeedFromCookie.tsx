@@ -5,8 +5,8 @@ interface GetPostSeedProps {
 }
 
 export default function getSeedFromCookie (): GetPostSeedProps {
-  const [cookies] = useCookies<string>(['postSeed'])
-  const postSeed = cookies.postSeed
+  const [cookies] = useCookies<string>(['od.local.postSeed'])
+  const postSeed = cookies['od.local.postSeed']
 
   return {
     seed: postSeed ?? null

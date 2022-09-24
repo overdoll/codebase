@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed7801f317076e9fb037e72328d936ad>>
+ * @generated SignedSource<<ca00e68a6ad5712dd4134a4da2dac54d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GridNewTopPostsHomeFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"GridSeriesCharactersCategoriesFragment" | "GridTopNewPostsFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"GridTopNewPostsFragment">;
   readonly " $fragmentType": "GridNewTopPostsHomeFragment";
 };
 export type GridNewTopPostsHomeFragment$key = {
@@ -29,17 +29,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "GridTopNewPostsFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "GridSeriesCharactersCategoriesFragment"
     }
   ],
   "type": "Query",
   "abstractKey": null
 };
 
-(node as any).hash = "b91353762d096e76f2cff436c92488ff";
+(node as any).hash = "9e305db55b24f861dbb97deb8092637c";
 
 export default node;

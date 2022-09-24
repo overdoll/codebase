@@ -1,9 +1,8 @@
-import { RefObject, useDeferredValue, useEffect, useRef, useState } from 'react'
-import { useDebounce } from 'usehooks-ts'
+import { RefObject, useEffect, useRef, useState } from 'react'
+import { Timeout } from '@//:types/components'
 
 interface UseObserveVideoPropsReturn {
   ref: RefObject<HTMLDivElement>
-  isObservingDebounced: boolean
   isObserving: boolean
 }
 
@@ -20,20 +19,13 @@ export default function useObserveVideo (props: UseObserveVideoProps): UseObserv
     observerOptions: definedObserverOptions,
     height,
     width,
-    debounceDelay = 300,
     threshold
   } = props
 
   const ref = useRef<HTMLDivElement>(null)
+  const timeoutRef = useRef<Timeout | null>(null)
 
   const [observing, setObserving] = useState(false)
-
-  // @ts-expect-error
-  const deferredObserving = useDeferredValue(observing, {
-    timeoutMs: 50
-  })
-
-  const debouncedObserving = useDebounce(observing, debounceDelay)
 
   const setThreshold = threshold != null ? threshold : ((width == null || height == null) ? 0.45 : ((height / width) >= 1 ? 0.23 : 0.45))
 
@@ -44,7 +36,20 @@ export default function useObserveVideo (props: UseObserveVideoProps): UseObserv
 
   const observerCallback = (entries): void => {
     const [entry] = entries
-    setObserving(entry.isIntersecting)
+
+    if (entry.isIntersecting === true) {
+      if (timeoutRef.current != null) {
+        clearTimeout(timeoutRef.current)
+      }
+      timeoutRef.current = setTimeout(() => {
+        setObserving(true)
+      }, 650)
+    } else {
+      if (timeoutRef.current != null) {
+        clearTimeout(timeoutRef.current)
+      }
+      setObserving(false)
+    }
   }
 
   useEffect(() => {
@@ -62,7 +67,6 @@ export default function useObserveVideo (props: UseObserveVideoProps): UseObserv
 
   return {
     ref,
-    isObserving: deferredObserving,
-    isObservingDebounced: debouncedObserving
+    isObserving: observing
   }
 }

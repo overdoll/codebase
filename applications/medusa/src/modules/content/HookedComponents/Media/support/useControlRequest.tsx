@@ -46,11 +46,10 @@ export default function useControlRequest<ControlT extends string> (props: UseCo
 
   const controls = useMemo(() => (
     <Flex
-      ddata-ignore='controls'
+      data-ignore='controls'
       ref={ref}
       align='inherit'
       justify='inherit'
-      w='inherit'
       h='inherit'
       position='relative'
     >

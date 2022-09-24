@@ -1,11 +1,18 @@
 import RootPublicClubPosts from './RootPublicClubPosts/RootPublicClubPosts'
 import ResultPublicClubPostsQuery from '@//:artifacts/ResultPublicClubPostsQuery.graphql'
-import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/HookedComponents/Post/support/getPostSeed'
 
 RootPublicClubPosts.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
+
+RootPublicClubPosts.getCookieProps = () => {
+  return {
+    cookies: {
+      postSeed: Date.now().toString()
+    }
+  }
+}
 
 RootPublicClubPosts.getRelayPreloadProps = (ctx) => {
   const { query } = ctx
@@ -16,7 +23,7 @@ RootPublicClubPosts.getRelayPreloadProps = (ctx) => {
         params: ResultPublicClubPostsQuery.params,
         variables: {
           slug: query.slug,
-          ...decodeSearchArguments(query),
+          sortBy: 'ALGORITHM',
           ...getPostSeed(ctx)
         },
         options: {

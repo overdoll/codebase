@@ -31,7 +31,8 @@ export default function VideoAdvancedControls (props: Props): JSX.Element {
         <Fade
           in={isOpen}
           style={{
-            pointerEvents: isOpen ? 'auto' : 'none'
+            pointerEvents: isOpen ? 'auto' : 'none',
+            width: '100%'
           }}
         >
           <VideoAdvancedFooterControls
