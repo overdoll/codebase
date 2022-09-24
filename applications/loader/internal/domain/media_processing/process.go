@@ -58,9 +58,9 @@ var (
 const (
 	jpegQuality           = 85
 	defaultPreset         = "slow"
-	defaultIntensityLevel = "-16.0"
-	defaultLoudnessRange  = "+11.0"
-	defaultTruePeak       = "-1.5"
+	defaultIntensityLevel = "-23.0"
+	defaultLoudnessRange  = "+7.0"
+	defaultTruePeak       = "-2"
 )
 
 func init() {
