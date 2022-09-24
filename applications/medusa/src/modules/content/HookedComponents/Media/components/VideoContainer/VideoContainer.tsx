@@ -42,7 +42,7 @@ export default function VideoContainer (props: VideoContainerProps): JSX.Element
     controls = 'advanced',
     autoPlay = false,
     currentTime = 0,
-    backgroundPoster,
+    backgroundPoster
   } = props
 
   const containerRef = useRef<HTMLDivElement>(null)
