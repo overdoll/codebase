@@ -56,8 +56,11 @@ var (
 )
 
 const (
-	jpegQuality   = 85
-	defaultPreset = "slow"
+	jpegQuality           = 85
+	defaultPreset         = "slow"
+	defaultIntensityLevel = "-23.0"
+	defaultLoudnessRange  = "+7.0"
+	defaultTruePeak       = "-2"
 )
 
 func init() {
@@ -136,6 +139,30 @@ type ffmpegProbeStream struct {
 	} `json:"format"`
 }
 
+type ffmpegPacket struct {
+	Size         string `json:"size"`
+	DurationTime string `json:"duration_time"`
+	PtsTime      string `json:"pts_time"`
+	Flags        string `json:"flags"`
+}
+
+type ffmpegPacketsProbe struct {
+	Packets []ffmpegPacket `json:"packets"`
+}
+
+type ffmpegLoudNormData struct {
+	InputI            string `json:"input_i"`
+	InputTp           string `json:"input_tp"`
+	InputLra          string `json:"input_lra"`
+	InputThresh       string `json:"input_thresh"`
+	OutputI           string `json:"output_i"`
+	OutputTp          string `json:"output_tp"`
+	OutputLra         string `json:"output_lra"`
+	OutputThresh      string `json:"output_thresh"`
+	NormalizationType string `json:"normalization_type"`
+	TargetOffset      string `json:"target_offset"`
+}
+
 func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) {
 
 	fileName := uuid.New().String()
@@ -191,7 +218,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 	if len(audioStreamProbeResult.Streams) > 0 {
 		bytes := bytes2.NewBuffer(nil)
 		// found audio streams - get first audio stream and check if it's silent
-		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"loglevel": "error"}).
+		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"loglevel": "error", "progress": "unix://" + validationSocket}).
 			Output("-", ffmpeg_go.KwArgs{"map": "0:a:0", "af": "astats=metadata=1:reset=0,ametadata=print:file=-:key=lavfi.astats.Overall.RMS_level", "f": "null"}).
 			WithErrorOutput(ffmpegLogger).
 			WithOutput(bytes).
@@ -236,6 +263,77 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		videoNoAudio = true
 	}
 
+	// if video has audio, we extract the audio, and apply a loudness normalization, to ensure an equal balance
+	if !videoNoAudio {
+
+		bytes := bytes2.NewBuffer(nil)
+		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "progress": "unix://" + validationSocket}).
+			Output("-", ffmpeg_go.KwArgs{"map": "0:a:0", "af": "loudnorm=I=" + defaultIntensityLevel + ":LRA=" + defaultLoudnessRange + ":tp=" + defaultTruePeak + ":print_format=json", "f": "null"}).
+			WithErrorOutput(bytes).
+			Run(); err != nil {
+			return nil, errors.Wrap(err, "failed to first pass normalization: "+bytes.String())
+		}
+
+		var buffer []byte
+		var alreadyRead bool
+
+		reader := bufio.NewReader(bytes)
+
+		// from our ffmpeg output, read all lines until we are at the end
+		for {
+			line, _, err := reader.ReadLine()
+
+			if err == io.EOF {
+				break
+			}
+
+			if string(line) == "{" && !alreadyRead {
+				alreadyRead = true
+			}
+
+			if alreadyRead {
+				buffer = append(buffer, line...)
+			}
+		}
+
+		// read normalization data
+		var ffmpegNormalizationData *ffmpegLoudNormData
+
+		if err := json.Unmarshal(buffer, &ffmpegNormalizationData); err != nil {
+			return nil, errors.Wrap(err, "failed to unmarshal ffmpeg normalization data")
+		}
+
+		loudNorm := "I=" + defaultIntensityLevel +
+			":LRA=" + defaultLoudnessRange +
+			":tp=" + defaultTruePeak +
+			":measured_I=" + ffmpegNormalizationData.InputI +
+			":measured_LRA=" + ffmpegNormalizationData.InputLra +
+			":measured_tp=" + ffmpegNormalizationData.InputTp +
+			":measured_thresh=" + ffmpegNormalizationData.InputThresh +
+			":offset=" + ffmpegNormalizationData.TargetOffset
+
+		newFileName := uuid.New().String() + ".mp4"
+		defer os.Remove(newFileName)
+
+		// process our audio
+		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "loglevel": "error", "progress": "unix://" + validationSocket}).
+			Output(newFileName, ffmpeg_go.KwArgs{
+				"map": []string{"0:v:0", "0:a:0"},
+				"ar":  "48k",
+				"c:a": "aac",
+				"c:v": "copy",
+				"ac":  "2",
+				"af":  "loudnorm=print_format=summary:linear=true:" + loudNorm,
+			}).
+			WithErrorOutput(ffmpegLogger).
+			OverWriteOutput().
+			Run(); err != nil {
+			return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
+		}
+
+		targetFileName = newFileName
+	}
+
 	// probe for video streams
 	str, err = ffmpeg_go.Probe(targetFileName, map[string]interface{}{
 		"select_streams": "v:0",
@@ -276,7 +374,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		{
 			high:    1920,
 			low:     1080,
-			ar:      "128k",
+			ar:      "152k",
 			rate:    "3100k",
 			maxFps:  60,
 			profile: "high",
@@ -286,7 +384,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		{
 			high:    1280,
 			low:     720,
-			ar:      "96k",
+			ar:      "128k",
 			rate:    "1800k",
 			maxFps:  60,
 			profile: "high",
@@ -296,7 +394,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		{
 			high:    854,
 			low:     480,
-			ar:      "48k",
+			ar:      "96k",
 			rate:    "900k",
 			maxFps:  30,
 			profile: "main",
@@ -520,10 +618,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		if videoNoAudio {
 			hlsArgs["an"] = ""
 		} else {
-			hlsArgs["c:a"] = "aac"
 			hlsArgs["b:a"] = scale.ar
-			hlsArgs["ar"] = "48000"
-			hlsArgs["ac"] = "2"
 			hlsArgs["map"] = []string{"0:a:0"}
 		}
 
@@ -545,10 +640,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			generatedSoloFile = true
 
 			if !videoNoAudio {
-				mp4FileArgs["c:a"] = "aac"
-				mp4FileArgs["ar"] = "48000"
 				mp4FileArgs["b:a"] = scale.ar
-				mp4FileArgs["ac"] = "2"
 				mp4FileArgs["map"] = []string{"0:a:0"}
 			} else {
 				mp4FileArgs["an"] = ""
@@ -613,6 +705,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 
 		var codecs string
 		var bitrate int64
+		var audioBitRate int64
 
 		finalStreamList := probeResult.Streams
 
@@ -620,6 +713,8 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		for i, j := 0, len(finalStreamList)-1; i < j; i, j = i+1, j-1 {
 			finalStreamList[i], finalStreamList[j] = finalStreamList[j], finalStreamList[i]
 		}
+
+		var videoStreamWidth, videoStreamHeight int
 
 		for i, stream := range finalStreamList {
 
@@ -632,6 +727,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 
 			if stream.CodecTagString == "mp4a" {
 				codecs += "mp4a.40.2"
+				audioBitRate = parsedInt
 			} else if stream.CodecTagString == "avc1" {
 				codecs += "avc1"
 
@@ -647,6 +743,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 					return errors.New("unknown level with codec: " + stream.CodecTagString + " - " + stream.Profile + ": " + strconv.Itoa(stream.Level))
 				}
 
+				videoStreamWidth = stream.Width
+				videoStreamHeight = stream.Height
+
 			} else {
 				return errors.New("unknown codec: " + stream.CodecTagString)
 			}
@@ -656,11 +755,84 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			}
 		}
 
+		packets, err := ffmpeg_go.Probe(path, map[string]interface{}{
+			"hide_banner":    "",
+			"v":              "error",
+			"select_streams": "v:0",
+			"show_packets":   "",
+			"show_entries":   "packet=pts_time,dts_time,duration_time,size,flags",
+		})
+
+		if err != nil {
+			return errors.Wrap(err, "failed to probe packets")
+		}
+
+		var probePackets *ffmpegPacketsProbe
+
+		if err := json.Unmarshal([]byte(packets), &probePackets); err != nil {
+			return errors.Wrap(err, "failed to unmarshal playlist probe")
+		}
+
+		var currentList []ffmpegPacket
+		var aggregation [][]ffmpegPacket
+
+		// bucket up packets, so we can get peak bit-rates
+		for _, packet := range probePackets.Packets {
+			// is an I-frame
+			if packet.Flags == "K_" {
+				if len(currentList) > 0 {
+					aggregation = append(aggregation, currentList)
+				}
+				currentList = []ffmpegPacket{packet}
+			} else {
+				// Not an I-frame
+				currentList = append(currentList, packet)
+			}
+		}
+
+		var peakBitrate float64
+
+		if len(aggregation) > 1 {
+			// go through our bucketed list and get the largest bitrate in the bucket
+			for _, aggregate := range aggregation {
+
+				lastFrame, err := strconv.ParseFloat(aggregate[len(aggregate)-1].PtsTime, 64)
+				if err != nil {
+					return errors.Wrap(err, "failed to parse last frame time")
+				}
+
+				firstFrame, err := strconv.ParseFloat(aggregate[0].PtsTime, 64)
+				if err != nil {
+					return errors.Wrap(err, "failed to parse first frame time")
+				}
+
+				duration := lastFrame - firstFrame
+				var totalSize float64
+				for _, frame := range aggregate {
+					parsedSize, err := strconv.ParseFloat(frame.Size, 64)
+					if err != nil {
+						return errors.Wrap(err, "failed to parse frame size")
+					}
+					totalSize += parsedSize
+				}
+
+				bitrateForFrame := ((totalSize * 8) / 1000) / duration * 1000
+
+				if bitrateForFrame > peakBitrate {
+					peakBitrate = bitrateForFrame
+				}
+			}
+
+			// include audio bitrate in the peak bitrate
+			peakBitrate += float64(audioBitRate)
+		} else {
+			peakBitrate = float64(bitrate)
+		}
+
 		playlist := &playlist{
-			bitrateInt:     int(bitrate),
-			bitrate:        strconv.Itoa(int(bitrate)),
+			bitrate:        strconv.Itoa(int(peakBitrate)),
 			averageBitrate: strconv.Itoa(int(bitrate)),
-			resolution:     strconv.Itoa(probeResult.Streams[0].Width) + "x" + strconv.Itoa(probeResult.Streams[0].Height),
+			resolution:     strconv.Itoa(videoStreamWidth) + "x" + strconv.Itoa(videoStreamHeight),
 			uri:            path,
 			codecs:         "\"" + codecs + "\"",
 		}
