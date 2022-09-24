@@ -20,6 +20,7 @@ export const VIDEO_OPTIONS = {
   closeFocusVideoFocus: true,
   closePlayVideoFocus: true,
   closeControlsBlur: true
+
 }
 
 export const CONTROLS_CONTAINER = {

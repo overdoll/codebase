@@ -3,13 +3,18 @@ import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Pos
 import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
 import LazyNewTopPostsHome from './LazyNewTopPostsHome/LazyNewTopPostsHome'
 import SuspenseNewTopPostsHome from './SuspenseNewTopPostsHome/SuspenseNewTopPostsHome'
+import getSeedFromCookie from '@//:modules/content/HookedComponents/Post/support/getSeedFromCookie'
 
 export default function PrepareNewTopPostsHome (): JSX.Element {
+  const { seed } = getSeedFromCookie()
+
   const {
     lazyArguments,
     loadQuery
   } = useLazyArguments<{}>({
-    defaultValue: {}
+    defaultValue: {
+      seed: `${seed ?? ''}_trending`
+    }
   })
 
   return (

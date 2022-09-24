@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<aaed4feefb64100a0744c2e0666b96e9>>
- * @relayHash 5a698c7d451f431530fb3ceee859d668
+ * @generated SignedSource<<a232ccf2b46b15c796ba601e8a226794>>
+ * @relayHash 369853deea023a84884a3fe6149119bf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,11 +9,13 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5a698c7d451f431530fb3ceee859d668
+// @relayRequestID 369853deea023a84884a3fe6149119bf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LazyNewTopPostsHomeQuery$variables = {};
+export type LazyNewTopPostsHomeQuery$variables = {
+  seed?: string | null;
+};
 export type LazyNewTopPostsHomeQuery$data = {
   readonly " $fragmentSpreads": FragmentRefs<"GridNewTopPostsHomeFragment">;
 };
@@ -23,21 +25,28 @@ export type LazyNewTopPostsHomeQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = {
+var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "seed"
+  }
+],
+v1 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v1 = {
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -113,58 +122,10 @@ v2 = [
     ],
     "storageKey": null
   },
-  (v1/*: any*/)
+  (v2/*: any*/)
 ],
-v3 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ImageMedia",
-  "kind": "LinkedField",
-  "name": "cover",
-  "plural": false,
-  "selections": (v2/*: any*/),
-  "storageKey": null
-},
-v4 = {
-  "kind": "TypeDiscriminator",
-  "abstractKey": "__isMedia"
-},
-v5 = {
-  "kind": "InlineFragment",
-  "selections": (v2/*: any*/),
-  "type": "ImageMedia",
-  "abstractKey": null
-},
-v6 = {
-  "kind": "InlineFragment",
-  "selections": [
-    (v1/*: any*/)
-  ],
-  "type": "RawMedia",
-  "abstractKey": null
-},
-v7 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "slug",
-  "storageKey": null
-},
-v8 = [
-  (v7/*: any*/),
-  (v1/*: any*/)
-],
-v9 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "Club",
-  "kind": "LinkedField",
-  "name": "club",
-  "plural": false,
-  "selections": (v8/*: any*/),
-  "storageKey": null
-},
-v10 = [
+v4 = [
+  (v1/*: any*/),
   {
     "alias": null,
     "args": null,
@@ -197,7 +158,7 @@ v10 = [
                 "name": "media",
                 "plural": false,
                 "selections": [
-                  (v0/*: any*/),
+                  (v1/*: any*/),
                   {
                     "kind": "InlineFragment",
                     "selections": [
@@ -208,19 +169,43 @@ v10 = [
                         "name": "duration",
                         "storageKey": null
                       },
-                      (v3/*: any*/),
-                      (v1/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "ImageMedia",
+                        "kind": "LinkedField",
+                        "name": "cover",
+                        "plural": false,
+                        "selections": (v3/*: any*/),
+                        "storageKey": null
+                      },
+                      (v2/*: any*/)
                     ],
                     "type": "VideoMedia",
                     "abstractKey": null
                   },
-                  (v4/*: any*/),
-                  (v5/*: any*/),
-                  (v6/*: any*/)
+                  {
+                    "kind": "TypeDiscriminator",
+                    "abstractKey": "__isMedia"
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": (v3/*: any*/),
+                    "type": "ImageMedia",
+                    "abstractKey": null
+                  },
+                  {
+                    "kind": "InlineFragment",
+                    "selections": [
+                      (v2/*: any*/)
+                    ],
+                    "type": "RawMedia",
+                    "abstractKey": null
+                  }
                 ],
                 "storageKey": null
               },
-              (v1/*: any*/)
+              (v2/*: any*/)
             ],
             "storageKey": null
           },
@@ -231,59 +216,36 @@ v10 = [
             "name": "reference",
             "storageKey": null
           },
-          (v9/*: any*/),
-          (v1/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "Club",
+            "kind": "LinkedField",
+            "name": "club",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "slug",
+                "storageKey": null
+              },
+              (v2/*: any*/)
+            ],
+            "storageKey": null
+          },
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ],
     "storageKey": null
   }
-],
-v11 = {
-  "kind": "Literal",
-  "name": "first",
-  "value": 3
-},
-v12 = {
-  "alias": null,
-  "args": null,
-  "concreteType": null,
-  "kind": "LinkedField",
-  "name": "bannerMedia",
-  "plural": false,
-  "selections": [
-    (v0/*: any*/),
-    (v4/*: any*/),
-    (v5/*: any*/),
-    {
-      "kind": "InlineFragment",
-      "selections": [
-        (v3/*: any*/),
-        (v1/*: any*/)
-      ],
-      "type": "VideoMedia",
-      "abstractKey": null
-    },
-    (v6/*: any*/)
-  ],
-  "storageKey": null
-},
-v13 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "title",
-    "storageKey": null
-  },
-  (v1/*: any*/),
-  (v12/*: any*/),
-  (v7/*: any*/)
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "LazyNewTopPostsHomeQuery",
@@ -299,17 +261,22 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "LazyNewTopPostsHomeQuery",
     "selections": [
       {
-        "alias": "topPosts",
+        "alias": "trendingPosts",
         "args": [
           {
             "kind": "Literal",
             "name": "first",
-            "value": 4
+            "value": 9
+          },
+          {
+            "kind": "Variable",
+            "name": "seed",
+            "variableName": "seed"
           },
           {
             "kind": "Literal",
@@ -321,8 +288,8 @@ return {
         "kind": "LinkedField",
         "name": "posts",
         "plural": false,
-        "selections": (v10/*: any*/),
-        "storageKey": "posts(first:4,sortBy:\"ALGORITHM\")"
+        "selections": (v4/*: any*/),
+        "storageKey": null
       },
       {
         "alias": "newPosts",
@@ -330,7 +297,7 @@ return {
           {
             "kind": "Literal",
             "name": "first",
-            "value": 5
+            "value": 8
           },
           {
             "kind": "Literal",
@@ -342,151 +309,13 @@ return {
         "kind": "LinkedField",
         "name": "posts",
         "plural": false,
-        "selections": (v10/*: any*/),
-        "storageKey": "posts(first:5,sortBy:\"NEW\")"
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Literal",
-            "name": "excludeEmpty",
-            "value": true
-          },
-          (v11/*: any*/),
-          {
-            "kind": "Literal",
-            "name": "sortBy",
-            "value": "POPULAR"
-          }
-        ],
-        "concreteType": "CategoryConnection",
-        "kind": "LinkedField",
-        "name": "categories",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CategoryEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Category",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": (v13/*: any*/),
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": "categories(excludeEmpty:true,first:3,sortBy:\"POPULAR\")"
-      },
-      {
-        "alias": null,
-        "args": [
-          (v11/*: any*/)
-        ],
-        "concreteType": "CharacterConnection",
-        "kind": "LinkedField",
-        "name": "characters",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "CharacterEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Character",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "name",
-                    "storageKey": null
-                  },
-                  (v1/*: any*/),
-                  (v12/*: any*/),
-                  (v7/*: any*/),
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Series",
-                    "kind": "LinkedField",
-                    "name": "series",
-                    "plural": false,
-                    "selections": (v8/*: any*/),
-                    "storageKey": null
-                  },
-                  (v9/*: any*/)
-                ],
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": "characters(first:3)"
-      },
-      {
-        "alias": null,
-        "args": [
-          {
-            "kind": "Literal",
-            "name": "first",
-            "value": 2
-          }
-        ],
-        "concreteType": "SeriesConnection",
-        "kind": "LinkedField",
-        "name": "series",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "SeriesEdge",
-            "kind": "LinkedField",
-            "name": "edges",
-            "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "Series",
-                "kind": "LinkedField",
-                "name": "node",
-                "plural": false,
-                "selections": (v13/*: any*/),
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": "series(first:2)"
+        "selections": (v4/*: any*/),
+        "storageKey": "posts(first:8,sortBy:\"NEW\")"
       }
     ]
   },
   "params": {
-    "id": "5a698c7d451f431530fb3ceee859d668",
+    "id": "369853deea023a84884a3fe6149119bf",
     "metadata": {},
     "name": "LazyNewTopPostsHomeQuery",
     "operationKind": "query",
@@ -495,6 +324,6 @@ return {
 };
 })();
 
-(node as any).hash = "2f3f7d5815695b9b2b135932a5979c65";
+(node as any).hash = "11131b891b3f1ec068449333e58f494d";
 
 export default node;

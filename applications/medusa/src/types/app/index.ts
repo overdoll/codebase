@@ -80,6 +80,12 @@ export type GetRelayPreloadPropsReturn = Partial<{
   }
 }>
 
+export type GetCookiePropsReturn = Partial<{
+  cookies: {
+    [cookieName: string]: string
+  }
+}>
+
 export type GetMiddlewareReturn = Partial<{
   redirect?: {
     permanent: boolean
@@ -99,6 +105,7 @@ interface PageContext extends NextPageContext {
 export declare type CustomComponentType<C extends BaseContext = PageContext, P = {}> =
   ComponentType<React.PropsWithChildren<P>>
   & {
+    getCookieProps?: (context: C) => GetCookiePropsReturn
     getRelayPreloadProps?: (context: C) => GetRelayPreloadPropsReturn
     getMiddleware?: (context: C, data: any) => GetMiddlewareReturn
     getTranslationProps?: (context: C) => GetTranslationPropsReturn

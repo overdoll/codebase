@@ -7,6 +7,8 @@ import PostPreviewCategories from './PostPreviewCategories/PostPreviewCategories
 import { useState } from 'react'
 import { Plural, Trans } from '@lingui/macro'
 import PostPreviewSeries from './PostPreviewSeries/PostPreviewSeries'
+import { CategoryIdentifier } from '@//:assets/icons'
+import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 
 interface Props {
   postQuery: TagsPublicPostFragment$key
@@ -41,45 +43,48 @@ export default function TagsPublicPost (props: Props): JSX.Element {
   const hasExpansion = postData.characters.length > CHARACTER_LIMIT || postData.categories.length > CATEGORY_LIMIT
 
   return (
-    <Stack spacing={1}>
-      <PostPreviewSeries postQuery={postData} />
-      <PostPreviewCharacters isExpanded={isExpanded} postQuery={postData} />
-      <PostPreviewCategories isExpanded={isExpanded} postQuery={postData} />
-      {((hasExpansion && !isExpanded) && (
-        <Box p={3} bg='dimmers.100' borderRadius='md' cursor='pointer' onClick={() => onExpand(true)}>
-          <Heading
-            fontSize={{
-              base: '2xs',
-              md: 'xs'
-            }}
-            color='whiteAlpha.800'
-          >
-            <Trans>
-              Reveal
-            </Trans>
-            {postData.characters.length > CHARACTER_LIMIT && (
-              <>
-                {' '}
-                <Plural
-                  value={postData.characters.length - CHARACTER_LIMIT}
-                  one='# character'
-                  other='# characters'
-                />
-              </>
-            )}
-            {postData.categories.length > CATEGORY_LIMIT && (
-              <>
-                {' '}
-                <Plural
-                  value={postData.categories.length - CATEGORY_LIMIT}
-                  one=' # category'
-                  other=' # categories'
-                />
-              </>
-            )}
-          </Heading>
-        </Box>
-      ))}
+    <Stack spacing={2}>
+      <PageHeader icon={CategoryIdentifier} title={<Trans>Characters and categories</Trans>} />
+      <Stack spacing={1}>
+        <PostPreviewSeries postQuery={postData} />
+        <PostPreviewCharacters isExpanded={isExpanded} postQuery={postData} />
+        <PostPreviewCategories isExpanded={isExpanded} postQuery={postData} />
+        {((hasExpansion && !isExpanded) && (
+          <Box p={3} bg='dimmers.100' borderRadius='md' cursor='pointer' onClick={() => onExpand(true)}>
+            <Heading
+              fontSize={{
+                base: '2xs',
+                md: 'xs'
+              }}
+              color='whiteAlpha.800'
+            >
+              <Trans>
+                Reveal
+              </Trans>
+              {postData.characters.length > CHARACTER_LIMIT && (
+                <>
+                  {' '}
+                  <Plural
+                    value={postData.characters.length - CHARACTER_LIMIT}
+                    one='# character'
+                    other='# characters'
+                  />
+                </>
+              )}
+              {postData.categories.length > CATEGORY_LIMIT && (
+                <>
+                  {' '}
+                  <Plural
+                    value={postData.categories.length - CATEGORY_LIMIT}
+                    one=' # category'
+                    other=' # categories'
+                  />
+                </>
+              )}
+            </Heading>
+          </Box>
+        ))}
+      </Stack>
     </Stack>
   )
 }

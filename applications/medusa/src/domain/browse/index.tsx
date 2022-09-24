@@ -6,6 +6,14 @@ RootBrowse.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
+RootBrowse.getCookieProps = () => {
+  return {
+    cookies: {
+      postSeed: Date.now().toString()
+    }
+  }
+}
+
 RootBrowse.getRelayPreloadProps = (ctx) => {
   return ({
     queries: {

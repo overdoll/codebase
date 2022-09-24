@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b8807d140f443b762d51a1f8a3ef722>>
+ * @generated SignedSource<<8a9b36f6eede505d5e1d887edf75514a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,13 +12,15 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type GridTopNewPostsFragment$data = {
   readonly newPosts: {
+    readonly __typename: "PostConnection";
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly " $fragmentSpreads": FragmentRefs<"PreviewPostTileHomeFragment">;
       };
     }>;
   };
-  readonly topPosts: {
+  readonly trendingPosts: {
+    readonly __typename: "PostConnection";
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly " $fragmentSpreads": FragmentRefs<"PreviewPostTileHomeFragment">;
@@ -34,6 +36,13 @@ export type GridTopNewPostsFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  },
   {
     "alias": null,
     "args": null,
@@ -63,18 +72,28 @@ var v0 = [
   }
 ];
 return {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "kind": "RootArgument",
+      "name": "seed"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "GridTopNewPostsFragment",
   "selections": [
     {
-      "alias": "topPosts",
+      "alias": "trendingPosts",
       "args": [
         {
           "kind": "Literal",
           "name": "first",
-          "value": 4
+          "value": 9
+        },
+        {
+          "kind": "Variable",
+          "name": "seed",
+          "variableName": "seed"
         },
         {
           "kind": "Literal",
@@ -87,7 +106,7 @@ return {
       "name": "posts",
       "plural": false,
       "selections": (v0/*: any*/),
-      "storageKey": "posts(first:4,sortBy:\"ALGORITHM\")"
+      "storageKey": null
     },
     {
       "alias": "newPosts",
@@ -95,7 +114,7 @@ return {
         {
           "kind": "Literal",
           "name": "first",
-          "value": 5
+          "value": 8
         },
         {
           "kind": "Literal",
@@ -108,7 +127,7 @@ return {
       "name": "posts",
       "plural": false,
       "selections": (v0/*: any*/),
-      "storageKey": "posts(first:5,sortBy:\"NEW\")"
+      "storageKey": "posts(first:8,sortBy:\"NEW\")"
     }
   ],
   "type": "Query",
@@ -116,6 +135,6 @@ return {
 };
 })();
 
-(node as any).hash = "0d5628228ffb915b878098a409ffe729";
+(node as any).hash = "a001c5902842c979cf303c6ed4e15315";
 
 export default node;

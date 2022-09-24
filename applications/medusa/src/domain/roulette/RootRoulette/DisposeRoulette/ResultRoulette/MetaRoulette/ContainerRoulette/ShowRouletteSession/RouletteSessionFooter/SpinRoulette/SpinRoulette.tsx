@@ -9,7 +9,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import SpinRouletteButton from './SpinRouletteButton/SpinRouletteButton'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState, useTransition } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
 import { useUpdateEffect } from 'usehooks-ts'
 import { useKeyPress } from '@//:modules/support/useKeyPress'
@@ -93,9 +93,14 @@ export default function SpinRoulette (props: Props): JSX.Element {
 
   const [, setGameSessionId] = useQueryParam<string | null | undefined>('gameSessionId')
 
+  // @ts-expect-error
+  const [isPending, startTransition] = useTransition({
+    timeoutMs: 300
+  })
+
   const isKeyPressed = useKeyPress(' ')
 
-  const disableSpin = state.isPending === true || isCreatingGame
+  const disableSpin = state.isPending === true || isCreatingGame || isPending
 
   const spinTwice = data?.gameSession?.isClosed === true && data?.gameSession?.viewerIsPlayer
   const [confirmSpin, setConfirmSpin] = useState(true)
@@ -170,6 +175,13 @@ export default function SpinRoulette (props: Props): JSX.Element {
           title: t`Error restarting game. Please try again.`
         })
       }
+    })
+  }
+
+  const onTransition = (skipTracking?: boolean, spunWithShortcut?: boolean): void => {
+    // performance gains??
+    startTransition(() => {
+      onClick(skipTracking, spunWithShortcut)
     })
   }
 
@@ -260,7 +272,7 @@ export default function SpinRoulette (props: Props): JSX.Element {
         showSpinConfirm={spinTwice && !confirmSpin}
         canFastForward={state.isSpinning === true && state.isPending === false}
         isDisabled={disableSpin}
-        onClick={() => onClick(false, false)}
+        onClick={() => onTransition(false, false)}
       />
     </>
   )

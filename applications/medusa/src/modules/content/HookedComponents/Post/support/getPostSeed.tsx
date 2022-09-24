@@ -3,10 +3,9 @@ interface GetPostSeedProps {
 }
 
 export default function getPostSeed (ctx): GetPostSeedProps {
-  const postSeed = ctx.cookies.get('postSeed')
-  const time = `${Date.now()}`
+  const postSeed = ctx.cookies.get('od.local.postSeed')
 
   return {
-    seed: postSeed ?? time
+    seed: postSeed
   }
 }

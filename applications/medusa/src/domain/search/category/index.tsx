@@ -1,11 +1,18 @@
 import RootSearchCategory from './RootSearchCategory/RootSearchCategory'
 import ResultSearchCategoryQuery from '@//:artifacts/ResultSearchCategoryQuery.graphql'
-import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/HookedComponents/Post/support/getPostSeed'
 
 RootSearchCategory.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
+
+RootSearchCategory.getCookieProps = () => {
+  return {
+    cookies: {
+      postSeed: Date.now().toString()
+    }
+  }
+}
 
 RootSearchCategory.getRelayPreloadProps = (ctx) => {
   const { query } = ctx
@@ -20,7 +27,7 @@ RootSearchCategory.getRelayPreloadProps = (ctx) => {
         params: ResultSearchCategoryQuery.params,
         variables: {
           categorySlug,
-          ...decodeSearchArguments(query),
+          sortBy: 'ALGORITHM',
           ...getPostSeed(ctx)
         },
         options: {

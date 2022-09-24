@@ -36,9 +36,15 @@ export default function BackgroundPosterImageMedia (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, imageMediaQuery)
 
-  const colorPalette = data.colorPalettes[0]
+  const colorPalette = data.colorPalettes?.[0]
 
-  const bgColor = `rgb(${colorPalette.red},${colorPalette.green},${colorPalette.blue})`
+  const rgb = {
+    red: colorPalette?.red ?? 0,
+    green: colorPalette?.green ?? 0,
+    blue: colorPalette?.blue ?? 0
+  }
+
+  const bgColor = `rgb(${rgb.red},${rgb.green},${rgb.blue})`
 
   return (
     <ImageMedia

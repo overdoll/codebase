@@ -4,7 +4,6 @@ import StorageVideoContainer, { StorageVideoProps } from './StorageVideoContaine
 import useObserveVideo, { UseObserveVideoProps } from '../../support/useObserveVideo'
 import { Flex } from '@chakra-ui/react'
 import { pauseVideo, playVideo, startOrPlayVideo } from '../../support/controls'
-import syncPlayerPlayPause from '../../support/syncPlayerPlayPause'
 
 interface ObserveVideoProps extends UseObserveVideoProps {
   isActive: boolean
@@ -40,24 +39,25 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
 
   const {
     ref,
-    isObserving,
-    isObservingDebounced
+    isObserving
   } = useObserveVideo({ ...restObserver })
+
+  // TODO experiment with destroying the player after the user scrolls away and doesn't play the video for a while
 
   // play video if it hasn't been loaded yet, and you're focused into it
   useEffect(() => {
-    if (player != null && !player.hasStart && isObservingDebounced && isActive) {
+    if (player != null && !player.hasStart && isObserving && isActive) {
       startOrPlayVideo(player)
     }
-  }, [isObservingDebounced, isActive, player])
+  }, [isObserving, isActive, player])
 
   // play video when you scroll into it, slide is active, and it is paused
   useEffect(() => {
     if (player == null || !player.hasStart) return
-    if (isObservingDebounced && isActive && player.video.paused) {
+    if (isObserving && isActive && player.video.paused) {
       playVideo(player)
     }
-  }, [isObservingDebounced, isActive, player])
+  }, [isObserving, isActive, player])
 
   // pause video when you're scrolled into it, slide is not active, and it is paused
   useEffect(() => {
@@ -75,9 +75,22 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
     }
   }, [isObserving, player])
 
-  // keep track of video states
-  syncPlayerPlayPause(player, () => {
-  }, setPlayer)
+  // if video autoplays after you scroll away (for example, after buffering), we pause the video
+  useEffect(() => {
+    if (player == null) return
+
+    const onPlay = (): void => {
+      if (!isObserving) {
+        pauseVideo(player)
+      }
+    }
+
+    player.on('play', onPlay)
+
+    return () => {
+      player.off('play', onPlay)
+    }
+  }, [isObserving, player])
 
   return (
     <Flex

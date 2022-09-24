@@ -3,20 +3,19 @@ import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/compone
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
 import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
 import LazyHomePosts from './LazyHomePosts/LazyHomePosts'
+import getSeedFromCookie from '@//:modules/content/HookedComponents/Post/support/getSeedFromCookie'
 
 export interface PrepareHomePostsLazyProps {
   seed: string | null
 }
 
 export default function PrepareHomePosts (): JSX.Element {
-  // TODO Fix seed here
-
   const {
     lazyArguments,
     loadQuery
   } = useLazyArguments<PrepareHomePostsLazyProps>({
     defaultValue: {
-      seed: null
+      ...getSeedFromCookie()
     }
   })
 
