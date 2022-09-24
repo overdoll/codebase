@@ -28,7 +28,8 @@ export default function VideoStart (props: Props): JSX.Element {
       setError(false)
     }
 
-    const onError = (): void => {
+    const onError = (e): void => {
+      console.log(e)
       setError(true)
     }
 

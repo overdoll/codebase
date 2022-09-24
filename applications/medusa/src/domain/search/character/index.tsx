@@ -1,11 +1,18 @@
 import RootSearchCharacter from './RootSearchCharacter/RootSearchCharacter'
 import ResultSearchCharacterQuery from '@//:artifacts/ResultSearchCharacterQuery.graphql'
-import decodeSearchArguments from '../../../common/components/PageHeader/SearchButton/support/decodeSearchArguments'
 import getPostSeed from '@//:modules/content/HookedComponents/Post/support/getPostSeed'
 
 RootSearchCharacter.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
+
+RootSearchCharacter.getCookieProps = () => {
+  return {
+    cookies: {
+      postSeed: Date.now().toString()
+    }
+  }
+}
 
 RootSearchCharacter.getRelayPreloadProps = (ctx) => {
   const { query } = ctx
@@ -22,7 +29,7 @@ RootSearchCharacter.getRelayPreloadProps = (ctx) => {
         variables: {
           seriesSlug,
           characterSlug,
-          ...decodeSearchArguments(query),
+          sortBy: 'ALGORITHM',
           ...getPostSeed(ctx)
         },
         options: {

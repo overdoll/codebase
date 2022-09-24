@@ -3,14 +3,7 @@ import { useState, useTransition } from 'react'
 import { CONTROLS_CONTAINER } from '../../../../../../../constants'
 import { Flex, Heading, HStack, Slider, SliderFilledTrack, SliderTrack } from '@chakra-ui/react'
 import { VideoControlTypeProps } from '../../../../../VideoContainer'
-import {
-  fastForwardVideo,
-  goBackwardVideo,
-  pauseVideo,
-  requestPlayAfterSeeking
-} from '../../../../../../../support/controls'
-import { ControlFastForwardTen, ControlGoBackwardTen } from '@//:assets/icons'
-import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
+import { pauseVideo, requestPlayAfterSeeking } from '../../../../../../../support/controls'
 import formatSecondsIntoMinutes from '../../../../../../../support/formatSecondsIntoMinutes'
 import syncPlayerTimeUpdate from '../../../../../../../support/syncPlayerTimeUpdate'
 import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
@@ -55,21 +48,13 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
   syncPlayerTimeUpdate(player, setTime, setPlayer)
 
   return (
-    <HStack data-ignore='controls' spacing={1}>
-      <Flex data-ignore='controls' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
-        <MediaButton
-          w={6}
-          h={6}
-          onClick={() => goBackwardVideo(10, duration, player)}
-          icon={ControlGoBackwardTen}
-        />
-      </Flex>
+    <HStack w='100%' data-ignore='controls' spacing={1}>
       <Flex
         data-ignore='controls'
         position='relative'
         {...CONTROLS_CONTAINER}
         h={12}
-        w={48}
+        w='100%'
         p={2}
         align='center'
         justify='center'
@@ -83,26 +68,19 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
           min={0}
           max={duration}
           step={0.01}
+          w='100%'
           h='100%'
           data-ignore='controls'
         >
           <SliderTrack data-ignore='controls' borderRadius='full' h='100%' bg='whiteAlpha.100'>
-            <SliderFilledTrack data-ignore='controls' bg='teal.300' />
+            <SliderFilledTrack data-ignore='controls' bg='primary.400' />
           </SliderTrack>
         </Slider>
         <Flex ddata-ignore='controls' pointerEvents='none' position='absolute'>
-          <Heading data-ignore='controls' color='whiteAlpha.800' fontSize='md'>
+          <Heading data-ignore='controls' color='whiteAlpha.900' fontSize='md'>
             {formatSecondsIntoMinutes(time)} / {formatSecondsIntoMinutes(duration)}
           </Heading>
         </Flex>
-      </Flex>
-      <Flex data-ignore='controls' {...CONTROLS_CONTAINER} h={12} w={12} align='center' justify='center'>
-        <MediaButton
-          w={6}
-          h={6}
-          onClick={() => fastForwardVideo(10, duration, player)}
-          icon={ControlFastForwardTen}
-        />
       </Flex>
     </HStack>
   )

@@ -51,12 +51,12 @@ export default function CinematicImageMedia (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, imageMediaQuery)
 
-  const colorPalette = data.colorPalettes[0]
+  const colorPalette = data.colorPalettes?.[0]
 
   const rgb = {
-    red: colorPalette.red,
-    green: colorPalette.green,
-    blue: colorPalette.blue
+    red: colorPalette?.red ?? 0,
+    green: colorPalette?.green ?? 0,
+    blue: colorPalette?.blue ?? 0
   }
 
   return (

@@ -6,10 +6,10 @@ import VideoFullscreen from '../../Controls/VideoFullscreen/VideoFullscreen'
 import useControlRequest from '../../../../../../support/useControlRequest'
 import VideoVolumeTrack from '../../LazyControls/LazyVideoUnmute/VideoUnmute/VideoVolumeTrack/VideoVolumeTrack'
 import { CONTROLS_CONTAINER } from '../../../../../../constants'
-import VideoSeek from '../../Controls/VideoSeek/VideoSeek'
 import VideoSeekTrack from '../../Controls/VideoSeek/VideoSeekTrack/VideoSeekTrack'
 import LazyVideoUnmute from '../../LazyControls/LazyVideoUnmute/LazyVideoUnmute'
 import { VideoControlsOpen } from '../../../VideoControls'
+import VideoSimpleSeek from '../../LazyControls/LazyVideoSimpleSeek/VideoSimpleSeek/VideoSimpleSeek'
 
 interface Props extends VideoControlTypeProps, ContainerRefProps, VideoControlsOpen {
   player: PlayerType
@@ -25,14 +25,12 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
   } = props
 
   const playerControls = {
-    seek: <VideoSeekTrack duration={duration} player={player} />,
     volume: <VideoVolumeTrack player={player} />
   }
 
   const {
     controls,
     request,
-    cancelRequest,
     ref,
     currentControl
   } = useControlRequest<'seek' | 'volume'>({
@@ -41,42 +39,36 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
   })
 
   return (
-    <Stack
-      ref={ref}
-      align='flex-end'
-      w='100%'
-      h='100%'
-      spacing={2}
-    >
-      <Flex
+    <HStack align='flex-end' w='100%' spacing={2} justify='space-between'>
+      <VideoSeekTrack duration={duration} player={player} />
+      <Stack
+        ref={ref}
         align='flex-end'
-        justify='flex-end'
-        h={12}
-        pointerEvents={currentControl == null ? 'none' : 'auto'}
+        spacing={2}
       >
-        {controls}
-      </Flex>
-      <HStack
-        {...CONTROLS_CONTAINER}
-        data-ignore='controls'
-        h={12}
-        px={4}
-        align='center'
-        justify='center'
-        spacing={4}
-      >
-        <VideoPlayPause player={player} />
-        <LazyVideoUnmute player={player} hasAudio={hasAudio} unMuteCallback={() => request('volume')} />
-        <VideoSeek
-          seekCallback={() => {
-            currentControl === 'seek'
-              ? cancelRequest()
-              : request('seek')
-          }}
-          duration={duration}
-        />
-        <VideoFullscreen containerRef={containerRef} player={player} />
-      </HStack>
-    </Stack>
+        <Flex
+          align='flex-end'
+          justify='flex-end'
+          h={12}
+          pointerEvents={currentControl == null ? 'none' : 'auto'}
+        >
+          {controls}
+        </Flex>
+        <HStack
+          {...CONTROLS_CONTAINER}
+          data-ignore='controls'
+          h={12}
+          px={4}
+          align='center'
+          justify='center'
+          spacing={4}
+        >
+          <VideoPlayPause player={player} />
+          <LazyVideoUnmute player={player} hasAudio={hasAudio} unMuteCallback={() => request('volume')} />
+          <VideoSimpleSeek player={player} duration={duration} />
+          <VideoFullscreen containerRef={containerRef} player={player} />
+        </HStack>
+      </Stack>
+    </HStack>
   )
 }

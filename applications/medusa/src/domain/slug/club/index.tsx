@@ -5,6 +5,14 @@ RootPublicClub.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
+RootPublicClub.getCookieProps = () => {
+  return {
+    cookies: {
+      postSeed: Date.now().toString()
+    }
+  }
+}
+
 RootPublicClub.getRelayPreloadProps = (ctx) => {
   return ({
     queries: {

@@ -10,7 +10,7 @@ interface Props extends LazyArgumentsProps<{}> {
 }
 
 const Query = graphql`
-  query LazyNewTopPostsHomeQuery {
+  query LazyNewTopPostsHomeQuery($seed: String) {
     ...GridNewTopPostsHomeFragment
   }
 `

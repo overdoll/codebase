@@ -7,9 +7,10 @@ import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import runIfFunction from '../../../../../support/runIfFunction'
 import { MaybeRenderProp } from '@//:types/components'
 import VerticalPaginationFooter from './VerticalPaginationFooter/VerticalPaginationFooter'
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState, useTransition } from 'react'
 import { DisposeFn } from 'relay-runtime/lib/util/RelayRuntimeTypes'
 import EmptyPaginationScroller from './EmptyPaginationScroller/EmptyPaginationScroller'
+import MemoKey from './MemoKey/MemoKey'
 
 interface ChildrenCallable {
   index: number
@@ -46,11 +47,15 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
 
   const [hasError, setHasError] = useState(false)
   const [dispose, setDispose] = useState<DisposeFn | null>(null)
+  // @ts-expect-error
+  const [isPending, startTransition] = useTransition({
+    timeoutMs: 300
+  })
 
   const onLoadNext = (): void => {
     setHasError(false)
     const disposedLoad = (): Disposable => {
-      return loadNext(12, {
+      return loadNext(7, {
         onComplete: (error) => {
           if (error != null) {
             setHasError(true)
@@ -58,7 +63,13 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
         }
       })
     }
-    disposedLoad()
+
+    // this might cause errors but its really necessary to prevent noticeable
+    // lag that happens when loading more on mobile
+    // gives a much smoother experience
+    startTransition(() => {
+      disposedLoad()
+    })
     setDispose(disposedLoad().dispose)
   }
 
@@ -75,23 +86,29 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     return <EmptyPaginationScroller />
   }
 
+  // we use a memo here because loading more posts re-renders the whole tree
+  // since additional dom nodes are added
+  // this helps with performance
   return (
     <Box>
-      {data?.edges.map((item, index) =>
-        (
-          <Box mb={16} key={item.node.id}>
-            {(hasNext && !isLoadingNext && !hasError && data.edges.length - 2 === index) &&
-              <LoadMoreObserver onObserve={onLoadNext} />}
-            {runIfFunction(children, {
-              index
-            })}
-          </Box>
-        ))}
+      {data?.edges.map((item, index) => (
+        <Fragment key={item.node.id}>
+          {(hasNext && !isPending && !isLoadingNext && !hasError && data.edges.length - 2 === index) &&
+            <LoadMoreObserver onObserve={onLoadNext} />}
+          <MemoKey memoKey={item.node.id}>
+            <Box mb={16}>
+              {runIfFunction(children, {
+                index
+              })}
+            </Box>
+          </MemoKey>
+        </Fragment>
+      ))}
       <VerticalPaginationFooter
         loadNext={onLoadNext}
         hasNext={hasNext}
         hasError={hasError}
-        isLoadingNext={isLoadingNext}
+        isLoadingNext={isLoadingNext || isPending}
       />
     </Box>
   )

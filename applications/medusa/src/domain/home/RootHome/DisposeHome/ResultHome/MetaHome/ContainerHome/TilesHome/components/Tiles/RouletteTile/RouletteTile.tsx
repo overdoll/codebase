@@ -29,7 +29,7 @@ export default function RouletteTile (): JSX.Element {
             top={0}
             position='absolute'
           >
-            <StaticImageCover url='https://static.dollycdn.net/banners/roulette-banner.jpg' />
+            <StaticImageCover loadFirst url='https://static.dollycdn.net/banners/roulette-banner.jpg' />
           </Flex>
           <Flex
             borderWidth={3}

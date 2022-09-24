@@ -41,11 +41,9 @@ export default function DescriptionPublicPost (props: Props): JSX.Element {
 
   return (
     <Stack spacing={6}>
-      <Stack spacing={3}>
-        <RepostPublicPost postQuery={postData} />
-        <SavePublicPost postQuery={postData} />
-      </Stack>
       <ClubPublicPost postQuery={postData} viewerQuery={viewerData} />
+      <SavePublicPost postQuery={postData} />
+      <RepostPublicPost postQuery={postData} />
       <TagsPublicPost postQuery={postData} />
       <MenuPublicPost postQuery={postData} />
     </Stack>

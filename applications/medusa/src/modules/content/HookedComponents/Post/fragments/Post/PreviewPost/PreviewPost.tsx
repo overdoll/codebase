@@ -4,14 +4,12 @@ import { PreviewPostFragment$key } from '@//:artifacts/PreviewPostFragment.graph
 import { Box } from '@chakra-ui/react'
 import { PreviewContent } from '../../../../../HookedComponents/Post'
 import PreviewHeader from '../PreviewHeader/PreviewHeader'
-import { Link } from '../../../../../../routing'
 import PreviewFooter from '../PreviewFooter/PreviewFooter'
 import { useState } from 'react'
 import SwiperType from 'swiper'
 import { PlayerType } from '../../../../Media/types'
-import syncSwiperSlideChange from '../../../support/syncSwiperSlideChange'
-import syncPlayerTimeUpdate from '../../../../Media/support/syncPlayerTimeUpdate'
 import trackFathomEvent from '../../../../../../support/trackFathomEvent'
+import { useRouter } from 'next/router'
 
 interface Props {
   postQuery: PreviewPostFragment$key
@@ -34,35 +32,32 @@ export default function PreviewPost (props: Props): JSX.Element {
 
   const postData = useFragment(PostFragment, postQuery)
 
+  const router = useRouter()
+
   const [swiper, setSwiper] = useState<SwiperType | null>(null)
   const [player, setPlayer] = useState<PlayerType | null>(null)
-  const [activeIndex, setActiveIndex] = useState(0)
-  const [currentTime, setCurrentTime] = useState(0)
 
+  // we bind the click of the post to a function as opposed to a link itself because
+  // the currentTime and activeIndex values don't update otherwise.
   const onClick = (): void => {
-    // track post clicks
+    void router.push({
+      pathname: '/[slug]/post/[reference]',
+      query: {
+        slug: postData.club.slug,
+        reference: postData.reference,
+        ...(swiper != null && swiper?.activeIndex !== 0 && ({ slide: swiper.activeIndex })),
+        ...(player != null && player?.currentTime >= 5 && ({ time: player.currentTime.toFixed(0) }))
+      }
+    })
     trackFathomEvent('QVSNTJRX', 1)
   }
 
-  syncSwiperSlideChange(swiper, (swiper) => setActiveIndex(swiper.activeIndex))
-  syncPlayerTimeUpdate(player, (time) => setCurrentTime(time))
+  // syncSwiperSlideChange(swiper, (swiper) => setActiveIndex(swiper.activeIndex))
+  // syncPlayerTimeUpdate(player, (time) => setCurrentTime(time))
 
   return (
     <Box position='relative'>
-      <Link
-        passHref
-        href={{
-          pathname: '/[slug]/post/[reference]',
-          query: {
-            slug: postData.club.slug,
-            reference: postData.reference,
-            ...(activeIndex !== 0 && ({ slide: activeIndex })),
-            ...(currentTime >= 5 && ({ time: currentTime.toFixed(0) }))
-          }
-        }}
-      >
-        <Box onClick={onClick} position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
-      </Link>
+      <Box onClick={onClick} position='absolute' top={0} bottom={0} left={0} right={0} cursor='pointer' />
       <PreviewHeader mb={1} postQuery={postData} />
       <PreviewContent onPlayerInit={setPlayer} onSwiper={setSwiper} postQuery={postData} />
       <PreviewFooter mt={1} postQuery={postData} />
