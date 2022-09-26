@@ -57,6 +57,7 @@ export interface CustomAppProps extends AppInitialProps {
   relayStore: any
   appHeaders: any
   cookies: any
+  userAgent: string
 }
 
 export interface CustomPageAppProps extends AppProps {
@@ -69,6 +70,7 @@ export interface CustomPageAppProps extends AppProps {
   appHeaders: any
   ctx: any
   cookies: any
+  userAgent: string
 }
 
 export type GetRelayPreloadPropsReturn = Partial<{

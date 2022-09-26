@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<657c9be54e9ba18b7df79aed49b4c0c8>>
- * @relayHash 34a664e38b3a22066761d30b756a5a01
+ * @generated SignedSource<<19009b3177e78a104bced08c8b896692>>
+ * @relayHash 4ddf473adc40735aa05bcb0ecb673ed1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 34a664e38b3a22066761d30b756a5a01
+// @relayRequestID 4ddf473adc40735aa05bcb0ecb673ed1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -178,6 +178,16 @@ v13 = {
   "storageKey": null
 },
 v14 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "medium",
+  "plural": false,
+  "selections": (v10/*: any*/),
+  "storageKey": null
+},
+v15 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
@@ -364,17 +374,8 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v13/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ImageMediaAccess",
-                                        "kind": "LinkedField",
-                                        "name": "medium",
-                                        "plural": false,
-                                        "selections": (v10/*: any*/),
-                                        "storageKey": null
-                                      },
-                                      (v14/*: any*/)
+                                      (v14/*: any*/),
+                                      (v15/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -403,6 +404,7 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
+                                          (v15/*: any*/),
                                           (v14/*: any*/),
                                           (v13/*: any*/)
                                         ],
@@ -571,7 +573,7 @@ return {
     ]
   },
   "params": {
-    "id": "34a664e38b3a22066761d30b756a5a01",
+    "id": "4ddf473adc40735aa05bcb0ecb673ed1",
     "metadata": {},
     "name": "LazySuggestedPostsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b624f68e3610ae609e7c7d0f42c0ef75>>
- * @relayHash 6fd73394d5b06afa3daddaaa302bfb6f
+ * @generated SignedSource<<c666eff5cad4c0d460d2f3d77d16d514>>
+ * @relayHash a0c065be6b4fd592984d624eabdb7153
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6fd73394d5b06afa3daddaaa302bfb6f
+// @relayRequestID a0c065be6b4fd592984d624eabdb7153
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -274,6 +274,16 @@ v20 = {
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "thumbnail",
+  "plural": false,
+  "selections": (v12/*: any*/),
+  "storageKey": null
+},
+v21 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "medium",
   "plural": false,
   "selections": (v12/*: any*/),
   "storageKey": null
@@ -560,7 +570,8 @@ return {
                             "plural": false,
                             "selections": [
                               (v19/*: any*/),
-                              (v20/*: any*/)
+                              (v20/*: any*/),
+                              (v21/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -606,16 +617,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v19/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ImageMediaAccess",
-                            "kind": "LinkedField",
-                            "name": "medium",
-                            "plural": false,
-                            "selections": (v12/*: any*/),
-                            "storageKey": null
-                          },
+                          (v21/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -784,7 +786,7 @@ return {
     ]
   },
   "params": {
-    "id": "6fd73394d5b06afa3daddaaa302bfb6f",
+    "id": "a0c065be6b4fd592984d624eabdb7153",
     "metadata": {},
     "name": "ResultPublicPostQuery",
     "operationKind": "query",

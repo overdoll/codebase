@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0126d1da3bbb799b7bdc09287c2f842d>>
- * @relayHash 28a0c210992a860afa4ff2ed7606fadd
+ * @generated SignedSource<<ac5df6eacf8c204ae06fc9ae3985a46b>>
+ * @relayHash ebb8fedfff113de8f69eab8988a2cb13
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 28a0c210992a860afa4ff2ed7606fadd
+// @relayRequestID ebb8fedfff113de8f69eab8988a2cb13
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -211,12 +211,22 @@ v15 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "thumbnail",
+  "name": "medium",
   "plural": false,
   "selections": (v10/*: any*/),
   "storageKey": null
 },
 v16 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "thumbnail",
+  "plural": false,
+  "selections": (v10/*: any*/),
+  "storageKey": null
+},
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -399,16 +409,7 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v14/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ImageMediaAccess",
-                                        "kind": "LinkedField",
-                                        "name": "medium",
-                                        "plural": false,
-                                        "selections": (v10/*: any*/),
-                                        "storageKey": null
-                                      },
+                                      (v15/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -419,7 +420,7 @@ return {
                                         "selections": (v10/*: any*/),
                                         "storageKey": null
                                       },
-                                      (v15/*: any*/),
+                                      (v16/*: any*/),
                                       {
                                         "alias": null,
                                         "args": null,
@@ -457,8 +458,9 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
+                                          (v15/*: any*/),
                                           (v14/*: any*/),
-                                          (v15/*: any*/)
+                                          (v16/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -541,7 +543,7 @@ return {
                         ],
                         "storageKey": null
                       },
-                      (v16/*: any*/)
+                      (v17/*: any*/)
                     ],
                     "storageKey": null
                   }
@@ -557,7 +559,7 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v16/*: any*/),
+                  (v17/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -606,7 +608,7 @@ return {
     ]
   },
   "params": {
-    "id": "28a0c210992a860afa4ff2ed7606fadd",
+    "id": "ebb8fedfff113de8f69eab8988a2cb13",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",

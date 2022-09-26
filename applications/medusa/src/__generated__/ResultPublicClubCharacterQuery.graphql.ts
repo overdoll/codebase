@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d2eab9c0345a10b734366d1f83b31102>>
- * @relayHash b7488a6e8dcd74ef3c264496872eedc8
+ * @generated SignedSource<<cb8ed8a981e3889447ddd0aa9ff030f0>>
+ * @relayHash cf86f12140ad1ad17096ad6764a87b71
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b7488a6e8dcd74ef3c264496872eedc8
+// @relayRequestID cf86f12140ad1ad17096ad6764a87b71
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -282,6 +282,16 @@ v23 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
+  "name": "medium",
+  "plural": false,
+  "selections": (v14/*: any*/),
+  "storageKey": null
+},
+v24 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
   "selections": (v14/*: any*/),
@@ -545,17 +555,8 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v21/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ImageMediaAccess",
-                                        "kind": "LinkedField",
-                                        "name": "medium",
-                                        "plural": false,
-                                        "selections": (v14/*: any*/),
-                                        "storageKey": null
-                                      },
-                                      (v23/*: any*/)
+                                      (v23/*: any*/),
+                                      (v24/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -584,6 +585,7 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
+                                          (v24/*: any*/),
                                           (v23/*: any*/),
                                           (v21/*: any*/)
                                         ],
@@ -742,7 +744,7 @@ return {
     ]
   },
   "params": {
-    "id": "b7488a6e8dcd74ef3c264496872eedc8",
+    "id": "cf86f12140ad1ad17096ad6764a87b71",
     "metadata": {},
     "name": "ResultPublicClubCharacterQuery",
     "operationKind": "query",

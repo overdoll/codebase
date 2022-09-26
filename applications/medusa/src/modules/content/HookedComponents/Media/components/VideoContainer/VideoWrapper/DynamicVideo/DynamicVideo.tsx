@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic'
 import { OnPlayerInitType } from '../../../../types'
 import { VideoWatchProps } from '../../VideoContainer'
-import sniffer from '../../../../support/sniffer'
+import useSniffer from '../../../../../../../hooks/useSniffer'
 
 const DynamicMp4VideoPlayer = dynamic(
   async () => {
@@ -45,9 +45,9 @@ export default function DynamicVideo (props: Props): JSX.Element {
     currentTime
   } = props
 
-  const device = sniffer.device
+  const { device } = useSniffer()
 
-  const determinHlsUrl = (): string | null => {
+  const determineHlsUrl = (): string | null => {
     if (hlsUrls == null || Object.keys(hlsUrls).length < 1) return null
     if (device === 'mobile') {
       if (hlsUrls.mobile != null) {
@@ -69,15 +69,18 @@ export default function DynamicVideo (props: Props): JSX.Element {
     return null
   }
 
-  const hlsUrl = determinHlsUrl()
+  const hlsUrl = determineHlsUrl()
+
+  const defaultMuted = device === 'mobile' ? true : muted
+  const defaultVolume = autoPlay ? 0 : (device === 'mobile' ? 0 : volume)
 
   if (hlsUrl != null) {
     return (
       <DynamicHlsVideoPlayer
         currentTime={currentTime}
         autoPlay={autoPlay}
-        volume={volume}
-        muted={muted}
+        volume={defaultVolume}
+        muted={defaultMuted}
         hlsUrl={hlsUrl}
         onPlayerInit={(player) => onPlayerInit(player)}
       />
@@ -89,8 +92,8 @@ export default function DynamicVideo (props: Props): JSX.Element {
       <DynamicMp4VideoPlayer
         currentTime={currentTime}
         autoPlay={autoPlay}
-        volume={volume}
-        muted={muted}
+        volume={defaultVolume}
+        muted={defaultMuted}
         mp4Url={mp4Url}
         onPlayerInit={(player) => onPlayerInit(player)}
       />
