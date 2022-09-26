@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<16a92c7b8c28abcc92619f441a33e15d>>
+ * @generated SignedSource<<a52385999f1efc71ac2747493b820b9f>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type PreviewPostContentSmallBannerFragment$data = {
   readonly media: {
     readonly __typename: string;
     readonly duration?: number;
-    readonly " $fragmentSpreads": FragmentRefs<"BannerMediaFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ThumbnailMediaFragment">;
   };
   readonly " $fragmentType": "PreviewPostContentSmallBannerFragment";
 };
@@ -61,7 +61,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "BannerMediaFragment"
+          "name": "ThumbnailMediaFragment"
         }
       ],
       "storageKey": null
@@ -71,6 +71,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "9db477c8754537ca02caa6bc82af6f5f";
+(node as any).hash = "1f4948e0bf73ce1cd0f579235f7d8336";
 
 export default node;

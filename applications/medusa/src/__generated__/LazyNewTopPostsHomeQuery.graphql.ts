@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<78f7f31c6696e40cbef65d0f9f4bc85a>>
- * @relayHash c3288033f328973f095cc6aef4245b4f
+ * @generated SignedSource<<4dbb3ea1e235769de2788e768af21796>>
+ * @relayHash 41712f0b21890fa9cdad9360c17692fa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c3288033f328973f095cc6aef4245b4f
+// @relayRequestID 41712f0b21890fa9cdad9360c17692fa
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -92,7 +92,7 @@ v3 = [
         "args": null,
         "concreteType": "ImageMediaAccess",
         "kind": "LinkedField",
-        "name": "banner",
+        "name": "thumbnail",
         "plural": false,
         "selections": [
           {
@@ -315,7 +315,7 @@ return {
     ]
   },
   "params": {
-    "id": "c3288033f328973f095cc6aef4245b4f",
+    "id": "41712f0b21890fa9cdad9360c17692fa",
     "metadata": {},
     "name": "LazyNewTopPostsHomeQuery",
     "operationKind": "query",
