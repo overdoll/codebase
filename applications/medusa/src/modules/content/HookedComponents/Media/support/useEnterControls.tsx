@@ -14,7 +14,7 @@ interface UseEnterControlsProps {
 export default function useEnterControls (props: UseEnterControlsProps): UseEnterControlsReturn {
   const {
     ref,
-    isDisabled,
+    isDisabled
   } = props
 
   const timeout = useRef<Timeout | null>(null)
@@ -86,20 +86,26 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
     if (isDisabled === true) return
     ref.current?.addEventListener('click', onClick)
     ref.current?.addEventListener('touchmove', onTouchMove)
+    return () => {
+      ref.current?.removeEventListener('click', onClick)
+      ref.current?.removeEventListener('touchmove', onTouchMove)
+    }
+  }, [isOpen, setOpen, isDisabled])
+
+  useEffect(() => {
+    if (isDisabled === true) return
     ref.current?.addEventListener('mouseenter', onMouseEnter)
     ref.current?.addEventListener('mouseover', onMouseOver)
     ref.current?.addEventListener('mouseleave', onMouseLeave)
     return () => {
-      ref.current?.removeEventListener('click', onClick)
-      ref.current?.removeEventListener('touchmove', onTouchMove)
       ref.current?.removeEventListener('mouseenter', onMouseEnter)
       ref.current?.removeEventListener('mouseover', onMouseOver)
       ref.current?.removeEventListener('mouseleave', onMouseLeave)
     }
-  }, [isOpen, setOpen, isDisabled])
+  }, [isDisabled])
 
   return {
     isOpen: isOpen,
-    showCursor: showCursor,
+    showCursor: showCursor
   }
 }
