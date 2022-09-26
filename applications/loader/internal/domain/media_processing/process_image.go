@@ -70,8 +70,13 @@ var thumbnailSizes = []*processImageSizes{
 
 var banner = []*processImageSizes{
 	{
+		name:       "large-banner",
+		constraint: 1080,
+		mandatory:  true,
+	},
+	{
 		name:       "banner",
-		constraint: 1200,
+		constraint: 720,
 		mandatory:  true,
 	},
 	{
