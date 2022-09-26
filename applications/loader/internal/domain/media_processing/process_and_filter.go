@@ -57,7 +57,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 
 	_, err := vips.GetImageDimensions(sourceFileName)
 	if err != nil {
-		if strings.Contains(err.Error(), "VipsJpeg: Invalid JPEG file structure") {
+		if strings.Contains(err.Error(), "VipsJpeg: Corrupt JPEG data") {
 			return &ProcessResponse{failed: true}, nil
 		}
 		return nil, err
