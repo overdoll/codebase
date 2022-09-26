@@ -16,6 +16,8 @@ import (
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
+	"overdoll/libraries/vips"
+	"strings"
 )
 
 type ErrorMediaCallbackNotFound struct{}
@@ -50,6 +52,16 @@ func IsVideo(mimeType string) bool {
 }
 
 func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
+
+	sourceFileName := file.Name()
+
+	_, err := vips.GetImageDimensions(sourceFileName)
+	if err != nil {
+		if strings.Contains(err.Error(), "VipsJpeg: Invalid JPEG file structure") {
+			return &ProcessResponse{failed: true}, nil
+		}
+		return nil, err
+	}
 
 	move, err := processImageWithSizes(media, file)
 
