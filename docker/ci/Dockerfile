@@ -4,7 +4,8 @@ USER root
 
 RUN apt-get update
 RUN apt update --allow-insecure-repositories
-RUN yes | apt install ffmpeg libvips libvips-dev libvips-tools
+RUN yes | apt install ffmpeg
+RUN yes | apt-get install libvips libvips-dev libvips-tools
 
 ENV NVM_DIR /root/.nvm
 ENV NODE_VERSION 16.5.0

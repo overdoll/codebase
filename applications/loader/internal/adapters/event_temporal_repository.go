@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/spf13/viper"
 	"go.temporal.io/sdk/client"
+	"os"
 	"overdoll/applications/loader/internal/app/workflows"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media"
@@ -55,11 +56,14 @@ func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, medi
 		ID:        "loader.ProcessMediaForUpload_" + media.RawProto().Link.Id + "_" + media.ID(),
 	}
 
+	if isPossibleVideo && os.Getenv("USE_HEAVY_QUEUE") != "" {
+		options.TaskQueue = "loader.heavy"
+	}
+
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
 		workflows.ProcessMediaInput{
-			SourceMedia:     media.RawProto(),
-			Source:          source,
-			IsPossibleVideo: isPossibleVideo,
+			SourceMedia: media.RawProto(),
+			Source:      source,
 		},
 	)
 

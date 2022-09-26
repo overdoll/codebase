@@ -301,7 +301,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			high:    1280,
 			low:     720,
 			ar:      "128k",
-			rate:    "2100k",
+			rate:    "1900k",
 			maxFps:  60,
 			profile: "high",
 			level:   "3.2",
@@ -392,7 +392,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 				scales = append([]resolutionTarget{{
 					high:    high,
 					low:     low,
-					ar:      "96k",
+					ar:      "152k",
 					rate:    "3100k",
 					maxFps:  60,
 					profile: "high",

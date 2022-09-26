@@ -3,20 +3,18 @@ package workflows
 import (
 	"go.temporal.io/sdk/temporal"
 	"go.temporal.io/sdk/workflow"
-	"os"
 	"overdoll/applications/loader/internal/app/workflows/activities"
 	"overdoll/libraries/media/proto"
 	"time"
 )
 
 type ProcessMediaInput struct {
-	SourceMedia     *proto.Media
-	NewMedia        *proto.Media
-	Pixelate        *int
-	Source          string
-	IsNotFound      bool
-	AlreadySent     bool
-	IsPossibleVideo bool
+	SourceMedia *proto.Media
+	NewMedia    *proto.Media
+	Pixelate    *int
+	Source      string
+	IsNotFound  bool
+	AlreadySent bool
 }
 
 type ProcessMediaPayload struct {
@@ -44,10 +42,6 @@ func ProcessMedia(ctx workflow.Context, input ProcessMediaInput) (*ProcessMediaP
 	var payload *activities.ProcessMediaPayload
 
 	if input.NewMedia == nil {
-
-		if input.IsPossibleVideo && os.Getenv("USE_HEAVY_QUEUE") != "" {
-			options.TaskQueue = "loader.heavy"
-		}
 
 		// new media is nil, we are just processing an upload
 		if err := workflow.ExecuteActivity(ctx, a.ProcessMediaFromUpload,
