@@ -6,6 +6,11 @@ import ImageMedia, { ImageMediaProps } from '../../../components/ImageContainer/
 const Fragment = graphql`
   fragment PosterImageMediaFragment on ImageMedia {
     variants {
+      medium {
+        url
+        width
+        height
+      }
       small {
         url
         width
@@ -33,6 +38,16 @@ export default function PosterImageMedia (props: Props): JSX.Element {
 
   return (
     <ImageMedia
+      variants={(
+        <>
+          <source
+            media='(min-width: 330px)'
+            srcSet={data.variants.medium.url}
+            width={data.variants.medium.width}
+            height={data.variants.medium.height}
+          />
+        </>
+      )}
       url={data.variants.small.url}
       width={data.variants.small.width}
       height={data.variants.small.height}

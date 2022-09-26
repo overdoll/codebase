@@ -4,14 +4,14 @@ import { useFragment } from 'react-relay/hooks'
 import CoverImage
   from '../../../../../HookedComponents/Media/components/ImageContainer/ImageWrapper/CoverImage/CoverImage'
 import RandomPattern from '../../../components/RandomPattern/RandomPattern'
-import SmallBannerMedia from '../../../../../HookedComponents/Media/fragments/SmallBannerMedia/SmallBannerMedia'
+import { ThumbnailMedia } from '../../../../../HookedComponents/Media'
 
 const Fragment = graphql`
   fragment SeriesSmallBannerFragment on Series {
     id
     bannerMedia {
       __typename
-      ...SmallBannerMediaFragment
+      ...ThumbnailMediaFragment
     }
   }
 `
@@ -36,6 +36,6 @@ export default function SeriesSmallBanner (props: Props): JSX.Element {
   }
 
   return (
-    <SmallBannerMedia mediaQuery={data.bannerMedia} />
+    <ThumbnailMedia mediaQuery={data.bannerMedia} />
   )
 }

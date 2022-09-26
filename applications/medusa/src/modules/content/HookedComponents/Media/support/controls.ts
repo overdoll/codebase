@@ -1,10 +1,13 @@
 import { PlayerType } from '../types'
+import { UseSnifferReturn } from '../../../../hooks/useSniffer'
 
 export const playVideo = (player: PlayerType): void => {
   player.off('canplay', playVideo)
   const playPromise = player.play()
   if (playPromise != null) {
-    playPromise.catch(() => {
+    playPromise.catch(e => {
+      player.video.muted = true
+      player.emit('autoplay-failure', e)
     })
   }
 }
@@ -75,17 +78,27 @@ export const exitFullscreen = (player): void => {
   }
 }
 
-export const muteVideo = (player: PlayerType): void => {
+export const muteVideo = (player: PlayerType, device: UseSnifferReturn['device']): void => {
   if (player.video == null) return
   if (!player.video.muted) {
-    player.video.muted = true
+    if (device === 'mobile') {
+      player.video.muted = true
+      player.video.volume = 0
+    } else {
+      player.video.muted = true
+    }
   }
 }
 
-export const unMuteVideo = (player: PlayerType): void => {
+export const unMuteVideo = (player: PlayerType, device: UseSnifferReturn['device']): void => {
   if (player.video == null) return
   if (player.video.muted) {
-    player.video.muted = false
+    if (device === 'mobile') {
+      player.video.muted = false
+      player.video.volume = 1
+    } else {
+      player.video.muted = false
+    }
   }
 }
 

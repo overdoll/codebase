@@ -31,6 +31,7 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
   } = observerProps
 
   const [player, setPlayer] = useState<PlayerType | null>(null)
+  const [playRejected, setPlayRejected] = useState(false)
 
   const setPlayers: OnPlayerInitType = (player) => {
     setPlayer(player)
@@ -79,18 +80,39 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
   useEffect(() => {
     if (player == null) return
 
+    const onAutoplayFailure = (): void => {
+      setPlayRejected(true)
+    }
+
     const onPlay = (): void => {
+      setPlayRejected(false)
       if (!isObserving) {
         pauseVideo(player)
       }
     }
 
     player.on('play', onPlay)
-
+    player.on('autoplay-failure', onAutoplayFailure)
     return () => {
       player.off('play', onPlay)
+      player.off('autoplay-failure', onAutoplayFailure)
     }
   }, [isObserving, player])
+
+  // if autoplay was rejected, a click anywhere will play the video
+  useEffect(() => {
+    if (player == null || !playRejected || !isObserving) return
+
+    const onClick = (): void => {
+      playVideo(player)
+    }
+
+    document.addEventListener('click', onClick)
+
+    return () => {
+      document.removeEventListener('click', onClick)
+    }
+  }, [player, playRejected, isObserving])
 
   return (
     <Flex
@@ -105,6 +127,9 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
         videoProps={{
           onPlayerInit: setPlayers,
           ...restVideo
+        }}
+        storageProps={{
+          isObserving
         }}
       />
     </Flex>

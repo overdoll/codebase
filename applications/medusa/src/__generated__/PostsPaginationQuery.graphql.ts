@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9c999e4cc4c625a4496847d697317b4c>>
- * @relayHash f23a206819e99cef4b3d7941ccf96fb1
+ * @generated SignedSource<<38191087eceff3bd99130dc4af3fc324>>
+ * @relayHash 425480a610c02429715c7c64e2f38a0b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f23a206819e99cef4b3d7941ccf96fb1
+// @relayRequestID 425480a610c02429715c7c64e2f38a0b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -152,7 +152,7 @@ v11 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
-  "name": "thumbnail",
+  "name": "medium",
   "plural": false,
   "selections": (v9/*: any*/),
   "storageKey": null
@@ -160,15 +160,25 @@ v11 = {
 v12 = {
   "alias": null,
   "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "thumbnail",
+  "plural": false,
+  "selections": (v9/*: any*/),
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
   "kind": "ScalarField",
   "name": "title",
   "storageKey": null
 },
-v13 = [
-  (v12/*: any*/),
+v14 = [
+  (v13/*: any*/),
   (v4/*: any*/)
 ],
-v14 = {
+v15 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -364,16 +374,7 @@ return {
                                             "plural": false,
                                             "selections": [
                                               (v10/*: any*/),
-                                              {
-                                                "alias": null,
-                                                "args": null,
-                                                "concreteType": "ImageMediaAccess",
-                                                "kind": "LinkedField",
-                                                "name": "medium",
-                                                "plural": false,
-                                                "selections": (v9/*: any*/),
-                                                "storageKey": null
-                                              },
+                                              (v11/*: any*/),
                                               {
                                                 "alias": null,
                                                 "args": null,
@@ -384,7 +385,7 @@ return {
                                                 "selections": (v9/*: any*/),
                                                 "storageKey": null
                                               },
-                                              (v11/*: any*/),
+                                              (v12/*: any*/),
                                               {
                                                 "alias": null,
                                                 "args": null,
@@ -423,6 +424,7 @@ return {
                                                 "name": "variants",
                                                 "plural": false,
                                                 "selections": [
+                                                  (v12/*: any*/),
                                                   (v11/*: any*/),
                                                   (v10/*: any*/)
                                                 ],
@@ -512,7 +514,7 @@ return {
                                 "kind": "LinkedField",
                                 "name": "audience",
                                 "plural": false,
-                                "selections": (v13/*: any*/),
+                                "selections": (v14/*: any*/),
                                 "storageKey": null
                               },
                               {
@@ -524,7 +526,7 @@ return {
                                 "plural": true,
                                 "selections": [
                                   (v4/*: any*/),
-                                  (v14/*: any*/),
+                                  (v15/*: any*/),
                                   {
                                     "alias": null,
                                     "args": null,
@@ -532,7 +534,7 @@ return {
                                     "kind": "LinkedField",
                                     "name": "series",
                                     "plural": false,
-                                    "selections": (v13/*: any*/),
+                                    "selections": (v14/*: any*/),
                                     "storageKey": null
                                   }
                                 ],
@@ -547,7 +549,7 @@ return {
                                 "plural": true,
                                 "selections": [
                                   (v4/*: any*/),
-                                  (v12/*: any*/)
+                                  (v13/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -559,7 +561,7 @@ return {
                                 "name": "club",
                                 "plural": false,
                                 "selections": [
-                                  (v14/*: any*/),
+                                  (v15/*: any*/),
                                   (v4/*: any*/)
                                 ],
                                 "storageKey": null
@@ -628,7 +630,7 @@ return {
     ]
   },
   "params": {
-    "id": "f23a206819e99cef4b3d7941ccf96fb1",
+    "id": "425480a610c02429715c7c64e2f38a0b",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

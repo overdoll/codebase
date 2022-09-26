@@ -10,6 +10,7 @@ import VideoSeekTrack from '../../Controls/VideoSeek/VideoSeekTrack/VideoSeekTra
 import LazyVideoUnmute from '../../LazyControls/LazyVideoUnmute/LazyVideoUnmute'
 import { VideoControlsOpen } from '../../../VideoControls'
 import VideoSimpleSeek from '../../LazyControls/LazyVideoSimpleSeek/VideoSimpleSeek/VideoSimpleSeek'
+import useSniffer from '../../../../../../../../../hooks/useSniffer'
 
 interface Props extends VideoControlTypeProps, ContainerRefProps, VideoControlsOpen {
   player: PlayerType
@@ -24,6 +25,8 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
     isOpen
   } = props
 
+  const { device } = useSniffer()
+
   const playerControls = {
     volume: <VideoVolumeTrack player={player} />
   }
@@ -37,6 +40,12 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
     controls: playerControls,
     watchValue: isOpen
   })
+
+  const onUnMute = (): void => {
+    if (device === 'pc') {
+      request('volume')
+    }
+  }
 
   return (
     <HStack align='flex-end' w='100%' spacing={2} justify='space-between'>
@@ -64,7 +73,7 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
           spacing={4}
         >
           <VideoPlayPause player={player} />
-          <LazyVideoUnmute player={player} hasAudio={hasAudio} unMuteCallback={() => request('volume')} />
+          <LazyVideoUnmute player={player} hasAudio={hasAudio} unMuteCallback={onUnMute} />
           <VideoSimpleSeek player={player} duration={duration} />
           <VideoFullscreen containerRef={containerRef} player={player} />
         </HStack>

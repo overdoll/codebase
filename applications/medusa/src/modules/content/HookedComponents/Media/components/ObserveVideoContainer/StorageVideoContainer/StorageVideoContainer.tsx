@@ -3,6 +3,7 @@ import { OnPlayerInitType, PlayerType } from '../../../types'
 import useVideoStorageManager from '../../../support/useVideoStorageManager'
 import VideoContainer, { VideoContainerProps } from '../../VideoContainer/VideoContainer'
 import syncPlayerVolumeChange from '../../../support/syncPlayerVolumeChange'
+import useSniffer from '../../../../../../hooks/useSniffer'
 
 export interface StorageVideoProps extends Omit<VideoContainerProps, 'volume' | 'muted'> {
   onPlayerInit?: OnPlayerInitType
@@ -10,12 +11,18 @@ export interface StorageVideoProps extends Omit<VideoContainerProps, 'volume' | 
 
 interface Props {
   videoProps: StorageVideoProps
+  storageProps: {
+    isObserving: boolean
+  }
 }
 
 export default function StorageVideoContainer (props: Props): JSX.Element {
   const {
-    videoProps
+    videoProps,
+    storageProps
   } = props
+
+  const { isObserving } = storageProps
 
   const {
     onPlayerInit,
@@ -24,21 +31,29 @@ export default function StorageVideoContainer (props: Props): JSX.Element {
 
   const [player, setPlayer] = useState<PlayerType | null>(null)
 
+  const { device } = useSniffer()
+
   const {
     volume,
     muted,
-    updateVolume,
-    updateMuted
-  } = useVideoStorageManager()
+    updateMuted,
+    updateVolume
+  } = useVideoStorageManager(device)
 
   const setPlayers: OnPlayerInitType = (player) => {
     setPlayer(player)
     onPlayerInit?.(player)
   }
 
+  const setVolume = (volume: number): void => {
+    if (device !== 'mobile') {
+      updateVolume(volume)
+    }
+  }
+
   // when volume has been changed by other video players, we update this value when video is played
   useEffect(() => {
-    if (player == null) return
+    if (player == null || !isObserving || device === 'mobile') return
     const onPlay = (): void => {
       player.video.volume = volume
     }
@@ -46,11 +61,11 @@ export default function StorageVideoContainer (props: Props): JSX.Element {
     return () => {
       player.off('play', onPlay)
     }
-  }, [volume, player])
+  }, [volume, player, isObserving])
 
   // same as above but for muted property
   useEffect(() => {
-    if (player == null) return
+    if (player == null || !isObserving || device === 'mobile') return
     const onPlay = (): void => {
       player.video.muted = muted
     }
@@ -58,9 +73,9 @@ export default function StorageVideoContainer (props: Props): JSX.Element {
     return () => {
       player.off('play', onPlay)
     }
-  }, [muted, player])
+  }, [muted, player, isObserving])
 
-  syncPlayerVolumeChange(player, updateVolume, updateMuted, setPlayer)
+  syncPlayerVolumeChange(player, setVolume, updateMuted, setPlayer)
 
   return (
     <VideoContainer

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<28bb8e8e6419f9d1017842617c796439>>
- * @relayHash 63940d7fcc4e13da4c49d810e10ba943
+ * @generated SignedSource<<ae3956ada90487a1aa6a5f82799a2b71>>
+ * @relayHash eb6ab95398470cbb2c92b2aa906df7e5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 63940d7fcc4e13da4c49d810e10ba943
+// @relayRequestID eb6ab95398470cbb2c92b2aa906df7e5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -204,6 +204,16 @@ v17 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
+  "name": "medium",
+  "plural": false,
+  "selections": (v13/*: any*/),
+  "storageKey": null
+},
+v18 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
   "name": "thumbnail",
   "plural": false,
   "selections": (v13/*: any*/),
@@ -388,17 +398,8 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v16/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ImageMediaAccess",
-                                        "kind": "LinkedField",
-                                        "name": "medium",
-                                        "plural": false,
-                                        "selections": (v13/*: any*/),
-                                        "storageKey": null
-                                      },
-                                      (v17/*: any*/)
+                                      (v17/*: any*/),
+                                      (v18/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -427,6 +428,7 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
+                                          (v18/*: any*/),
                                           (v17/*: any*/),
                                           (v16/*: any*/)
                                         ],
@@ -606,7 +608,7 @@ return {
     ]
   },
   "params": {
-    "id": "63940d7fcc4e13da4c49d810e10ba943",
+    "id": "eb6ab95398470cbb2c92b2aa906df7e5",
     "metadata": {},
     "name": "LazyClubPostsQuery",
     "operationKind": "query",

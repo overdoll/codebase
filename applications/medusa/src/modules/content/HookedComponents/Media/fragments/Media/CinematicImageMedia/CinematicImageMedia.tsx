@@ -66,13 +66,13 @@ export default function CinematicImageMedia (props: Props): JSX.Element {
       variants={(
         <>
           <source
-            media='(min-width: 48em)'
+            media='(min-width: 760px)'
             srcSet={data.variants.large.url}
             width={data.variants.large.width}
             height={data.variants.large.height}
           />
           <source
-            media='(min-width: 30em)'
+            media='(min-width: 330px)'
             srcSet={data.variants.medium.url}
             width={data.variants.medium.width}
             height={data.variants.medium.height}

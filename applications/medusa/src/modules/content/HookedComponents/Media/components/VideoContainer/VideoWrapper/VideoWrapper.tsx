@@ -43,13 +43,18 @@ export default function VideoWrapper (props: Props): JSX.Element {
   // when video has been played at least once, we hide the thumbnail
   useEffect(() => {
     if (player == null) return
+    const onCanPlay = (): void => {
+      player.once('play', onPlay)
+    }
+
     const onPlay = (): void => {
       setHasPlayed(true)
     }
+    player.once('canplay', onCanPlay)
 
-    player.once('play', onPlay)
     return () => {
       player.off('play', onPlay)
+      player.off('canplay', onCanPlay)
     }
   }, [player])
 

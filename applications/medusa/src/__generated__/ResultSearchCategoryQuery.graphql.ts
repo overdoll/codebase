@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<727277c01a1e7c00ed5c56790c8a5952>>
- * @relayHash 18103a19adf0f52e1f718e3b702c859d
+ * @generated SignedSource<<9044a2273801a20fd965a2c2ed34c4bb>>
+ * @relayHash bef4d8ef7f61bb1067ad9134e4929521
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 18103a19adf0f52e1f718e3b702c859d
+// @relayRequestID bef4d8ef7f61bb1067ad9134e4929521
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -222,6 +222,16 @@ v19 = [
   (v11/*: any*/)
 ],
 v20 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "medium",
+  "plural": false,
+  "selections": (v14/*: any*/),
+  "storageKey": null
+},
+v21 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
@@ -521,17 +531,8 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v15/*: any*/),
-                                      {
-                                        "alias": null,
-                                        "args": null,
-                                        "concreteType": "ImageMediaAccess",
-                                        "kind": "LinkedField",
-                                        "name": "medium",
-                                        "plural": false,
-                                        "selections": (v14/*: any*/),
-                                        "storageKey": null
-                                      },
-                                      (v20/*: any*/)
+                                      (v20/*: any*/),
+                                      (v21/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -560,6 +561,7 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
+                                          (v21/*: any*/),
                                           (v20/*: any*/),
                                           (v15/*: any*/)
                                         ],
@@ -718,7 +720,7 @@ return {
     ]
   },
   "params": {
-    "id": "18103a19adf0f52e1f718e3b702c859d",
+    "id": "bef4d8ef7f61bb1067ad9134e4929521",
     "metadata": {},
     "name": "ResultSearchCategoryQuery",
     "operationKind": "query",

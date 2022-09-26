@@ -4,7 +4,7 @@ import { muteVideo, unMuteVideo } from '../../../../../../../support/controls'
 import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
 import { PlayerType } from '../../../../../../../types'
 import syncPlayerVolumeChange from '../../../../../../../support/syncPlayerVolumeChange'
-import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
+import useSniffer from '../../../../../../../../../../hooks/useSniffer'
 
 interface Props {
   player: PlayerType
@@ -19,13 +19,15 @@ export default function VideoUnmute (props: Props): JSX.Element {
 
   const [player, setPlayer] = useState(inheritedPlayer)
 
+  const { device } = useSniffer()
+
   const [muted, setMuted] = useState(player?.video?.muted ?? true)
 
   const onUnMuteVideo = (): void => {
-    unMuteVideo(player)
+    unMuteVideo(player, device)
     unMuteCallback?.()
     // track video unmute
-    trackFathomEvent('101EOY3R', 1)
+    // trackFathomEvent('101EOY3R', 1)
   }
 
   syncPlayerVolumeChange(player, () => {
@@ -43,7 +45,7 @@ export default function VideoUnmute (props: Props): JSX.Element {
   return (
     <MediaButton
       onClick={() => {
-        muteVideo(player)
+        muteVideo(player, device)
         unMuteCallback?.()
       }}
       icon={ControlVolumeLow}

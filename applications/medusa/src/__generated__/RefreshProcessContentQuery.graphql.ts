@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<db1f3815eecee5983bd4cde2926bf2b5>>
- * @relayHash c49314cfe98a1c7d64b67ae3de0fa1b8
+ * @generated SignedSource<<3ab4258845f9551b7064e6ef8fd554d4>>
+ * @relayHash 4374ebc205f06e16d353a6c61ae4199d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c49314cfe98a1c7d64b67ae3de0fa1b8
+// @relayRequestID 4374ebc205f06e16d353a6c61ae4199d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -176,6 +176,16 @@ v15 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
+  "name": "medium",
+  "plural": false,
+  "selections": (v12/*: any*/),
+  "storageKey": null
+},
+v16 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
   "name": "small",
   "plural": false,
   "selections": (v12/*: any*/),
@@ -299,7 +309,8 @@ return {
                             "selections": [
                               (v13/*: any*/),
                               (v14/*: any*/),
-                              (v15/*: any*/)
+                              (v15/*: any*/),
+                              (v16/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -388,17 +399,8 @@ return {
                         "plural": false,
                         "selections": [
                           (v13/*: any*/),
+                          (v16/*: any*/),
                           (v15/*: any*/),
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "ImageMediaAccess",
-                            "kind": "LinkedField",
-                            "name": "medium",
-                            "plural": false,
-                            "selections": (v12/*: any*/),
-                            "storageKey": null
-                          },
                           {
                             "alias": null,
                             "args": null,
@@ -505,7 +507,7 @@ return {
     ]
   },
   "params": {
-    "id": "c49314cfe98a1c7d64b67ae3de0fa1b8",
+    "id": "4374ebc205f06e16d353a6c61ae4199d",
     "metadata": {},
     "name": "RefreshProcessContentQuery",
     "operationKind": "query",
