@@ -81,7 +81,7 @@ var banner = []*processImageSizes{
 	},
 	{
 		name:       "small-banner",
-		constraint: 360,
+		constraint: 480,
 		mandatory:  true,
 	},
 }
