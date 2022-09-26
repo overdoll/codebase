@@ -3,8 +3,9 @@ import VideoLoading from './VideoLoading/VideoLoading'
 import { VideoControlTypeProps } from '../../VideoContainer'
 import { PlayerType } from '../../../../types'
 import { VideoControlsOpen } from '../VideoControls'
-import syncPlayerPlayPause from '../../../../support/syncPlayerPlayPause'
 import { useState } from 'react'
+import syncPlayerLoading from '../../../../support/syncPlayerLoading'
+import syncPlayerPlayPause from '../../../../support/syncPlayerPlayPause'
 
 interface Props extends VideoControlTypeProps, VideoControlsOpen {
   player: PlayerType
@@ -18,14 +19,15 @@ export default function VideoHeaderControls (props: Props): JSX.Element {
     isOpen
   } = props
 
-  const [playing, setPlaying] = useState((!(player?.video?.paused) ?? false))
+  const [isLoading, setLoading] = useState(false)
+  const [playing, setPlaying] = useState(false)
 
-  syncPlayerPlayPause(player, setPlaying, () => {
-  })
+  syncPlayerLoading(player, setLoading)
+  syncPlayerPlayPause(player, setPlaying)
 
   return (
     <Fade
-      in={playing ? isOpen : true}
+      in={isLoading || !playing ? true : isOpen}
     >
       <VideoLoading hasAudio={hasAudio} duration={duration} player={player} />
     </Fade>

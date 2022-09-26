@@ -32,10 +32,12 @@ import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/source-code-pro/400.css'
 import { ConfigurationProvider } from '@//:modules/configuration'
+import { UserAgentProvider } from '@//:modules/agent'
 
 let securityTokenCache = ''
 let globalRelayEnvironment
 let appHeadersCache
+let userAgentCache
 
 const MyApp = ({
   Component,
@@ -46,10 +48,12 @@ const MyApp = ({
   relayStore,
   translationProps,
   appHeaders,
-  cookies
+  cookies,
+  userAgent
 }: CustomPageAppProps): JSX.Element => {
   if (CanUseDOM) {
     securityTokenCache = securityToken
+    userAgentCache = userAgent
   }
 
   // For initial request and transitions to pages that export `getServerSideProps`,
@@ -84,6 +88,8 @@ const MyApp = ({
   const emotionCache = useMemo(() => createCache({
     key: EMOTION_CACHE_KEY
   }), [])
+
+  userAgent = useMemo(() => userAgent, [])
 
   environment = useMemo(() => CanUseDOM ? createEnvironment(clientFetch(securityTokenCache), relayStore) : environment, [])
 
@@ -133,18 +139,20 @@ const MyApp = ({
               <ConfigurationProvider headers={appHeaders}>
                 <ChakraProvider theme={theme}>
                   <FlashProvider>
-                    <CookiesProvider cookies={cookies != null ? new Cookies(cookies) : undefined}>
-                      <ReactRelayContainer
-                        environment={environment}
-                        requestProps={requestProps}
-                      >
-                        {(requestProps) => (
-                          <Root {...requestProps} {...pageProps}>
-                            {getLayout(<Component {...requestProps} {...pageProps} />)}
-                          </Root>
-                        )}
-                      </ReactRelayContainer>
-                    </CookiesProvider>
+                    <UserAgentProvider userAgent={userAgent}>
+                      <CookiesProvider cookies={cookies != null ? new Cookies(cookies) : undefined}>
+                        <ReactRelayContainer
+                          environment={environment}
+                          requestProps={requestProps}
+                        >
+                          {(requestProps) => (
+                            <Root {...requestProps} {...pageProps}>
+                              {getLayout(<Component {...requestProps} {...pageProps} />)}
+                            </Root>
+                          )}
+                        </ReactRelayContainer>
+                      </CookiesProvider>
+                    </UserAgentProvider>
                   </FlashProvider>
                 </ChakraProvider>
               </ConfigurationProvider>
@@ -167,6 +175,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   let appHeaders = {
     Accept: []
   }
+  let userAgent
 
   if (app.ctx.locale == null) {
     app.ctx.locale = 'en'
@@ -175,6 +184,10 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
   if (!CanUseDOM) {
     if (app.ctx.req != null) {
       securityToken = await getOrCreateSecurityToken(app.ctx)
+    }
+
+    if (app.ctx.req.headers['user-agent'] != null) {
+      userAgent = app.ctx.req.headers['user-agent']
     }
 
     if (app.ctx.req.headers.accept != null) {
@@ -187,6 +200,7 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     securityToken = securityTokenCache
     environment = globalRelayEnvironment
     appHeaders = appHeadersCache
+    userAgent = userAgentCache
     app.ctx.cookies = new Cookies()
   }
 
@@ -284,7 +298,8 @@ MyApp.getInitialProps = async function (app): Promise<CustomAppProps> {
     relayStore,
     translationProps,
     appHeaders,
-    cookies: chosenCookies
+    cookies: chosenCookies,
+    userAgent
   }
 
   // do a prepass to collect all queries and wait for them to complete

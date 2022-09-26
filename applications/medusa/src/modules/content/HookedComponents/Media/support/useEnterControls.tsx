@@ -14,7 +14,7 @@ interface UseEnterControlsProps {
 export default function useEnterControls (props: UseEnterControlsProps): UseEnterControlsReturn {
   const {
     ref,
-    isDisabled
+    isDisabled,
   } = props
 
   const timeout = useRef<Timeout | null>(null)
@@ -100,6 +100,6 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
 
   return {
     isOpen: isOpen,
-    showCursor: showCursor
+    showCursor: showCursor,
   }
 }

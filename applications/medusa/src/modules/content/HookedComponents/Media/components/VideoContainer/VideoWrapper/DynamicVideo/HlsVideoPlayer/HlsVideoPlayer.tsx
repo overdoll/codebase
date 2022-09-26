@@ -4,6 +4,7 @@ import { VideoContainerProps } from '../../../../../types'
 import { VIDEO_OPTIONS } from '../../../../../constants'
 import VideoBox from '../VideoBox/VideoBox'
 import { VideoWatchProps } from '../../../VideoContainer'
+import useSniffer from '../../../../../../../../hooks/useSniffer'
 
 interface Props extends VideoContainerProps, VideoWatchProps {
   hlsUrl: string
@@ -19,19 +20,22 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
     currentTime
   } = props
 
+  const { os } = useSniffer()
+
   const ref = useRef(null)
 
   useEffect(() => {
     const config = {
       el: ref.current,
       url: hlsUrl,
-      autoPlay,
-      volume: autoPlay ? 0 : undefined,
-      useHls: true,
+      useHls: os.isPhone ? undefined : true,
       hlsOpts: {
         maxBufferLength: 1,
         maxMaxBufferLength: 6
       },
+      volume,
+      muted,
+      autoplay: autoPlay,
       ...VIDEO_OPTIONS
     }
 
@@ -39,7 +43,7 @@ export default function HlsVideoPlayer (props: Props): JSX.Element {
 
     const onReady = (): void => {
       player.muted = muted
-      player.volume = autoPlay ? 0 : volume
+      player.volume = volume
       if (currentTime !== 0) {
         player.currentTime = currentTime
       }

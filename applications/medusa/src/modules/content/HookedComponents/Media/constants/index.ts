@@ -1,6 +1,7 @@
 import { FlexProps } from '@chakra-ui/react'
+import { IPlayerOptions } from 'xgplayer'
 
-export const VIDEO_OPTIONS = {
+export const VIDEO_OPTIONS: Omit<IPlayerOptions, 'url'> = {
   controlsList: ['nodownload', 'noremoteplayback'],
   controls: false,
   airplay: false,
@@ -14,7 +15,6 @@ export const VIDEO_OPTIONS = {
     display: 'block'
   },
   loop: true,
-  noLog: true,
   hideStartBtn: true,
   keyShortcut: 'off',
   closeFocusVideoFocus: true,

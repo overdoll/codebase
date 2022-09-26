@@ -1,4 +1,4 @@
-import Mp4Player from 'xgplayer-mp4'
+import Player from 'xgplayer'
 import { useEffect, useRef } from 'react'
 import { VideoContainerProps } from '../../../../../types'
 import { VIDEO_OPTIONS } from '../../../../../constants'
@@ -19,18 +19,20 @@ export default function Mp4VideoPlayer (props: Props): JSX.Element {
     currentTime
   } = props
 
-  const ref = useRef(null)
+  const ref = useRef()
 
   useEffect(() => {
     const config = {
       el: ref.current,
       url: mp4Url,
       maxBufferLength: 10,
+      volume,
+      muted,
       autoplay: autoPlay,
       ...VIDEO_OPTIONS
     }
 
-    const player = new Mp4Player(config)
+    const player = new Player(config)
 
     const onReady = (): void => {
       player.muted = muted

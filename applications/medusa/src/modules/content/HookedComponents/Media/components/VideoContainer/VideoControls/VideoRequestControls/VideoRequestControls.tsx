@@ -45,7 +45,7 @@ export default function VideoRequestControls (props: Props): JSX.Element {
       setPlayer(player)
     }
 
-    player.on('play', onPlay)
+    player.once('play', onPlay)
     return () => {
       player.off('play', onPlay)
     }
