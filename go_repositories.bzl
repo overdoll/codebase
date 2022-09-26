@@ -442,16 +442,6 @@ def go_repositories():
         sum = "h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=",
         version = "v1.1.1",
     )
-    go_repository(
-        name = "com_github_davidbyttow_govips_v2",
-        build_file_generation = "off",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/davidbyttow/govips/v2",
-        patch_args = ["-p1"],
-        patches = ["//.patches:govips.patch"],
-        sum = "h1:eJY+Sgt2LRVh6TFSNMnl5rrFkDfuToG5uE5aLSV1jvM=",
-        version = "v2.11.0",
-    )
 
     go_repository(
         name = "com_github_dgrijalva_jwt_go",
@@ -951,13 +941,6 @@ def go_repositories():
         importpath = "github.com/grpc-ecosystem/grpc-gateway",
         sum = "h1:gmcG1KaJ57LophUzW0Hy8NmPhnMZb4M0+kPpLofRdBo=",
         version = "v1.16.0",
-    )
-    go_repository(
-        name = "com_github_h2non_bimg",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/h2non/bimg",
-        sum = "h1:WH20Nxko9l/HFm4kZCA3Phbgu2cbHvYzxwxn9YROEGg=",
-        version = "v1.1.9",
     )
 
     go_repository(
@@ -1757,13 +1740,6 @@ def go_repositories():
         importpath = "github.com/pingcap/errors",
         sum = "h1:lFuQV/oaUMGcD2tqt+01ROSmJs75VG1ToEOkZIZ4nE4=",
         version = "v0.11.4",
-    )
-    go_repository(
-        name = "com_github_pixiv_go_libjpeg",
-        build_file_proto_mode = "disable",
-        importpath = "github.com/pixiv/go-libjpeg",
-        sum = "h1:ls+7AYarUlUSetfnN/DKVNcK6W8mQWc6VblmOm4XwX0=",
-        version = "v0.0.0-20190822045933-3da21a74767d",
     )
 
     go_repository(

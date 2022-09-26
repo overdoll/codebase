@@ -2,8 +2,8 @@ package media_processing
 
 import (
 	"github.com/EdlinOrg/prominentcolor"
-	"github.com/pixiv/go-libjpeg/jpeg"
 	"image"
+	"image/jpeg"
 	"image/png"
 	"io"
 	"math"
@@ -23,7 +23,7 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, imag
 			return nil, nil, errors.Wrap(err, "failed to decode png for preview")
 		}
 	} else {
-		img, err = jpeg.Decode(r, &jpeg.DecoderOptions{})
+		img, err = jpeg.Decode(r)
 
 		if err != nil {
 			return nil, nil, errors.Wrap(err, "failed to decode jpeg for preview")

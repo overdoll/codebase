@@ -1,9 +1,6 @@
 build --enable_platform_specific_config
-build --linkopt="-I/usr/include"
-#build --linkopt="-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/local/include/ -I/usr/include/vips -I/usr/include/ -I/usr/local/lib"
-#run --linkopt="-I/usr/include/glib-2.0 -I/usr/lib/x86_64-linux-gnu/glib-2.0/include -I/usr/local/include/ -I/usr/include/vips -I/usr/include/ -I/usr/local/lib"
-build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64_cgo
-run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64_cgo
+build --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
+run --platforms=@io_bazel_rules_go//go/toolchain:linux_amd64
 test --incompatible_strict_action_env
 build --incompatible_strict_action_env
 build --nobuild_runfile_links

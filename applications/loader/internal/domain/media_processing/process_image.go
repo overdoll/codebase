@@ -1,12 +1,13 @@
 package media_processing
 
 import (
-	"github.com/h2non/bimg"
+	"fmt"
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
+	"overdoll/libraries/vips"
 )
 
 const (
@@ -40,7 +41,7 @@ var postContentSizes = []*processImageSizes{
 	},
 	{
 		name:       "thumbnail",
-		constraint: 150,
+		constraint: 300,
 		resize:     true,
 	},
 }
@@ -75,16 +76,11 @@ var banner = []*processImageSizes{
 
 func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) {
 
-	buffer, err := bimg.Read(file.Name())
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to read image")
-	}
+	sourceFileName := file.Name()
 
-	srcImg := bimg.NewImage(buffer)
-
-	imgSize, err := srcImg.Size()
+	dimensions, err := vips.GetImageDimensions(sourceFileName)
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get image")
+		return nil, err
 	}
 
 	var contentSizes []*processImageSizes
@@ -96,7 +92,7 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 
 	_ = os.MkdirAll(fileName, os.ModePerm)
 
-	isPortrait := imgSize.Height > imgSize.Width
+	isPortrait := dimensions.Height > dimensions.Width
 
 	switch target.LinkType() {
 	case proto.MediaLinkType_POST_CONTENT:
@@ -127,78 +123,56 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 
 	for _, size := range contentSizes {
 
-		buffer, err := bimg.Read(file.Name())
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to read image")
-		}
-
-		img := bimg.NewImage(buffer)
-		imgSize, err := img.Size()
-
-		shouldResizeHeight := isPortrait && imgSize.Height > size.constraint
-		shouldResizeWidth := !isPortrait && imgSize.Width > size.constraint
+		shouldResizeHeight := isPortrait && dimensions.Height > size.constraint
+		shouldResizeWidth := !isPortrait && dimensions.Width > size.constraint
 
 		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
 			continue
 		}
 
-		options := bimg.Options{}
-
-		if size.resize {
-
-			options.Width = size.constraint
-			options.Height = size.constraint
-			options.Gravity = bimg.GravitySmart
-
-		} else {
-
-			if shouldResizeHeight {
-				options.Height = size.constraint
-			} else if shouldResizeWidth {
-				options.Width = size.constraint
-			}
-
-			options.Embed = true
-		}
-
-		options.StripMetadata = true
-		options.Quality = jpegQuality
-		options.Interlace = true
-		options.Type = bimg.JPEG
-
-		processedImage, err := img.Process(options)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to process image")
-		}
-
-		newImage, err := bimg.NewImage(processedImage).Size()
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to get new image size")
-		}
-
-		//// mozjpeg parameters
-		//ep := vips.NewJpegExportParams()
-		//ep.StripMetadata = true
-		//ep.Quality = jpegQuality
-		//ep.Interlace = true
-		//ep.OptimizeCoding = true
-		//ep.SubsampleMode = vips.VipsForeignSubsampleAuto
-		//ep.TrellisQuant = true
-		//ep.OvershootDeringing = true
-		//ep.OptimizeScans = true
-		//ep.QuantTable = 3
-
 		imageName := size.name + ".jpg"
 		imageFileName := fileName + "/" + imageName
 
-		if err := bimg.Write(imageFileName, processedImage); err != nil {
-			return nil, errors.Wrap(err, "failed to write image")
+		if size.resize {
+			if err := vips.Thumbnail(sourceFileName, imageFileName, size.constraint); err != nil {
+				return nil, errors.Wrap(err, "failed to create thumbnail from image")
+			}
+		} else {
+			var targetSize int
+
+			if shouldResizeHeight {
+				targetSize = dimensions.Height
+			} else if shouldResizeWidth {
+				targetSize = dimensions.Width
+			}
+
+			var factor float64
+
+			fmt.Println(shouldResizeWidth)
+
+			if targetSize != 0 {
+
+				factor = float64(size.constraint) / float64(targetSize)
+			} else {
+				factor = 1
+			}
+
+			fmt.Println(factor)
+
+			if err := vips.Resize(sourceFileName, imageFileName, factor); err != nil {
+				return nil, errors.Wrap(err, "failed to resize image by height")
+			}
+		}
+
+		data, err := vips.GetImageDimensions(imageFileName)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to get image dimensions")
 		}
 
 		imageSizes = append(imageSizes, &proto.ImageDataSize{
 			Id:     imageName,
-			Width:  uint32(newImage.Width),
-			Height: uint32(newImage.Height),
+			Width:  uint32(data.Width),
+			Height: uint32(data.Height),
 		})
 
 		if imageFile == "" {

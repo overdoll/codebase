@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "vips",
+    srcs = [
+        "headerinfo.go",
+        "resize.go",
+        "thumbnail.go",
+    ],
+    importpath = "overdoll/libraries/vips",
+    visibility = ["//visibility:public"],
+    deps = ["//libraries/errors"],
+)

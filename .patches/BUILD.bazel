@@ -1,5 +1,0 @@
-exports_files([
-    "govips.patch",
-])
-
-package(default_visibility = ["//visibility:public"])
