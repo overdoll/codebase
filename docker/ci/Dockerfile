@@ -7,7 +7,7 @@ RUN apt update --allow-insecure-repositories
 RUN yes | apt install ffmpeg
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/lib
+ENV LD_LIBRARY_PATH /usr/local/lib
 ENV PKG_CONFIG_PATH /opt/mozjpeg/lib64/pkgconfig
 
 RUN  apt-get update \

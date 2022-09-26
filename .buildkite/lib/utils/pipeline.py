@@ -1,6 +1,6 @@
 from . import format
 
-DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:f8f2bfce22cd692b45916f41a755c209a1082b423f2910fcfbc77c8f732086ad"
+DEFAULT_IMAGE = "771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:5403ce7233c8c6ab0057de063f35572ddf3e9eab313bfb72998aa1e9fd45bc63"
 
 
 def create_step(label, commands, platform, configs=None, artifacts=None, cache=None, additional_env_vars=None, shards=1,
