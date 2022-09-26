@@ -11,6 +11,7 @@ import (
 	"github.com/tus/tusd/pkg/s3store"
 	"io"
 	"os"
+	"overdoll/applications/loader/internal/domain/media_processing"
 	"overdoll/applications/loader/internal/domain/upload"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
@@ -59,6 +60,7 @@ func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*up
 		Size     int
 		MetaData struct {
 			Filename string `json:"filename"`
+			Filetype string `json:"filetype"`
 		} `json:"MetaData"`
 	}
 
@@ -76,7 +78,7 @@ func (r UploadS3Repository) GetUpload(ctx context.Context, uploadId string) (*up
 		return nil, domainerror.NewValidation("file not yet fully uploaded")
 	}
 
-	upl, err := upload.NewUpload(fileId, data.MetaData.Filename)
+	upl, err := upload.NewUpload(fileId, data.MetaData.Filename, media_processing.IsVideo(data.MetaData.Filetype))
 
 	if err != nil {
 		return nil, err

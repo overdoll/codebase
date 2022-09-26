@@ -39,6 +39,16 @@ var (
 	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v", "video/quicktime", "video/webm"}
 )
 
+func IsVideo(mimeType string) bool {
+	for _, mime := range videoAcceptedTypes {
+		if mimeType == mime {
+			return true
+		}
+	}
+
+	return false
+}
+
 func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
 
 	move, err := processImageWithSizes(media, file)

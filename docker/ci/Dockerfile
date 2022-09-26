@@ -2,8 +2,9 @@ FROM gcr.io/bazel-public/ubuntu2004-java11@sha256:446ebb3ff63accd503177199be6911
 
 USER root
 
+RUN apt-get update
 RUN apt update --allow-insecure-repositories
-RUN yes | apt install ffmpeg
+RUN yes | apt install ffmpeg libvips libvips-dev libvips-tools
 
 ENV NVM_DIR /root/.nvm
 ENV NODE_VERSION 16.5.0

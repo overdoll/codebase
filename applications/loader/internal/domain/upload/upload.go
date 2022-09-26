@@ -1,14 +1,16 @@
 package upload
 
 type Upload struct {
-	fileId   string
-	fileName string
+	fileId          string
+	fileName        string
+	isPossibleVideo bool
 }
 
-func NewUpload(fileId, fileName string) (*Upload, error) {
+func NewUpload(fileId, fileName string, isPossibleVideo bool) (*Upload, error) {
 	return &Upload{
-		fileId:   fileId,
-		fileName: fileName,
+		fileId:          fileId,
+		fileName:        fileName,
+		isPossibleVideo: isPossibleVideo,
 	}, nil
 }
 
@@ -18,4 +20,8 @@ func (u *Upload) FileId() string {
 
 func (u *Upload) FileName() string {
 	return u.fileName
+}
+
+func (u *Upload) IsPossibleVideo() bool {
+	return u.isPossibleVideo
 }

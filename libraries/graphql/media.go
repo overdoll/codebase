@@ -101,6 +101,8 @@ type ImageMediaVariants struct {
 	Icon *ImageMediaAccess `json:"icon"`
 	// 150x150 crop of an image. Suitable for small previews.
 	Thumbnail *ImageMediaAccess `json:"thumbnail"`
+	// 150x150 crop of an image. Suitable for small previews.
+	Avatar *ImageMediaAccess `json:"avatar"`
 	// 680px width or height resize.
 	Small *ImageMediaAccess `json:"small"`
 	// 1200px width or height resize.
@@ -215,6 +217,7 @@ func marshalImageMediaToGraphQL(ctx context.Context, res *media.Media) *ImageMed
 			Mini:        marshalImageAccessToGraphQL(ctx, res.MiniImageMediaAccess()),
 			Icon:        marshalImageAccessToGraphQL(ctx, res.IconImageMediaAccess()),
 			Thumbnail:   marshalImageAccessToGraphQL(ctx, res.ThumbnailImageMediaAccess()),
+			Avatar:      marshalImageAccessToGraphQL(ctx, res.AvatarImageMediaAccess()),
 			Small:       marshalImageAccessToGraphQL(ctx, res.SmallImageMediaAccess()),
 			Medium:      marshalImageAccessToGraphQL(ctx, res.MediumImageMediaAccess()),
 			Large:       marshalImageAccessToGraphQL(ctx, res.LargeImageMediaAccess()),

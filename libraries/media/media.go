@@ -255,7 +255,7 @@ func (m *Media) generateUrlForVideo(id string, usePrefix bool) string {
 	return signed
 }
 
-func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
+func (m *Media) generateUrlForImage(optimalSizes []int) *ImageMediaAccess {
 
 	if m.IsLegacy() {
 		return m.LegacyImageMediaAccess()
@@ -265,7 +265,7 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 
 	for _, size := range m.proto.ImageData.Sizes {
 
-		if optimalSize == 0 {
+		if len(optimalSizes) == 0 {
 			lastSize = size
 			break
 		}
@@ -280,26 +280,30 @@ func (m *Media) generateUrlForImage(optimalSize int) *ImageMediaAccess {
 			targetSize = int(size.Width)
 		}
 
-		if optimalSize == targetSize {
-			lastSize = size
-			break
-		} else if optimalSize > targetSize {
-			if lastSize == nil {
+	out:
+		for _, optimalSize := range optimalSizes {
+			if optimalSize == targetSize {
 				lastSize = size
-			} else {
-				var sourceTargetSize int
-
-				if isPortrait {
-					sourceTargetSize = int(lastSize.Height)
-				} else {
-					sourceTargetSize = int(lastSize.Width)
-				}
-
-				if targetSize > sourceTargetSize {
+				break out
+			} else if optimalSize > targetSize {
+				if lastSize == nil {
 					lastSize = size
+				} else {
+					var sourceTargetSize int
+
+					if isPortrait {
+						sourceTargetSize = int(lastSize.Height)
+					} else {
+						sourceTargetSize = int(lastSize.Width)
+					}
+
+					if targetSize > sourceTargetSize {
+						lastSize = size
+					}
 				}
 			}
 		}
+
 	}
 
 	if lastSize == nil {
@@ -372,41 +376,45 @@ func (m *Media) LegacyImageMediaAccess() *ImageMediaAccess {
 
 // OriginalImageMediaAccess original image is always max of 4096
 func (m *Media) OriginalImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(0)
+	return m.generateUrlForImage([]int{})
 }
 
 func (m *Media) HdImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(4096)
+	return m.generateUrlForImage([]int{4096})
 }
 
 func (m *Media) MiniImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(50)
+	return m.generateUrlForImage([]int{100})
 }
 
 func (m *Media) IconImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(100)
+	return m.generateUrlForImage([]int{200})
+}
+
+func (m *Media) AvatarImageMediaAccess() *ImageMediaAccess {
+	return m.generateUrlForImage([]int{400})
 }
 
 func (m *Media) ThumbnailImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(150)
+	return m.generateUrlForImage([]int{300})
 }
 
 func (m *Media) SmallImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(680)
+	return m.generateUrlForImage([]int{720})
 }
 
 func (m *Media) MediumImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(1200)
+	return m.generateUrlForImage([]int{1200})
 }
 
 func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(2048)
+	return m.generateUrlForImage([]int{2048})
 }
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(720)
+	return m.generateUrlForImage([]int{720})
 }
 
 func (m *Media) SmallBannerImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage(360)
+	return m.generateUrlForImage([]int{360})
 }

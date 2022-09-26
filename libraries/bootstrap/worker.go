@@ -6,13 +6,35 @@ import (
 	"go.temporal.io/sdk/interceptor"
 	"go.temporal.io/sdk/worker"
 	"go.uber.org/zap"
+	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/sentry_support"
+	"strconv"
 	"time"
 )
 
-func NewWorker(client client.Client, maxActivitySessions int) worker.Worker {
-	return worker.New(client, viper.GetString("temporal.queue"),
+func NewWorker(client client.Client) worker.Worker {
+
+	queue := os.Getenv("TEMPORAL_QUEUE")
+
+	if queue == "" {
+		queue = viper.GetString("temporal.queue")
+	}
+
+	var maxActivitySessions int
+
+	overrideActivitySessions := os.Getenv("TEMPORAL_MAX_ACTIVITY_SESSIONS")
+
+	if overrideActivitySessions != "" {
+		parsed, err := strconv.ParseInt(overrideActivitySessions, 10, 64)
+		if err != nil {
+			zap.S().Fatalw("failed to parse activity sessions override", zap.Error(err))
+		}
+
+		maxActivitySessions = int(parsed)
+	}
+
+	return worker.New(client, queue,
 		worker.Options{
 			MaxConcurrentActivityExecutionSize: maxActivitySessions,
 			Interceptors:                       []interceptor.WorkerInterceptor{sentry_support.NewTemporalWorkerInterceptor()},

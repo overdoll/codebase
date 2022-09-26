@@ -418,6 +418,7 @@ type ComplexityRoot struct {
 	}
 
 	ImageMediaVariants struct {
+		Avatar      func(childComplexity int) int
 		Banner      func(childComplexity int) int
 		Hd          func(childComplexity int) int
 		Icon        func(childComplexity int) int
@@ -2240,6 +2241,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.ImageMediaAccess.Width(childComplexity), true
+
+	case "ImageMediaVariants.avatar":
+		if e.complexity.ImageMediaVariants.Avatar == nil {
+			break
+		}
+
+		return e.complexity.ImageMediaVariants.Avatar(childComplexity), true
 
 	case "ImageMediaVariants.banner":
 		if e.complexity.ImageMediaVariants.Banner == nil {
@@ -4394,13 +4402,15 @@ type ImageMediaAccess {
 All variants available for an image.
 """
 type ImageMediaVariants {
-  """50x50 crop of an image. Suitable for mini icons."""
+  """100x100 crop of an image. Suitable for mini icons."""
   mini: ImageMediaAccess!
-  """100x100 crop of an image. Suitable for icons."""
+  """200x200 crop of an image. Suitable for icons."""
   icon: ImageMediaAccess!
-  """150x150 crop of an image. Suitable for small previews."""
+  """300x300 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
-  """680px width or height resize."""
+  """400x400 crop of an image. Suitable for small previews."""
+  avatar: ImageMediaAccess!
+  """720px width or height resize."""
   small: ImageMediaAccess!
   """1200px width or height resize."""
   medium: ImageMediaAccess!
@@ -15759,6 +15769,8 @@ func (ec *executionContext) fieldContext_ImageMedia_variants(ctx context.Context
 				return ec.fieldContext_ImageMediaVariants_icon(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_ImageMediaVariants_thumbnail(ctx, field)
+			case "avatar":
+				return ec.fieldContext_ImageMediaVariants_avatar(ctx, field)
 			case "small":
 				return ec.fieldContext_ImageMediaVariants_small(ctx, field)
 			case "medium":
@@ -16100,6 +16112,58 @@ func (ec *executionContext) _ImageMediaVariants_thumbnail(ctx context.Context, f
 }
 
 func (ec *executionContext) fieldContext_ImageMediaVariants_thumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ImageMediaVariants",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "width":
+				return ec.fieldContext_ImageMediaAccess_width(ctx, field)
+			case "height":
+				return ec.fieldContext_ImageMediaAccess_height(ctx, field)
+			case "url":
+				return ec.fieldContext_ImageMediaAccess_url(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ImageMediaAccess", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ImageMediaVariants_avatar(ctx context.Context, field graphql.CollectedField, obj *graphql1.ImageMediaVariants) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ImageMediaVariants_avatar(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Avatar, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*graphql1.ImageMediaAccess)
+	fc.Result = res
+	return ec.marshalNImageMediaAccess2ᚖoverdollᚋlibrariesᚋgraphqlᚐImageMediaAccess(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ImageMediaVariants_avatar(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ImageMediaVariants",
 		Field:      field,
@@ -25454,6 +25518,13 @@ func (ec *executionContext) _ImageMediaVariants(ctx context.Context, sel ast.Sel
 		case "thumbnail":
 
 			out.Values[i] = ec._ImageMediaVariants_thumbnail(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "avatar":
+
+			out.Values[i] = ec._ImageMediaVariants_avatar(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

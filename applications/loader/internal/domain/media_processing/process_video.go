@@ -301,7 +301,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			high:    1280,
 			low:     720,
 			ar:      "128k",
-			rate:    "1800k",
+			rate:    "2100k",
 			maxFps:  60,
 			profile: "high",
 			level:   "3.2",

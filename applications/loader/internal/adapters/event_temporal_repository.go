@@ -48,7 +48,7 @@ func (r EventTemporalRepository) GenerateImageFromMedia(ctx context.Context, med
 	return nil
 }
 
-func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, media *media.Media, source string) error {
+func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, media *media.Media, source string, isPossibleVideo bool) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -57,8 +57,9 @@ func (r EventTemporalRepository) ProcessMediaForUpload(ctx context.Context, medi
 
 	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.ProcessMedia,
 		workflows.ProcessMediaInput{
-			SourceMedia: media.RawProto(),
-			Source:      source,
+			SourceMedia:     media.RawProto(),
+			Source:          source,
+			IsPossibleVideo: isPossibleVideo,
 		},
 	)
 

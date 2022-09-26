@@ -76,7 +76,7 @@ func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessM
 
 		newMedia := media.FromProto(sourceMedia)
 
-		if err := h.event.ProcessMediaForUpload(ctx, newMedia, cmd.Source); err != nil {
+		if err := h.event.ProcessMediaForUpload(ctx, newMedia, cmd.Source, final.IsPossibleVideo()); err != nil {
 			return nil, err
 		}
 

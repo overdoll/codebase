@@ -133,13 +133,15 @@ type ImageMediaAccess {
 All variants available for an image.
 """
 type ImageMediaVariants {
-  """50x50 crop of an image. Suitable for mini icons."""
+  """100x100 crop of an image. Suitable for mini icons."""
   mini: ImageMediaAccess!
-  """100x100 crop of an image. Suitable for icons."""
+  """200x200 crop of an image. Suitable for icons."""
   icon: ImageMediaAccess!
-  """150x150 crop of an image. Suitable for small previews."""
+  """300x300 crop of an image. Suitable for small previews."""
   thumbnail: ImageMediaAccess!
-  """680px width or height resize."""
+  """400x400 crop of an image. Suitable for small previews."""
+  avatar: ImageMediaAccess!
+  """720px width or height resize."""
   small: ImageMediaAccess!
   """1200px width or height resize."""
   medium: ImageMediaAccess!

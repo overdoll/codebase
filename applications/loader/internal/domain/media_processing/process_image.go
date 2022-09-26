@@ -1,7 +1,6 @@
 package media_processing
 
 import (
-	"fmt"
 	"os"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/media"
@@ -19,6 +18,7 @@ type processImageSizes struct {
 	constraint int
 	resize     bool
 	mandatory  bool
+	smartCrop  bool
 }
 
 var postContentSizes = []*processImageSizes{
@@ -37,25 +37,32 @@ var postContentSizes = []*processImageSizes{
 	},
 	{
 		name:       "small",
-		constraint: 680,
+		constraint: 720,
 	},
 	{
 		name:       "thumbnail",
 		constraint: 300,
 		resize:     true,
+		smartCrop:  true,
 	},
 }
 
 var thumbnailSizes = []*processImageSizes{
 	{
+		name:       "avatar",
+		constraint: 400,
+		resize:     true,
+		mandatory:  true,
+	},
+	{
 		name:       "icon",
-		constraint: 100,
+		constraint: 200,
 		resize:     true,
 		mandatory:  true,
 	},
 	{
 		name:       "mini",
-		constraint: 50,
+		constraint: 100,
 		resize:     true,
 		mandatory:  true,
 	},
@@ -134,7 +141,7 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 		imageFileName := fileName + "/" + imageName
 
 		if size.resize {
-			if err := vips.Thumbnail(sourceFileName, imageFileName, size.constraint); err != nil {
+			if err := vips.Thumbnail(sourceFileName, imageFileName, size.constraint, size.smartCrop); err != nil {
 				return nil, errors.Wrap(err, "failed to create thumbnail from image")
 			}
 		} else {
@@ -148,16 +155,11 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 
 			var factor float64
 
-			fmt.Println(shouldResizeWidth)
-
 			if targetSize != 0 {
-
 				factor = float64(size.constraint) / float64(targetSize)
 			} else {
 				factor = 1
 			}
-
-			fmt.Println(factor)
 
 			if err := vips.Resize(sourceFileName, imageFileName, factor); err != nil {
 				return nil, errors.Wrap(err, "failed to resize image by height")
