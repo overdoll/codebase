@@ -104,7 +104,6 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "CCBILL_DATALINK_USERNAME",
         "CCBILL_DATALINK_PASSWORD",
         "AWS_PRIVATE_MEDIA_KEY_PAIR_ID",
-        "LD_LIBRARY_PATH",
         "AWS_PRIVATE_MEDIA_KEY_PAIR_PRIVATE_KEY",
         "BUILDKITE_JOB_ID",
         "BUILDKITE_BUILD_ID",
