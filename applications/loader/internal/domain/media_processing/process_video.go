@@ -5,17 +5,8 @@ import (
 	bytes2 "bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/EdlinOrg/prominentcolor"
-	"github.com/disintegration/gift"
-	"github.com/h2non/filetype"
-	"github.com/nfnt/resize"
-	"github.com/oliamb/cutter"
 	ffmpeg_go "github.com/u2takey/ffmpeg-go"
 	"go.uber.org/zap"
-	"image"
-	"image/jpeg"
-	"image/png"
-	_ "image/png"
 	"io"
 	"io/fs"
 	"io/ioutil"
@@ -23,7 +14,6 @@ import (
 	"math"
 	"os"
 	"overdoll/libraries/errors"
-	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 	"overdoll/libraries/uuid"
@@ -34,91 +24,17 @@ import (
 	"time"
 )
 
-type ErrorMediaCallbackNotFound struct{}
-
-func newMediaCallbackNotFound() error {
-	return &ErrorMediaCallbackNotFound{}
-}
-
-func (c *ErrorMediaCallbackNotFound) Error() string {
-	return "media callback not found"
-}
-
-var (
-	ErrFileTypeNotAllowed    = domainerror.NewValidation("filetype not allowed")
-	ErrMediaCallbackNotFound = newMediaCallbackNotFound()
-)
-
-// accepted formats
-var (
-	imageAcceptedTypes = []string{"image/png", "image/jpeg"}
-	videoAcceptedTypes = []string{"video/mp4", "video/x-m4v", "video/quicktime", "video/webm"}
-)
-
-const (
-	jpegQuality           = 85
-	defaultPreset         = "slow"
-	defaultIntensityLevel = "-23.0"
-	defaultLoudnessRange  = "+7.0"
-	defaultTruePeak       = "-2.0"
-)
-
 func init() {
 	// not ideal but we need to disable the log messages from: ffmpeg-go
 	log.SetOutput(ioutil.Discard)
 }
 
-func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
-
-	var img image.Image
-	var err error
-
-	if isPng {
-		img, err = png.Decode(r)
-
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "failed to decode png for preview")
-		}
-	} else {
-		img, err = jpeg.Decode(r)
-
-		if err != nil {
-			return nil, nil, errors.Wrap(err, "failed to decode jpeg for preview")
-		}
-	}
-
-	var cols []prominentcolor.ColorItem
-
-	cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
-
-	if err != nil {
-		return nil, nil, err
-	}
-
-	totalPixels := 0
-
-	for _, c := range cols {
-		totalPixels += c.Cnt
-	}
-
-	var palettes []*proto.ColorPalette
-
-	for i, col := range cols {
-
-		if i == 3 {
-			break
-		}
-
-		palettes = append(palettes, &proto.ColorPalette{
-			Percent: math.Round(100*(float64(col.Cnt)/float64(totalPixels)*float64(100))) / 100,
-			Red:     col.Color.R,
-			Green:   col.Color.G,
-			Blue:    col.Color.B,
-		})
-	}
-
-	return palettes, img, nil
-}
+const (
+	defaultPreset         = "slow"
+	defaultIntensityLevel = "-23.0"
+	defaultLoudnessRange  = "+7.0"
+	defaultTruePeak       = "-2.0"
+)
 
 type ffmpegProbeStream struct {
 	Streams []struct {
@@ -851,19 +767,18 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		return nil, errors.Wrap(err, "failed to walk playlists")
 	}
 
-	// generate a thumbnail
-	var img image.Image
-
 	foundFrame := false
 
 	fileThumbnailName := uuid.New().String()
 
 	durationAddition := float64(0)
 
+	var fileThumbnail *os.File
+
 	// keep looking for frames that are not all black (we can successfully generate a preview
 	for start := time.Now(); time.Since(start) < time.Second*10; {
 
-		fileThumbnail, err := os.Create(fileThumbnailName)
+		fileThumbnail, err = os.Create(fileThumbnailName)
 		if err != nil {
 			return nil, err
 		}
@@ -912,7 +827,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		}
 
 		_, _ = fileThumbnail.Seek(0, io.SeekStart)
-		_, img, err = createPreviewFromFile(fileThumbnail, false)
+		_, _, err = createPreviewFromFile(fileThumbnail, false)
 
 		if err != nil {
 			// fully black image - we want to find a different one
@@ -1041,7 +956,8 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		heightAspect = int64(newHeight)
 	}
 
-	processedResponses, err := processImageWithSizes(target, img)
+	_, _ = fileThumbnail.Seek(0, io.SeekStart)
+	processedResponses, err := processImageWithSizes(target, fileThumbnail)
 
 	if err != nil {
 		return nil, err
@@ -1069,337 +985,4 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			directory: fileName,
 		}),
 	}, nil
-}
-
-type processImageSizes struct {
-	name       string
-	constraint int
-	resize     bool
-	crop       bool
-	mandatory  bool
-}
-
-var postContentSizes = []*processImageSizes{
-	{
-		name:       "hd",
-		constraint: 4096,
-		mandatory:  true,
-	},
-	{
-		name:       "large",
-		constraint: 2048,
-	},
-	{
-		name:       "medium",
-		constraint: 1200,
-	},
-	{
-		name:       "small",
-		constraint: 680,
-	},
-	{
-		name:       "thumbnail",
-		constraint: 150,
-		resize:     true,
-	},
-}
-
-var thumbnailSizes = []*processImageSizes{
-	{
-		name:       "icon",
-		constraint: 100,
-		resize:     true,
-		mandatory:  true,
-	},
-	{
-		name:       "mini",
-		constraint: 50,
-		resize:     true,
-		mandatory:  true,
-	},
-}
-
-var banner = []*processImageSizes{
-	{
-		name:       "banner",
-		constraint: 720,
-		mandatory:  true,
-	},
-	{
-		name:       "small-banner",
-		constraint: 360,
-		mandatory:  true,
-	},
-}
-
-func processImageWithSizes(media *media.Media, sourceSrc image.Image) ([]*Move, error) {
-
-	var contentSizes []*processImageSizes
-
-	var imageSizes []*proto.ImageDataSize
-	var imageFile *os.File
-
-	fileName := uuid.New().String()
-
-	_ = os.MkdirAll(fileName, os.ModePerm)
-
-	isPortrait := sourceSrc.Bounds().Dy() > sourceSrc.Bounds().Dx()
-
-	switch media.LinkType() {
-	case proto.MediaLinkType_POST_CONTENT:
-		contentSizes = postContentSizes
-		break
-	case proto.MediaLinkType_CLUB_THUMBNAIL:
-		contentSizes = thumbnailSizes
-		break
-	case proto.MediaLinkType_CLUB_BANNER:
-		contentSizes = banner
-		break
-	case proto.MediaLinkType_SERIES_BANNER:
-		contentSizes = banner
-		break
-	case proto.MediaLinkType_CATEGORY_BANNER:
-		contentSizes = banner
-		break
-	case proto.MediaLinkType_CHARACTER_BANNER:
-		contentSizes = banner
-		break
-	case proto.MediaLinkType_AUDIENCE_BANNER:
-		contentSizes = banner
-		break
-	case proto.MediaLinkType_TOPIC_BANNER:
-		contentSizes = banner
-		break
-	}
-
-	for _, size := range contentSizes {
-
-		shouldResizeHeight := isPortrait && sourceSrc.Bounds().Dy() > size.constraint
-		shouldResizeWidth := !isPortrait && sourceSrc.Bounds().Dx() > size.constraint
-
-		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
-			continue
-		}
-
-		var src image.Image
-
-		if size.resize {
-			src = resize.Thumbnail(uint(size.constraint), uint(size.constraint), sourceSrc, resize.Lanczos3)
-		} else if size.crop {
-			var err error
-			src, err = cutter.Crop(sourceSrc, cutter.Config{
-				Width:   size.constraint,
-				Height:  size.constraint,
-				Options: cutter.Copy,
-				Mode:    cutter.Centered,
-			})
-			if err != nil {
-				return nil, errors.Wrap(err, "failed to crop")
-			}
-		} else {
-			// if larger than constraint, we resize
-			if shouldResizeHeight {
-				src = resize.Resize(0, uint(size.constraint), sourceSrc, resize.Lanczos3)
-			} else if shouldResizeWidth {
-				src = resize.Resize(uint(size.constraint), 0, sourceSrc, resize.Lanczos3)
-			} else {
-				src = sourceSrc
-			}
-		}
-
-		imageName := size.name + ".jpg"
-
-		imageSizes = append(imageSizes, &proto.ImageDataSize{
-			Id:     imageName,
-			Width:  uint32(src.Bounds().Dx()),
-			Height: uint32(src.Bounds().Dy()),
-		})
-
-		resizedImageFile, err := os.Create(fileName + "/" + imageName)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to create image")
-		}
-
-		if err := jpeg.Encode(resizedImageFile, src, &jpeg.Options{Quality: jpegQuality}); err != nil {
-			return nil, errors.Wrap(err, "failed to encode jpeg")
-		}
-
-		if imageFile == nil {
-			imageFile = resizedImageFile
-		}
-	}
-
-	// do preview generation on the first file
-	_, _ = imageFile.Seek(0, io.SeekStart)
-	palettes, _, err := createPreviewFromFile(imageFile, false)
-
-	if err != nil {
-		return nil, err
-	}
-
-	// update the source image data
-	media.RawProto().ImageData = &proto.ImageData{
-		Id:       fileName,
-		MimeType: proto.MediaMimeType_ImageJpeg,
-		Sizes:    imageSizes,
-		Palettes: palettes,
-	}
-
-	return []*Move{
-		{
-			directory: fileName,
-			isImage:   true,
-		},
-	}, nil
-}
-
-func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessResponse, error) {
-
-	var src image.Image
-	var err error
-
-	if mimeType == "image/png" {
-		src, err = png.Decode(file)
-		// check for png format error
-		var formatError png.FormatError
-		if errors.As(err, &formatError) {
-			zap.S().Errorw("failed to decode png", zap.Error(err))
-			return &ProcessResponse{failed: true}, nil
-		}
-	} else {
-		src, err = jpeg.Decode(file)
-		// check for jpeg format error
-		var formatError jpeg.FormatError
-		if errors.As(err, &formatError) {
-			zap.S().Errorw("failed to decode jpeg", zap.Error(err))
-			return &ProcessResponse{failed: true}, nil
-		}
-	}
-
-	if err != nil {
-		return nil, errors.Wrap(err, "failed to decode image")
-	}
-
-	move, err := processImageWithSizes(media, src)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &ProcessResponse{move: move}, nil
-}
-
-func ProcessMedia(media *media.Media, file *os.File) (*ProcessResponse, error) {
-
-	defer os.Remove(file.Name())
-	defer file.Close()
-
-	headBuffer := make([]byte, 261)
-	_, err := file.Read(headBuffer)
-	if err != nil {
-		return nil, err
-	}
-
-	// do a mime type check on the file to make sure its an accepted file and to get our extension
-	kind, _ := filetype.Match(headBuffer)
-	if kind == filetype.Unknown {
-		return &ProcessResponse{failed: true}, nil
-	}
-
-	// seek file, so we can read it again (first time we only grab a few bytes)
-	_, _ = file.Seek(0, io.SeekStart)
-
-	foundImage := false
-	foundVideo := false
-	mimeType := kind.MIME.Value
-
-	for _, m := range imageAcceptedTypes {
-		if m == mimeType {
-			foundImage = true
-			break
-		}
-	}
-
-	for _, m := range videoAcceptedTypes {
-		if m == mimeType {
-			foundVideo = true
-			break
-		}
-	}
-
-	var response *ProcessResponse
-
-	if foundImage {
-		response, err = processImage(media, mimeType, file)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if foundVideo {
-		response, err = processVideo(media, file)
-
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	if !foundImage && !foundVideo {
-		zap.S().Errorw("unknown mime type", zap.String("mimeType", mimeType))
-		return &ProcessResponse{failed: true}, nil
-	}
-
-	media.RawProto().State.Processed = true
-	media.RawProto().State.Failed = false
-
-	return response, nil
-}
-
-func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mimeType proto.MediaMimeType) (*ProcessResponse, error) {
-
-	defer file.Close()
-	defer os.Remove(file.Name())
-
-	var src image.Image
-	var err error
-
-	if mimeType == proto.MediaMimeType_ImagePng {
-		src, err = png.Decode(file)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to decode png")
-		}
-	} else {
-		src, err = jpeg.Decode(file)
-		if err != nil {
-			return nil, errors.Wrap(err, "failed to encode jpeg")
-		}
-	}
-
-	// create and apply filters
-	g := gift.New()
-
-	if filters.Pixelate() != nil {
-		pixelateAmount := *filters.Pixelate()
-		// in order to have a consistent pixelation filter, regardless of how large the image is,
-		// we take the total amount of pixels in the image (w * h) and multiply by the percentage
-		// this will be the # of pixels left
-		totalPixels := float64(src.Bounds().Dx()) * float64(pixelateAmount) / float64(100)
-		pixelateValue := int(math.Floor(totalPixels))
-		g.Add(gift.Pixelate(pixelateValue))
-	}
-
-	pixelatedSrc := image.NewNRGBA(g.Bounds(src.Bounds()))
-	g.Draw(pixelatedSrc, src)
-
-	move, err := processImageWithSizes(media, pixelatedSrc)
-
-	if err != nil {
-		return nil, err
-	}
-
-	media.RawProto().State.Processed = true
-	media.RawProto().State.Failed = false
-
-	return &ProcessResponse{move: move}, nil
 }
