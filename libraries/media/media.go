@@ -412,9 +412,9 @@ func (m *Media) LargeImageMediaAccess() *ImageMediaAccess {
 }
 
 func (m *Media) BannerImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage([]int{720})
+	return m.generateUrlForImage([]int{1200})
 }
 
 func (m *Media) SmallBannerImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage([]int{360})
+	return m.generateUrlForImage([]int{480})
 }
