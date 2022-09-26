@@ -7,7 +7,7 @@ import { Flex, Heading } from '@chakra-ui/react'
 import { Icon } from '@//:modules/content/PageLayout'
 import { ControlPlayButton } from '@//:assets/icons'
 import formatSecondsIntoMinutes from '@//:modules/content/HookedComponents/Media/support/formatSecondsIntoMinutes'
-import { BannerMedia } from '@//:modules/content/HookedComponents/Media'
+import { ThumbnailMedia } from '@//:modules/content/HookedComponents/Media'
 
 const Fragment = graphql`
   fragment PreviewPostContentSmallBannerFragment on PostContent {
@@ -16,7 +16,7 @@ const Fragment = graphql`
       ...on VideoMedia {
         duration
       }
-      ...BannerMediaFragment
+      ...ThumbnailMediaFragment
     }
   }
 `
@@ -34,14 +34,14 @@ export default function PreviewPostContentSmallBanner (props: Props): JSX.Elemen
 
   if (data.media.__typename === 'ImageMedia') {
     return (
-      <BannerMedia mediaQuery={data.media} />
+      <ThumbnailMedia mediaQuery={data.media} />
     )
   }
 
   if (data.media.__typename === 'VideoMedia') {
     return (
       <Flex borderRadius='inherit' top={0} bottom={0} right={0} left={0} position='absolute'>
-        <BannerMedia mediaQuery={data.media} />
+        <ThumbnailMedia mediaQuery={data.media} />
         <Flex align='center' justify='center' position='absolute' top={0} bottom={0} right={0} left={0}>
           <Flex align='center' justify='center' p={2}>
             <Icon

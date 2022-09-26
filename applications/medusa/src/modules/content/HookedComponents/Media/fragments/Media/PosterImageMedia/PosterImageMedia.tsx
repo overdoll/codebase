@@ -41,7 +41,7 @@ export default function PosterImageMedia (props: Props): JSX.Element {
       variants={(
         <>
           <source
-            media='(min-width: 30em)'
+            media='(min-width: 330px)'
             srcSet={data.variants.medium.url}
             width={data.variants.medium.width}
             height={data.variants.medium.height}

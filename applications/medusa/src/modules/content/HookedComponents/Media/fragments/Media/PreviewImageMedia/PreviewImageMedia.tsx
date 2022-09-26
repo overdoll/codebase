@@ -47,12 +47,14 @@ export default function PreviewImageMedia (props: Props): JSX.Element {
   return (
     <ImageContainContainer
       variants={(
-        <source
-          media='(min-width: 30em)'
-          srcSet={data.variants.medium.url}
-          width={data.variants.medium.width}
-          height={data.variants.medium.height}
-        />
+        <>
+          <source
+            media='(min-width: 330px)'
+            srcSet={data.variants.medium.url}
+            width={data.variants.medium.width}
+            height={data.variants.medium.height}
+          />
+        </>
       )}
       url={data.variants.small.url}
       width={data.variants.small.width}
