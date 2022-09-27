@@ -92,6 +92,10 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx contex
 			return nil, err
 		}
 
+		if !m.IsProcessed() && pst.State == "PUBLISHED" {
+			continue
+		}
+
 		finalMedia = append(finalMedia, m)
 		alreadyVisitedIds[m.ID()] = true
 	}

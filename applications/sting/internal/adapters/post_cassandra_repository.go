@@ -257,6 +257,10 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 			return nil, err
 		}
 
+		if !m.IsProcessed() && postPending.State == "PUBLISHED" {
+			continue
+		}
+
 		finalMedia = append(finalMedia, m)
 		alreadyVisitedIds[m.ID()] = true
 	}
