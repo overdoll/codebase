@@ -169,12 +169,12 @@ func UnmarshalMediaFromDatabase(ctx context.Context, media *string) (*Media, err
 
 func UnmarshalMediaWithLegacyResourceFromDatabase(ctx context.Context, resource string, media *string) (*Media, error) {
 
-	if resource != "" {
-		return unmarshalLegacyResourceFromDatabase(ctx, resource)
-	}
-
 	if media != nil {
 		return UnmarshalMediaFromDatabase(ctx, media)
+	}
+
+	if resource != "" {
+		return unmarshalLegacyResourceFromDatabase(ctx, resource)
 	}
 
 	return nil, nil
