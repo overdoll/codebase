@@ -131,7 +131,7 @@ func (h ConvertResourcesToMediaHandler) Handle(ctx context.Context, cmd ConvertR
 
 		newMedia := media.FromProto(sourceMedia)
 
-		if err := h.event.ProcessMediaForUpload(ctx, newMedia, cmd.Source, false); err != nil {
+		if err := h.event.ProcessMediaForUpload(ctx, newMedia, cmd.Source, final.IsPossibleVideo()); err != nil {
 			return nil, err
 		}
 
