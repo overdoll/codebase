@@ -46,7 +46,7 @@ type Repository interface {
 	UpdateTotalLikesForPostTags(ctx context.Context, post *post.Post) error
 	UpdateTotalPostsForPostTags(ctx context.Context, post *post.Post) error
 
-	SendCompletedPixelatedResources(ctx context.Context, post *post.Post, media *media.Media) error
-	SendPostCompletedProcessing(ctx context.Context, post *post.Post, media *media.Media) error
+	SendCompletedPixelatedResources(ctx context.Context, postId string, media *media.Media) error
+	SendPostCompletedProcessing(ctx context.Context, postId string, media *media.Media) error
 	TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error
 }

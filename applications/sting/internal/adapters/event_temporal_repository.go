@@ -24,9 +24,9 @@ func NewEventTemporalRepository(client client.Client) EventTemporalRepository {
 	return EventTemporalRepository{client: client}
 }
 
-func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, post *post.Post, media *media.Media) error {
+func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Context, postId string, media *media.Media) error {
 
-	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostPixelatedMediaSignalChannel, &workflows.PixelatedPostMediaFinished{
+	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+postId, "", workflows.SubmitPostPixelatedMediaSignalChannel, &workflows.PixelatedPostMediaFinished{
 		MediaId: media.ID(),
 	}); err != nil {
 		if strings.Contains(err.Error(), "Workflow execution already finished successfully") {
@@ -38,9 +38,9 @@ func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Con
 	return nil
 }
 
-func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context, post *post.Post, media *media.Media) error {
+func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context, postId string, media *media.Media) error {
 
-	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+post.ID(), "", workflows.SubmitPostMediaFinishedProcessingSignalChannel, &workflows.SubmitPostMediaFinished{
+	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+postId, "", workflows.SubmitPostMediaFinishedProcessingSignalChannel, &workflows.SubmitPostMediaFinished{
 		MediaId: media.ID(),
 		Failed:  media.IsFailed(),
 	}); err != nil {

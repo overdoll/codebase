@@ -106,7 +106,7 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 				}),
 			}
 
-			_, err := repo.UpdatePostContentOperatorMedia(ctx, postId, medias)
+			err := repo.UpdatePostContentOperatorMedia(ctx, postId, medias)
 
 			if err == nil {
 				// user is only created when an error is not returned

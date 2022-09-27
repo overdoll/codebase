@@ -673,33 +673,36 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx con
 	return currentPost, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ctx context.Context, id string, resources []*media.Media) (*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ctx context.Context, id string, resources []*media.Media) error {
 
-	currentPost, err := r.GetPostByIdOperator(ctx, id)
+	postPending, err := r.getPostById(ctx, id)
+
+	if err != nil {
+		return err
+	}
 
 	if err != nil {
 
 		// not found errors - send back a resource not present, so we gracefully handle it
 		if apperror.IsNotFoundError(err) {
-			return nil, media.ErrMediaNotPresent
+			return media.ErrMediaNotPresent
 		}
 
-		return nil, err
+		return err
 	}
 
 	foundCount := 0
 
-	for _, content := range currentPost.Content() {
+	for _, content := range postPending.ContentMedia {
+
+		unmarshall, err := media.UnmarshalMediaFromDatabase(ctx, &content)
+
+		if err != nil {
+			return err
+		}
+
 		for _, res := range resources {
-
-			if content.MediaHidden() != nil {
-				if res.ID() == content.MediaHidden().ID() {
-					foundCount += 1
-					break
-				}
-			}
-
-			if res.ID() == content.Media().ID() {
+			if unmarshall.ID() == res.ID() {
 				foundCount += 1
 				break
 			}
@@ -708,13 +711,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 
 	// make sure we updated all resources for this post otherwise we send a not found error
 	if foundCount != len(resources) {
-		return nil, media.ErrMediaNotPresent
-	}
-
-	pst, err := marshalPostToDatabase(currentPost)
-
-	if err != nil {
-		return nil, err
+		return media.ErrMediaNotPresent
 	}
 
 	marshalledResources := make(map[string]string)
@@ -722,7 +719,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 	for _, r := range resources {
 		marshalled, err := media.MarshalMediaToDatabase(r)
 		if err != nil {
-			return nil, err
+			return err
 		}
 		marshalledResources[r.ID()] = *marshalled
 	}
@@ -739,8 +736,8 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		finalStruct["content_media['"+key+"']"] = val
 	}
 
-	finalStruct["updated_at"] = pst.UpdatedAt
-	finalStruct["id"] = pst.Id
+	finalStruct["updated_at"] = postPending.UpdatedAt
+	finalStruct["id"] = postPending.Id
 
 	// update strategically so we don't override each-other
 	if err := r.session.
@@ -750,7 +747,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		Consistency(gocql.LocalQuorum).
 		BindMap(finalStruct).
 		ExecRelease(); err != nil {
-		return nil, errors.Wrap(support.NewGocqlError(err), "failed to update post")
+		return errors.Wrap(support.NewGocqlError(err), "failed to update post")
 	}
 
 	updateDoc := make(map[string]interface{})
@@ -761,21 +758,21 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 	}
 
 	updateDoc["content_media"] = contentMedia
-	updateDoc["updated_at"] = pst.UpdatedAt
+	updateDoc["updated_at"] = postPending.UpdatedAt
 
 	_, err = r.client.
 		Update().
 		Index(postWriterIndex).
-		Id(pst.Id).
+		Id(postPending.Id).
 		RetryOnConflict(20).
 		Doc(updateDoc).
 		Do(ctx)
 
 	if err != nil {
-		return nil, errors.Wrap(support.ParseElasticError(err), "failed to partially update post media")
+		return errors.Wrap(support.ParseElasticError(err), "failed to partially update post media")
 	}
 
-	return currentPost, nil
+	return nil
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

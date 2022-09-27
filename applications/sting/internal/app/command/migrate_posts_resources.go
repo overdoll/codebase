@@ -41,7 +41,7 @@ func (h MigratePostsResourcesHandler) Handle(ctx context.Context, cmd MigratePos
 			return err
 		}
 
-		_, err = h.pr.UpdatePostContentOperatorMedia(ctx, post.ID(), newMedia)
+		err = h.pr.UpdatePostContentOperatorMedia(ctx, post.ID(), newMedia)
 
 		if err != nil {
 			return err

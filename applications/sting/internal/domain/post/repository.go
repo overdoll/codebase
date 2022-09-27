@@ -37,7 +37,7 @@ type Repository interface {
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContentAndState(ctx context.Context, id string, updateFn func(pending *Post) error) error
 	UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
-	UpdatePostContentOperatorMedia(ctx context.Context, id string, medias []*media.Media) (*Post, error)
+	UpdatePostContentOperatorMedia(ctx context.Context, id string, medias []*media.Media) error
 	UpdatePostLikesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	ScanPosts(ctx context.Context, clubId, postId string, callback func(post *Post) error) error

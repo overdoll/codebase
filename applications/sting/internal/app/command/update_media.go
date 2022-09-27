@@ -92,20 +92,18 @@ func (h UpdateMediaHandler) Handle(ctx context.Context, cmd UpdateMedia) error {
 		}
 		break
 	case proto.MediaLinkType_POST_CONTENT:
-		pst, err := h.pr.UpdatePostContentOperatorMedia(ctx, sourceId, []*media.Media{cmd.Media})
-
-		if err != nil {
+		if err := h.pr.UpdatePostContentOperatorMedia(ctx, sourceId, []*media.Media{cmd.Media}); err != nil {
 			return err
 		}
 
 		if cmd.Media.IsLinked() {
 			// send a callback to say that the pixelated resource generation was complete, so we can proceed with post submission
-			if err := h.event.SendCompletedPixelatedResources(ctx, pst, cmd.Media); err != nil {
+			if err := h.event.SendCompletedPixelatedResources(ctx, sourceId, cmd.Media); err != nil {
 				return err
 			}
 		} else {
 			// send callback to say the processing was completed for this media piece
-			if err := h.event.SendPostCompletedProcessing(ctx, pst, cmd.Media); err != nil {
+			if err := h.event.SendPostCompletedProcessing(ctx, sourceId, cmd.Media); err != nil {
 				return err
 			}
 		}
