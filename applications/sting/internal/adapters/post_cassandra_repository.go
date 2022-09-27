@@ -709,7 +709,7 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 		}
 	}
 
-	// make sure we updated all resources for this post otherwise we send a not found error
+	// make sure we updated all resources for this post otherwise we send a not found errors
 	if foundCount != len(resources) {
 		return media.ErrMediaNotPresent
 	}
