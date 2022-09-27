@@ -578,8 +578,8 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 	if err := ffmpeg_go.MergeOutputs(streams...).
 		OverWriteOutput().
 		WithErrorOutput(ffmpegLogger).
-		WithCpuCoreLimit(2).
-		WithCpuCoreRequest(2).
+		WithCpuCoreLimit(1).
+		WithCpuCoreRequest(1).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
