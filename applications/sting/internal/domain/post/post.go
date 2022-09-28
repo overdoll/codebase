@@ -677,17 +677,17 @@ func (p *Post) CanAddContent(requester *principal.Principal) error {
 
 func (p *Post) CanUpdate(requester *principal.Principal) error {
 
+	// staff && workers can update posts that are published
+	if (requester.IsStaff() || requester.IsWorker()) && p.state == Published {
+		return nil
+	}
+
 	if p.state != Draft {
 		return domainerror.NewValidation("can only update posts that are in draft")
 	}
 
 	if requester.IsLocked() {
 		return principal.ErrLocked
-	}
-
-	// staff && workers can update posts that are published
-	if (requester.IsStaff() || requester.IsWorker()) && p.state == Published {
-		return nil
 	}
 
 	if !requester.IsWorker() {
