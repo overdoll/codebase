@@ -61,7 +61,7 @@ func UnmarshalLegacyResourceFromDatabase(id, itemId, resourceToken string, copie
 		link = proto.MediaLinkType_TOPIC_BANNER
 		break
 	default:
-		return nil, errors.New("not supported legacy resource type")
+		return nil, errors.New("not supported legacy resource type: " + resourceToken)
 	}
 
 	return &LegacyResource{
