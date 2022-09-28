@@ -693,7 +693,17 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 
 	foundCount := 0
 
+	var allContentIds []string
+
 	for _, contentMediaId := range postPending.ContentMediaIds {
+		allContentIds = append(allContentIds, contentMediaId)
+	}
+
+	for _, contentMediaId := range postPending.ContentSupporterOnlyMediaIds {
+		allContentIds = append(allContentIds, contentMediaId)
+	}
+
+	for _, contentMediaId := range allContentIds {
 		for _, res := range resources {
 			if contentMediaId == res.ID() {
 				foundCount += 1
