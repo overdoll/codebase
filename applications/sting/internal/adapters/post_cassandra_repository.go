@@ -693,16 +693,9 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperatorMedia(ct
 
 	foundCount := 0
 
-	for _, content := range postPending.ContentMedia {
-
-		unmarshall, err := media.UnmarshalMediaFromDatabase(ctx, &content)
-
-		if err != nil {
-			return err
-		}
-
+	for _, contentMediaId := range postPending.ContentMediaIds {
 		for _, res := range resources {
-			if unmarshall.ID() == res.ID() {
+			if contentMediaId == res.ID() {
 				foundCount += 1
 				break
 			}
