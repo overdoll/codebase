@@ -33,6 +33,9 @@ func UnmarshalLegacyResourceFromDatabase(id, itemId, resourceToken string, copie
 	var link proto.MediaLinkType
 
 	switch resourceToken {
+	case "":
+		link = proto.MediaLinkType_POST_CONTENT
+		break
 	case "POST":
 		link = proto.MediaLinkType_POST_CONTENT
 		break
