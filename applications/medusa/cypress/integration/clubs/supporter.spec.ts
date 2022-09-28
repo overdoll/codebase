@@ -142,12 +142,12 @@ describe('Supporter', () => {
     cy.findByText(/Select a saved payment method/iu).should('be.visible')
 
     // // use saved payment method to subscribe
-    // cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click({ force: true })
-    // clickOnToggle(/I have read and agree to the/iu, true)
-    // clickOnButton('Subscribe')
-    // cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
-    // clickOnButton('Close')
-    // cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
+    cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click({ force: true })
+    clickOnToggle(/I have read and agree to the/iu, true)
+    clickOnButton('Subscribe')
+    cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
+    clickOnButton('Close')
+    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
 
     /**
      * Remove saved payment method
