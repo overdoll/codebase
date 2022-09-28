@@ -4,8 +4,9 @@ import { graphql } from 'react-relay'
 import MetaCreatePost from './MetaCreatePost/MetaCreatePost'
 import EmptyClubCreatePost from './EmptyClubCreatePost/EmptyClubCreatePost'
 import RestrictedClubCreatePost from './RestrictedClubCreatePost/RestrictedClubCreatePost'
-import { MobileContainer } from '@//:modules/content/PageLayout'
-import SubmittedCreatePost from './MetaCreatePost/ContainerCreatePost/SubmittedCreatePost/SubmittedCreatePost'
+import { MobileContainer, PostPlaceholder } from '@//:modules/content/PageLayout'
+import { Box, Heading, Stack, Text } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<ResultCreatePostQuery>
@@ -58,10 +59,25 @@ export default function ResultCreatePost (props: Props): JSX.Element {
   }
 
   // If the post was already submitted
-  if (queryData.post?.state !== 'DRAFT' && ((queryData.viewer?.isStaff) === false) && !(queryData.viewer?.isWorker)) {
+  if (queryData.post != null && queryData.post?.state !== 'DRAFT' && ((queryData.viewer?.isStaff) === false) && !(queryData.viewer?.isWorker)) {
     return (
       <MobileContainer pt={2}>
-        <SubmittedCreatePost />
+        <PostPlaceholder>
+          <Stack spacing={6}>
+            <Box>
+              <Heading mb={2} textAlign='center' color='gray.00' fontSize='2xl'>
+                <Trans>
+                  Post Submitted
+                </Trans>
+              </Heading>
+              <Text mb={8} textAlign='center' color='gray.100' fontSize='md'>
+                <Trans>
+                  This post was already submitted
+                </Trans>
+              </Text>
+            </Box>
+          </Stack>
+        </PostPlaceholder>
       </MobileContainer>
     )
   }
