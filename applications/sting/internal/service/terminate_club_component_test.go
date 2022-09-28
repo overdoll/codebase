@@ -42,7 +42,7 @@ func TestTerminateClub_and_unTerminate(t *testing.T) {
 	postId := publishedPost.ID()
 	relayId := convertClubIdToRelayId(clb.ID())
 
-	// TEST WITH REGULAR ACCOUNT TO SEE IF YOU CAN SEE POST
+	// TEST WITH REGULAR ACCOUNT TO SEE IF YOU CAN SEE POSTS
 	regularClient := getGraphqlClientWithAuthenticatedAccount(t, randomAccountId)
 	pst := getPost(t, regularClient, postId)
 	require.NotNil(t, pst.Post, "post is not nil")
