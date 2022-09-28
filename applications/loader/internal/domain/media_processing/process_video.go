@@ -181,7 +181,6 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 
 	// if video has audio, we extract the audio, and apply a loudness normalization, to ensure an equal balance
 	if !videoNoAudio {
-
 		bytes := bytes2.NewBuffer(nil)
 		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "progress": "unix://" + validationSocket}).
 			Output("-", ffmpeg_go.KwArgs{"map": "0:a:0", "af": "loudnorm=I=" + defaultIntensityLevel + ":LRA=" + defaultLoudnessRange + ":tp=" + defaultTruePeak + ":print_format=json", "f": "null"}).
@@ -231,6 +230,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		newFileName := uuid.New().String() + ".mp4"
 		defer os.Remove(newFileName)
 
+		// start a channel that will send fake progress
+		done := startFakeProgress(target.RawProto().Id)
+
 		// process our audio
 		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "loglevel": "error", "progress": "unix://" + validationSocket}).
 			Output(newFileName, ffmpeg_go.KwArgs{
@@ -244,8 +246,10 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			WithErrorOutput(ffmpegLogger).
 			OverWriteOutput().
 			Run(); err != nil {
+			done()
 			return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
 		}
+		done()
 
 		targetFileName = newFileName
 	}

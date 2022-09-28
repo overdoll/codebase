@@ -23,7 +23,7 @@ type ProgressSocketMessage struct {
 
 func ListenProgressSocket(id string, cb func(progress ProgressSocketMessage)) (func(), error) {
 
-	progressChannel := make(chan ProgressSocketMessage)
+	progressChannel := make(chan ProgressSocketMessage, 20)
 	progressSocketChannels[id] = progressChannel
 
 	// use a 500ms ticker to rate limit
@@ -59,6 +59,34 @@ func ListenProgressSocket(id string, cb func(progress ProgressSocketMessage)) (f
 		delete(progressSocketChannels, id)
 		ticker.Stop()
 	}, nil
+}
+
+// start a fake progress, since this is needed sometimes
+func startFakeProgress(id string) func() {
+
+	ticker := time.NewTicker(5000 * time.Millisecond)
+	stop := make(chan bool, 1)
+
+	go func() {
+		for {
+			select {
+			case _ = <-ticker.C:
+				if channel, ok := progressSocketChannels[id]; ok {
+					channel <- ProgressSocketMessage{Progress: 0, OnlyHeartbeat: true}
+				}
+				continue
+			case <-stop:
+				return
+			default:
+				continue
+			}
+		}
+	}()
+
+	return func() {
+		stop <- true
+		ticker.Stop()
+	}
 }
 
 // show progress taken from: https://github.com/u2takey/ffmpeg-go/blob/master/examples/showProgress.go
