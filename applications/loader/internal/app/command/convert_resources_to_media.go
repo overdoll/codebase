@@ -40,7 +40,7 @@ func (h ConvertResourcesToMediaHandler) Handle(ctx context.Context, cmd ConvertR
 		for _, resourceId := range cmd.ResourceIds {
 			if resourceId == legacyResource.ID() {
 				targetLegacyResources = append(targetLegacyResources, legacyResource)
-				continue
+				break
 			}
 		}
 	}
@@ -48,14 +48,8 @@ func (h ConvertResourcesToMediaHandler) Handle(ctx context.Context, cmd ConvertR
 	var results []*media.Media
 
 	for _, legacyResource := range targetLegacyResources {
-		final, err := h.ur.GetUpload(ctx, legacyResource.ID())
-		if err != nil {
-			return nil, err
-		}
-
 		// if it's a copy, run the copy pipeline
 		if legacyResource.CopiedFromId() != "" {
-
 			sourceIds := strings.Split(legacyResource.CopiedFromId(), "-")
 
 			var pixelate *int
@@ -107,6 +101,11 @@ func (h ConvertResourcesToMediaHandler) Handle(ctx context.Context, cmd ConvertR
 
 			results = append(results, newMedia)
 			continue
+		}
+
+		final, err := h.ur.GetUpload(ctx, legacyResource.ID())
+		if err != nil {
+			return nil, err
 		}
 
 		sourceMedia := &proto.Media{
