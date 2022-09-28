@@ -2,10 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { ContainerCreatePostFragment$key } from '@//:artifacts/ContainerCreatePostFragment.graphql'
 import type { ContainerCreatePostClubFragment$key } from '@//:artifacts/ContainerCreatePostClubFragment.graphql'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import useAbility from '@//:modules/authorization/useAbility'
 import SuspenseCreatePost from '../../../SuspenseCreatePost/SuspenseCreatePost'
 import { BannerContainer, MobileContainer } from '@//:modules/content/PageLayout'
-import SubmittedCreatePost from './SubmittedCreatePost/SubmittedCreatePost'
 import BannerCreatePost from './BannerCreatePost/BannerCreatePost'
 import UpdateCreatePost from './UpdateCreatePost/UpdateCreatePost'
 import NewCreatePost from './NewCreatePost/NewCreatePost'
@@ -41,8 +39,6 @@ export default function ContainerCreatePost ({
     state
   } = useSequenceContext()
 
-  const ability = useAbility()
-
   // If there is no post found from the URL parameter, show create post initiator
   if (postData == null) {
     return (
@@ -59,15 +55,6 @@ export default function ContainerCreatePost ({
 
   if (state.isSubmitted === true) {
     return <SuspenseCreatePost />
-  }
-
-  // If the post was already submitted
-  if (postData?.state !== 'DRAFT' && !ability.can('staff', 'Post')) {
-    return (
-      <MobileContainer pt={2}>
-        <SubmittedCreatePost />
-      </MobileContainer>
-    )
   }
 
   // When there is a valid post we load the post creator flow
