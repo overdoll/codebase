@@ -45,11 +45,11 @@ msgstr ""
 msgid "Don't get distracted now. Spin."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:170
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:175
 msgid "Error restarting game. Please try again."
 msgstr ""
 
-#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:139
+#: src/domain/roulette/RootRoulette/DisposeRoulette/ResultRoulette/MetaRoulette/ContainerRoulette/ShowRouletteSession/RouletteSessionFooter/SpinRoulette/SpinRoulette.tsx:144
 msgid "Error spinning. Please try again."
 msgstr ""
 

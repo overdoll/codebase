@@ -44,9 +44,9 @@ export const requestFullscreen = (player: PlayerType, container: HTMLElement | n
     container.mozRequestFullScreen().catch(() => {
       player.emit('fullscreen error')
     })
-  } else if (container.webkitRequestFullscreen != null) {
+  } else if (container?.webkitRequestFullscreen != null) {
     // @ts-expect-error
-    container.webkitRequestFullscreen(window.Element.ALLOW_KEYBOARD_INPUT).catch(() => {
+    container?.webkitRequestFullscreen(window.Element.ALLOW_KEYBOARD_INPUT).catch(() => {
       player.emit('fullscreen error')
     })
   } else if (player.video.webkitSupportsFullscreen != null) {

@@ -69,20 +69,22 @@ export default function PostPreviewCategories (props: Props): JSX.Element {
           </GridItem>
         )}
       </Grid>
-      <Grid
-        w='100%'
-        gap={1}
-        templateColumns={`repeat(${secondDataSet.length}, minmax(50px, 300px))`}
-        templateRows='50px'
-      >
-        {secondDataSet.map((item) =>
-          <GridItem key={item.id}>
-            <CategoryLinkTile onClick={() => trackFathomEvent('4HWA0TIN', 1)} query={item}>
-              <PreviewCategory categoryQuery={item} />
-            </CategoryLinkTile>
-          </GridItem>
-        )}
-      </Grid>
+      {secondDataSet.length > 0 && (
+        <Grid
+          w='100%'
+          gap={1}
+          templateColumns={`repeat(${secondDataSet.length}, minmax(50px, 300px))`}
+          templateRows='50px'
+        >
+          {secondDataSet.map((item) =>
+            <GridItem key={item.id}>
+              <CategoryLinkTile onClick={() => trackFathomEvent('4HWA0TIN', 1)} query={item}>
+                <PreviewCategory categoryQuery={item} />
+              </CategoryLinkTile>
+            </GridItem>
+          )}
+        </Grid>
+      )}
       {lastDataSet.length > 0 && (
         <Grid
           w='100%'

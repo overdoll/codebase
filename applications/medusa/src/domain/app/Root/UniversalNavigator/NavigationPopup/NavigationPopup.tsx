@@ -24,9 +24,15 @@ export default function NavigationPopup (props: Props): JSX.Element {
 
   const isHidden = hiddenOn.some((item) => router.asPath.includes(item))
 
+  if (isHidden) {
+    return <></>
+  }
+
   return (
     <>
-      <ShowJoinToast isHidden={isHidden || data != null} />
+      {data == null && (
+        <ShowJoinToast />
+      )}
       <ShowRatingToast />
     </>
   )

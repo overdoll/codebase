@@ -52,7 +52,7 @@ export default function ScrollClubsFeed (props: Props): JSX.Element {
         index
       }) => (
         <PreviewPost
-          postQuery={data.clubMembersPostsFeed.edges[index].node}
+          postQuery={data?.clubMembersPostsFeed?.edges?.[index]?.node}
         />
       )}
     </VerticalPaginationScroller>

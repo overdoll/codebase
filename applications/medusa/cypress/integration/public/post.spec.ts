@@ -94,7 +94,7 @@ describe('Post', () => {
      */
     gotoPost()
     clickOnPostJoinButton()
-    cy.url().should('include', '/join')
+    cy.findByText(/Join this club/iu).should('be.visible')
 
     /**
      * Report from post

@@ -16,6 +16,7 @@ interface Props {
 
 const PostFragment = graphql`
   fragment DescriptionPublicPostFragment on Post {
+    id
     ...RepostPublicPostFragment
     ...ClubPublicPostFragment
     ...SavePublicPostFragment

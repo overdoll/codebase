@@ -4,10 +4,8 @@ import { Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { ArrowButtonRight } from '@//:assets/icons'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import { ExternalLink } from '@//:modules/routing'
+import { Link } from '@//:modules/routing'
 import Button from '@//:modules/form/Button/Button'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
-import { FEEDBACK_LINK } from '@//:modules/constants/links'
 
 interface Props {
   onClose: () => void
@@ -22,7 +20,6 @@ export default function RatingToast (props: Props): JSX.Element {
 
   const onClickRate = (): void => {
     onClose()
-    trackFathomEvent('WAXAG3AM', 1)
   }
 
   return (
@@ -36,8 +33,8 @@ export default function RatingToast (props: Props): JSX.Element {
           </Text>
           <CloseButton onClick={onForget} />
         </HStack>
-        <ExternalLink
-          href={FEEDBACK_LINK}
+        <Link
+          href='/feedback'
         >
           <Button
             w='100%'
@@ -51,7 +48,7 @@ export default function RatingToast (props: Props): JSX.Element {
               Give Feedback
             </Trans>
           </Button>
-        </ExternalLink>
+        </Link>
       </Stack>
     </Box>
   )

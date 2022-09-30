@@ -5,8 +5,8 @@ import { ClubPublicPostViewerFragment$key } from '@//:artifacts/ClubPublicPostVi
 import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
-import JoinClubPublicPost from './JoinClubPublicPost/JoinClubPublicPost'
 import trackFathomEvent from '@//:modules/support/trackFathomEvent'
+import ClubJoinButton from '@//:modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton'
 
 interface Props {
   postQuery: ClubPublicPostFragment$key
@@ -20,7 +20,7 @@ const PostFragment = graphql`
       name
       slug
       ...ClubIconFragment
-      ...JoinClubPublicPostFragment
+      ...ClubJoinButtonFragment
     }
     description
   }
@@ -28,7 +28,7 @@ const PostFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment ClubPublicPostViewerFragment on Account {
-    ...JoinClubPublicPostViewerFragment
+    ...ClubJoinButtonViewerFragment
   }
 `
 
@@ -72,7 +72,7 @@ export default function ClubPublicPost (props: Props): JSX.Element {
               </Text>
             </Flex>
           </HStack>
-          <JoinClubPublicPost clubQuery={postData.club} viewerQuery={viewerData} />
+          <ClubJoinButton clubQuery={postData.club} viewerQuery={viewerData} />
         </HStack>
         {postData.description.length > 0 && (
           <Text mt={1} lineHeight='20px' fontSize='sm' color='gray.200'>

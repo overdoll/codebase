@@ -62,6 +62,10 @@ const GeneralCatalogs = [
   {
     path: 'src/domain/top/__locale__/{locale}/index',
     include: ['src/domain/top/']
+  },
+  {
+    path: 'src/domain/feedback/__locale__/{locale}/index',
+    include: ['src/domain/feedback/']
   }
 ]
 

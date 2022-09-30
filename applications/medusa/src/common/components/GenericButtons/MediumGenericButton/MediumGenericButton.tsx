@@ -26,7 +26,7 @@ const MediumGenericButton = forwardRef<Props, any>(({
   const IconItem = (
     <Icon
       icon={icon}
-      fill={(colorScheme !== 'gray' && colorScheme != null) ? 'gray.00' : 'gray.100'}
+      fill={(colorScheme !== 'gray' && colorScheme != null) ? `${colorScheme}.900` : 'gray.100'}
       h={4}
     />
   )

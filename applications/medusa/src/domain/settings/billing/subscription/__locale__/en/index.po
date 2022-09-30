@@ -21,7 +21,7 @@ msgstr ""
 msgid "A list with one or more subscriptions should appear. <0>Find the Subscription ID</0> that is <1>{0}</1> and click on <2>Click here to update your payment information</2> to update your payment information."
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:72
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:71
 msgid "ACTIVE"
 msgstr ""
 
@@ -39,7 +39,7 @@ msgstr ""
 #~ msgid "As a supporter, you have access to all exclusive content from this club."
 #~ msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:66
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:65
 msgid "CANCELLED"
 msgstr ""
 
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Cancel Subscription"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:84
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:83
 msgid "Cancelled on"
 msgstr ""
 
@@ -99,7 +99,7 @@ msgstr ""
 msgid "Navigate to the"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:90
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:89
 msgid "Next renewal on"
 msgstr ""
 
@@ -115,11 +115,11 @@ msgstr ""
 msgid "Please tell us why you would like to cancel the subscription. We'll communicate this to the club so they can continue to improve their content."
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/ClubExclusivePosts/ClubExclusivePosts.tsx:64
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/ClubExclusivePosts/ClubExclusivePosts.tsx:63
 msgid "See All"
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/ClubExclusivePosts/PostsHorizontalPreview/PostsHorizontalPreview.tsx:88
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/ClubExclusivePosts/PostsHorizontalPreview/PostsHorizontalPreview.tsx:89
 msgid "See all"
 msgstr ""
 
@@ -146,8 +146,8 @@ msgstr ""
 msgid "Subscription was cancelled. You will no longer be billed when it expires."
 msgstr ""
 
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:80
-#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:74
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountActiveClubSupporterSubscriptionDetails/AccountActiveClubSupporterSubscriptionDetails.tsx:79
+#: src/domain/settings/billing/subscription/RootAccountClubSupporterSubscriptionSettings/AccountClubSupporterSubscriptionSettings/AccountCancelledClubSupporterSubscriptionDetails/AccountCancelledClubSupporterSubscriptionDetails.tsx:73
 msgid "Supporter since"
 msgstr ""
 

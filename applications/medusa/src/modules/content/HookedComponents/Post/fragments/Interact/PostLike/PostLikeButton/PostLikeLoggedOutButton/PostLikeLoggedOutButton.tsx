@@ -72,7 +72,7 @@ export default function PostLikeLoggedOutButton ({
         isCentered
         size={{
           base: 'sm',
-          md: '2xl'
+          md: 'lg'
         }}
         onClose={onClose}
         isOpen={isOpen}

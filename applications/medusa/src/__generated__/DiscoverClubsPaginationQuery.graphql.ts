@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1d71780c48b1ce82e7a37ab3e7987083>>
- * @relayHash ef5aa60878ae9692822f618130789dc8
+ * @generated SignedSource<<11f657f75549af5ff62eebefdaa8869a>>
+ * @relayHash 85f452ebc08205061ab271b29d2a6f7e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ef5aa60878ae9692822f618130789dc8
+// @relayRequestID 85f452ebc08205061ab271b29d2a6f7e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -249,20 +249,14 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "name",
+                    "name": "viewerIsOwner",
                     "storageKey": null
                   },
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ClubMember",
-                    "kind": "LinkedField",
-                    "name": "viewerMember",
-                    "plural": false,
-                    "selections": [
-                      (v3/*: any*/),
-                      (v2/*: any*/)
-                    ],
+                    "kind": "ScalarField",
+                    "name": "name",
                     "storageKey": null
                   },
                   {
@@ -339,13 +333,6 @@ return {
                       },
                       (v8/*: any*/)
                     ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "viewerIsOwner",
                     "storageKey": null
                   },
                   (v3/*: any*/)
@@ -428,7 +415,7 @@ return {
     ]
   },
   "params": {
-    "id": "ef5aa60878ae9692822f618130789dc8",
+    "id": "85f452ebc08205061ab271b29d2a6f7e",
     "metadata": {},
     "name": "DiscoverClubsPaginationQuery",
     "operationKind": "query",

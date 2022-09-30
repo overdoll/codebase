@@ -11,6 +11,7 @@ import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHe
 import { Trans } from '@lingui/macro'
 import { MagicWand } from '@//:assets/icons'
 import PrepareSuggestedPosts from './PrepareSuggestedPosts/PrepareSuggestedPosts'
+import HomeRedirectPrompt from '@//:common/components/HomeRedirectPrompt/HomeRedirectPrompt'
 
 interface Props {
   postQuery: ContainerPublicPostFragment$key
@@ -56,6 +57,7 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
         <Stack spacing={16}>
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
           <Stack spacing={4}>
+            <HomeRedirectPrompt />
             <PageHeader icon={MagicWand} title={<Trans>Similar content</Trans>} />
             <PrepareSuggestedPosts postQuery={postData} />
           </Stack>
