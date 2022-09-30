@@ -9,6 +9,8 @@ import type { LogoutMutation } from '@//:artifacts/LogoutMutation.graphql'
 import { invalidateToken } from '../../join/Join/support/support'
 import DefaultRichObject from '../../../common/rich-objects/default/DefaultRichObject/DefaultRichObject'
 import TitleRichObject from '../../../common/rich-objects/default/TitleRichObject/TitleRichObject'
+import posthog from 'posthog-js'
+import * as Sentry from '@sentry/nextjs'
 
 const LogoutButtonGQL = graphql`
   mutation LogoutMutation {
@@ -29,6 +31,9 @@ const Logout: PageProps<{}> = () => {
     logout({
       variables: {},
       onCompleted () {
+        // reset user from posthog && reset sentry user
+        posthog.reset()
+        Sentry.configureScope(scope => scope.setUser(null))
         notify({
           status: 'success',
           title: t`You have been logged out`

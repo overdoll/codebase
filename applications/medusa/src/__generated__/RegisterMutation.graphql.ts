@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6d11d473818d8122b9a443b4b19f2ee0>>
- * @relayHash 853cae8e8d0914b3f7819b2afde98807
+ * @generated SignedSource<<4227825f688ba86a657ad506fda9bbfd>>
+ * @relayHash 6d9bd5e2bc8b0159bae100c9c498246a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 853cae8e8d0914b3f7819b2afde98807
+// @relayRequestID 6d9bd5e2bc8b0159bae100c9c498246a
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -28,6 +28,8 @@ export type RegisterMutation$data = {
       readonly isArtist: boolean;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isWorker: boolean;
+      readonly reference: string;
       readonly username: string;
       readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
@@ -80,28 +82,42 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "reference",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isModerator",
+  "name": "username",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "isModerator",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "isArtist",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isWorker",
   "storageKey": null
 };
 return {
@@ -134,6 +150,8 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -178,6 +196,8 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -206,7 +226,7 @@ return {
     ]
   },
   "params": {
-    "id": "853cae8e8d0914b3f7819b2afde98807",
+    "id": "6d9bd5e2bc8b0159bae100c9c498246a",
     "metadata": {},
     "name": "RegisterMutation",
     "operationKind": "mutation",
@@ -215,6 +235,6 @@ return {
 };
 })();
 
-(node as any).hash = "a00bb7d3d3b4ecaa5a93fd13d8fe64c3";
+(node as any).hash = "d79a37b333f1a89bb8c9f8e0df07c4ff";
 
 export default node;

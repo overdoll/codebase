@@ -13,7 +13,6 @@ import React, { Suspense, useEffect, useState, useTransition } from 'react'
 import SpinRouletteUpdate from './SpinRouletteButton/SpinRouletteUpdate/SpinRouletteUpdate'
 import { useUpdateEffect } from 'usehooks-ts'
 import { useKeyPress } from '@//:modules/support/useKeyPress'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   query: SpinRouletteFragment$key | null
@@ -122,15 +121,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
           value: true,
           transform: 'SET'
         })
-        if (skipTracking !== true) {
-          if (spunWithShortcut === true) {
-            // track new spin using keyboard shortcut
-            trackFathomEvent('KXKTPYXO', 1)
-            return
-          }
-          // track new spin using regular button click
-          trackFathomEvent('WMPMZGXS', 1)
-        }
       },
       updater: (store) => {
         if (data.gameState == null) {
@@ -166,8 +156,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
           })
         }
         setConfirmSpin(true)
-        // track new game creation
-        trackFathomEvent('ACHBYYQY', 1)
       },
       onError () {
         notify({
@@ -205,8 +193,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
         value: false,
         transform: 'SET'
       })
-      // track spin skipping
-      trackFathomEvent('HRIMDERJ', 1)
       return
     }
     if (data.gameSession.isClosed) {
@@ -241,8 +227,6 @@ export default function SpinRoulette (props: Props): JSX.Element {
         reference: data.gameSession.reference
       })
       loadQuery()
-      // track game loss
-      trackFathomEvent('TSKUTJW8', 1)
     }
   }, [data?.gameState, data?.gameSession])
 

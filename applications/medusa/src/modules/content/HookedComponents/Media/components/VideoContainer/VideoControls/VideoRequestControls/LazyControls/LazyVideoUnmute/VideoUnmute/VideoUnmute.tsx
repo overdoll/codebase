@@ -26,8 +26,6 @@ export default function VideoUnmute (props: Props): JSX.Element {
   const onUnMuteVideo = (): void => {
     unMuteVideo(player, device)
     unMuteCallback?.()
-    // track video unmute
-    // trackFathomEvent('101EOY3R', 1)
   }
 
   syncPlayerVolumeChange(player, () => {

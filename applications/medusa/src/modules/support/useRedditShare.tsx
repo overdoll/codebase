@@ -4,7 +4,6 @@ import { resolveHref } from 'next/dist/shared/lib/router/router'
 import { encodeQueryParams, StringParam } from 'serialize-query-params'
 import { stringify } from 'query-string'
 import { UrlObject } from 'url'
-import trackFathomEvent from './trackFathomEvent'
 
 interface UseRedditShareProps {
   url: string | UrlObject
@@ -44,7 +43,7 @@ export default function useRedditShare (props: UseRedditShareProps): UseRedditSh
   return (): void => {
     windowReference.current = window.open(encodedPost, '_blank', 'width=600,height=800')
     if (trackingEventId != null) {
-      trackFathomEvent(trackingEventId, 1)
+
     }
   }
 }

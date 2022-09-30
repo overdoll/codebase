@@ -5,7 +5,6 @@ import { ClubPublicPostViewerFragment$key } from '@//:artifacts/ClubPublicPostVi
 import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 import ClubJoinButton from '@//:modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton'
 
 interface Props {
@@ -42,8 +41,6 @@ export default function ClubPublicPost (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   const onClick = (): void => {
-    // track club link clicks
-    trackFathomEvent('U1AWMVCU', 1)
   }
 
   return (

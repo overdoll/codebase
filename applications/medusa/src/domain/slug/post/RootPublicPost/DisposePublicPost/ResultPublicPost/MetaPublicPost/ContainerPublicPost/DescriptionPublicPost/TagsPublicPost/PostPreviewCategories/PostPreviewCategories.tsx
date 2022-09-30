@@ -11,7 +11,6 @@ import PreviewCategory
 import CategoryLinkTile from '@//:modules/content/PageLayout/Display/fragments/Link/CategoryLinkTile/CategoryLinkTile'
 import { useUpdateEffect } from 'usehooks-ts'
 import { CATEGORY_LIMIT } from '../TagsPublicPost'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   postQuery: PostPreviewCategoriesFragment$key
@@ -63,7 +62,7 @@ export default function PostPreviewCategories (props: Props): JSX.Element {
       >
         {firstDataSet.map((item) =>
           <GridItem key={item.id}>
-            <CategoryLinkTile onClick={() => trackFathomEvent('4HWA0TIN', 1)} query={item}>
+            <CategoryLinkTile query={item}>
               <PreviewCategory categoryQuery={item} />
             </CategoryLinkTile>
           </GridItem>
@@ -78,7 +77,7 @@ export default function PostPreviewCategories (props: Props): JSX.Element {
         >
           {secondDataSet.map((item) =>
             <GridItem key={item.id}>
-              <CategoryLinkTile onClick={() => trackFathomEvent('4HWA0TIN', 1)} query={item}>
+              <CategoryLinkTile query={item}>
                 <PreviewCategory categoryQuery={item} />
               </CategoryLinkTile>
             </GridItem>
@@ -94,7 +93,7 @@ export default function PostPreviewCategories (props: Props): JSX.Element {
         >
           {lastDataSet.map((item) =>
             <GridItem key={item.id}>
-              <CategoryLinkTile onClick={() => trackFathomEvent('4HWA0TIN', 1)} query={item}>
+              <CategoryLinkTile query={item}>
                 <PreviewCategory categoryQuery={item} />
               </CategoryLinkTile>
             </GridItem>

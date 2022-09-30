@@ -7,7 +7,6 @@ import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import Head from 'next/head'
 import useGrantCleanup from '../../support/useGrantCleanup'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -74,7 +73,6 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
           status: 'success',
           title: t`Welcome back!`
         })
-        trackFathomEvent('BBSROX4D', 1)
       },
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationToken?.validation != null) {

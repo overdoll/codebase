@@ -4,7 +4,7 @@ import { Trans } from '@lingui/macro'
 import { DownloadArrow } from '@//:assets/icons/interface'
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from '@chakra-ui/react'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
+import posthog from 'posthog-js'
 
 let deferredPrompt
 
@@ -39,7 +39,9 @@ export default function DropdownMenuButtonInstallApp (): JSX.Element {
   useEffect(() => {
     const onInstallApp = (): void => {
       setIsInstalled(true)
-      trackFathomEvent('ULE2DATA', 1)
+      posthog.capture(
+        'pwa-install'
+      )
     }
 
     document.addEventListener('appinstalled', onInstallApp)
@@ -51,7 +53,7 @@ export default function DropdownMenuButtonInstallApp (): JSX.Element {
 
   return (
     <HorizontalNavigationDropdownMenu.Button
-      colorScheme='teal'
+      color='teal.300'
       icon={DownloadArrow}
       onClick={onInstall}
       label={

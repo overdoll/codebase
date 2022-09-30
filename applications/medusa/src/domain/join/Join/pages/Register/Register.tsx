@@ -14,8 +14,9 @@ import Head from 'next/head'
 import RevokeTokenButton from '../../components/RevokeTokenButton/RevokeTokenButton'
 import { OverdollLogo } from '@//:assets/logos'
 import useGrantCleanup from '../../support/useGrantCleanup'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 import { StringParam, useQueryParam } from 'use-query-params'
+import posthog from 'posthog-js'
+import * as Sentry from '@sentry/nextjs'
 
 interface Props {
   queryRef: RegisterFragment$key
@@ -28,10 +29,12 @@ const RegisterMutationGQL = graphql`
       validation
       account {
         id
+        reference
         username
         isModerator
         isStaff
         isArtist
+        isWorker
         ...AccountIconFragment
       }
     }
@@ -92,24 +95,39 @@ export default function Register ({ queryRef }: Props): JSX.Element {
         successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
         flash('new.account', '')
 
+        const accountData = payload.createAccountWithAuthenticationToken?.account
+
+        // identify user in posthog
+        posthog.identify(accountData?.reference, {
+          isStaff: accountData?.isStaff,
+          isArtist: accountData?.isArtist,
+          isModerator: accountData?.isModerator,
+          isWorker: accountData?.isWorker,
+          username: accountData?.username
+        })
+
+        // identify user in sentry
+        Sentry.setUser({
+          username: accountData?.username,
+          id: accountData?.reference
+        })
+
         notify({
           status: 'success',
           title: t`Welcome to overdoll!`,
           isClosable: true
         })
-        if (from == null) {
-          // track generic registration
-          trackFathomEvent('AJ0MJENF', 1)
-        } else if (from === 'post_like_button') {
-          // track registration as a result of the post like button
-          trackFathomEvent('AUYW3TCY', 1)
-        } else if (from === 'club_join_button') {
-          // track registration as a result of the club join button
-          trackFathomEvent('FOEECN69', 1)
-        } else if (from === 'club_join_button') {
-          // track registration as a result of the navigation join popup
-          trackFathomEvent('5JHI3XGE', 1)
+
+        let source = 'generic'
+
+        if (from != null) {
+          source = 'post_like_button'
         }
+
+        posthog.capture(
+          'registered',
+          { source: source }
+        )
       },
       onError () {
         notify({

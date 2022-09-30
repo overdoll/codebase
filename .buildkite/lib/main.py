@@ -274,8 +274,8 @@ def execute_build_commands_custom(configs):
 
     env = {
         "NEXT_PUBLIC_SENTRY_DSN": os.getenv("NEXT_PUBLIC_SENTRY_DSN"),
-        "NEXT_PUBLIC_FATHOM_TRACKING_CODE": os.getenv("NEXT_PUBLIC_FATHOM_TRACKING_CODE"),
-        "NEXT_PUBLIC_FATHOM_DOMAIN": os.getenv("NEXT_PUBLIC_FATHOM_DOMAIN"),
+        "NEXT_PUBLIC_POSTHOG_TRACKING_CODE": os.getenv("NEXT_PUBLIC_POSTHOG_TRACKING_CODE"),
+        "NEXT_PUBLIC_POSTHOG_DOMAIN": os.getenv("NEXT_PUBLIC_POSTHOG_DOMAIN"),
 
         "STATIC_ASSETS_URL": os.getenv("STATIC_ASSETS_URL"),
         "SENTRY_AUTH_TOKEN": os.getenv("SENTRY_AUTH_TOKEN"),

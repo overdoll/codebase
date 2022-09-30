@@ -7,7 +7,6 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { ArrowButtonRight } from '@//:assets/icons'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   onClose: () => void
@@ -26,7 +25,6 @@ export default function JoinToast (props: Props): JSX.Element {
 
   const onClickJoin = (): void => {
     onClose()
-    trackFathomEvent('VVNXUKFX', 1)
   }
 
   return (

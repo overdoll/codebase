@@ -14,7 +14,6 @@ import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
 import SafeModal from './SafeModal/SafeModal'
 import RootRichObject from '../../../common/rich-objects/default/RootRichObject/RootRichObject'
-import LocalStorageEvents from './LocalStorageEvents/LocalStorageEvents'
 
 interface Props {
   children: ReactNode
@@ -52,7 +51,6 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
         <PageContents>
           {props.children}
           <SafeModal />
-          <LocalStorageEvents />
         </PageContents>
         <NoScript />
       </AccountAuthorizer>

@@ -1,5 +1,4 @@
 import { useQueryParam } from 'use-query-params'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { RandomizeDice } from '@//:assets/icons'
 import { t, Trans } from '@lingui/macro'
@@ -18,7 +17,6 @@ export default function RandomizeButton (): JSX.Element {
 
   const onRandomize = (): void => {
     setPostSeed(seed)
-    trackFathomEvent('8Y7XTJJJ', 1)
   }
 
   const BUTTON_PROPS = {

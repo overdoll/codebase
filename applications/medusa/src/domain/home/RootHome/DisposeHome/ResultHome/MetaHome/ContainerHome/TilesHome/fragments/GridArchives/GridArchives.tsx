@@ -4,14 +4,12 @@ import { ArchiveFolder, FreshLeaf, HotContent } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import StaticTile from '../../components/Tiles/StaticTile/StaticTile'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 export default function GridArchives (): JSX.Element {
   return (
     <GridLayoutHome columns={3} rows={3}>
       <GridItem gridColumn='auto / span 3'>
         <StaticTile
-          onClick={() => trackFathomEvent('RX0LIM9H', 1)}
           icon={ArchiveFolder}
           bg='https://static.dollycdn.net/banners/generalbutch-thumbnail.jpg'
           href='/generalbutch'
@@ -29,7 +27,6 @@ export default function GridArchives (): JSX.Element {
       </GridItem>
       <GridItem gridColumn='auto / span 3'>
         <StaticTile
-          onClick={() => trackFathomEvent('TL5ZQYLZ', 1)}
           icon={ArchiveFolder}
           bg='https://static.dollycdn.net/banners/arhoangel-thumbnail.jpg'
           href='/arhoangel'
@@ -47,7 +44,6 @@ export default function GridArchives (): JSX.Element {
       </GridItem>
       <GridItem gridColumn='auto / span 1'>
         <StaticTile
-          onClick={() => trackFathomEvent('HYEE9TK0', 1)}
           icon={HotContent}
           bg='https://static.dollycdn.net/banners/top-thumbnail.jpg'
           href='/top'
@@ -65,7 +61,6 @@ export default function GridArchives (): JSX.Element {
       </GridItem>
       <GridItem gridColumn='auto / span 2'>
         <StaticTile
-          onClick={() => trackFathomEvent('CJBUCECC', 1)}
           icon={FreshLeaf}
           bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
           href='/new'

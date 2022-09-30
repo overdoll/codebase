@@ -9,5 +9,6 @@ type SendAccountNewRegistrationNotificationInput struct {
 }
 
 func (h *Activities) SendAccountNewRegistrationNotification(ctx context.Context, input SendAccountNewRegistrationNotificationInput) error {
-	return h.carrier.AccountNewRegistration(ctx, input.AccountId)
+	// note: removed new account registration notification for now - we will use something better in the future
+	return nil
 }
