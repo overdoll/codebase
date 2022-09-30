@@ -22,6 +22,8 @@ import {
 import { MobilePhone, WarningTriangle } from '@//:assets/icons'
 import { FlowBuilderNextButton } from '@//:modules/content/PageLayout'
 import useGrantCleanup from '../../../support/useGrantCleanup'
+import posthog from 'posthog-js'
+import * as Sentry from '@sentry/nextjs'
 
 interface CodeValues {
   code: string
@@ -45,7 +47,9 @@ const Mutation = graphql`
       validation
       account {
         id
+        reference
         username
+        isWorker
         isModerator
         isStaff
         isArtist
@@ -103,6 +107,27 @@ export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
           })
           return
         }
+        const accountData = data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account
+
+        // identify user in posthog
+        posthog.identify(accountData?.reference, {
+          isStaff: accountData?.isStaff,
+          isArtist: accountData?.isArtist,
+          isModerator: accountData?.isModerator,
+          isWorker: accountData?.isWorker,
+          username: accountData?.username
+        })
+
+        // identify user in sentry
+        Sentry.setUser({
+          username: accountData?.username,
+          id: accountData?.reference
+        })
+
+        if (accountData != null && (accountData.isStaff || accountData.isWorker)) {
+          posthog.opt_out_capturing()
+        }
+
         notify({
           status: 'success',
           title: t`Welcome back! Thanks for using two-factor to log in!`

@@ -112,6 +112,10 @@ export default function Register ({ queryRef }: Props): JSX.Element {
           id: accountData?.reference
         })
 
+        if (accountData != null && (accountData.isStaff || accountData.isWorker)) {
+          posthog.opt_out_capturing()
+        }
+
         notify({
           status: 'success',
           title: t`Welcome to overdoll!`,

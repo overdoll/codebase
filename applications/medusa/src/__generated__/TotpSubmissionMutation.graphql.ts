@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<051e1fbc6646f0115b1d8e6780b24d3b>>
- * @relayHash e9c4c43657034ac8c5dd3b229ba5f470
+ * @generated SignedSource<<9dd443d5e300a739d0852cf6c8762d19>>
+ * @relayHash 20c9a0ed58e0ca4a461d3aed3b486ad1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e9c4c43657034ac8c5dd3b229ba5f470
+// @relayRequestID 20c9a0ed58e0ca4a461d3aed3b486ad1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -31,9 +31,11 @@ export type TotpSubmissionMutation$data = {
       readonly isArtist: boolean;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isWorker: boolean;
       readonly lock: {
         readonly __typename: "AccountLock";
       } | null;
+      readonly reference: string;
       readonly username: string;
       readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
@@ -86,58 +88,72 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "reference",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isModerator",
+  "name": "username",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "isWorker",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isArtist",
+  "name": "isModerator",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "isStaff",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/)
+v12 = [
+  (v11/*: any*/)
 ],
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountDeleting",
   "kind": "LinkedField",
   "name": "deleting",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
   "kind": "LinkedField",
   "name": "lock",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 };
 return {
@@ -170,8 +186,10 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v11/*: any*/),
-              (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v13/*: any*/),
+              (v14/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -216,8 +234,10 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v11/*: any*/),
-              (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v13/*: any*/),
+              (v14/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -226,7 +246,7 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
+                  (v11/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
@@ -240,7 +260,7 @@ return {
     ]
   },
   "params": {
-    "id": "e9c4c43657034ac8c5dd3b229ba5f470",
+    "id": "20c9a0ed58e0ca4a461d3aed3b486ad1",
     "metadata": {},
     "name": "TotpSubmissionMutation",
     "operationKind": "mutation",
@@ -249,6 +269,6 @@ return {
 };
 })();
 
-(node as any).hash = "cc04d236bed47b5d9f275120825b5377";
+(node as any).hash = "13446c8b712fb16a6328dd6d3e873f3f";
 
 export default node;

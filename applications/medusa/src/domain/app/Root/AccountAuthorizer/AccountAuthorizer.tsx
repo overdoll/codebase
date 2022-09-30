@@ -63,13 +63,15 @@ export default function AccountAuthorizer ({
   // fathom setup for tracking users
   useEffect(() => {
     const trackingCode: string = process.env.NEXT_PUBLIC_POSTHOG_TRACKING_CODE as string
-
+    const isInProperHostName = [process.env.NEXT_PUBLIC_POSTHOG_DOMAIN as string].includes(window.location.hostname)
     if (trackingCode !== '') {
+      const disableSessionRecording = !isInProperHostName || (data != null ? (data?.isStaff || data?.isWorker) : false)
       posthog.init(trackingCode, {
         api_host: 'https://app.posthog.com',
         persistence: 'localStorage',
+        opt_out_capturing_by_default: !isInProperHostName,
         opt_out_capturing_persistence_type: 'localStorage',
-        disable_session_recording: false,
+        disable_session_recording: disableSessionRecording,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         loaded: (posthog_instance) => {
           if (data != null) {
@@ -85,11 +87,6 @@ export default function AccountAuthorizer ({
             if (data.isStaff || data.isWorker) {
               posthog_instance.opt_out_capturing()
             }
-          }
-
-          // only capture on specific domains
-          if (![process.env.NEXT_PUBLIC_POSTHOG_DOMAIN as string].includes(window.location.hostname)) {
-            posthog_instance.opt_out_capturing()
           }
         }
       })

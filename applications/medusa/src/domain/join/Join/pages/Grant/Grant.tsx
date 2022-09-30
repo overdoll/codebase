@@ -7,6 +7,8 @@ import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import Head from 'next/head'
 import useGrantCleanup from '../../support/useGrantCleanup'
+import posthog from 'posthog-js'
+import * as Sentry from '@sentry/nextjs'
 
 interface Props {
   queryRef: GrantFragment$key
@@ -19,10 +21,12 @@ const GrantAction = graphql`
       revokedAuthenticationTokenId
       account {
         id
+        reference
         username
         isModerator
         isStaff
         isArtist
+        isWorker
         deleting {
           __typename
         }
@@ -69,6 +73,27 @@ export default function Grant ({ queryRef }: Props): JSX.Element {
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
           return
         }
+        const accountData = data?.grantAccountAccessWithAuthenticationToken?.account
+
+        // identify user in posthog
+        posthog.identify(accountData?.reference, {
+          isStaff: accountData?.isStaff,
+          isArtist: accountData?.isArtist,
+          isModerator: accountData?.isModerator,
+          isWorker: accountData?.isWorker,
+          username: accountData?.username
+        })
+
+        // identify user in sentry
+        Sentry.setUser({
+          username: accountData?.username,
+          id: accountData?.reference
+        })
+
+        if (accountData != null && (accountData.isStaff || accountData.isWorker)) {
+          posthog.opt_out_capturing()
+        }
+
         notify({
           status: 'success',
           title: t`Welcome back!`

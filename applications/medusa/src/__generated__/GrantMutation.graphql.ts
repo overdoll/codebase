@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4d0510b6ea05f7e33a75fbf6b7363859>>
- * @relayHash e3a03063e8dda72feb60bb5e98b3ba38
+ * @generated SignedSource<<945fff3087b3248fbdb5bd5243a775bf>>
+ * @relayHash 18240a1ea886f52ca05606f31f475bc6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e3a03063e8dda72feb60bb5e98b3ba38
+// @relayRequestID 18240a1ea886f52ca05606f31f475bc6
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -30,9 +30,11 @@ export type GrantMutation$data = {
       readonly isArtist: boolean;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isWorker: boolean;
       readonly lock: {
         readonly __typename: "AccountLock";
       } | null;
+      readonly reference: string;
       readonly username: string;
       readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
@@ -85,58 +87,72 @@ v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "username",
+  "name": "reference",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isModerator",
+  "name": "username",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "isModerator",
   "storageKey": null
 },
 v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isArtist",
+  "name": "isStaff",
   "storageKey": null
 },
 v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isWorker",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/)
+v12 = [
+  (v11/*: any*/)
 ],
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountDeleting",
   "kind": "LinkedField",
   "name": "deleting",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
   "kind": "LinkedField",
   "name": "lock",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 };
 return {
@@ -169,8 +185,10 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v11/*: any*/),
-              (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v13/*: any*/),
+              (v14/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -215,8 +233,10 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v11/*: any*/),
-              (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v13/*: any*/),
+              (v14/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -225,7 +245,7 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
+                  (v11/*: any*/),
                   (v4/*: any*/)
                 ],
                 "storageKey": null
@@ -239,7 +259,7 @@ return {
     ]
   },
   "params": {
-    "id": "e3a03063e8dda72feb60bb5e98b3ba38",
+    "id": "18240a1ea886f52ca05606f31f475bc6",
     "metadata": {},
     "name": "GrantMutation",
     "operationKind": "mutation",
@@ -248,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "e9d336799d2a819e7fe62786e19f79e7";
+(node as any).hash = "013781d9de0deafa133a9ba026514285";
 
 export default node;
