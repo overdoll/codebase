@@ -78,6 +78,7 @@ export default function AccountAuthorizer ({
         persistence: 'localStorage',
         opt_out_capturing_by_default: !isInProperHostName,
         opt_out_capturing_persistence_type: 'localStorage',
+        autocapture: !disableSessionRecording,
         capture_pageview: isInProperHostName,
         disable_session_recording: disableSessionRecording,
         // eslint-disable-next-line @typescript-eslint/naming-convention
