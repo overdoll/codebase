@@ -13,7 +13,11 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:50
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:47
+msgid "Characters and categories"
+msgstr ""
+
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:49
 msgid "Copied Discord link! Send it in a channel or direct message!"
 msgstr ""
 
@@ -22,21 +26,21 @@ msgid "Copy Link"
 msgstr ""
 
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/ClubPublicPost/JoinClubPublicPost/JoinClubPublicPost.tsx:56
-msgid "Join"
-msgstr ""
+#~ msgid "Join"
+#~ msgstr ""
 
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/SavePublicPost/SavePublicPost.tsx:71
 msgid "Let the artist know you love their content"
 msgstr ""
 
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/CopyLinkPublicPost/CopyLinkPublicPost.tsx:48
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:55
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:54
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareRedditButton/PostShareRedditButton.tsx:54
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareTwitterButton/PostShareTwitterButton.tsx:71
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareTwitterButton/PostShareTwitterButton.tsx:70
 msgid "Repost"
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:57
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:61
 msgid "Reveal"
 msgstr ""
 
@@ -44,7 +48,7 @@ msgstr ""
 msgid "Save this post"
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:59
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:61
 msgid "Similar content"
 msgstr ""
 
@@ -68,10 +72,10 @@ msgstr ""
 #~ msgid "View Post"
 #~ msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:73
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:77
 msgid "{0, plural, one { # category} other { # categories}}"
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:63
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/TagsPublicPost/TagsPublicPost.tsx:67
 msgid "{0, plural, one {# character} other {# characters}}"
 msgstr ""

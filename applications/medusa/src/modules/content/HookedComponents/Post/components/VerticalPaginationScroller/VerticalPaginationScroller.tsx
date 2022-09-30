@@ -11,6 +11,7 @@ import { Fragment, useEffect, useState, useTransition } from 'react'
 import { DisposeFn } from 'relay-runtime/lib/util/RelayRuntimeTypes'
 import EmptyPaginationScroller from './EmptyPaginationScroller/EmptyPaginationScroller'
 import MemoKey from './MemoKey/MemoKey'
+import JoinRedirectPrompt from '@//:common/components/JoinRedirectPrompt/JoinRedirectPrompt'
 
 interface ChildrenCallable {
   index: number
@@ -95,6 +96,9 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
         <Fragment key={item.node.id}>
           {(hasNext && !isPending && !isLoadingNext && !hasError && data.edges.length - 2 === index) &&
             <LoadMoreObserver onObserve={onLoadNext} />}
+          {(index % 10 === 0 && index !== 0) && (
+            <JoinRedirectPrompt mb={16} seed={item.node.id} />
+          )}
           <MemoKey memoKey={item.node.id}>
             <Box mb={16}>
               {runIfFunction(children, {

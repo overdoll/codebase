@@ -6,7 +6,7 @@ import { Trans } from '@lingui/macro'
 import React from 'react'
 import StaticTile from '../../components/Tiles/StaticTile/StaticTile'
 import useAbility from '@//:modules/authorization/useAbility'
-import { DISCORD_LINK, FEEDBACK_LINK, TWITTER_FOLLOW_INTENT } from '@//:modules/constants/links'
+import { DISCORD_LINK, TWITTER_FOLLOW_INTENT } from '@//:modules/constants/links'
 
 export default function GridContribute (): JSX.Element {
   const ability = useAbility()
@@ -107,9 +107,8 @@ export default function GridContribute (): JSX.Element {
       <GridItem colSpan={1}>
         <StaticTile
           color='purple.300'
-          isExternal
           icon={ContentBookEdit}
-          href={FEEDBACK_LINK}
+          href='/feedback'
           header={(
             <Trans>
               Give Feedback

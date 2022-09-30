@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<461748ded7e28c50f86cfcffef72db0a>>
- * @relayHash 1e0de11de8b41dd9befbf2bfd375151e
+ * @generated SignedSource<<f7ecdd74b7fb55edf1272be1c8169c30>>
+ * @relayHash e9e219c1841f811cde8d1037473ddb2d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1e0de11de8b41dd9befbf2bfd375151e
+// @relayRequestID e9e219c1841f811cde8d1037473ddb2d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -234,18 +234,14 @@ v16 = {
   "selections": (v10/*: any*/),
   "storageKey": null
 },
-v17 = [
-  (v0/*: any*/),
-  (v1/*: any*/)
-],
-v18 = {
+v17 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "cursor",
   "storageKey": null
 },
-v19 = {
+v18 = {
   "alias": null,
   "args": null,
   "concreteType": "PageInfo",
@@ -270,14 +266,14 @@ v19 = {
   ],
   "storageKey": null
 },
-v20 = [
+v19 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 9
   }
 ],
-v21 = [
+v20 = [
   (v6/*: any*/),
   {
     "alias": null,
@@ -609,18 +605,21 @@ return {
                         "kind": "LinkedField",
                         "name": "viewerLiked",
                         "plural": false,
-                        "selections": (v17/*: any*/),
+                        "selections": [
+                          (v0/*: any*/),
+                          (v1/*: any*/)
+                        ],
                         "storageKey": null
                       },
                       (v0/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v18/*: any*/)
+                  (v17/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v19/*: any*/)
+              (v18/*: any*/)
             ],
             "storageKey": "clubMembersPostsFeed(first:5)"
           },
@@ -652,7 +651,7 @@ return {
       },
       {
         "alias": null,
-        "args": (v20/*: any*/),
+        "args": (v19/*: any*/),
         "concreteType": "ClubConnection",
         "kind": "LinkedField",
         "name": "discoverClubs",
@@ -676,17 +675,14 @@ return {
                 "selections": [
                   (v1/*: any*/),
                   (v3/*: any*/),
-                  (v4/*: any*/),
                   {
                     "alias": null,
                     "args": null,
-                    "concreteType": "ClubMember",
-                    "kind": "LinkedField",
-                    "name": "viewerMember",
-                    "plural": false,
-                    "selections": (v17/*: any*/),
+                    "kind": "ScalarField",
+                    "name": "viewerIsOwner",
                     "storageKey": null
                   },
+                  (v4/*: any*/),
                   (v13/*: any*/),
                   {
                     "alias": null,
@@ -700,7 +696,7 @@ return {
                       (v5/*: any*/),
                       {
                         "kind": "InlineFragment",
-                        "selections": (v21/*: any*/),
+                        "selections": (v20/*: any*/),
                         "type": "ImageMedia",
                         "abstractKey": null
                       },
@@ -714,7 +710,7 @@ return {
                             "kind": "LinkedField",
                             "name": "cover",
                             "plural": false,
-                            "selections": (v21/*: any*/),
+                            "selections": (v20/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -726,28 +722,21 @@ return {
                     ],
                     "storageKey": null
                   },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "viewerIsOwner",
-                    "storageKey": null
-                  },
                   (v0/*: any*/)
                 ],
                 "storageKey": null
               },
-              (v18/*: any*/)
+              (v17/*: any*/)
             ],
             "storageKey": null
           },
-          (v19/*: any*/)
+          (v18/*: any*/)
         ],
         "storageKey": "discoverClubs(first:9)"
       },
       {
         "alias": null,
-        "args": (v20/*: any*/),
+        "args": (v19/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "DiscoverClubs_discoverClubs",
@@ -757,7 +746,7 @@ return {
     ]
   },
   "params": {
-    "id": "1e0de11de8b41dd9befbf2bfd375151e",
+    "id": "e9e219c1841f811cde8d1037473ddb2d",
     "metadata": {},
     "name": "ResultClubsFeedQuery",
     "operationKind": "query",

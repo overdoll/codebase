@@ -84,7 +84,7 @@ export default function ScrollLikedPosts (props: Props): JSX.Element {
         index
       }) => (
         <PreviewPost
-          postQuery={data.likedPosts.edges[index].node}
+          postQuery={data?.likedPosts?.edges?.[index]?.node}
         />
       )}
     </VerticalPaginationScroller>

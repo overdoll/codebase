@@ -5,6 +5,7 @@ import { HeaderPublicClubViewerFragment$key } from '@//:artifacts/HeaderPublicCl
 import { Stack } from '@chakra-ui/react'
 import SupportLinksPublicClub from './SupportLinksPublicClub/SupportLinksPublicClub'
 import JoinBannerPublicClub from './JoinBannerPublicClub/JoinBannerPublicClub'
+import HomeRedirectPrompt from '@//:common/components/HomeRedirectPrompt/HomeRedirectPrompt'
 
 interface Props {
   clubQuery: HeaderPublicClubFragment$key
@@ -36,6 +37,7 @@ export default function HeaderPublicClub (props: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
+      <HomeRedirectPrompt />
       <JoinBannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       <SupportLinksPublicClub clubQuery={clubData} viewerQuery={viewerData} />
     </Stack>

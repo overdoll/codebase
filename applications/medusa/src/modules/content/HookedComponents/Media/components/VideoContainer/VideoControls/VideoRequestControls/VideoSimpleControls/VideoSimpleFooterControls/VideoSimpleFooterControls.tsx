@@ -18,7 +18,6 @@ export default function VideoSimpleFooterControls (props: Props): JSX.Element {
 
   return (
     <HStack
-      onClick={(e) => e.stopPropagation()}
       h={12}
       bg='dimmers.300'
       borderRadius='full'

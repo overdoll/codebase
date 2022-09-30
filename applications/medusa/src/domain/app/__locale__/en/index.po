@@ -263,16 +263,30 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton.tsx:64
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:63
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:102
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:108
 msgid "Join"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:90
+msgid "Join overdoll to get updates when {0} makes a new post"
+msgstr ""
+
+#: src/common/components/JoinRedirectPrompt/JoinRedirectPrompt.tsx:54
+msgid "Join overdoll to hide this"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:96
 msgid "Join overdoll to save this post and let {0} know you like their post"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:85
+msgid "Join this club"
+msgstr ""
+
 #: src/common/components/ClubJoinTile/ClubJoinTileIconButton/ClubJoinTileIconButton.tsx:51
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostJoinClub/PostJoinClub.tsx:89
 msgid "Join {0}"
 msgstr ""
 
@@ -333,7 +347,6 @@ msgid "Looks like you messed up. Something you did here violated our community g
 msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:54
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostJoinClub/PostJoinClub.tsx:74
 msgid "Manage Club"
 msgstr ""
 
@@ -776,8 +789,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostJoinClub/PostJoinClub.tsx:121
-msgid "Support"
-msgstr ""
+#~ msgid "Support"
+#~ msgstr ""
 
 #: src/modules/content/ContentSelection/TileOverlay/AccountTileOverlay/AccountTileOverlay.tsx:43
 msgid "Supporter"
@@ -879,7 +892,7 @@ msgstr ""
 msgid "This category was not found"
 msgstr ""
 
-#: src/modules/content/Placeholder/NotFound/NotFoundCharacter/NotFoundCharacter.tsx:13
+#: src/modules/content/Placeholder/NotFound/NotFoundCharacter/NotFoundCharacter.tsx:12
 msgid "This character was not found"
 msgstr ""
 
@@ -1022,6 +1035,10 @@ msgstr ""
 msgid "We couldn't find any posts"
 msgstr ""
 
+#: src/common/components/HomeRedirectPrompt/HomeRedirectPrompt.tsx:26
+msgid "We've got a home page with a rule34 roulette game and much more!"
+msgstr ""
+
 #: src/common/components/BooleanHeader/BooleanHeader.tsx:16
 msgid "Yes"
 msgstr ""
@@ -1139,6 +1156,10 @@ msgstr ""
 #: src/modules/content/Placeholder/Empty/EmptyTopics/EmptyTopics.tsx:16
 #~ msgid "message.placeholder.empty.topics.other"
 #~ msgstr ""
+
+#: src/common/components/HomeRedirectPrompt/HomeRedirectPrompt.tsx:21
+msgid "overdoll is more than just for browsing adult content"
+msgstr ""
 
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:78
 #~ msgid "{0}"

@@ -124,14 +124,14 @@ msgid "If requested, refunds may be considered on a case-by-case basis."
 msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:74
-msgid "Join"
-msgstr ""
+#~ msgid "Join"
+#~ msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/PublicClub/ClubBanners/ClubJoinBanner/ClubJoinBanner.tsx:47
 #~ msgid "Join this club to see new content in your feed!"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:53
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:52
 msgid "Join {0}"
 msgstr ""
 
@@ -210,7 +210,7 @@ msgstr ""
 #~ msgid "See all"
 #~ msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:58
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:57
 msgid "See their newly posted content in your feed"
 msgstr ""
 

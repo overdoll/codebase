@@ -14,6 +14,7 @@
     "@hookform/resolvers": "^2.5.1",
     "@lingui/react": "^3.14.0",
     "@sentry/nextjs": "^7.0.0",
+    "@typeform/embed": "^1.38.0",
     "@uppy/core": "^1.16.2",
     "@uppy/drag-drop": "^1.4.27",
     "@uppy/drop-target": "^0.2.3",

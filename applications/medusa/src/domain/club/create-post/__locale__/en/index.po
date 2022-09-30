@@ -238,9 +238,9 @@ msgstr ""
 msgid "Post Content Processed"
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:52
-#~ msgid "Post Submitted"
-#~ msgstr ""
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/ResultCreatePost.tsx:69
+msgid "Post Submitted"
+msgstr ""
 
 #: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostSubmitted/PostSubmitted.tsx:41
 #~ msgid "Post again"
@@ -471,9 +471,9 @@ msgstr ""
 msgid "This content failed to process. Please remove the content and try uploading it again."
 msgstr ""
 
-#: src/domain/club/create-post/CreatePost/PostCreator/PostState/PostNotDraft/PostNotDraft.tsx:23
-#~ msgid "This post was already submitted"
-#~ msgstr ""
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/ResultCreatePost.tsx:74
+msgid "This post was already submitted"
+msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadSelectTopics/UploadSelectTopics.tsx:29
 msgid "Topics"
@@ -552,9 +552,13 @@ msgstr ""
 msgid "Yes, exit"
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/BannerCreatePost/BannerCreatePost.tsx:45
-msgid "You are editing this post as a staff member"
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/BannerCreatePost/BannerCreatePost.tsx:42
+msgid "You are editing this post"
 msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/BannerCreatePost/BannerCreatePost.tsx:45
+#~ msgid "You are editing this post as a staff member"
+#~ msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/RestrictedClubCreatePost/RestrictedClubCreatePost.tsx:38
 msgid "You cannot post at this time due to a restriction on your club"

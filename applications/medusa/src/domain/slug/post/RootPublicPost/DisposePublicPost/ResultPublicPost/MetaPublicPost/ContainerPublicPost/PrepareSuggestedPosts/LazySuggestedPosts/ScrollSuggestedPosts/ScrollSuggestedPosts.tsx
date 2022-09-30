@@ -3,6 +3,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { LazySuggestedPostsQuery } from '@//:artifacts/LazySuggestedPostsQuery.graphql'
 import React from 'react'
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { PreviewPostFragment$key } from '@//:artifacts/PreviewPostFragment.graphql'
 
 interface Props {
   postQuery: ScrollSuggestedPostsFragment$key
@@ -51,7 +52,7 @@ export default function ScrollSuggestedPosts (props: Props): JSX.Element {
         index
       }) => (
         <PreviewPost
-          postQuery={data.suggestedPosts.edges[index].node}
+          postQuery={data?.suggestedPosts?.edges?.[index]?.node as PreviewPostFragment$key}
         />
       )}
     </VerticalPaginationScroller>

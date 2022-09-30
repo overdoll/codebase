@@ -65,7 +65,7 @@ export default function ScrollClubPosts (props: Props): JSX.Element {
         index
       }) => (
         <PreviewPost
-          postQuery={data.posts.edges[index].node}
+          postQuery={data?.posts?.edges?.[index]?.node}
         />
       )}
     </VerticalPaginationScroller>

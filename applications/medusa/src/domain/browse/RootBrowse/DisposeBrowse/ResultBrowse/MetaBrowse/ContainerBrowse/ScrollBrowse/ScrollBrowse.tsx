@@ -52,7 +52,7 @@ export default function ScrollBrowse (props: Props): JSX.Element {
         index
       }) => (
         <PreviewPost
-          postQuery={data.postsFeed.edges[index].node}
+          postQuery={data?.postsFeed?.edges?.[index]?.node}
         />
       )}
     </VerticalPaginationScroller>

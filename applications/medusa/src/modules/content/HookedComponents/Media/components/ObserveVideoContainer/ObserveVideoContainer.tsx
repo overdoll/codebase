@@ -79,25 +79,43 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
   // if video autoplays after you scroll away (for example, after buffering), we pause the video
   useEffect(() => {
     if (player == null) return
-
-    const onAutoplayFailure = (): void => {
-      setPlayRejected(true)
-    }
-
+    if (isObserving) return
     const onPlay = (): void => {
-      setPlayRejected(false)
+      if (!player.hasStart) return
+      player.off('play', onPlay)
       if (!isObserving) {
         pauseVideo(player)
       }
     }
 
-    player.on('play', onPlay)
-    player.on('autoplay-failure', onAutoplayFailure)
+    const onCanPlay = (): void => {
+      player.once('play', onPlay)
+    }
+
+    player.on('canplay', onCanPlay)
     return () => {
+      player.off('canplay', onCanPlay)
       player.off('play', onPlay)
-      player.off('autoplay-failure', onAutoplayFailure)
     }
   }, [isObserving, player])
+
+  // autoplay failure capture
+  useEffect(() => {
+    if (player == null) return
+    const onAutoplayFailure = (): void => {
+      setPlayRejected(true)
+    }
+    const onPlay = (): void => {
+      setPlayRejected(false)
+    }
+
+    player.on('autoplay-failure', onAutoplayFailure)
+    player.on('play', onPlay)
+    return () => {
+      player.off('autoplay-failure', onAutoplayFailure)
+      player.off('play', onPlay)
+    }
+  }, [player])
 
   // if autoplay was rejected, a click anywhere will play the video
   useEffect(() => {
