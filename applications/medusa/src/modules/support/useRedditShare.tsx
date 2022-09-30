@@ -16,8 +16,7 @@ type UseRedditShareReturn = () => void
 export default function useRedditShare (props: UseRedditShareProps): UseRedditShareReturn {
   const {
     url,
-    title,
-    trackingEventId
+    title
   } = props
 
   const router = useRouter()
@@ -42,8 +41,5 @@ export default function useRedditShare (props: UseRedditShareProps): UseRedditSh
 
   return (): void => {
     windowReference.current = window.open(encodedPost, '_blank', 'width=600,height=800')
-    if (trackingEventId != null) {
-
-    }
   }
 }
