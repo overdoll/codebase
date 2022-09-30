@@ -68,7 +68,7 @@ export default function AccountAuthorizer ({
       let disableSessionRecording = !isInProperHostName || (data != null ? (data?.isStaff || data?.isWorker) : false)
 
       const random = Math.floor(Math.random() * 11)
-      // only record 1/10 sessions (around 10%)
+      // only record 1/10 sessions (around 10%))
       if (random !== 0 && !disableSessionRecording) {
         disableSessionRecording = true
       }
