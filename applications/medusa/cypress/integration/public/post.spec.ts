@@ -82,6 +82,7 @@ describe('Post', () => {
   })
 
   it('like, join, support, report as not logged in', () => {
+    cy.viewport('iphone-xr')
     /**
      * Like post
      */
