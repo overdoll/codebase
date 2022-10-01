@@ -119,6 +119,8 @@ type Commands struct {
 	MigrateCharactersResources command.MigrateCharactersResourcesHandler
 	MigrateSeriesResources     command.MigrateSeriesResourcesHandler
 	MigratePostsResources      command.MigratePostsResourcesHandler
+
+	ObservePosts command.ObservePostsHandler
 }
 
 type Queries struct {

@@ -468,6 +468,7 @@ type ComplexityRoot struct {
 		JoinClub                         func(childComplexity int, input types.JoinClubInput) int
 		LeaveClub                        func(childComplexity int, input types.LeaveClubInput) int
 		LikePost                         func(childComplexity int, input types.LikePostInput) int
+		ObservePosts                     func(childComplexity int, input types.ObservePostsInput) int
 		PromoteClubSlugAliasToDefault    func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
 		RemoveCategoryAlternativeTitle   func(childComplexity int, input types.RemoveCategoryAlternativeTitleInput) int
 		RemoveClubSlugAlias              func(childComplexity int, input types.RemoveClubSlugAliasInput) int
@@ -504,6 +505,10 @@ type ComplexityRoot struct {
 		UpdateTopicDescription           func(childComplexity int, input types.UpdateTopicDescriptionInput) int
 		UpdateTopicTitle                 func(childComplexity int, input types.UpdateTopicTitleInput) int
 		UpdateTopicWeight                func(childComplexity int, input types.UpdateTopicWeightInput) int
+	}
+
+	ObservePostsPayload struct {
+		Posts func(childComplexity int) int
 	}
 
 	PageInfo struct {
@@ -972,6 +977,7 @@ type MutationResolver interface {
 	UnArchivePost(ctx context.Context, input types.UnArchivePostInput) (*types.UnArchivePostPayload, error)
 	CreateSeries(ctx context.Context, input types.CreateSeriesInput) (*types.CreateSeriesPayload, error)
 	UpdateSeriesTitle(ctx context.Context, input types.UpdateSeriesTitleInput) (*types.UpdateSeriesTitlePayload, error)
+	ObservePosts(ctx context.Context, input types.ObservePostsInput) (*types.ObservePostsPayload, error)
 	CreateTopic(ctx context.Context, input types.CreateTopicInput) (*types.CreateTopicPayload, error)
 	UpdateTopicTitle(ctx context.Context, input types.UpdateTopicTitleInput) (*types.UpdateTopicTitlePayload, error)
 	UpdateTopicDescription(ctx context.Context, input types.UpdateTopicDescriptionInput) (*types.UpdateTopicDescriptionPayload, error)
@@ -2863,6 +2869,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.LikePost(childComplexity, args["input"].(types.LikePostInput)), true
 
+	case "Mutation.observePosts":
+		if e.complexity.Mutation.ObservePosts == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_observePosts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.ObservePosts(childComplexity, args["input"].(types.ObservePostsInput)), true
+
 	case "Mutation.promoteClubSlugAliasToDefault":
 		if e.complexity.Mutation.PromoteClubSlugAliasToDefault == nil {
 			break
@@ -3294,6 +3312,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateTopicWeight(childComplexity, args["input"].(types.UpdateTopicWeightInput)), true
+
+	case "ObservePostsPayload.posts":
+		if e.complexity.ObservePostsPayload.Posts == nil {
+			break
+		}
+
+		return e.complexity.ObservePostsPayload.Posts(childComplexity), true
 
 	case "PageInfo.endCursor":
 		if e.complexity.PageInfo.EndCursor == nil {
@@ -4627,6 +4652,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputJoinClubInput,
 		ec.unmarshalInputLeaveClubInput,
 		ec.unmarshalInputLikePostInput,
+		ec.unmarshalInputObservePostsInput,
 		ec.unmarshalInputPromoteClubSlugAliasToDefaultInput,
 		ec.unmarshalInputRemoveCategoryAlternativeTitleInput,
 		ec.unmarshalInputRemoveClubSlugAliasInput,
@@ -7492,6 +7518,25 @@ extend type Mutation {
   updateSeriesTitle(input: UpdateSeriesTitleInput!): UpdateSeriesTitlePayload
 }
 `, BuiltIn: false},
+	{Name: "../../../schema/stats/schema.graphql", Input: `"""Track posts observations."""
+input ObservePostsInput {
+  """The post ids."""
+  postIds: [ID!]!
+}
+
+"""Tracking posts observations."""
+type ObservePostsPayload {
+  """The posts that were observed."""
+  posts: [Post!]!
+}
+
+extend type Mutation {
+  """
+  Track posts observations - this should be tracked whenever a post is "viewed" on the site - either through the list or viewing the post individually.
+  """
+  observePosts(input: ObservePostsInput!): ObservePostsPayload
+}
+`, BuiltIn: false},
 	{Name: "../../../schema/topic/schema.graphql", Input: `type Topic implements Node @key(fields: "id") {
   """An ID pointing to this topic."""
   id: ID!
@@ -9486,6 +9531,21 @@ func (ec *executionContext) field_Mutation_likePost_args(ctx context.Context, ra
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNLikePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐLikePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_observePosts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.ObservePostsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNObservePostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐObservePostsInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -25511,6 +25571,62 @@ func (ec *executionContext) fieldContext_Mutation_updateSeriesTitle(ctx context.
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_observePosts(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_observePosts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().ObservePosts(rctx, fc.Args["input"].(types.ObservePostsInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.ObservePostsPayload)
+	fc.Result = res
+	return ec.marshalOObservePostsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐObservePostsPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_observePosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "posts":
+				return ec.fieldContext_ObservePostsPayload_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type ObservePostsPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_observePosts_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_createTopic(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_createTopic(ctx, field)
 	if err != nil {
@@ -25789,6 +25905,86 @@ func (ec *executionContext) fieldContext_Mutation_updateTopicBanner(ctx context.
 	if fc.Args, err = ec.field_Mutation_updateTopicBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ObservePostsPayload_posts(ctx context.Context, field graphql.CollectedField, obj *types.ObservePostsPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ObservePostsPayload_posts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Posts, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.Post)
+	fc.Result = res
+	return ec.marshalNPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ObservePostsPayload_posts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ObservePostsPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Post_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Post_reference(ctx, field)
+			case "state":
+				return ec.fieldContext_Post_state(ctx, field)
+			case "supporterOnlyStatus":
+				return ec.fieldContext_Post_supporterOnlyStatus(ctx, field)
+			case "contributor":
+				return ec.fieldContext_Post_contributor(ctx, field)
+			case "club":
+				return ec.fieldContext_Post_club(ctx, field)
+			case "content":
+				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Post_createdAt(ctx, field)
+			case "postedAt":
+				return ec.fieldContext_Post_postedAt(ctx, field)
+			case "suggestedPosts":
+				return ec.fieldContext_Post_suggestedPosts(ctx, field)
+			case "audience":
+				return ec.fieldContext_Post_audience(ctx, field)
+			case "categories":
+				return ec.fieldContext_Post_categories(ctx, field)
+			case "characters":
+				return ec.fieldContext_Post_characters(ctx, field)
+			case "likes":
+				return ec.fieldContext_Post_likes(ctx, field)
+			case "viewerLiked":
+				return ec.fieldContext_Post_viewerLiked(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Post", field.Name)
+		},
 	}
 	return fc, nil
 }
@@ -38079,6 +38275,29 @@ func (ec *executionContext) unmarshalInputLikePostInput(ctx context.Context, obj
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputObservePostsInput(ctx context.Context, obj interface{}) (types.ObservePostsInput, error) {
+	var it types.ObservePostsInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "postIds":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("postIds"))
+			it.PostIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputPromoteClubSlugAliasToDefaultInput(ctx context.Context, obj interface{}) (types.PromoteClubSlugAliasToDefaultInput, error) {
 	var it types.PromoteClubSlugAliasToDefaultInput
 	asMap := map[string]interface{}{}
@@ -42924,6 +43143,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateSeriesTitle(ctx, field)
 			})
 
+		case "observePosts":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_observePosts(ctx, field)
+			})
+
 		case "createTopic":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -42954,6 +43179,34 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateTopicBanner(ctx, field)
 			})
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var observePostsPayloadImplementors = []string{"ObservePostsPayload"}
+
+func (ec *executionContext) _ObservePostsPayload(ctx context.Context, sel ast.SelectionSet, obj *types.ObservePostsPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, observePostsPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ObservePostsPayload")
+		case "posts":
+
+			out.Values[i] = ec._ObservePostsPayload_posts(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -47259,6 +47512,11 @@ func (ec *executionContext) marshalNMediaDeviceType2overdollᚋlibrariesᚋgraph
 	return v
 }
 
+func (ec *executionContext) unmarshalNObservePostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐObservePostsInput(ctx context.Context, v interface{}) (types.ObservePostsInput, error) {
+	res, err := ec.unmarshalInputObservePostsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphqlᚋrelayᚐPageInfo(ctx context.Context, sel ast.SelectionSet, v *relay.PageInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -47271,6 +47529,50 @@ func (ec *executionContext) marshalNPageInfo2ᚖoverdollᚋlibrariesᚋgraphql�
 
 func (ec *executionContext) marshalNPost2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx context.Context, sel ast.SelectionSet, v types.Post) graphql.Marshaler {
 	return ec._Post(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNPost2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.Post) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) marshalNPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx context.Context, sel ast.SelectionSet, v *types.Post) graphql.Marshaler {
@@ -48913,6 +49215,13 @@ func (ec *executionContext) marshalOMediaProgress2ᚖoverdollᚋlibrariesᚋgrap
 		return graphql.Null
 	}
 	return ec._MediaProgress(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOObservePostsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐObservePostsPayload(ctx context.Context, sel ast.SelectionSet, v *types.ObservePostsPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._ObservePostsPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx context.Context, sel ast.SelectionSet, v *types.Post) graphql.Marshaler {
