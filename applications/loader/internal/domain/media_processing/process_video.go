@@ -211,7 +211,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			}
 		}
 
-		// read normalization data
+		// read normalization datas
 		var ffmpegNormalizationData *ffmpegLoudNormData
 
 		if err := json.Unmarshal(buffer, &ffmpegNormalizationData); err != nil {
