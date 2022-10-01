@@ -8,7 +8,7 @@ import AdvertBoxWrapper from '../../../join/Join/components/PlatformBenefitsAdve
 import { ArrowButtonLeft, RemoveCross } from '@//:assets/icons'
 import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
 import VerifyTokenRichObject
-  from '../../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
+  from '../../RootVerifyToken/VerifyTokenRichObject/VerifyTokenRichObject'
 
 export default function Invalid (): JSX.Element {
   return (

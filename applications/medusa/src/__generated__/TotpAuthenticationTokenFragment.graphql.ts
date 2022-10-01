@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<979c2258cc4dc174639f47c21eba7fcb>>
+ * @generated SignedSource<<9b6606274f8c58d2405ff1c017b75339>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type TotpAuthenticationTokenFragment$data = {
   readonly id: string;
   readonly token: string;
+  readonly " $fragmentSpreads": FragmentRefs<"RevokeViewAuthenticationTokenButtonFragment">;
   readonly " $fragmentType": "TotpAuthenticationTokenFragment";
 };
 export type TotpAuthenticationTokenFragment$key = {
@@ -39,12 +40,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "token",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "RevokeViewAuthenticationTokenButtonFragment"
     }
   ],
   "type": "AuthenticationToken",
   "abstractKey": null
 };
 
-(node as any).hash = "e0e52f46d0185baeeffe6f98151c5402";
+(node as any).hash = "62449b9305ab307903ac0b0ee2e2d541";
 
 export default node;

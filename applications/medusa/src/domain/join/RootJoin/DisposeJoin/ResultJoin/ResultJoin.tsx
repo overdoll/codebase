@@ -2,7 +2,7 @@ import { PreloadedQuery, usePreloadedQuery } from 'react-relay/hooks'
 import type { ResultJoinQuery } from '@//:artifacts/ResultJoinQuery.graphql'
 import { graphql } from 'react-relay'
 import StartJoin from './StartJoin/StartJoin'
-import { Center } from '@chakra-ui/react'
+import { FixedContainer } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: PreloadedQuery<ResultJoinQuery>
@@ -29,13 +29,8 @@ export default function ResultJoin (props: Props): JSX.Element {
   )
 
   return (
-    <Center mt={4} position='fixed' w='100%'>
-      <Center
-        maxW='container.sm'
-      >
-        <StartJoin query={data.viewAuthenticationToken} loadQuery={loadQuery} />
-      </Center>
-    </Center>
-
+    <FixedContainer>
+      <StartJoin query={data.viewAuthenticationToken} loadQuery={loadQuery} />
+    </FixedContainer>
   )
 }

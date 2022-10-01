@@ -53,7 +53,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
         <MobileContainer>
           <Flex
             direction='column'
-            bg='gray.800'
+            bg='gray.900'
             borderRadius='base'
             zIndex='sidebar'
           >
@@ -76,7 +76,7 @@ export default function VerticalNavigationContent (props: Props): JSX.Element {
         </MobileContainer>
       </PageContainer>
       <Box
-        bg='gray.800'
+        bg='gray.900'
         w='300px'
         h='calc(100vh - 54px)'
         pr={4}

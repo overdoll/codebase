@@ -37,17 +37,17 @@ export default function RefreshLobbyAuthenticationTokenJoin (props: Props): JSX.
     return (
       <Flex align='center' justify='center'>
         <Stack w={60} align='center' justify='center' spacing={2}>
-          <Spinner color='purple.50' w={6} h={6} />
-          <Text textAlign='center' color='purple.50' fontSize='md'>
+          <Spinner color='whiteAlpha.300' w={6} h={6} />
+          <Text textAlign='center' color='whiteAlpha.300' fontSize='md'>
             <Trans>
               Waiting for you to click on the email link
             </Trans>
           </Text>
         </Stack>
       </Flex>
-
     )
   }
 
+  // we should do something when the token is verified and you go back to the tab
   return <></>
 }

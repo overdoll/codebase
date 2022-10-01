@@ -1,22 +1,20 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import { Suspense, useEffect, useRef } from 'react'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
-import { Box, Flex, Heading, Stack } from '@chakra-ui/react'
+import { Center, Flex, Grid, GridItem, Heading, Stack } from '@chakra-ui/react'
 import type {
   LobbyAuthenticationTokenJoinFragment$key
 } from '@//:artifacts/LobbyAuthenticationTokenJoinFragment.graphql'
-import { Trans } from '@lingui/macro'
 import Head from 'next/head'
-import { MailEnvelope } from '@//:assets/icons'
+import { EmailSent } from '@//:assets/icons'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
-
 import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
 import { useCookies } from 'react-cookie'
 import RefreshLobbyAuthenticationTokenJoin
   from './RefreshLobbyAuthenticationTokenJoin/RefreshLobbyAuthenticationTokenJoin'
-import Lobby from '../../../../../../Join/pages/Lobby/Lobby'
 import RevokeViewAuthenticationTokenButton
   from '../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: LobbyAuthenticationTokenJoinFragment$key
@@ -74,58 +72,56 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
       <Head>
         <title>Waiting for authentication - overdoll</title>
       </Head>
-      <Flex align='center' h='100%' position='relative'>
-        <Flex top={0} position='absolute' w='100%' justify='flex-end'>
-          <RevokeViewAuthenticationTokenButton query={data} />
-        </Flex>
-        <Stack spacing={6}>
-          <Icon
-            icon={MailEnvelope}
-            w={16}
-            h={16}
-            fill='purple.300'
-          />
-          <Box>
-            <Heading
-              textAlign='center'
-              fontSize='xl'
-              color='gray.00'
-              mb={1}
-            >
-              <Trans>
-                Tap on the link you received in your email inbox to continue
-              </Trans>
-            </Heading>
-            <Heading textAlign='center' color='gray.300' fontSize='sm'>
-              <Trans>
-                Make sure to check your spam!
-              </Trans>
-            </Heading>
-          </Box>
-          <Flex
-            justify='center'
-            align='center'
-            wordBreak='break-all'
-            p={3}
-            borderRadius='md'
-            bg='gray.900'
-            w='100%'
-          >
-            <Heading
-              textAlign='center'
-              fontSize='md'
-              color='purple.300'
-            >
-              {data.email ?? (cookies.token != null ? cookies.token.split(';')[1] : undefined)}
-            </Heading>
-          </Flex>
-          <QueryErrorBoundary loadQuery={loadQuery}>
-            <Suspense fallback={<></>}>
-              <RefreshLobbyAuthenticationTokenJoin searchArguments={searchArguments} />
-            </Suspense>
-          </QueryErrorBoundary>
+      <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
+        <Stack spacing={4}>
+          <Grid w='100%' templateColumns='1fr 1fr 1fr'>
+            <GridItem>
+              <Flex h='100%' align='center'>
+                <RevokeViewAuthenticationTokenButton query={data} />
+              </Flex>
+            </GridItem>
+            <GridItem>
+              <Center>
+                <Icon
+                  icon={EmailSent}
+                  w={16}
+                  h={16}
+                  fill='gray.00'
+                />
+              </Center>
+            </GridItem>
+            <GridItem />
+          </Grid>
+          <Heading fontSize='4xl' color='gray.00'>
+            <Trans>
+              Check your email and click on the link.
+            </Trans>
+          </Heading>
         </Stack>
-      </Flex>
+        <Flex
+          justify='center'
+          align='center'
+          wordBreak='break-all'
+          p={3}
+          borderRadius='lg'
+          bg='gray.800'
+          w='100%'
+        >
+          <Heading
+            noOfLines={2}
+            textAlign='center'
+            fontSize='xl'
+            color='primary.400'
+          >
+            {data.email ?? (cookies.token != null ? cookies.token.split(';')[1] : undefined)}
+          </Heading>
+        </Flex>
+        <QueryErrorBoundary loadQuery={loadQuery}>
+          <Suspense fallback={<></>}>
+            <RefreshLobbyAuthenticationTokenJoin searchArguments={searchArguments} />
+          </Suspense>
+        </QueryErrorBoundary>
+      </Stack>
     </>
   )
 }

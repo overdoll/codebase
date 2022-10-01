@@ -4,6 +4,8 @@ import LobbyAuthenticationTokenJoin from './LobbyAuthenticationTokenJoin/LobbyAu
 import RegisterAuthenticationToken from './RegisterAuthenticationToken/RegisterAuthenticationToken'
 import MultiFactorAuthenticationToken from './MultiFactorAuthenticationToken/MultiFactorAuthenticationToken'
 import GrantAuthenticationTokenJoin from './GrantAuthenticationTokenJoin/GrantAuthenticationTokenJoin'
+import { usePageVisibility } from '@//:modules/hooks/usePageVisibility/usePageVisibility'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: ViewAuthenticationTokenJoinFragment$key
@@ -35,9 +37,17 @@ export default function ViewAuthenticationTokenJoin (props: Props): JSX.Element 
 
   const data = useFragment(Fragment, query)
 
+  const isVisible = usePageVisibility()
+
   useSubscribeToInvalidationState([data.id], () => {
     loadQuery()
   })
+
+  useUpdateEffect(() => {
+    if (isVisible) {
+      loadQuery()
+    }
+  }, [isVisible])
 
   if (!data.verified) {
     return (

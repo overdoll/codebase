@@ -12,7 +12,7 @@ import Complete from './Complete/Complete'
 import Invalid from './Invalid/Invalid'
 import { PageProps } from '@//:types/app'
 import VerifyTokenRichObject
-  from '../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
+  from '../RootVerifyToken/VerifyTokenRichObject/VerifyTokenRichObject'
 
 interface Props {
   queryRefs: {

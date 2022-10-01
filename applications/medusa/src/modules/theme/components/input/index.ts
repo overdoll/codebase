@@ -32,9 +32,8 @@ const baseStyle: PartsStyleObject<typeof parts> = {
 
 const size: Record<string, SystemStyleObject> = {
   xl: {
-    fontSize: 'xl',
-    pt: 5,
-    px: 3,
+    fontSize: '2xl',
+    px: 4,
     h: 16,
     borderRadius: 'lg',
     fontWeight: 'semibold'

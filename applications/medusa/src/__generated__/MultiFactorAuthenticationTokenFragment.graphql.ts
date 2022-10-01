@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d2af88547ff328dd0ca837ded0e06497>>
+ * @generated SignedSource<<a3a32ee596fd6181f82666c7417049c7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type MultiFactorAuthenticationTokenFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"RecoveryCodeAuthenticationTokenFragment" | "RevokeViewAuthenticationTokenButtonFragment" | "TotpAuthenticationTokenFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"RecoveryCodeAuthenticationTokenFragment" | "TotpAuthenticationTokenFragment">;
   readonly " $fragmentType": "MultiFactorAuthenticationTokenFragment";
 };
 export type MultiFactorAuthenticationTokenFragment$key = {
@@ -34,17 +34,12 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RecoveryCodeAuthenticationTokenFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "RevokeViewAuthenticationTokenButtonFragment"
     }
   ],
   "type": "AuthenticationToken",
   "abstractKey": null
 };
 
-(node as any).hash = "1186cc86738701a29fe5b9917f405186";
+(node as any).hash = "48f30c020fd88e74d5e19102a8ad4623";
 
 export default node;

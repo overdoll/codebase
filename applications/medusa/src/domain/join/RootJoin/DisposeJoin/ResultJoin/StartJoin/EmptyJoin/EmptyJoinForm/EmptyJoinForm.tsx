@@ -47,7 +47,7 @@ export default function EmptyJoinForm (props: Props): JSX.Element {
       <Stack spacing={4}>
         <FormInput
           id='email'
-          size='lg'
+          size='xl'
         >
           <InputBody>
             <TextInput
@@ -60,7 +60,7 @@ export default function EmptyJoinForm (props: Props): JSX.Element {
           <InputFooter />
         </FormInput>
         <FormSubmitButton
-          size='lg'
+          size='xl'
           variant='solid'
           colorScheme='primary'
           isLoading={isLoading}

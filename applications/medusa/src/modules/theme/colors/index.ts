@@ -1,6 +1,6 @@
 export default {
   black: {
-    100: '#1a1a1a'
+    900: '#000'
   },
 
   gray: {

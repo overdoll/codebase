@@ -1,5 +1,5 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Box, Heading, Stack } from '@chakra-ui/react'
+import { Center, Flex, Grid, GridItem, Heading, Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import Joi from 'joi'
@@ -20,9 +20,13 @@ import {
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import { Barcode } from '@//:assets/icons'
+import { RegisterAccount } from '@//:assets/icons'
 import useGrantCleanup from '../../../support/useGrantCleanup'
 import { Icon } from '@//:modules/content/PageLayout'
+import Head from 'next/head'
+import RevokeViewAuthenticationTokenButton
+  from '../../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
+import Button from '@//:modules/form/Button/Button'
 
 interface CodeValues {
   code: string
@@ -30,6 +34,7 @@ interface CodeValues {
 
 interface Props {
   query: RecoveryCodeAuthenticationTokenFragment$key
+  onUseTotp: () => void
 }
 
 const Mutation = graphql`
@@ -59,13 +64,17 @@ const Fragment = graphql`
   fragment RecoveryCodeAuthenticationTokenFragment on AuthenticationToken {
     id
     token
+    ...RevokeViewAuthenticationTokenButtonFragment
   }
 `
 
 export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Element {
-  const { query } = props
+  const {
+    query,
+    onUseTotp
+  } = props
 
-  const fragment = useFragment(Fragment, query)
+  const data = useFragment(Fragment, query)
 
   const [submitCode, isSubmittingCode] = useMutation<RecoveryCodeAuthenticationTokenMutation>(
     Mutation
@@ -105,7 +114,7 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
     submitCode({
       variables: {
         input: {
-          token: fragment.token,
+          token: data.token,
           recoveryCode: code
         }
       },
@@ -124,7 +133,7 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
       },
       updater: (store, payload) => {
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.validation === 'TOKEN_INVALID') {
-          invalidateGrant(store, fragment.id)
+          invalidateGrant(store, data.id)
           return
         }
         if (payload?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account?.id != null) {
@@ -143,55 +152,64 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
 
   return (
     <>
-      <Icon
-        icon={Barcode}
-        w={16}
-        h={16}
-        fill='primary.400'
-      />
-      <Box>
-        <Heading
-          textAlign='center'
-          fontSize='xl'
-          color='gray.00'
-          mb={1}
-        >
-          <Trans>
-            Enter an 8-character recovery code
-          </Trans>
-        </Heading>
-        <Heading textAlign='center' color='gray.300' fontSize='sm'>
-          <Trans>
-            If you lost access to your two-factor device, you can use one of the recovery codes you downloaded
-            when you set up two-factor authentication.
-          </Trans>
-        </Heading>
-      </Box>
-      <Form {...methods} onSubmit={onSubmitCode}>
-        <Stack spacing={4} justify='space-between'>
-          <FormInput size='lg' id='code'>
-            <InputBody>
-              <TextInput
-                borderColor='transparent'
-                variant='outline'
-                placeholder={i18n._(t`An 8-character recovery code`)}
+      <Head>
+        <title>Recovery codes - overdoll</title>
+      </Head>
+      <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
+        <Grid w='100%' templateColumns='1fr 1fr 1fr'>
+          <GridItem>
+            <Flex h='100%' align='center'>
+              <RevokeViewAuthenticationTokenButton query={data} />
+            </Flex>
+          </GridItem>
+          <GridItem>
+            <Center>
+              <Icon
+                icon={RegisterAccount}
+                w={16}
+                h={16}
+                fill='gray.00'
               />
-              <InputFeedback />
-            </InputBody>
-            <InputFooter />
-          </FormInput>
-          <FormSubmitButton
-            size='lg'
-            variant='solid'
-            colorScheme='primary'
-            isLoading={isSubmittingCode}
-          >
-            <Trans>
-              Submit
-            </Trans>
-          </FormSubmitButton>
-        </Stack>
-      </Form>
+            </Center>
+          </GridItem>
+          <GridItem />
+        </Grid>
+        <Heading fontSize='4xl' color='gray.00'>
+          <Trans>
+            Enter an 8-character recovery code to log in.
+          </Trans>
+        </Heading>
+        <Form {...methods} onSubmit={onSubmitCode}>
+          <Stack spacing={4} justify='space-between'>
+            <FormInput size='lg' id='code'>
+              <InputBody>
+                <TextInput
+                  borderColor='transparent'
+                  variant='outline'
+                  placeholder={i18n._(t`An 8-character recovery code`)}
+                />
+                <InputFeedback />
+              </InputBody>
+              <InputFooter />
+            </FormInput>
+            <FormSubmitButton
+              size='lg'
+              variant='solid'
+              colorScheme='primary'
+              isLoading={isSubmittingCode}
+            >
+              <Trans>
+                Submit
+              </Trans>
+            </FormSubmitButton>
+          </Stack>
+        </Form>
+        <Button onClick={onUseTotp} variant='ghost' size='sm'>
+          <Trans>
+            Use authenticator app instead
+          </Trans>
+        </Button>
+      </Stack>
     </>
   )
 }

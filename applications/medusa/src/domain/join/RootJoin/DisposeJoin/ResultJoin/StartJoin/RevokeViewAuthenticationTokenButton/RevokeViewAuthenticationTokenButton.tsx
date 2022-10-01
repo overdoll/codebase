@@ -14,13 +14,17 @@ import {
 import type {
   RevokeViewAuthenticationTokenButtonFragment$key
 } from '@//:artifacts/RevokeViewAuthenticationTokenButtonFragment.graphql'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import {
   RevokeViewAuthenticationTokenButtonMutation
 } from '@//:artifacts/RevokeViewAuthenticationTokenButtonMutation.graphql'
 import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import useGrantCleanup from '../support/useGrantCleanup'
+import IconButton from '@//:modules/form/IconButton/IconButton'
+import { useLingui } from '@lingui/react'
+import Icon from '../../../../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
+import { ArrowThickLeft } from '@//:assets/icons'
 
 interface Props {
   query: RevokeViewAuthenticationTokenButtonFragment$key
@@ -46,6 +50,8 @@ export default function RevokeViewAuthenticationTokenButton (props: Props): JSX.
   const data = useFragment(Fragment, query)
 
   const cancelButtonRef = useRef(null)
+
+  const { i18n } = useLingui()
 
   const {
     onOpen,
@@ -77,14 +83,19 @@ export default function RevokeViewAuthenticationTokenButton (props: Props): JSX.
 
   return (
     <>
-      <CloseButton
-        size='lg'
+      <IconButton
+        aria-label={i18n._(t`Cancel`)}
         onClick={onOpen}
-      >
-        <Trans>
-          Cancel
-        </Trans>
-      </CloseButton>
+        icon={(
+          <Icon
+            icon={ArrowThickLeft}
+            w={8}
+            h={8}
+            fill='gray.00'
+          />)}
+        variant='ghost'
+        size='lg'
+      />
       <AlertDialog
         preserveScrollBarGap
         isCentered

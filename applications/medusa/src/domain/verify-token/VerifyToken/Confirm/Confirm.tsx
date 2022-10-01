@@ -13,7 +13,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { WarningTriangle } from '@//:assets/icons'
 import BackgroundPatternWrapper from '../../../join/Join/components/BackgroundPatternWrapper/BackgroundPatternWrapper'
 import VerifyTokenRichObject
-  from '../../../../common/rich-objects/verify-token/VerifyTokenRichObject/VerifyTokenRichObject'
+  from '../../RootVerifyToken/VerifyTokenRichObject/VerifyTokenRichObject'
 
 interface Props {
   verify: () => void

@@ -102,30 +102,13 @@ export default function GrantAuthenticationTokenJoin (props: Props): JSX.Element
       <Head>
         <title>Logging you in - overdoll</title>
       </Head>
-      <Stack align='center' justify='center' h='100%' spacing={6}>
-        <Spinner
-          thickness='6px'
-          w={16}
-          h={16}
-          color='primary.400'
-        />
-        <Box>
-          <Heading
-            textAlign='center'
-            fontSize='xl'
-            color='gray.00'
-            mb={1}
-          >
-            <Trans>
-              Logging in
-            </Trans>
-          </Heading>
-          <Heading textAlign='center' color='gray.300' fontSize='sm'>
-            <Trans>
-              Please wait while we log you in...
-            </Trans>
-          </Heading>
-        </Box>
+      <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
+        <Spinner thickness='12px' color='gray.00' w={16} h={16} />
+        <Heading fontSize='4xl' color='gray.00'>
+          <Trans>
+            Just a few seconds for us to log you in.
+          </Trans>
+        </Heading>
       </Stack>
     </>
   )

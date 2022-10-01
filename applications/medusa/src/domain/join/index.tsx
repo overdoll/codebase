@@ -6,17 +6,20 @@ RootJoin.getTranslationProps = async (ctx) => ({
 })
 
 RootJoin.getRelayPreloadProps = (ctx) => {
-  let tokenCookie = ctx.cookies.get('token')
+  const tokenCookie = ctx.cookies.get('token') != null ? decodeURIComponent(ctx.cookies.get('token')) : null
 
-  if (tokenCookie != null) {
-    tokenCookie = tokenCookie.split(';')[0]
-  }
+  const formattedCookie = tokenCookie != null ? tokenCookie.split(';')[0] : ''
+
+  // cookie empty sometimes for some reason, esp when refreshing the page
   return {
     queries: {
       joinQuery: {
         params: ResultJoinQuery.params,
         variables: {
-          token: tokenCookie ?? ''
+          token: formattedCookie
+        },
+        options: {
+          fetchPolicy: 'network-only'
         }
       }
     }

@@ -1,12 +1,11 @@
 import { graphql, useMutation } from 'react-relay/hooks'
 import { Heading, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
-import { OverdollLogo } from '@//:assets/logos'
+import { OverdollLogoOutline } from '@//:assets/logos'
 import { useCookies } from 'react-cookie'
 import { EmptyJoinMutation } from '@//:artifacts/EmptyJoinMutation.graphql'
-import { t } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 import EmptyJoinForm from './EmptyJoinForm/EmptyJoinForm'
 
 const Mutation = graphql`
@@ -56,9 +55,13 @@ export default function EmptyJoin (): JSX.Element {
 
         let tokenCookie = cookies.token
 
+        console.log(tokenCookie)
+
         if (tokenCookie != null) {
           tokenCookie = tokenCookie.split(';')[0]
         }
+
+        console.log(`viewAuthenticationToken(token:"${tokenCookie as string ?? ''}")`)
 
         store
           .getRoot()
@@ -72,7 +75,6 @@ export default function EmptyJoin (): JSX.Element {
         })
       },
       onCompleted () {
-        trackFathomEvent('OP1VETUI', 1)
       },
       onError (data) {
         notify({
@@ -86,15 +88,17 @@ export default function EmptyJoin (): JSX.Element {
   // Ask user to authenticate
   return (
     <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
-      <Stack spacing={2}>
+      <Stack spacing={4}>
         <Icon
-          icon={OverdollLogo}
+          icon={OverdollLogoOutline}
           w={16}
           h={16}
-          fill='gray.300'
+          fill='gray.00'
         />
-        <Heading textAlign='center' fontSize='4xl' color='gray.00'>
-          overdoll
+        <Heading fontSize='4xl' color='gray.00'>
+          <Trans>
+            Join the next digital adult content platform.
+          </Trans>
         </Heading>
       </Stack>
       <EmptyJoinForm

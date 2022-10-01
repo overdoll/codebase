@@ -58,7 +58,7 @@ export default function ShowJoinToast (): JSX.Element {
       }}
     >
       <ModalOverlay />
-      <ModalContent bg='#000'>
+      <ModalContent>
         <ModalBody p={4}>
           <Stack spacing={4}>
             <Stack spacing={2}>
