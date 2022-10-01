@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"errors"
 	"overdoll/applications/loader/internal/domain/event"
 	"overdoll/applications/loader/internal/domain/media_storage"
 	"overdoll/applications/loader/internal/domain/upload"
@@ -14,6 +15,7 @@ type ProcessMediaFromUploads struct {
 	Link      *proto.MediaLink
 	UploadIds []string
 	Source    string
+	Reprocess bool
 }
 
 type ProcessMediaFromUploadsHandler struct {
@@ -34,6 +36,13 @@ func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessM
 		return nil, err
 	}
 
+	// if reprocessing, set existing media as current upload ids - basically reprocess all resources associated to this post id
+	if len(cmd.UploadIds) == 0 && cmd.Reprocess {
+		for _, existing := range existingMedia {
+			cmd.UploadIds = append(cmd.UploadIds, existing.ID())
+		}
+	}
+
 	var results []*media.Media
 
 	for _, uploadId := range cmd.UploadIds {
@@ -44,17 +53,31 @@ func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessM
 		}
 
 		found := false
+		var foundMedia *media.Media
 
 		for _, existing := range existingMedia {
 			if existing.ID() == final.FileId() {
 				results = append(results, existing)
 				found = true
+				foundMedia = existing
 				break
 			}
 		}
 
-		if found {
+		if found && !cmd.Reprocess {
 			continue
+		}
+
+		if !found && cmd.Reprocess {
+			return nil, errors.New("could not find existing media [" + cmd.Link.Id + "] [" + uploadId + "] for processing")
+		}
+
+		var link *proto.MediaLink
+
+		if cmd.Reprocess {
+			link = foundMedia.RawProto().Link
+		} else {
+			link = cmd.Link
 		}
 
 		sourceMedia := &proto.Media{
@@ -62,7 +85,7 @@ func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessM
 			IsUpload:         true,
 			OriginalFileName: final.FileName(),
 			Private:          true,
-			Link:             cmd.Link,
+			Link:             link,
 			State: &proto.MediaState{
 				Processed: false,
 				Failed:    false,

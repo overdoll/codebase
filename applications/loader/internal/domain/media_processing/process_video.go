@@ -371,7 +371,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 	hasOversized := false
 
 	if isLandscape {
-		if firstStream.Width > 1920 {
+		if firstStream.Width > 2560 {
 			requiresResize = true
 		}
 
@@ -379,7 +379,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			hasOversized = true
 		}
 	} else {
-		if firstStream.Height > 1920 {
+		if firstStream.Height > 2560 {
 			requiresResize = true
 		}
 

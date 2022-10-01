@@ -29,9 +29,11 @@ func (h MigratePostsResourcesHandler) Handle(ctx context.Context, cmd MigratePos
 		for _, pst := range post.Content() {
 			if pst.Media().IsLegacy() {
 				content = append(content, pst.Media())
-				if pst.MediaHidden() != nil {
-					content = append(content, pst.MediaHidden())
-				}
+			}
+
+			// only convert hidden media if it's not legacy
+			if pst.MediaHidden() != nil && !pst.Media().IsLegacy() {
+				content = append(content, pst.MediaHidden())
 			}
 		}
 
