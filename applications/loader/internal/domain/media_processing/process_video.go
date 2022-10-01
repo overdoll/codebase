@@ -21,7 +21,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func init() {
@@ -48,6 +47,7 @@ type ffmpegProbeStream struct {
 		CodecTagString     string `json:"codec_tag_string"`
 		Profile            string `json:"profile"`
 		Level              int    `json:"level"`
+		CodecName          string `json:"codec_name"`
 	} `json:"streams"`
 	Format struct {
 		Duration string `json:"duration"`
@@ -218,40 +218,72 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			return nil, errors.Wrap(err, "failed to unmarshal ffmpeg normalization data")
 		}
 
-		loudNorm := "I=" + defaultIntensityLevel +
-			":LRA=" + defaultLoudnessRange +
-			":tp=" + defaultTruePeak +
-			":measured_I=" + ffmpegNormalizationData.InputI +
-			":measured_LRA=" + ffmpegNormalizationData.InputLra +
-			":measured_tp=" + ffmpegNormalizationData.InputTp +
-			":measured_thresh=" + ffmpegNormalizationData.InputThresh +
-			":offset=" + ffmpegNormalizationData.TargetOffset
+		// if these are infinite, we need to ignore
+		if ffmpegNormalizationData.InputI != "-inf" && ffmpegNormalizationData.TargetOffset != "inf" {
+			loudNorm := "I=" + defaultIntensityLevel +
+				":LRA=" + defaultLoudnessRange +
+				":tp=" + defaultTruePeak +
+				":measured_I=" + ffmpegNormalizationData.InputI +
+				":measured_LRA=" + ffmpegNormalizationData.InputLra +
+				":measured_tp=" + ffmpegNormalizationData.InputTp +
+				":measured_thresh=" + ffmpegNormalizationData.InputThresh +
+				":offset=" + ffmpegNormalizationData.TargetOffset
 
-		newFileName := uuid.New().String() + ".mp4"
-		defer os.Remove(newFileName)
+			newFileName := uuid.New().String()
+			defer os.Remove(newFileName)
 
-		// start a channel that will send fake progress
-		done := startFakeProgress(target.RawProto().Id)
+			// get format
+			packets, err := ffmpeg_go.Probe(targetFileName, map[string]interface{}{
+				"hide_banner":    "",
+				"v":              "error",
+				"select_streams": "v:0",
+				"show_entries":   "stream=codec_name",
+			})
 
-		// process our audio
-		if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "loglevel": "error", "progress": "unix://" + validationSocket}).
-			Output(newFileName, ffmpeg_go.KwArgs{
-				"map": []string{"0:v:0", "0:a:0"},
-				"ar":  "48k",
-				"c:a": "aac",
-				"c:v": "copy",
-				"ac":  "2",
-				"af":  "loudnorm=print_format=summary:linear=true:" + loudNorm,
-			}).
-			WithErrorOutput(ffmpegLogger).
-			OverWriteOutput().
-			Run(); err != nil {
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to probe format")
+			}
+
+			var probePackets *ffmpegProbeStream
+
+			if err := json.Unmarshal([]byte(packets), &probePackets); err != nil {
+				return nil, errors.Wrap(err, "failed to unmarshal playlist probe")
+			}
+
+			args := ffmpeg_go.KwArgs{
+				"map":    []string{"0:v:0", "0:a:0"},
+				"ar":     "48k",
+				"c:a":    "aac",
+				"ac":     "2",
+				"af":     "loudnorm=print_format=summary:linear=true:" + loudNorm,
+				"format": "mp4",
+			}
+
+			if len(probePackets.Streams) > 0 && probePackets.Streams[0].CodecName == "h264" {
+				args["c:v"] = "copy"
+			} else {
+				args["c:v"] = "libx264"
+				args["crf"] = "1"
+			}
+
+			// start a channel that will send fake progress
+			done := startFakeProgress(target.RawProto().Id)
+
+			// process our audio
+			if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "loglevel": "error", "progress": "unix://" + validationSocket}).
+				Output(newFileName, args).
+				WithErrorOutput(ffmpegLogger).
+				OverWriteOutput().
+				Run(); err != nil {
+				done()
+				return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
+			}
 			done()
-			return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
-		}
-		done()
 
-		targetFileName = newFileName
+			targetFileName = newFileName
+		} else {
+			videoNoAudio = true
+		}
 	}
 
 	// probe for video streams
@@ -789,8 +821,10 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 
 	var fileThumbnail *os.File
 
+	var testCounts int
+
 	// keep looking for frames that are not all black (we can successfully generate a preview
-	for start := time.Now(); time.Since(start) < time.Second*10; {
+	for testCounts <= 10 {
 
 		fileThumbnail, err = os.Create(fileThumbnailName)
 		if err != nil {
@@ -846,8 +880,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		if err != nil {
 			// fully black image - we want to find a different one
 			if err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)" {
+				testCounts += 1
 				_ = os.Remove(fileThumbnail.Name())
-				durationAddition += 0.5
+				durationAddition += duration / 10
 				continue
 			}
 
