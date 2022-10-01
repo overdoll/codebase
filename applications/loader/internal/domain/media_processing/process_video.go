@@ -579,11 +579,21 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		"hide_banner":  "",
 	}
 
+	cpuLimit := 2
+
+	if os.Getenv("FFMPEG_CPU") != "" {
+		parseInt, err := strconv.ParseInt(os.Getenv("FFMPEG_CPU"), 10, 64)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse ffmpeg cpu")
+		}
+		cpuLimit = int(parseInt)
+	}
+
 	if err := ffmpeg_go.MergeOutputs(streams...).
 		OverWriteOutput().
 		WithErrorOutput(ffmpegLogger).
-		WithCpuCoreLimit(1).
-		WithCpuCoreRequest(1).
+		WithCpuCoreLimit(float32(cpuLimit)).
+		WithCpuCoreRequest(float32(cpuLimit)).
 		Run(); err != nil {
 		zap.S().Errorw("ffmpeg_go error output", zap.String("message", string(ffmpegLogger.Output)))
 		return nil, err
