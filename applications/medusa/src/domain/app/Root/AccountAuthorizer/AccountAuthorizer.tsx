@@ -67,8 +67,14 @@ export default function AccountAuthorizer ({
     if (trackingCode !== '') {
       let disableSessionRecording = !isInProperHostName || (data != null ? (data?.isStaff || data?.isWorker) : false)
 
-      const random = Math.floor(Math.random() * 11)
+      let random = Math.floor(Math.random() * 11)
       // only record 1/10 sessions (around 10%))
+
+      // always record artist sessions
+      if (data?.isArtist === true) {
+        random = 0
+      }
+
       if (random !== 0 && !disableSessionRecording) {
         disableSessionRecording = true
       }
