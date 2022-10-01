@@ -29,7 +29,7 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 			})
 
 			if err != nil {
-				zap.S().Fatalw("failed to reprocess media", zap.Error(err))
+				zap.S().Fatalw("failed to reprocess medias", zap.Error(err))
 			}
 		},
 	}
