@@ -1,11 +1,11 @@
-import JoinRootWrap from './Join/JoinRootWrap'
-import JoinRootData from '@//:artifacts/JoinRootQuery.graphql'
+import RootJoin from './RootJoin/RootJoin'
+import ResultJoinQuery from '@//:artifacts/ResultJoinQuery.graphql'
 
-JoinRootWrap.getTranslationProps = async (ctx) => ({
+RootJoin.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
-JoinRootWrap.getRelayPreloadProps = (ctx) => {
+RootJoin.getRelayPreloadProps = (ctx) => {
   let tokenCookie = ctx.cookies.get('token')
 
   if (tokenCookie != null) {
@@ -14,7 +14,7 @@ JoinRootWrap.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       joinQuery: {
-        params: JoinRootData.params,
+        params: ResultJoinQuery.params,
         variables: {
           token: tokenCookie ?? ''
         }
@@ -22,4 +22,4 @@ JoinRootWrap.getRelayPreloadProps = (ctx) => {
     }
   }
 }
-export default JoinRootWrap
+export default RootJoin
