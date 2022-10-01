@@ -232,7 +232,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			newFileName := uuid.New().String()
 			defer os.Remove(newFileName)
 
-			// get format
+			// get formats
 			packets, err := ffmpeg_go.Probe(targetFileName, map[string]interface{}{
 				"hide_banner":    "",
 				"v":              "error",
