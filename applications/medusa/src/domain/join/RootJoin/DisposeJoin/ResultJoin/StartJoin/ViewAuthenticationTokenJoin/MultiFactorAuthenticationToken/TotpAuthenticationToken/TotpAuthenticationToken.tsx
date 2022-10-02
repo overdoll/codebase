@@ -25,6 +25,7 @@ import Head from 'next/head'
 import RevokeViewAuthenticationTokenButton
   from '../../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
 import Button from '@//:modules/form/Button/Button'
+import identifyAccount from '@//:modules/external/identifyAccount'
 
 interface CodeValues {
   code: string
@@ -61,6 +62,7 @@ const Mutation = graphql`
           __typename
         }
         ...AccountIconFragment
+        ...identifyAccountFragment
       }
     }
   }
@@ -113,6 +115,7 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
           })
           return
         }
+        identifyAccount({ query: data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account ?? null })
         notify({
           status: 'success',
           title: t`Welcome back! Thanks for using two-factor to log in!`

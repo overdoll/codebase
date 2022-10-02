@@ -12,6 +12,7 @@ import useGrantCleanup from '../../support/useGrantCleanup'
 import Button from '@//:modules/form/Button/Button'
 import { SadError } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
+import identifyAccount from '@//:modules/external/identifyAccount'
 
 interface Props {
   query: GrantAuthenticationTokenJoinFragment$key
@@ -35,6 +36,7 @@ const Mutation = graphql`
           __typename
         }
         ...AccountIconFragment
+        ...identifyAccountFragment
       }
     }
   }
@@ -76,6 +78,7 @@ export default function GrantAuthenticationTokenJoin (props: Props): JSX.Element
         if (data.grantAccountAccessWithAuthenticationToken.validation != null) {
           return
         }
+        identifyAccount({ query: data?.grantAccountAccessWithAuthenticationToken?.account })
         notify({
           status: 'success',
           title: t`Welcome back!`

@@ -27,6 +27,9 @@ import Username from '@//:modules/validation/Username'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
 import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
+import identifyAccount from '@//:modules/external/identifyAccount'
+import captureRegistration from '@//:modules/external/captureRegistration'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 interface RegisterValues {
   username: string
@@ -48,6 +51,7 @@ const Mutation = graphql`
         isStaff
         isArtist
         ...AccountIconFragment
+        ...identifyAccountFragment
       }
     }
   }
@@ -69,6 +73,8 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
   )
 
   const data = useFragment(Fragment, query)
+
+  const [from] = useQueryParam<string | null | undefined>('from', StringParam)
 
   const notify = useToast()
 
@@ -132,6 +138,10 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
           title: t`Welcome to overdoll!`,
           isClosable: true
         })
+      },
+      onCompleted (data) {
+        identifyAccount({ query: data?.createAccountWithAuthenticationToken?.account ?? null })
+        captureRegistration({ from: from })
       },
       onError () {
         notify({

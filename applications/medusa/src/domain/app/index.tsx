@@ -1,5 +1,5 @@
 import Root from './Root/Root'
-import RootQuery from '@//:artifacts/RootQuery.graphql'
+import ResultRootQuery from '@//:artifacts/ResultRootQuery.graphql'
 
 Root.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -9,7 +9,7 @@ Root.getRelayPreloadProps = () => {
   return {
     queries: {
       rootQuery: {
-        params: RootQuery.params,
+        params: ResultRootQuery.params,
         variables: {}
       }
     }

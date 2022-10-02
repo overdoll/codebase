@@ -2,6 +2,10 @@ package media
 
 func CalculateAspectRatio(width, height int) (w int, h int) {
 
+	if width == height {
+		return 1, 1
+	}
+
 	widthAspect := 0
 	heightAspect := 0
 
@@ -20,11 +24,6 @@ func CalculateAspectRatio(width, height int) (w int, h int) {
 	if height > width {
 		dividend = width
 		divisor = height
-	}
-
-	// make sure we check for a 0 divisor or else we may have division by 0 errors
-	if divisor == 0 {
-		return 0, 0
 	}
 
 	gcd := -1

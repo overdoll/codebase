@@ -6,7 +6,6 @@ import { DiscoverGlobe, RandomizeDice, SearchBar } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
 import StaticTile from '../components/Tiles/StaticTile/StaticTile'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 export default function HeaderGrid (): JSX.Element {
   const seed = getRandomSeed()
@@ -18,7 +17,6 @@ export default function HeaderGrid (): JSX.Element {
       </GridItem>
       <GridItem>
         <StaticTile
-          onClick={() => trackFathomEvent('WQGKR6NZ', 1)}
           icon={RandomizeDice}
           bg='https://static.dollycdn.net/banners/browse-thumbnail-2.jpg'
           href={`/random?seed=${seed}`}
@@ -36,7 +34,6 @@ export default function HeaderGrid (): JSX.Element {
       </GridItem>
       <GridItem>
         <StaticTile
-          onClick={() => trackFathomEvent('C1IMUMGT', 1)}
           bg='https://static.dollycdn.net/banners/search-thumbnail.jpg'
           icon={SearchBar}
           href='/search'
@@ -54,7 +51,6 @@ export default function HeaderGrid (): JSX.Element {
       </GridItem>
       <GridItem>
         <StaticTile
-          onClick={() => trackFathomEvent('CFBKBINZ', 1)}
           bg='https://static.dollycdn.net/banners/discover-thumbnail.jpg'
           icon={DiscoverGlobe}
           href='/clubs/discover'

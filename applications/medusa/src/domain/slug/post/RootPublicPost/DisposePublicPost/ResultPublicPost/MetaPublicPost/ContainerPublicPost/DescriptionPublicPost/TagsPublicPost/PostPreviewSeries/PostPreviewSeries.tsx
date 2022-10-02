@@ -3,7 +3,6 @@ import { graphql, useFragment } from 'react-relay'
 import type { PostPreviewSeriesFragment$key } from '@//:artifacts/PostPreviewSeriesFragment.graphql'
 import PreviewSeries from '@//:modules/content/HookedComponents/Post/fragments/Interact/PreviewSeries/PreviewSeries'
 import SeriesLinkTile from '@//:modules/content/PageLayout/Display/fragments/Link/SeriesLinkTile/SeriesLinkTile'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   postQuery: PostPreviewSeriesFragment$key
@@ -44,7 +43,7 @@ export default function PostPreviewSeries (props: Props): JSX.Element {
       >
         {uniqueSeries.map((item) => (
           <GridItem key={item.id}>
-            <SeriesLinkTile onClick={() => trackFathomEvent('799H9Y3G', 1)} query={item}>
+            <SeriesLinkTile query={item}>
               <PreviewSeries seriesQuery={item} />
             </SeriesLinkTile>
           </GridItem>

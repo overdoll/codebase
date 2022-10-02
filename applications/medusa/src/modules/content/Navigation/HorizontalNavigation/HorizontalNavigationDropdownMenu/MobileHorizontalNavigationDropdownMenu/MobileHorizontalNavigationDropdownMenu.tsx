@@ -3,7 +3,7 @@ import { IconType } from '@//:types/components'
 import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import { HorizontalNavigationDropdownMenuContext } from '../context'
 import HorizontalNavigationButton from '../../HorizontalNavigationButton/HorizontalNavigationButton'
-import SiteLinkLogo from '@//:domain/app/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
+import SiteLinkLogo from '@//:domain/app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 
 interface Props {
   children: ReactNode

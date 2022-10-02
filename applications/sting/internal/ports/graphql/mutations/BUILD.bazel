@@ -13,6 +13,7 @@ go_library(
         "post_like.go",
         "resolvers.go",
         "series.go",
+        "stats.go",
         "topic.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/mutations",

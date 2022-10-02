@@ -4,7 +4,6 @@ import { ArchiveFolder, FreshLeaf, HotContent } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import StaticTile from '../../components/Tiles/StaticTile/StaticTile'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 export default function GridArchives (): JSX.Element {
   return (
@@ -62,7 +61,6 @@ export default function GridArchives (): JSX.Element {
       </GridItem>
       <GridItem gridColumn='auto / span 2'>
         <StaticTile
-          onClick={() => trackFathomEvent('CJBUCECC', 1)}
           icon={FreshLeaf}
           bg='https://static.dollycdn.net/banners/new-thumbnail-2.jpg'
           href='/new'

@@ -7,7 +7,6 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 import { Alert, AlertCloseButton, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { useFlash } from '@//:modules/flash'
 import { useEffect } from 'react'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   query: CurationProfileAlertFragment$key | null
@@ -31,10 +30,6 @@ export default function CurationProfileAlert ({ query }: Props): JSX.Element {
   } = useFlash()
 
   const hasNewAccount = read('new.account')
-
-  const trackClick = (): void => {
-    trackFathomEvent('T0ZPPEWQ', 1)
-  }
 
   useEffect(() => {
     if (data?.curationProfile?.completed === true && hasNewAccount != null) {
@@ -65,7 +60,6 @@ export default function CurationProfileAlert ({ query }: Props): JSX.Element {
           </AlertDescription>
         </HStack>
         <LinkButton
-          onClick={trackClick}
           href='/settings/preferences/curation-profile'
           size='sm'
           width='100%'

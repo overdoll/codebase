@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<119166c7919bb723fe3cce8961c4bff0>>
- * @relayHash 39bf4f8aff501201b06b6fcbc9b2dd09
+ * @generated SignedSource<<7bd507108fafce5106a5c56895cd2934>>
+ * @relayHash 6a8b0e2e28eee4527535cd0dc2a4bc53
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 39bf4f8aff501201b06b6fcbc9b2dd09
+// @relayRequestID 6a8b0e2e28eee4527535cd0dc2a4bc53
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -35,7 +35,7 @@ export type TotpAuthenticationTokenMutation$data = {
         readonly __typename: "AccountLock";
       } | null;
       readonly username: string;
-      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment" | "identifyAccountFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
@@ -176,6 +176,11 @@ return {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "AccountIconFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "identifyAccountFragment"
               }
             ],
             "storageKey": null
@@ -230,6 +235,20 @@ return {
                   (v4/*: any*/)
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isWorker",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reference",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -240,7 +259,7 @@ return {
     ]
   },
   "params": {
-    "id": "39bf4f8aff501201b06b6fcbc9b2dd09",
+    "id": "6a8b0e2e28eee4527535cd0dc2a4bc53",
     "metadata": {},
     "name": "TotpAuthenticationTokenMutation",
     "operationKind": "mutation",
@@ -249,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "197f61d37610989f106c78c3eb0bad3a";
+(node as any).hash = "aadae1672c597a7ffc861069e6dba63c";
 
 export default node;

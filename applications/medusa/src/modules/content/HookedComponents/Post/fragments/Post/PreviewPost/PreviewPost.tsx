@@ -8,7 +8,6 @@ import PreviewFooter from '../PreviewFooter/PreviewFooter'
 import { useEffect, useRef, useState } from 'react'
 import SwiperType from 'swiper'
 import { PlayerType } from '../../../../Media/types'
-import trackFathomEvent from '../../../../../../support/trackFathomEvent'
 import { UrlObject } from 'url'
 import { Link } from '../../../../../../routing'
 
@@ -49,10 +48,6 @@ export default function PreviewPost (props: Props): JSX.Element {
 
   const [href, setHref] = useState<UrlObject>(defaultLink)
 
-  const onClick = (): void => {
-    trackFathomEvent('QVSNTJRX', 1)
-  }
-
   useEffect(() => {
     const onMouseEnter = (): void => {
       setHref({
@@ -80,7 +75,6 @@ export default function PreviewPost (props: Props): JSX.Element {
       >
         <Box
           ref={boxRef}
-          onClick={onClick}
           as='a'
           position='absolute'
           top={0}

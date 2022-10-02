@@ -735,6 +735,18 @@ type LikePostPayload struct {
 	PostLike *PostLike `json:"postLike"`
 }
 
+// Track posts observations.
+type ObservePostsInput struct {
+	// The post ids.
+	PostIds []relay.ID `json:"postIds"`
+}
+
+// Tracking posts observations.
+type ObservePostsPayload struct {
+	// The posts that were observed.
+	Posts []*Post `json:"posts"`
+}
+
 type Post struct {
 	ID relay.ID `json:"id"`
 	// The reference of this post. Should always be used to reference this post.

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b51457b4fc183485678641e3f7f280f2>>
- * @relayHash 5867c27851701e6ed1615ee2672594cf
+ * @generated SignedSource<<03b5822cfc77ec3740338f3a94964e30>>
+ * @relayHash 1772352a3d582fc77483951a078cb30b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5867c27851701e6ed1615ee2672594cf
+// @relayRequestID 1772352a3d582fc77483951a078cb30b
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -35,7 +35,7 @@ export type RecoveryCodeAuthenticationTokenMutation$data = {
         readonly __typename: "AccountLock";
       } | null;
       readonly username: string;
-      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment" | "identifyAccountFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation | null;
@@ -176,6 +176,11 @@ return {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "AccountIconFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "identifyAccountFragment"
               }
             ],
             "storageKey": null
@@ -230,6 +235,20 @@ return {
                   (v4/*: any*/)
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isWorker",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reference",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -240,7 +259,7 @@ return {
     ]
   },
   "params": {
-    "id": "5867c27851701e6ed1615ee2672594cf",
+    "id": "1772352a3d582fc77483951a078cb30b",
     "metadata": {},
     "name": "RecoveryCodeAuthenticationTokenMutation",
     "operationKind": "mutation",
@@ -249,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "02ce8083debd28bac98aee210e12d8ec";
+(node as any).hash = "9717307b3a89d2a30600a3d626c103ed";
 
 export default node;

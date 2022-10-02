@@ -18,7 +18,7 @@ import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuB
 import DropdownMenuButtonInstallApp from './DropdownMenuButtonInstallApp/DropdownMenuButtonInstallApp'
 import React, { Suspense } from 'react'
 import SkeletonDropdownMenuButton
-  from '../../../../../../modules/content/Placeholder/Loading/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
+  from '@//:modules/content/Placeholder/Loading/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
 import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
 import DropdownMenuSocialLinks from './DropdownMenuSocialLinks/DropdownMenuSocialLinks'
 import { DropdownMenuButtonsFragment$key } from '@//:artifacts/DropdownMenuButtonsFragment.graphql'

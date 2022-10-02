@@ -23,6 +23,10 @@ func NewMigrateCategoriesResourcesHandler(pr post.Repository, loader LoaderServi
 func (h MigrateCategoriesResourcesHandler) Handle(ctx context.Context, cmd MigrateCategoriesResources) error {
 	return h.pr.ScanCategories(ctx, cmd.CategoryId, func(char *post.Category) error {
 
+		if char.BannerMedia() == nil {
+			return nil
+		}
+
 		if !char.BannerMedia().IsLegacy() {
 			return nil
 		}

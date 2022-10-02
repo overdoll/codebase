@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1f480a312d0d9357071b27ee86dc3a54>>
- * @relayHash f3921089b2a0f4cd82148598a4b2face
+ * @generated SignedSource<<d33c39dd353fd27534dbf84206b48e53>>
+ * @relayHash 3c4ca4bcc8b51107c7ff33a33a5029e6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f3921089b2a0f4cd82148598a4b2face
+// @relayRequestID 3c4ca4bcc8b51107c7ff33a33a5029e6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type RootQuery$variables = {};
-export type RootQuery$data = {
+export type ResultRootQuery$variables = {};
+export type ResultRootQuery$data = {
   readonly viewer: {
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment" | "UniversalNavigatorFragment">;
   } | null;
 };
-export type RootQuery = {
-  response: RootQuery$data;
-  variables: RootQuery$variables;
+export type ResultRootQuery = {
+  response: ResultRootQuery$data;
+  variables: ResultRootQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -48,7 +48,7 @@ return {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
-    "name": "RootQuery",
+    "name": "ResultRootQuery",
     "selections": [
       {
         "alias": null,
@@ -85,7 +85,7 @@ return {
   "operation": {
     "argumentDefinitions": [],
     "kind": "Operation",
-    "name": "RootQuery",
+    "name": "ResultRootQuery",
     "selections": [
       {
         "alias": null,
@@ -178,15 +178,15 @@ return {
     ]
   },
   "params": {
-    "id": "f3921089b2a0f4cd82148598a4b2face",
+    "id": "3c4ca4bcc8b51107c7ff33a33a5029e6",
     "metadata": {},
-    "name": "RootQuery",
+    "name": "ResultRootQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "00fab66df90208fd6500b81f4bfc37e2";
+(node as any).hash = "c077ed281d9fb0799f7b9e56987bb015";
 
 export default node;

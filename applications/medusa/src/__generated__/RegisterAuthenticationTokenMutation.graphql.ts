@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fc6f54059607a4be12ce04e505aa7d45>>
- * @relayHash 235051e5e4b10a5b23a9b57ed02aed88
+ * @generated SignedSource<<e4168b10c59e0af14ad6f2dee1cda82e>>
+ * @relayHash 390336e30632a75f18937cd33b9021e8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 235051e5e4b10a5b23a9b57ed02aed88
+// @relayRequestID 390336e30632a75f18937cd33b9021e8
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -29,7 +29,7 @@ export type RegisterAuthenticationTokenMutation$data = {
       readonly isModerator: boolean;
       readonly isStaff: boolean;
       readonly username: string;
-      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment" | "identifyAccountFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
@@ -138,6 +138,11 @@ return {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "AccountIconFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "identifyAccountFragment"
               }
             ],
             "storageKey": null
@@ -196,6 +201,20 @@ return {
                   (v4/*: any*/)
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isWorker",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reference",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -206,7 +225,7 @@ return {
     ]
   },
   "params": {
-    "id": "235051e5e4b10a5b23a9b57ed02aed88",
+    "id": "390336e30632a75f18937cd33b9021e8",
     "metadata": {},
     "name": "RegisterAuthenticationTokenMutation",
     "operationKind": "mutation",
@@ -215,6 +234,6 @@ return {
 };
 })();
 
-(node as any).hash = "a835e621719e6c519aaf02fa534e643d";
+(node as any).hash = "f896b7e1d59648daa12d8fdfe166828c";
 
 export default node;

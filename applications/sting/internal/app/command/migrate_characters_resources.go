@@ -23,6 +23,10 @@ func NewMigrateCharactersResourcesHandler(pr post.Repository, loader LoaderServi
 func (h MigrateCharactersResourcesHandler) Handle(ctx context.Context, cmd MigrateCharactersResources) error {
 	return h.pr.ScanCharacters(ctx, cmd.CharacterId, func(char *post.Character) error {
 
+		if char.BannerMedia() == nil {
+			return nil
+		}
+
 		if !char.BannerMedia().IsLegacy() {
 			return nil
 		}

@@ -9,13 +9,12 @@ import PlatformShareRedditButton from './PlatformShareRedditButton/PlatformShare
 import PlatformShareDiscordButton from './PlatformShareDiscordButton/PlatformShareDiscordButton'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import getRandomSeed from '@//:modules/support/getRandomSeed'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 export default function PlatformPromoteAlert (): JSX.Element {
   const seed = getRandomSeed()
 
   const trackClick = (): void => {
-    trackFathomEvent('S6M3O0N3', 1)
+
   }
 
   return (

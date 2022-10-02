@@ -6,7 +6,6 @@ import { VideoControlTypeProps } from '../../../../../VideoContainer'
 import { pauseVideo, requestPlayAfterSeeking } from '../../../../../../../support/controls'
 import formatSecondsIntoMinutes from '../../../../../../../support/formatSecondsIntoMinutes'
 import syncPlayerTimeUpdate from '../../../../../../../support/syncPlayerTimeUpdate'
-import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
 
 interface Props extends Pick<VideoControlTypeProps, 'duration'> {
   player: PlayerType
@@ -41,8 +40,6 @@ export default function VideoSeekTrack (props: Props): JSX.Element {
     setTime(value)
     player.currentTime = value
     requestPlayAfterSeeking(player)
-    // track seeking
-    trackFathomEvent('EFY0WCPJ', 1)
   }
 
   syncPlayerTimeUpdate(player, setTime, setPlayer)

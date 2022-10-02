@@ -27,6 +27,7 @@ import Head from 'next/head'
 import RevokeViewAuthenticationTokenButton
   from '../../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
 import Button from '@//:modules/form/Button/Button'
+import identifyAccount from '@//:modules/external/identifyAccount'
 
 interface CodeValues {
   code: string
@@ -55,6 +56,7 @@ const Mutation = graphql`
           __typename
         }
         ...AccountIconFragment
+        ...identifyAccountFragment
       }
     }
   }
@@ -126,6 +128,7 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
           })
           return
         }
+        identifyAccount({ query: data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account ?? null })
         notify({
           status: 'success',
           title: t`A recovery code was successfully used up to log you in`

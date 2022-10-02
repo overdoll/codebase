@@ -4,7 +4,6 @@ import { useFragment } from 'react-relay/hooks'
 import { Box, Flex, Heading } from '@chakra-ui/react'
 import PreviewPostContentSmallBanner from './PreviewPostContentSmallBanner/PreviewPostContentSmallBanner'
 import PostLinkTile from '@//:modules/content/PageLayout/Display/fragments/Link/PostLinkTile/PostLinkTile'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 import { Icon } from '@//:modules/content/PageLayout'
 import { FreshLeaf, HotContent } from '@//:assets/icons'
 
@@ -30,17 +29,8 @@ export default function PreviewPostTileHome (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, postQuery)
 
-  const onClick = (): void => {
-    if (badge == null) return
-    if (badge === 'new') {
-      trackFathomEvent('0SR9MTDW', 1)
-    } else {
-      trackFathomEvent('ZZSA2HXV', 1)
-    }
-  }
-
   return (
-    <PostLinkTile onClick={onClick} query={data}>
+    <PostLinkTile query={data}>
       <Flex borderRadius='lg' w='100%' h='100%' position='relative'>
         <PreviewPostContentSmallBanner postContentQuery={data.content[0]} />
         <Flex bottom={1} right={1} position='absolute'>

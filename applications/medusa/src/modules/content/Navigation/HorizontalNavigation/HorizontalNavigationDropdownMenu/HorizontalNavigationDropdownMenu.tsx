@@ -19,7 +19,7 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import HorizontalNavigationButton from '../HorizontalNavigationButton/HorizontalNavigationButton'
-import SiteLinkLogo from '../../../../../domain/app/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
+import SiteLinkLogo from '../../../../../domain/app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 import { IconType } from '@//:types/components'
 
 interface Props {

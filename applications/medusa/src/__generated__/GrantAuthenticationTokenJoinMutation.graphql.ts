@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f1acb814a2ea3741526a19c93512cc0f>>
- * @relayHash 4d33c941a211e8a6f5aa490d32548b54
+ * @generated SignedSource<<db2e38fa02cce82b7e0d760cb44b4584>>
+ * @relayHash e5556e13eb51e9f3a4973140b9bcad22
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4d33c941a211e8a6f5aa490d32548b54
+// @relayRequestID e5556e13eb51e9f3a4973140b9bcad22
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -34,7 +34,7 @@ export type GrantAuthenticationTokenJoinMutation$data = {
         readonly __typename: "AccountLock";
       } | null;
       readonly username: string;
-      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment" | "identifyAccountFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: GrantAccountAccessWithAuthenticationTokenValidation | null;
@@ -175,6 +175,11 @@ return {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "AccountIconFragment"
+              },
+              {
+                "args": null,
+                "kind": "FragmentSpread",
+                "name": "identifyAccountFragment"
               }
             ],
             "storageKey": null
@@ -229,6 +234,20 @@ return {
                   (v4/*: any*/)
                 ],
                 "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "isWorker",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "reference",
+                "storageKey": null
               }
             ],
             "storageKey": null
@@ -239,7 +258,7 @@ return {
     ]
   },
   "params": {
-    "id": "4d33c941a211e8a6f5aa490d32548b54",
+    "id": "e5556e13eb51e9f3a4973140b9bcad22",
     "metadata": {},
     "name": "GrantAuthenticationTokenJoinMutation",
     "operationKind": "mutation",
@@ -248,6 +267,6 @@ return {
 };
 })();
 
-(node as any).hash = "3adb5f0dd224d436af684e66c265259b";
+(node as any).hash = "fcd2ecb7126babd852a037a75df79ae1";
 
 export default node;
