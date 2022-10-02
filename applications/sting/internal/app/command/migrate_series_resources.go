@@ -23,6 +23,10 @@ func NewMigrateSeriesResourcesHandler(pr post.Repository, loader LoaderService) 
 func (h MigrateSeriesResourcesHandler) Handle(ctx context.Context, cmd MigrateSeriesResources) error {
 	return h.pr.ScanSeries(ctx, cmd.SeriesId, func(char *post.Series) error {
 
+		if char.BannerMedia() == nil {
+			return nil
+		}
+
 		if !char.BannerMedia().IsLegacy() {
 			return nil
 		}
