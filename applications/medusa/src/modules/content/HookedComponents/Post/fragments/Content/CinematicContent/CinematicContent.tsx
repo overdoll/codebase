@@ -8,6 +8,8 @@ import { Box, GridItem } from '@chakra-ui/react'
 import CinematicGallery from '../../Gallery/CinematicGallery/CinematicGallery'
 import CinematicCarousel from '../../Carousel/CinematicCarousel/CinematicCarousel'
 import syncSwiperSlideChange from '../../../support/syncSwiperSlideChange'
+import useAbility from '../../../../../../authorization/useAbility'
+import ViewCounterPostObserver from '@//:domain/app/Root/DisposeRoot/ResultRoot/ViewCounter/ViewCounterPostObserver'
 
 interface Props {
   postQuery: CinematicContentFragment$key
@@ -33,6 +35,8 @@ export default function CinematicContent (props: Props): JSX.Element {
 
   const [swiper, setSwiper] = useState<SwiperType | null>(null)
 
+  const ability = useAbility()
+
   const onInit: OnSwiperInitType = (swiper) => {
     setSwiper(swiper)
   }
@@ -43,6 +47,11 @@ export default function CinematicContent (props: Props): JSX.Element {
     <ContentGrid contentLength={postData.content.length} key={postData.id}>
       <GridItem overflow='hidden' area='gallery'>
         <Box h='100%' position='relative'>
+          {ability.can('configure', 'Account') && (
+            <ViewCounterPostObserver
+              delay={3000}
+              postId={postData.id}
+            />)}
           <CinematicGallery postQuery={postData} onSwiper={onInit} />
         </Box>
       </GridItem>

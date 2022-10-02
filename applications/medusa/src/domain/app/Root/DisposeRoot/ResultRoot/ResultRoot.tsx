@@ -9,6 +9,7 @@ import SafeModal from './SafeModal/SafeModal'
 import NoScript from './NoScript/NoScript'
 import RootRichObject from '@//:common/rich-objects/default/RootRichObject/RootRichObject'
 import dynamic from 'next/dynamic'
+import { ViewCounterProvider } from './ViewCounter/ViewCounter'
 
 const DynamicRouteProgressBar = dynamic(
   async () => {
@@ -59,13 +60,14 @@ export default function ResultRoot (props: Props): JSX.Element {
   return (
     <>
       <AccountAuthorizer queryRef={data.viewer}>
-        <UniversalNavigator queryRef={data.viewer} />
-        <PageContents>
-          {children}
-          <SafeModal />
-        </PageContents>
-        <NoScript />
+        <ViewCounterProvider>
+          <UniversalNavigator queryRef={data.viewer} />
+          <PageContents>
+            {children}
+          </PageContents>
+        </ViewCounterProvider>
       </AccountAuthorizer>
+      <NoScript />
       <DynamicRouteProgressBar />
       <DynamicNavigationPopup query={data.viewer} />
       <SafeModal />
