@@ -11,13 +11,11 @@ export const SEARCH_SWIPER_PROPS: SwiperProps = {
 }
 
 export const SEARCH_SLIDE_HEIGHT = {
-  base: 130,
-  md: 190
+  base: 190
 }
 
 export const SEARCH_SLIDE_WIDTH = {
-  base: 100,
-  md: 150
+  base: 150
 }
 
 export const configMap = {

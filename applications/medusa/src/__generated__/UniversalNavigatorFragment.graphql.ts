@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<7bc25299b92758f1425a3333a1cb4bbc>>
+ * @generated SignedSource<<06278425db05a58c2a39e284cd6b042a>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UniversalNavigatorFragment$data = {
-  readonly id: string;
-  readonly " $fragmentSpreads": FragmentRefs<"AlternativeMenuFragment" | "NavigationPopupFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"DesktopHorizontalNavigationFragment" | "MobileHorizontalNavigationFragment">;
   readonly " $fragmentType": "UniversalNavigatorFragment";
 };
 export type UniversalNavigatorFragment$key = {
@@ -27,27 +26,20 @@ const node: ReaderFragment = {
   "name": "UniversalNavigatorFragment",
   "selections": [
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "DesktopHorizontalNavigationFragment"
     },
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "AlternativeMenuFragment"
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "NavigationPopupFragment"
+      "name": "MobileHorizontalNavigationFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "844a20e9b794b72aeabad81dd529695e";
+(node as any).hash = "8d34542e04d4dd0f4b5f5bcf5573e015";
 
 export default node;

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f853e3abcdab30dc24e9af7eabb958c9>>
- * @relayHash e105c9b73143471e9f22b189d388e5f4
+ * @generated SignedSource<<4a7c6b79a01de6e6db16459b5ed384bc>>
+ * @relayHash 769d3cad110e71cbcf9ceadde7ec1420
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e105c9b73143471e9f22b189d388e5f4
+// @relayRequestID 769d3cad110e71cbcf9ceadde7ec1420
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -405,6 +405,25 @@ return {
                             ],
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "name",
+                                "storageKey": null
+                              },
+                              (v8/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
                           (v7/*: any*/)
                         ],
                         "storageKey": null
@@ -469,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "e105c9b73143471e9f22b189d388e5f4",
+    "id": "769d3cad110e71cbcf9ceadde7ec1420",
     "metadata": {},
     "name": "UploadRewindSingleSelectorPaginationFragment",
     "operationKind": "query",

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c6d70ab83bb1430580c7e75c20ede3b7>>
+ * @generated SignedSource<<19462c44e82b7ce7a9cc24d0bd1b7875>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,20 +10,20 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AlternativeMenuFragment$data = {
+export type DropdownMenuButtonsFragment$data = {
   readonly " $fragmentSpreads": FragmentRefs<"DropdownMenuButtonProfileFragment" | "QuickAccessButtonProfileFragment">;
-  readonly " $fragmentType": "AlternativeMenuFragment";
+  readonly " $fragmentType": "DropdownMenuButtonsFragment";
 };
-export type AlternativeMenuFragment$key = {
-  readonly " $data"?: AlternativeMenuFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"AlternativeMenuFragment">;
+export type DropdownMenuButtonsFragment$key = {
+  readonly " $data"?: DropdownMenuButtonsFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"DropdownMenuButtonsFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "AlternativeMenuFragment",
+  "name": "DropdownMenuButtonsFragment",
   "selections": [
     {
       "args": null,
@@ -40,6 +40,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f916892e8339373ee22ff56b2ce8f7de";
+(node as any).hash = "3562055d5a4c14bb1a61d60f05d17242";
 
 export default node;

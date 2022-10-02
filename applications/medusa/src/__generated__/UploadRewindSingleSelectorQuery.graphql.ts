@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0f024eb6f871bf221d6d738b21486164>>
- * @relayHash 04c207425659c7b19a37067abf271795
+ * @generated SignedSource<<f9a12f71b177776d2e38956f50c9f5cf>>
+ * @relayHash e6ffb2530343709fe1681feb42129f9a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 04c207425659c7b19a37067abf271795
+// @relayRequestID e6ffb2530343709fe1681feb42129f9a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -375,6 +375,25 @@ return {
                         ],
                         "storageKey": null
                       },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": "Character",
+                        "kind": "LinkedField",
+                        "name": "characters",
+                        "plural": true,
+                        "selections": [
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "name",
+                            "storageKey": null
+                          },
+                          (v3/*: any*/)
+                        ],
+                        "storageKey": null
+                      },
                       (v5/*: any*/)
                     ],
                     "storageKey": null
@@ -436,7 +455,7 @@ return {
     ]
   },
   "params": {
-    "id": "04c207425659c7b19a37067abf271795",
+    "id": "e6ffb2530343709fe1681feb42129f9a",
     "metadata": {},
     "name": "UploadRewindSingleSelectorQuery",
     "operationKind": "query",

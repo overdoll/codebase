@@ -9,7 +9,7 @@ interface SnifferProps {
     isPc: boolean
   }
   browser: string
-  device: 'pc' | 'mobile'
+  device: 'desktop' | 'mobile'
 }
 
 const sniffer: SnifferProps = {

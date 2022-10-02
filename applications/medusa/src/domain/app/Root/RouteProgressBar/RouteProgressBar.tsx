@@ -6,7 +6,8 @@ NProgress.configure({
   showSpinner: false,
   minimum: 0.35,
   easing: 'ease',
-  speed: 300
+  speed: 300,
+  trickleSpeed: 100
 })
 
 export default function RouteProgressBar (): null {

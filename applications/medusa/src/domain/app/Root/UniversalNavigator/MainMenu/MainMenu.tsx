@@ -1,5 +1,6 @@
 import { BirdHouse, SearchBar } from '@//:assets/icons/navigation'
-import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigationButton
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationButton/HorizontalNavigationButton'
 import Can from '@//:modules/authorization/Can'
 import { t } from '@lingui/macro'
 import MainMenuButtonCreatePost from './MainMenuButtonCreatePost/MainMenuButtonCreatePost'
@@ -11,7 +12,7 @@ export default function MainMenu (): JSX.Element {
 
   return (
     <>
-      <HorizontalNavigation.Button
+      <HorizontalNavigationButton
         exact
         colorScheme='primary'
         href='/'
@@ -20,7 +21,7 @@ export default function MainMenu (): JSX.Element {
       />
       <MainMenuButtonClubs />
       <Can not I='create' a='Club'>
-        <HorizontalNavigation.Button
+        <HorizontalNavigationButton
           colorScheme='primary'
           href='/search'
           icon={SearchBar}

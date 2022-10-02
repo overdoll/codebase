@@ -12,7 +12,7 @@ export interface UseSnifferReturn {
     isPc: boolean
   }
   browser: 'firefox' | 'ie' | 'chrome' | 'opera' | 'safari'
-  device: 'pc' | 'mobile'
+  device: 'desktop' | 'mobile'
 }
 
 export default function useSniffer (): UseSnifferReturn {
@@ -53,7 +53,7 @@ export default function useSniffer (): UseSnifferReturn {
   const memoOs = useMemo(() => getOs(), [userAgent])
 
   const getDevice = (): UseSnifferReturn['device'] => {
-    return memoOs.isPc ? 'pc' : 'mobile'
+    return memoOs.isPc ? 'desktop' : 'mobile'
   }
 
   const memoBrowser = useMemo(() => getBrowser(), [userAgent])

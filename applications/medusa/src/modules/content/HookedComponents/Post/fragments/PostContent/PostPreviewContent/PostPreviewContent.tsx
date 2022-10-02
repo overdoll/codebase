@@ -18,6 +18,7 @@ const Fragment = graphql`
       isSupporterOnly
       ...InfoRawPostContentBannerFragment
     }
+    ...PendingMediaFragment
   }
 `
 
@@ -49,7 +50,7 @@ export default function PostPreviewContent (props: Props): JSX.Element {
       {firstContent != null
         ? data.state === 'SUBMITTED'
           ? (
-            <PendingMedia />
+            <PendingMedia postQuery={data} />
             )
           : (
             <InfoRawPostContentBanner postContentQuery={firstContent} />

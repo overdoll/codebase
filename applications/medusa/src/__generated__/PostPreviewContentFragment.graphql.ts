@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f5c00b5ce73137e9b2044f908eb45ec8>>
+ * @generated SignedSource<<70f16959777557da665c28d02dc0f4ee>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -17,6 +17,7 @@ export type PostPreviewContentFragment$data = {
     readonly " $fragmentSpreads": FragmentRefs<"InfoRawPostContentBannerFragment">;
   }>;
   readonly state: PostState;
+  readonly " $fragmentSpreads": FragmentRefs<"PendingMediaFragment">;
   readonly " $fragmentType": "PostPreviewContentFragment";
 };
 export type PostPreviewContentFragment$key = {
@@ -59,12 +60,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PendingMediaFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "23879673f8e464197a5b24b6a8a644e2";
+(node as any).hash = "f253107fdba3727b29c522946ce2c44d";
 
 export default node;

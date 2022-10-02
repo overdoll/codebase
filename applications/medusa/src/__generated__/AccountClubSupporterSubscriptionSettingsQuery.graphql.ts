@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e73fb364a718243eec75a53272bc6b4c>>
- * @relayHash 145687aa2b9a24e13feea80e32324e79
+ * @generated SignedSource<<eadf6d653de711bebf1aac19f60d1edc>>
+ * @relayHash a6af265670885be20a94ea8e5c64a451
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 145687aa2b9a24e13feea80e32324e79
+// @relayRequestID a6af265670885be20a94ea8e5c64a451
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -193,6 +193,13 @@ v11 = {
 v12 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "name",
+  "storageKey": null
+},
+v13 = {
+  "alias": null,
+  "args": null,
   "concreteType": "PageInfo",
   "kind": "LinkedField",
   "name": "pageInfo",
@@ -215,7 +222,7 @@ v12 = {
   ],
   "storageKey": null
 },
-v13 = {
+v14 = {
   "alias": "exclusivePosts",
   "args": (v4/*: any*/),
   "concreteType": "PostConnection",
@@ -383,6 +390,19 @@ v13 = {
                 (v6/*: any*/)
               ],
               "storageKey": null
+            },
+            {
+              "alias": null,
+              "args": null,
+              "concreteType": "Character",
+              "kind": "LinkedField",
+              "name": "characters",
+              "plural": true,
+              "selections": [
+                (v12/*: any*/),
+                (v6/*: any*/)
+              ],
+              "storageKey": null
             }
           ],
           "storageKey": null
@@ -390,11 +410,11 @@ v13 = {
       ],
       "storageKey": null
     },
-    (v12/*: any*/)
+    (v13/*: any*/)
   ],
   "storageKey": "posts(first:10,sortBy:\"NEW\",supporterOnlyStatus:[\"FULL\",\"PARTIAL\"])"
 },
-v14 = {
+v15 = {
   "alias": "exclusivePosts",
   "args": (v4/*: any*/),
   "filters": [
@@ -405,13 +425,6 @@ v14 = {
   "key": "ClubExclusivePosts_exclusivePosts",
   "kind": "LinkedHandle",
   "name": "posts"
-},
-v15 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "name",
-  "storageKey": null
 },
 v16 = [
   (v8/*: any*/),
@@ -619,10 +632,10 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v13/*: any*/),
                   (v14/*: any*/),
-                  (v6/*: any*/),
                   (v15/*: any*/),
+                  (v6/*: any*/),
+                  (v12/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -746,10 +759,10 @@ return {
                 "plural": false,
                 "selections": [
                   (v3/*: any*/),
-                  (v13/*: any*/),
                   (v14/*: any*/),
-                  (v6/*: any*/),
                   (v15/*: any*/),
+                  (v6/*: any*/),
+                  (v12/*: any*/),
                   (v18/*: any*/)
                 ],
                 "storageKey": null
@@ -831,7 +844,7 @@ return {
                 ],
                 "storageKey": null
               },
-              (v12/*: any*/),
+              (v13/*: any*/),
               {
                 "kind": "ClientExtension",
                 "selections": [
@@ -865,7 +878,7 @@ return {
     ]
   },
   "params": {
-    "id": "145687aa2b9a24e13feea80e32324e79",
+    "id": "a6af265670885be20a94ea8e5c64a451",
     "metadata": {},
     "name": "AccountClubSupporterSubscriptionSettingsQuery",
     "operationKind": "query",

@@ -2,8 +2,9 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { t } from '@lingui/macro'
 import { BookmarkLarge, ClubPeopleGroup, DiscoverGlobe } from '@//:assets/icons'
 import { MainMenuButtonClubsQuery } from '@//:artifacts/MainMenuButtonClubsQuery.graphql'
-import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
 import { useLingui } from '@lingui/react'
+import HorizontalNavigationButton
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationButton/HorizontalNavigationButton'
 
 const Query = graphql`
   query MainMenuButtonClubsQuery {
@@ -33,7 +34,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
 
   if (data.viewer == null) {
     return (
-      <HorizontalNavigation.Button
+      <HorizontalNavigationButton
         exact
         colorScheme='primary'
         href='/clubs/discover'
@@ -46,7 +47,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
   if (data?.viewer.likedPosts == null || data?.viewer.likedPosts?.edges.length < 1) {
     if (data?.viewer?.clubMembersPostsFeed?.edges.length > 0) {
       return (
-        <HorizontalNavigation.Button
+        <HorizontalNavigationButton
           exact
           colorScheme='primary'
           href='/clubs/feed'
@@ -57,7 +58,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
     }
 
     return (
-      <HorizontalNavigation.Button
+      <HorizontalNavigationButton
         exact
         colorScheme='primary'
         href='/clubs/discover'
@@ -68,7 +69,7 @@ export default function MainMenuButtonClubs (): JSX.Element {
   }
 
   return (
-    <HorizontalNavigation.Button
+    <HorizontalNavigationButton
       exact
       colorScheme='primary'
       href='/clubs/liked-posts'

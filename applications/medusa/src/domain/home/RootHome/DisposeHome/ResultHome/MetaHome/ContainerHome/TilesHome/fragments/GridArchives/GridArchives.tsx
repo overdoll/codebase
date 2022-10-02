@@ -11,7 +11,6 @@ export default function GridArchives (): JSX.Element {
     <GridLayoutHome columns={3} rows={3}>
       <GridItem gridColumn='auto / span 3'>
         <StaticTile
-          onClick={() => trackFathomEvent('RX0LIM9H', 1)}
           icon={ArchiveFolder}
           bg='https://static.dollycdn.net/banners/generalbutch-thumbnail.jpg'
           href='/generalbutch'
@@ -29,7 +28,6 @@ export default function GridArchives (): JSX.Element {
       </GridItem>
       <GridItem gridColumn='auto / span 3'>
         <StaticTile
-          onClick={() => trackFathomEvent('TL5ZQYLZ', 1)}
           icon={ArchiveFolder}
           bg='https://static.dollycdn.net/banners/arhoangel-thumbnail.jpg'
           href='/arhoangel'
@@ -47,7 +45,6 @@ export default function GridArchives (): JSX.Element {
       </GridItem>
       <GridItem gridColumn='auto / span 1'>
         <StaticTile
-          onClick={() => trackFathomEvent('HYEE9TK0', 1)}
           icon={HotContent}
           bg='https://static.dollycdn.net/banners/top-thumbnail.jpg'
           href='/top'

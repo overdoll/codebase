@@ -3,7 +3,8 @@ import { t } from '@lingui/macro'
 import { ContentBrushPen } from '@//:assets/icons/navigation'
 import { AddPlus } from '@//:assets/icons/interface'
 import { MainMenuButtonCreatePostQuery } from '@//:artifacts/MainMenuButtonCreatePostQuery.graphql'
-import HorizontalNavigation from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigation'
+import HorizontalNavigationButton
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationButton/HorizontalNavigationButton'
 import { useLingui } from '@lingui/react'
 
 const Query = graphql`
@@ -32,7 +33,7 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
 
   if (data.viewer == null || data.viewer.clubsCount < 1 || data?.viewer?.clubs?.edges.length < 1 || data?.viewer?.clubs == null) {
     return (
-      <HorizontalNavigation.Button
+      <HorizontalNavigationButton
         exact
         colorScheme='primary'
         href='/clubs/create-club'
@@ -45,7 +46,7 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
   const selectedClub = data.viewer?.clubs?.edges[0]?.node
 
   return (
-    <HorizontalNavigation.Button
+    <HorizontalNavigationButton
       exact
       colorScheme='primary'
       href={{
