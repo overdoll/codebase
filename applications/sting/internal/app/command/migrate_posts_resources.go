@@ -37,6 +37,10 @@ func (h MigratePostsResourcesHandler) Handle(ctx context.Context, cmd MigratePos
 			}
 		}
 
+		if len(content) == 0 {
+			return nil
+		}
+
 		newMedia, err := h.loader.ConvertResourcesToMedia(ctx, post.ID(), content)
 
 		if err != nil {

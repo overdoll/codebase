@@ -232,10 +232,6 @@ func (r PostsCassandraElasticsearchRepository) ScanPosts(ctx context.Context, cl
 		filterQueries = append(filterQueries, elastic.NewTermQuery("id", postId))
 	}
 
-	if clubId == "" && postId == "" {
-		return nil
-	}
-
 	query.Filter(filterQueries...)
 
 	builder.Query(query)
