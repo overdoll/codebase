@@ -131,6 +131,7 @@ func createFFMPEGTempSocket(id string, duration float64, onlyHeartbeat bool) (st
 					continue
 				}
 				data += string(buf)
+
 				a := re.FindAllStringSubmatch(data, -1)
 				cp := ""
 
@@ -143,6 +144,7 @@ func createFFMPEGTempSocket(id string, duration float64, onlyHeartbeat bool) (st
 					}
 
 					c, _ := strconv.Atoi(intValue)
+
 					parsed := float64(c) / duration / 1000000
 
 					truncated := fmt.Sprintf("%.2f", parsed)
@@ -158,7 +160,7 @@ func createFFMPEGTempSocket(id string, duration float64, onlyHeartbeat bool) (st
 					cp = "0"
 				}
 
-				if cp != progress {
+				if cp != progress || (cp == progress && duration == 0) {
 					progress = cp
 					if channel, ok := progressSocketChannels[id]; ok {
 						parsedInt, err := strconv.ParseInt(cp, 10, 64)
