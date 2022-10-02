@@ -32,6 +32,7 @@ go_library(
         "repository.go",
         "search_elasticsearch_repository.go",
         "sitemap_repository.go",
+        "stats_cassandra_repository.go",
     ],
     importpath = "overdoll/applications/sting/internal/adapters",
     visibility = ["//applications/sting:__subpackages__"],

@@ -56,8 +56,8 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "STATIC_ASSETS_URL",
         "AWS_STATIC_ASSETS_BUCKET",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "NEXT_PUBLIC_FATHOM_TRACKING_CODE",
-        "NEXT_PUBLIC_FATHOM_DOMAIN",
+        "NEXT_PUBLIC_POSTHOG_TRACKING_CODE",
+        "NEXT_PUBLIC_POSTHOG_DOMAIN",
     ]
 
     step = {
@@ -158,8 +158,8 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "STATIC_ASSETS_URL",
         "AWS_STATIC_ASSETS_BUCKET",
         "NEXT_PUBLIC_SENTRY_DSN",
-        "NEXT_PUBLIC_FATHOM_TRACKING_CODE",
-        "NEXT_PUBLIC_FATHOM_DOMAIN",
+        "NEXT_PUBLIC_POSTHOG_TRACKING_CODE",
+        "NEXT_PUBLIC_POSTHOG_DOMAIN",
     ]
 
     step = {

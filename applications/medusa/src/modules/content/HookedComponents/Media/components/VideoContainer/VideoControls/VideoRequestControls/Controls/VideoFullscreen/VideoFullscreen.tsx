@@ -4,7 +4,6 @@ import { exitFullscreen, requestFullscreen } from '../../../../../../support/con
 import MediaButton from '../../../../../MediaControls/MediaButton/MediaButton'
 import { ContainerRefProps } from '../../../../VideoContainer'
 import { PlayerType } from '../../../../../../types'
-import trackFathomEvent from '../../../../../../../../../support/trackFathomEvent'
 
 interface Props extends ContainerRefProps {
   player: PlayerType
@@ -35,8 +34,6 @@ export default function VideoFullscreen (props: Props): JSX.Element {
 
     const onEnableFullscreen = (): void => {
       setFullscreen(true)
-      // track fullscreen enable
-      trackFathomEvent('QIVQ4ERG', 1)
     }
 
     const onDisableFullscreen = (): void => {

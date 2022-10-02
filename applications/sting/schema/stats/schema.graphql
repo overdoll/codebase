@@ -1,0 +1,18 @@
+"""Track posts observations."""
+input ObservePostsInput {
+  """The post ids."""
+  postIds: [ID!]!
+}
+
+"""Tracking posts observations."""
+type ObservePostsPayload {
+  """The posts that were observed."""
+  posts: [Post!]!
+}
+
+extend type Mutation {
+  """
+  Track posts observations - this should be tracked whenever a post is "viewed" on the site - either through the list or viewing the post individually.
+  """
+  observePosts(input: ObservePostsInput!): ObservePostsPayload
+}

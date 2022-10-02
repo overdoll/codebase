@@ -5,7 +5,6 @@ import { fastForwardVideo } from '../../../../../../../support/controls'
 import { ControlFastForwardTen } from '@//:assets/icons'
 import MediaButton from '../../../../../../MediaControls/MediaButton/MediaButton'
 import syncPlayerTimeUpdate from '../../../../../../../support/syncPlayerTimeUpdate'
-import trackFathomEvent from '../../../../../../../../../../support/trackFathomEvent'
 
 interface Props extends Pick<VideoControlTypeProps, 'duration'> {
   player: PlayerType
@@ -21,8 +20,6 @@ export default function VideoSimpleSeek (props: Props): JSX.Element {
 
   const onSeek = (): void => {
     fastForwardVideo(10, duration, player)
-    // track video simple seek
-    trackFathomEvent('JUQJWED9', 1)
   }
 
   syncPlayerTimeUpdate(player, () => {

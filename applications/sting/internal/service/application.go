@@ -87,6 +87,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	personalizationRepo := adapters.NewCurationProfileCassandraRepository(session)
 	gamesRepo := adapters.NewGamesCassandraRepository(session)
 
+	statsRepo := adapters.NewStatsCassandraRepository(session)
+
 	return &app.Application{
 		Commands: app.Commands{
 			TransferClubOwnership: command.NewTransferClubOwnershipHandler(clubRepo, eventRepo, eva),
@@ -190,6 +192,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			MigrateSeriesResources:     command.NewMigrateSeriesResourcesHandler(postRepo, loader),
 			MigrateCharactersResources: command.NewMigrateCharactersResourcesHandler(postRepo, loader),
 			MigrateCategoryResources:   command.NewMigrateCategoriesResourcesHandler(postRepo, loader),
+
+			ObservePosts: command.NewObservePostsHandler(postRepo, statsRepo),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),

@@ -52,7 +52,7 @@ func UnmarshalLegacyResourceFromDatabase(id, itemId, resourceToken string, copie
 		link = proto.MediaLinkType_SERIES_BANNER
 		break
 	case "CHARACTER_BANNER":
-		link = proto.MediaLinkType_CATEGORY_BANNER
+		link = proto.MediaLinkType_CHARACTER_BANNER
 		break
 	case "CLUB_BANNER":
 		link = proto.MediaLinkType_CLUB_BANNER

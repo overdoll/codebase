@@ -4,7 +4,6 @@ import type { MetaPublicPostViewerFragment$key } from '@//:artifacts/MetaPublicP
 import PublicPostRichObject from './PublicPostRichObject/PublicPostRichObject'
 import PublicPostStructuredData from './PublicPostStructuredData/PublicPostStructuredData'
 import React, { useEffect } from 'react'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 import { useRouter } from 'next/router'
 import ContainerPublicPost from './ContainerPublicPost/ContainerPublicPost'
 import { useQueryParam } from 'use-query-params'
@@ -63,18 +62,6 @@ export default function MetaPublicPost (props: Props): JSX.Element {
   }, [slug])
 
   useEffect(() => {
-    const logTo = ['/random', '/browse', '/search/', '/posts', '/clubs/liked-posts', '/clubs/feed']
-
-    router.beforePopState(({ as }) => {
-      if (logTo.some((item) => as.includes(item))) {
-        trackFathomEvent('RDMKVLIO', 1)
-      }
-      if (as !== router.asPath && as.includes('/post/')) {
-        trackFathomEvent('46JKG1EM', 1)
-      }
-      return true
-    })
-
     return () => {
       router.beforePopState(() => true)
     }

@@ -1,7 +1,7 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { CacheProvider } from '@emotion/react'
 import theme from '../modules/theme'
-import React, { useEffect, useMemo, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import { I18nProvider } from '@lingui/react'
 import { i18n as i18nGlobal } from '@lingui/core'
 import NextApp from 'next/app'
@@ -27,7 +27,6 @@ import prepass from 'react-ssr-prepass'
 import { RouterContext } from 'next/dist/shared/lib/router-context'
 import { EMOTION_CACHE_KEY } from '@//:modules/constants/emotion'
 import Head from 'next/head'
-import * as Fathom from 'fathom-client'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/source-code-pro/400.css'
@@ -93,31 +92,6 @@ const MyApp = ({
   userAgent = useMemo(() => userAgent, [])
 
   environment = useMemo(() => CanUseDOM ? createEnvironment(clientFetch(securityTokenCache), relayStore) : environment, [])
-
-  // fathom setup for tracking users
-  useEffect(() => {
-    const trackingCode: string = process.env.NEXT_PUBLIC_FATHOM_TRACKING_CODE as string
-
-    if (trackingCode !== '') {
-      Fathom.load(trackingCode, {
-        includedDomains: [process.env.NEXT_PUBLIC_FATHOM_DOMAIN as string]
-      })
-    }
-
-    function onRouteChangeComplete (): void {
-      if (trackingCode !== '') {
-        Fathom.trackPageview()
-      }
-    }
-
-    // Record a pageview when route changes
-    router.events.on('routeChangeComplete', onRouteChangeComplete)
-
-    // Unassign event listener
-    return () => {
-      router.events.off('routeChangeComplete', onRouteChangeComplete)
-    }
-  }, [])
 
   // cache for later
   if (CanUseDOM) {

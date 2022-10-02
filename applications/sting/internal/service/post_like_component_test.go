@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/stretchr/testify/mock"
 	sting "overdoll/applications/sting/proto"
+	"overdoll/libraries/graphql/relay"
 	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/uuid"
 	"testing"
@@ -49,6 +50,12 @@ type UndoLikePost struct {
 	UndoLikePost *struct {
 		PostLikeId *string
 	} `graphql:"undoLikePost(input: $input)"`
+}
+
+type ObservePosts struct {
+	ObservePosts *struct {
+		Posts []*PostWithViewerLike
+	} `graphql:"observePosts(input: $input)"`
 }
 
 type PostWithViewer struct {
@@ -164,6 +171,16 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error liking a post")
+
+	var observePosts ObservePosts
+
+	err = client.Mutate(context.Background(), &observePosts, map[string]interface{}{
+		"input": types.ObservePostsInput{
+			PostIds: []relay.ID{relayId},
+		},
+	})
+
+	require.NoError(t, err, "failed to observe posts")
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 

@@ -1,8 +1,8 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Center, Flex, Grid, GridItem, Heading, Stack } from '@chakra-ui/react'
+import { Box, Heading, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
-import type { TotpAuthenticationTokenFragment$key } from '@//:artifacts/TotpAuthenticationTokenFragment.graphql'
-import { TotpAuthenticationTokenMutation } from '@//:artifacts/TotpAuthenticationTokenMutation.graphql'
+import type { TotpSubmissionFragment$key } from '@//:artifacts/TotpSubmissionFragment.graphql'
+import { TotpSubmissionMutation } from '@//:artifacts/TotpSubmissionMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import Joi from 'joi'
 import Totp from '@//:modules/validation/Totp'
@@ -19,32 +19,27 @@ import {
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
-import { RegisterAccount } from '@//:assets/icons'
+import { MobilePhone, WarningTriangle } from '@//:assets/icons'
+import { FlowBuilderNextButton } from '@//:modules/content/PageLayout'
 import useGrantCleanup from '../../../support/useGrantCleanup'
-import Head from 'next/head'
-import RevokeViewAuthenticationTokenButton
-  from '../../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
-import Button from '@//:modules/form/Button/Button'
 
 interface CodeValues {
   code: string
 }
 
 interface Props {
-  query: TotpAuthenticationTokenFragment$key
-  onUseTotp: () => void
+  queryRef: TotpSubmissionFragment$key
 }
 
 const Fragment = graphql`
-  fragment TotpAuthenticationTokenFragment on AuthenticationToken {
+  fragment TotpSubmissionFragment on AuthenticationToken {
     id
     token
-    ...RevokeViewAuthenticationTokenButtonFragment
   }
 `
 
 const Mutation = graphql`
-  mutation TotpAuthenticationTokenMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
+  mutation TotpSubmissionMutation($input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!) {
     grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: $input) {
       revokedAuthenticationTokenId
       validation
@@ -66,15 +61,10 @@ const Mutation = graphql`
   }
 `
 
-export default function TotpAuthenticationToken (props: Props): JSX.Element {
-  const {
-    query,
-    onUseTotp
-  } = props
+export default function TotpSubmission ({ queryRef }: Props): JSX.Element {
+  const data = useFragment(Fragment, queryRef)
 
-  const data = useFragment(Fragment, query)
-
-  const [submitTotp, isSubmittingTotp] = useMutation<TotpAuthenticationTokenMutation>(Mutation)
+  const [submitTotp, isSubmittingTotp] = useMutation<TotpSubmissionMutation>(Mutation)
 
   const { i18n } = useLingui()
 
@@ -113,6 +103,27 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
           })
           return
         }
+        const accountData = data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account
+
+        // identify user in posthog
+        posthog.identify(accountData?.reference, {
+          isStaff: accountData?.isStaff,
+          isArtist: accountData?.isArtist,
+          isModerator: accountData?.isModerator,
+          isWorker: accountData?.isWorker,
+          username: accountData?.username
+        })
+
+        // identify user in sentry
+        Sentry.setUser({
+          username: accountData?.username,
+          id: accountData?.reference
+        })
+
+        if (accountData != null && (accountData.isStaff || accountData.isWorker)) {
+          posthog.opt_out_capturing()
+        }
+
         notify({
           status: 'success',
           title: t`Welcome back! Thanks for using two-factor to log in!`
@@ -140,63 +151,61 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
 
   return (
     <>
-      <Head>
-        <title>Two-factor authentication - overdoll</title>
-      </Head>
-      <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
-        <Grid w='100%' templateColumns='1fr 1fr 1fr'>
-          <GridItem>
-            <Flex h='100%' align='center'>
-              <RevokeViewAuthenticationTokenButton query={data} />
-            </Flex>
-          </GridItem>
-          <GridItem>
-            <Center>
-              <Icon
-                icon={RegisterAccount}
-                w={16}
-                h={16}
-                fill='gray.00'
-              />
-            </Center>
-          </GridItem>
-          <GridItem />
-        </Grid>
-        <Heading fontSize='4xl' color='gray.00'>
+      <Icon
+        icon={MobilePhone}
+        w={16}
+        h={16}
+        fill='primary.400'
+      />
+      <Box>
+        <Heading
+          textAlign='center'
+          fontSize='xl'
+          color='gray.00'
+          mb={1}
+        >
           <Trans>
-            Enter the 6-digit code from your Authenticator app.
+            Enter the 6-digit code from your Authenticator app
           </Trans>
         </Heading>
-        <Form {...methods} onSubmit={onSubmitTotp}>
-          <Stack spacing={3}>
-            <FormInput size='xl' id='code'>
-              <InputBody>
-                <TextInput
-                  borderColor='transparent'
-                  variant='outline'
-                  placeholder='123456'
-                />
-              </InputBody>
-              <InputFooter />
-            </FormInput>
-            <FormSubmitButton
-              size='xl'
-              variant='solid'
-              colorScheme='primary'
-              isLoading={isSubmittingTotp}
-            >
-              <Trans>
-                Submit Code
-              </Trans>
-            </FormSubmitButton>
-          </Stack>
-        </Form>
-        <Button onClick={onUseTotp} variant='ghost' size='sm'>
+        <Heading textAlign='center' color='gray.300' fontSize='sm'>
           <Trans>
-            I lost access to my device
+            You can find this code in the same app you used to set up two-factor authentication
           </Trans>
-        </Button>
-      </Stack>
+        </Heading>
+      </Box>
+      <Form {...methods} onSubmit={onSubmitTotp}>
+        <Stack spacing={3}>
+          <FormInput size='lg' id='code'>
+            <InputBody>
+              <TextInput
+                borderColor='transparent'
+                variant='outline'
+                placeholder='123456'
+              />
+            </InputBody>
+            <InputFooter />
+          </FormInput>
+          <FormSubmitButton
+            size='lg'
+            variant='solid'
+            colorScheme='primary'
+            isLoading={isSubmittingTotp}
+          >
+            <Trans>
+              Submit Code
+            </Trans>
+          </FormSubmitButton>
+        </Stack>
+      </Form>
+      <FlowBuilderNextButton
+        size='md'
+        rightIcon={<Icon w={4} h={4} icon={WarningTriangle} fill='inherit' />}
+      >
+        <Trans>
+          I lost access to my device
+        </Trans>
+      </FlowBuilderNextButton>
     </>
   )
 }

@@ -37,7 +37,6 @@ import {
   useSequence,
   ValueResolver
 } from '@//:modules/content/HookedComponents/Sequence'
-import trackFathomEvent from '@//:modules/support/trackFathomEvent'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>
@@ -152,7 +151,6 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
 
   useUpdateEffect(() => {
     if (queryData?.viewer?.curationProfile?.completed === true) {
-      trackFathomEvent('GAHMWRXA', 0)
       onOpen()
     }
   }, [queryData?.viewer?.curationProfile?.completed])
