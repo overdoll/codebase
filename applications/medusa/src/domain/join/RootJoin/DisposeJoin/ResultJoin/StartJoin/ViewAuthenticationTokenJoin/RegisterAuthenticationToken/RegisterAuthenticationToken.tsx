@@ -13,8 +13,24 @@ import Head from 'next/head'
 import useGrantCleanup from '../../support/useGrantCleanup'
 import RevokeViewAuthenticationTokenButton
   from '../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
-import RegisterAuthenticationTokenForm from './RegisterAuthenticationTokenForm/RegisterAuthenticationTokenForm'
 import { RegisterAccount } from '@//:assets/icons'
+import {
+  Form,
+  FormInput,
+  FormSubmitButton,
+  InputBody,
+  InputFooter,
+  TextInput
+} from '@//:modules/content/HookedComponents/Form'
+import Joi from 'joi'
+import Username from '@//:modules/validation/Username'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
+
+interface RegisterValues {
+  username: string
+}
 
 interface Props {
   query: RegisterAuthenticationTokenFragment$key
@@ -65,6 +81,18 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
 
   const { flash } = useFlash()
 
+  const schema = Joi.object({
+    username: Username()
+  })
+
+  const methods = useForm<RegisterValues>({
+    resolver: joiResolver(
+      schema
+    )
+  })
+
+  const { setError } = methods
+
   const onSubmit = ({ username }): void => {
     commit({
       variables: {
@@ -76,6 +104,14 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
       updater: (store, payload) => {
         if (payload?.createAccountWithAuthenticationToken?.validation === 'TOKEN_INVALID') {
           invalidateGrant(store, data.id)
+        }
+
+        if (payload.createAccountWithAuthenticationToken?.validation === 'USERNAME_TAKEN') {
+          setError('username', {
+            type: 'mutation',
+            message: i18n._(translateValidation(payload.createAccountWithAuthenticationToken.validation))
+          })
+          return
         }
 
         if (payload.createAccountWithAuthenticationToken?.validation != null) {
@@ -107,6 +143,8 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
     })
   }
 
+  usePreventWindowUnload(true)
+
   return (
     <>
       <Head>
@@ -136,10 +174,32 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
             What should we call you?
           </Trans>
         </Heading>
-        <RegisterAuthenticationTokenForm
-          onSubmit={onSubmit}
-          isLoading={isInFlight}
-        />
+        <Form {...methods} onSubmit={onSubmit}>
+          <Stack spacing={6}>
+            <FormInput
+              size='xl'
+              id='username'
+            >
+              <InputBody>
+                <TextInput
+                  placeholder={i18n._(t`Enter a username`)}
+                />
+              </InputBody>
+              <InputFooter />
+            </FormInput>
+            <FormSubmitButton
+              size='xl'
+              variant='solid'
+              colorScheme='primary'
+              isLoading={isInFlight}
+              w='100%'
+            >
+              <Trans>
+                Register
+              </Trans>
+            </FormSubmitButton>
+          </Stack>
+        </Form>
         <Text color='whiteAlpha.300' fontSize='sm'>
           <Trans>
             Creating an account on overdoll means you agree to follow our{' '}

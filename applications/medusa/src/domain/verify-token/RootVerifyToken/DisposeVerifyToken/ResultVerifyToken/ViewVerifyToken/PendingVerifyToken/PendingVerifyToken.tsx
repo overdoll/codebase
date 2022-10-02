@@ -4,6 +4,7 @@ import { PendingVerifyTokenFragment$key } from '@//:artifacts/PendingVerifyToken
 import Head from 'next/head'
 import { useEffect } from 'react'
 import { Trans } from '@lingui/macro'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 
 interface Props {
   query: PendingVerifyTokenFragment$key
@@ -32,13 +33,15 @@ export default function PendingVerifyToken (props: Props): JSX.Element {
     }
   }, [data])
 
+  usePreventWindowUnload(true)
+
   return (
     <>
       <Head>
         <title>Verifying login - overdoll</title>
       </Head>
       <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
-        <Spinner thickness='12px' color='gray.00' w={16} h={16} />
+        <Spinner thickness='6px' color='gray.00' w={16} h={16} />
         <Heading fontSize='4xl' color='gray.00'>
           <Trans>
             We're confirming your login.

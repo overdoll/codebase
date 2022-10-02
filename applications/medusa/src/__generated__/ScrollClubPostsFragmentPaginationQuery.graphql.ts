@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f1ec0f89e0ca2b9108011326a8039f49>>
- * @relayHash da17dfdea9a3a797b5b8c26e46d6a77e
+ * @generated SignedSource<<981118c60c37f1624a50433b50025d96>>
+ * @relayHash c3bbe247a7961636a5d0f2906dcdd746
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID da17dfdea9a3a797b5b8c26e46d6a77e
+// @relayRequestID c3bbe247a7961636a5d0f2906dcdd746
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -383,6 +383,13 @@ return {
                                   (v19/*: any*/)
                                 ],
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "canSupport",
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -641,7 +648,7 @@ return {
     ]
   },
   "params": {
-    "id": "da17dfdea9a3a797b5b8c26e46d6a77e",
+    "id": "c3bbe247a7961636a5d0f2906dcdd746",
     "metadata": {},
     "name": "ScrollClubPostsFragmentPaginationQuery",
     "operationKind": "query",

@@ -139,7 +139,7 @@ export default function RevokeViewAuthenticationTokenButton (props: Props): JSX.
               isLoading={isRevokingToken}
               ml={3}
               size='lg'
-              colorScheme='green'
+              colorScheme='primary'
               variant='solid'
             >
               <Trans>

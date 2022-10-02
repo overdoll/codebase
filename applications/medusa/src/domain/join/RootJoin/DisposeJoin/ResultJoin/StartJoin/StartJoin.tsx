@@ -2,6 +2,8 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { StartJoinFragment$key } from '@//:artifacts/StartJoinFragment.graphql'
 import ViewAuthenticationTokenJoin from './ViewAuthenticationTokenJoin/ViewAuthenticationTokenJoin'
 import EmptyJoin from './EmptyJoin/EmptyJoin'
+import { useCookies } from 'react-cookie'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: StartJoinFragment$key | null
@@ -21,6 +23,15 @@ export default function StartJoin (props: Props): JSX.Element {
   } = props
 
   const data = useFragment(Fragment, query)
+
+  const [cookies] = useCookies<string>(['token', 'od.session'])
+
+  // if token cookie exists but data is null, we force a refetch
+  useUpdateEffect(() => {
+    if (cookies.token != null && cookies.token !== '' && data == null) {
+      loadQuery()
+    }
+  }, [cookies.token, data])
 
   if (data == null) {
     return <EmptyJoin />

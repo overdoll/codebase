@@ -15,6 +15,7 @@ import RefreshLobbyAuthenticationTokenJoin
 import RevokeViewAuthenticationTokenButton
   from '../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
 import { Trans } from '@lingui/macro'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 
 interface Props {
   query: LobbyAuthenticationTokenJoinFragment$key
@@ -29,6 +30,7 @@ const Fragment = graphql`
     token
     email
     ...RevokeViewAuthenticationTokenButtonFragment
+    ...RefreshLobbyAuthenticationTokenJoinFragment
   }
 `
 
@@ -66,6 +68,8 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
       }
     }
   }, [])
+
+  usePreventWindowUnload(true)
 
   return (
     <>
@@ -118,7 +122,7 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
         </Flex>
         <QueryErrorBoundary loadQuery={loadQuery}>
           <Suspense fallback={<></>}>
-            <RefreshLobbyAuthenticationTokenJoin searchArguments={searchArguments} />
+            <RefreshLobbyAuthenticationTokenJoin query={data} searchArguments={searchArguments} />
           </Suspense>
         </QueryErrorBoundary>
       </Stack>

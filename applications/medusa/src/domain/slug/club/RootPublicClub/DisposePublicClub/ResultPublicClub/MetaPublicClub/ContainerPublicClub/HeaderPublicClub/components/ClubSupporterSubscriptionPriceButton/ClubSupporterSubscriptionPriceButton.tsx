@@ -30,10 +30,7 @@ const Fragment = graphql`
 
 export const SUPPORT_BUTTON_PROPS = {
   colorScheme: 'orange',
-  size: {
-    base: 'md',
-    md: 'lg'
-  },
+  size: 'lg',
   w: '100%',
   leftIcon: (
     <Icon

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fa73753e56ada1223cf59c60e309c7da>>
+ * @generated SignedSource<<0ac1a345a4084201b483883eef8797b2>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostPreviewFragment$data = {
+  readonly club: {
+    readonly name: string;
+    readonly slug: string;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
+  };
+  readonly description: string;
   readonly " $fragmentSpreads": FragmentRefs<"RawCinematicContentFragment">;
   readonly " $fragmentType": "PostPreviewFragment";
 };
@@ -26,6 +32,43 @@ const node: ReaderFragment = {
   "name": "PostPreviewFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "ClubIconFragment"
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "description",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RawCinematicContentFragment"
@@ -35,6 +78,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "54003ab8e587ccec3e7f1047a5380aba";
+(node as any).hash = "7a5c303a467564aa4ae8c3c4135816fa";
 
 export default node;

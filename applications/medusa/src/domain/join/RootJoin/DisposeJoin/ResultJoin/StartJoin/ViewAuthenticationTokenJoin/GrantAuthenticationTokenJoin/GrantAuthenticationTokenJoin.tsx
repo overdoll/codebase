@@ -1,6 +1,6 @@
 import { graphql, useFragment, useMutation } from 'react-relay/hooks'
-import { Box, Heading, Spinner, Stack } from '@chakra-ui/react'
-import { useEffect } from 'react'
+import { Heading, Spinner, Stack } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import type {
   GrantAuthenticationTokenJoinFragment$key
 } from '@//:artifacts/GrantAuthenticationTokenJoinFragment.graphql'
@@ -9,6 +9,9 @@ import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import Head from 'next/head'
 import useGrantCleanup from '../../support/useGrantCleanup'
+import Button from '@//:modules/form/Button/Button'
+import { SadError } from '@//:assets/icons'
+import { Icon } from '@//:modules/content/PageLayout'
 
 interface Props {
   query: GrantAuthenticationTokenJoinFragment$key
@@ -48,6 +51,7 @@ export default function GrantAuthenticationTokenJoin (props: Props): JSX.Element
   const { query } = props
 
   const [commit] = useMutation<GrantAuthenticationTokenJoinMutation>(Mutation)
+  const [hasError, setHasError] = useState(false)
 
   const data = useFragment(Fragment, query)
 
@@ -58,8 +62,7 @@ export default function GrantAuthenticationTokenJoin (props: Props): JSX.Element
     invalidateGrant
   } = useGrantCleanup()
 
-  // grant account access
-  useEffect(() => {
+  const onCommit = (): void => {
     commit({
       variables: {
         input: {
@@ -88,22 +91,61 @@ export default function GrantAuthenticationTokenJoin (props: Props): JSX.Element
         successfulGrant(store, viewerPayload, payload.grantAccountAccessWithAuthenticationToken.revokedAuthenticationTokenId)
       },
       onError (data) {
-        notify({
-          status: 'error',
-          title: t`There was an error logging you in`
-        })
+        setHasError(true)
       }
     })
+  }
+
+  const onRetry = (): void => {
+    setHasError(false)
+    onCommit()
+  }
+
+  // grant account access
+  useEffect(() => {
+    onCommit()
   }, [])
 
-  // Ask user to authenticate
+  if (hasError) {
+    return (
+      <>
+        <Head>
+          <title>Error - overdoll</title>
+        </Head>
+        <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
+          <Icon
+            icon={SadError}
+            w={16}
+            h={16}
+            fill='gray.00'
+          />
+          <Heading fontSize='4xl' color='gray.00'>
+            <Trans>
+              There was an error logging you in.
+            </Trans>
+          </Heading>
+          <Button
+            onClick={onRetry}
+            size='xl'
+            colorScheme='primary'
+            variant='solid'
+          >
+            <Trans>
+              Retry
+            </Trans>
+          </Button>
+        </Stack>
+      </>
+    )
+  }
+
   return (
     <>
       <Head>
         <title>Logging you in - overdoll</title>
       </Head>
       <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
-        <Spinner thickness='12px' color='gray.00' w={16} h={16} />
+        <Spinner thickness='6px' color='gray.00' w={16} h={16} />
         <Heading fontSize='4xl' color='gray.00'>
           <Trans>
             Just a few seconds for us to log you in.

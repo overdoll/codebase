@@ -55,13 +55,9 @@ export default function EmptyJoin (): JSX.Element {
 
         let tokenCookie = cookies.token
 
-        console.log(tokenCookie)
-
         if (tokenCookie != null) {
           tokenCookie = tokenCookie.split(';')[0]
         }
-
-        console.log(`viewAuthenticationToken(token:"${tokenCookie as string ?? ''}")`)
 
         store
           .getRoot()

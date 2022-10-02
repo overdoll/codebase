@@ -6,7 +6,7 @@ export default function LargeBackgroundBox ({
 }: BoxProps): JSX.Element {
   return (
     <Box
-      bg='gray.900'
+      bg='gray.800'
       p={{
         base: 3,
         md: 4

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1971b7e33d3c33d7a2f78c4fd644fba0>>
+ * @generated SignedSource<<f5c00b5ce73137e9b2044f908eb45ec8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,14 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type PostPreviewContentFragment$data = {
   readonly content: ReadonlyArray<{
     readonly isSupporterOnly: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"InfoRawPostContentBannerFragment">;
   }>;
+  readonly state: PostState;
   readonly " $fragmentType": "PostPreviewContentFragment";
 };
 export type PostPreviewContentFragment$key = {
@@ -28,6 +30,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PostPreviewContentFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "state",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -56,6 +65,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "5c1f4092def3b5105ee93a72dbca61cd";
+(node as any).hash = "23879673f8e464197a5b24b6a8a644e2";
 
 export default node;

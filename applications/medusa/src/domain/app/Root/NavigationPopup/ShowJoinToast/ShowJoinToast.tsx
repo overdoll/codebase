@@ -31,7 +31,7 @@ export default function ShowJoinToast (): JSX.Element {
   }
 
   useEffect(() => {
-    if (isOpen) return
+    if (isOpen || closedJoinPopupStorage) return
     if (timeoutRef.current == null) {
       timeoutRef.current = setTimeout(openPopup, 45000)
     }
@@ -41,7 +41,7 @@ export default function ShowJoinToast (): JSX.Element {
         clearTimeout(timeoutRef.current)
       }
     }
-  }, [isOpen, timeoutRef])
+  }, [isOpen, timeoutRef, closedJoinPopupStorage])
 
   return (
     <Modal
@@ -58,8 +58,8 @@ export default function ShowJoinToast (): JSX.Element {
       }}
     >
       <ModalOverlay />
-      <ModalContent>
-        <ModalBody p={4}>
+      <ModalContent bg='#000'>
+        <ModalBody p={5}>
           <Stack spacing={4}>
             <Stack spacing={2}>
               <Heading maxW={400} fontSize='3xl' color='whiteAlpha.900'>

@@ -5,6 +5,7 @@ import { FileMultiple, PremiumStar, SadError } from '@//:assets/icons'
 import Icon from '../../../../../PageLayout/BuildingBlocks/Icon/Icon'
 import InfoRawPostContentBanner from '../InfoRawPostContentBanner/InfoRawPostContentBanner'
 import { Trans } from '@lingui/macro'
+import PendingMedia from '../../../../Media/components/PendingMedia/PendingMedia'
 
 interface Props {
   query: PostPreviewContentFragment$key
@@ -12,6 +13,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment PostPreviewContentFragment on Post {
+    state
     content {
       isSupporterOnly
       ...InfoRawPostContentBannerFragment
@@ -19,9 +21,11 @@ const Fragment = graphql`
   }
 `
 
-export default function PostPreviewContent ({
-  query
-}: Props): JSX.Element {
+export default function PostPreviewContent (props: Props): JSX.Element {
+  const {
+    query
+  } = props
+
   const data = useFragment(Fragment, query)
 
   const firstContent = data.content?.[0]
@@ -43,9 +47,13 @@ export default function PostPreviewContent ({
       align='center'
     >
       {firstContent != null
-        ? (
-          <InfoRawPostContentBanner postContentQuery={firstContent} />
-          )
+        ? data.state === 'SUBMITTED'
+          ? (
+            <PendingMedia />
+            )
+          : (
+            <InfoRawPostContentBanner postContentQuery={firstContent} />
+            )
         : (
           <Stack p={2} spacing={1}>
             <Icon icon={SadError} w={6} h={6} fill='gray.200' />

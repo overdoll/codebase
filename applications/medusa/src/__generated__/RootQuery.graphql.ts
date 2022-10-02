@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5ebfe12b4aa1a4757181572a5f116ae4>>
- * @relayHash 40c7487cb43dfa20169cdab45395d019
+ * @generated SignedSource<<6f955596e84e3f98be8d121e26602cbd>>
+ * @relayHash d09333e8feec5a40676d9ed8b4cffa72
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 40c7487cb43dfa20169cdab45395d019
+// @relayRequestID d09333e8feec5a40676d9ed8b4cffa72
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type RootQuery$variables = {};
 export type RootQuery$data = {
   readonly viewer: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "UniversalNavigatorFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment" | "UniversalNavigatorFragment">;
   } | null;
 };
 export type RootQuery = {
@@ -68,6 +68,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "UniversalNavigatorFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "NavigationPopupFragment"
           }
         ],
         "storageKey": null
@@ -173,7 +178,7 @@ return {
     ]
   },
   "params": {
-    "id": "40c7487cb43dfa20169cdab45395d019",
+    "id": "d09333e8feec5a40676d9ed8b4cffa72",
     "metadata": {},
     "name": "RootQuery",
     "operationKind": "query",
@@ -182,6 +187,6 @@ return {
 };
 })();
 
-(node as any).hash = "143692f7e97c1828c459519f72d0d96b";
+(node as any).hash = "00fab66df90208fd6500b81f4bfc37e2";
 
 export default node;

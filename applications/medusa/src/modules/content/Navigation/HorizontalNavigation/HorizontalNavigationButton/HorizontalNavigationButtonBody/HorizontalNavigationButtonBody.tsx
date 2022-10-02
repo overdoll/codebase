@@ -29,7 +29,7 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
       base: 2,
       md: 10
     },
-    bg: isActive ? 'gray.500' : 'transparent',
+    bg: isActive ? 'whiteAlpha.100' : 'transparent',
     h: '46px',
     w: {
       base: '58px',

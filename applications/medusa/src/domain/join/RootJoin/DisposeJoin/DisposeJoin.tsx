@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import type { ResultJoinQuery as ResultJoinQueryType } from '@//:artifacts/ResultJoinQuery.graphql'
 import { useQueryLoaderHookType } from 'react-relay/relay-hooks/useQueryLoader'
 import PageErrorBoundary from '@//:modules/content/Placeholder/Fallback/PageErrorBoundary/PageErrorBoundary'
@@ -17,9 +17,8 @@ export default function DisposeJoin (props: Props): JSX.Element {
 
   const [cookies] = useCookies<string>(['token'])
 
-  const [cookieToken] = useState<string>(cookies.token != null ? cookies.token.split(';')[0] : '')
-
   const onLoadQuery = (): void => {
+    const cookieToken = cookies.token != null ? cookies.token.split(';')[0] : ''
     loadQuery({ token: cookieToken }, { fetchPolicy: 'network-only' })
   }
 
@@ -31,7 +30,7 @@ export default function DisposeJoin (props: Props): JSX.Element {
 
   useUpdateEffect(() => {
     onLoadQuery()
-  }, [cookieToken])
+  }, [cookies.token])
 
   if (queryRef == null) {
     return <LoadJoin loadQuery={onLoadQuery} />

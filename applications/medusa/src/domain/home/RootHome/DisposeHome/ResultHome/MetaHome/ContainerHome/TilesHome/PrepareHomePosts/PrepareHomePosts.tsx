@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
 import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
@@ -19,11 +19,10 @@ export default function PrepareHomePosts (): JSX.Element {
     }
   })
 
-  return (
+  return useMemo(() => (
     <LazyPostsErrorBoundary loadQuery={loadQuery}>
       <SuspenseLazyPosts>
         <LazyHomePosts lazyArguments={lazyArguments} />
       </SuspenseLazyPosts>
-    </LazyPostsErrorBoundary>
-  )
+    </LazyPostsErrorBoundary>), [])
 }

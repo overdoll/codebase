@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<583c306e9f6dd7b7587b23883b2223dd>>
- * @relayHash 462475116fa2b78311ddaab6c7587e49
+ * @generated SignedSource<<ff0f03dc34140bbfc6c938158a48478a>>
+ * @relayHash c2f767525682a2e626f32616bfbc9a62
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 462475116fa2b78311ddaab6c7587e49
+// @relayRequestID c2f767525682a2e626f32616bfbc9a62
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -40,7 +40,14 @@ v1 = [
     "name": "token",
     "variableName": "token"
   }
-];
+],
+v2 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
@@ -119,13 +126,7 @@ return {
                 "name": "multiFactor",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  }
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -139,6 +140,7 @@ return {
             "name": "token",
             "storageKey": null
           },
+          (v2/*: any*/),
           {
             "kind": "ClientExtension",
             "selections": [
@@ -157,7 +159,7 @@ return {
     ]
   },
   "params": {
-    "id": "462475116fa2b78311ddaab6c7587e49",
+    "id": "c2f767525682a2e626f32616bfbc9a62",
     "metadata": {},
     "name": "ResultJoinQuery",
     "operationKind": "query",

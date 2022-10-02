@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<0b51a4ed44762f5393b98f632bf17fa9>>
- * @relayHash 3e011a4d820c8f0ab611d1b4c3e578b2
+ * @generated SignedSource<<7b30a185e391c7f7b67e0ea03275677d>>
+ * @relayHash 1b33cb3d7d3fbe80ffdd0684f5825d37
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3e011a4d820c8f0ab611d1b4c3e578b2
+// @relayRequestID 1b33cb3d7d3fbe80ffdd0684f5825d37
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,7 +18,6 @@ export type RefreshLobbyAuthenticationTokenJoinQuery$variables = {
 };
 export type RefreshLobbyAuthenticationTokenJoinQuery$data = {
   readonly viewAuthenticationToken: {
-    readonly verified: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ViewAuthenticationTokenJoinFragment">;
   } | null;
 };
@@ -46,7 +45,7 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "verified",
+  "name": "__typename",
   "storageKey": null
 };
 return {
@@ -64,7 +63,6 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -91,12 +89,18 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
             "kind": "ScalarField",
             "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "verified",
             "storageKey": null
           },
           {
@@ -122,13 +126,7 @@ return {
                 "name": "multiFactor",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "__typename",
-                    "storageKey": null
-                  }
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               }
@@ -142,6 +140,7 @@ return {
             "name": "token",
             "storageKey": null
           },
+          (v2/*: any*/),
           {
             "kind": "ClientExtension",
             "selections": [
@@ -160,7 +159,7 @@ return {
     ]
   },
   "params": {
-    "id": "3e011a4d820c8f0ab611d1b4c3e578b2",
+    "id": "1b33cb3d7d3fbe80ffdd0684f5825d37",
     "metadata": {},
     "name": "RefreshLobbyAuthenticationTokenJoinQuery",
     "operationKind": "query",
@@ -169,6 +168,6 @@ return {
 };
 })();
 
-(node as any).hash = "afc692360d7abe407a35a36b2df09f22";
+(node as any).hash = "4953eb24c47913677e37ec02f0663c4e";
 
 export default node;

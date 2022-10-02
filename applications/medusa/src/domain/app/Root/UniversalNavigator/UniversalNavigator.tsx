@@ -8,7 +8,7 @@ import { RenderOnDesktop, RenderOnMobile } from '@//:modules/content/PageLayout'
 import { useMemo } from 'react'
 import { useRouter } from 'next/router'
 import SimpleNav from './SimpleNav/SimpleNav'
-import NavigationPopup from './NavigationPopup/NavigationPopup'
+import NavigationPopup from '../NavigationPopup/NavigationPopup'
 
 interface Props {
   queryRef: UniversalNavigatorFragment$key | null

@@ -1,10 +1,10 @@
-import { graphql, useFragment, useSubscribeToInvalidationState } from 'react-relay/hooks'
+import { graphql, useFragment } from 'react-relay/hooks'
 import type { ViewAuthenticationTokenJoinFragment$key } from '@//:artifacts/ViewAuthenticationTokenJoinFragment.graphql'
 import LobbyAuthenticationTokenJoin from './LobbyAuthenticationTokenJoin/LobbyAuthenticationTokenJoin'
 import RegisterAuthenticationToken from './RegisterAuthenticationToken/RegisterAuthenticationToken'
 import MultiFactorAuthenticationToken from './MultiFactorAuthenticationToken/MultiFactorAuthenticationToken'
 import GrantAuthenticationTokenJoin from './GrantAuthenticationTokenJoin/GrantAuthenticationTokenJoin'
-import { usePageVisibility } from '@//:modules/hooks/usePageVisibility/usePageVisibility'
+import { usePageVisibility } from '@//:modules/hooks/usePageVisibility'
 import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
@@ -39,15 +39,11 @@ export default function ViewAuthenticationTokenJoin (props: Props): JSX.Element 
 
   const isVisible = usePageVisibility()
 
-  useSubscribeToInvalidationState([data.id], () => {
-    loadQuery()
-  })
-
   useUpdateEffect(() => {
-    if (isVisible) {
+    if (isVisible && data?.accountStatus != null && data?.verified) {
       loadQuery()
     }
-  }, [isVisible])
+  }, [isVisible, data])
 
   if (!data.verified) {
     return (

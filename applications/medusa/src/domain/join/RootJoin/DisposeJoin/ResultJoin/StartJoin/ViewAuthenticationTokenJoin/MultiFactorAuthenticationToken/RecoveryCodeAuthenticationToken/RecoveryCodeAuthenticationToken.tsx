@@ -181,7 +181,7 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
         </Heading>
         <Form {...methods} onSubmit={onSubmitCode}>
           <Stack spacing={4} justify='space-between'>
-            <FormInput size='lg' id='code'>
+            <FormInput size='xl' id='code'>
               <InputBody>
                 <TextInput
                   borderColor='transparent'
@@ -193,7 +193,7 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
               <InputFooter />
             </FormInput>
             <FormSubmitButton
-              size='lg'
+              size='xl'
               variant='solid'
               colorScheme='primary'
               isLoading={isSubmittingCode}

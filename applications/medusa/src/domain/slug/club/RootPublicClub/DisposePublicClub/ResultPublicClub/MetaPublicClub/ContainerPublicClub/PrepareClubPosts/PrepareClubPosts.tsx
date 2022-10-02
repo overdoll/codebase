@@ -1,6 +1,6 @@
 import type { PrepareClubPostsFragment$key } from '@//:artifacts/PrepareClubPostsFragment.graphql'
 import { graphql } from 'react-relay'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useFragment } from 'react-relay/hooks'
 import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
@@ -42,11 +42,11 @@ export default function PrepareClubPosts (props: Props): JSX.Element {
     }
   })
 
-  return (
+  return useMemo(() => (
     <LazyPostsErrorBoundary loadQuery={loadQuery}>
       <SuspenseLazyPosts>
         <LazyClubPosts lazyArguments={lazyArguments} />
       </SuspenseLazyPosts>
     </LazyPostsErrorBoundary>
-  )
+  ), [data.slug])
 }

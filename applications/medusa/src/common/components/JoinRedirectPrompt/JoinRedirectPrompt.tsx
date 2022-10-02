@@ -25,7 +25,7 @@ export default function JoinRedirectPrompt (props: Props): JSX.Element {
 
   const memoized = useMemo(() => new Random(hash(seed)), [seed])
 
-  const chosen = useMemo(() => memoized.nextInt32([0, (images.length - 1)]), [seed])
+  const chosen = useMemo(() => memoized.nextInt32([0, images.length]), [seed])
 
   if (ability.can('configure', 'Account')) {
     return <></>
@@ -45,7 +45,7 @@ export default function JoinRedirectPrompt (props: Props): JSX.Element {
             maxW={400}
           >
             <ImageMedia
-              url={images[chosen]}
+              url={images?.[chosen] ?? images[0]}
             />
           </Flex>
           <HStack spacing={1}>

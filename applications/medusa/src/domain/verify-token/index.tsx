@@ -1,15 +1,15 @@
-import VerifyToken from './VerifyToken/VerifyToken'
-import VerifyTokenQuery from '@//:artifacts/VerifyTokenQuery.graphql'
+import RootVerifyToken from './RootVerifyToken/RootVerifyToken'
+import ResultVerifyTokenQuery from '@//:artifacts/ResultVerifyTokenQuery.graphql'
 
-VerifyToken.getTranslationProps = async (ctx) => ({
+RootVerifyToken.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
-VerifyToken.getRelayPreloadProps = (ctx) => {
+RootVerifyToken.getRelayPreloadProps = (ctx) => {
   return {
     queries: {
       verifyTokenQuery: {
-        params: VerifyTokenQuery.params,
+        params: ResultVerifyTokenQuery.params,
         variables: {
           token: ctx.query.token ?? '',
           secret: ctx.query.secret ?? ''
@@ -21,4 +21,4 @@ VerifyToken.getRelayPreloadProps = (ctx) => {
     }
   }
 }
-export default VerifyToken
+export default RootVerifyToken

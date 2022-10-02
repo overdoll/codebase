@@ -188,7 +188,7 @@ export default function ConfirmVerifyToken (props: Props): JSX.Element {
           <Button
             w='100%'
             size='lg'
-            colorScheme='green'
+            colorScheme='primary'
             variant='solid'
             isDisabled={isRevokingToken}
             isLoading={isVerifyingToken}

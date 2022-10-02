@@ -5,6 +5,7 @@ import type {
 import TotpAuthenticationToken from './TotpAuthenticationToken/TotpAuthenticationToken'
 import RecoveryCodeAuthenticationToken from './RecoveryCodeAuthenticationToken/RecoveryCodeAuthenticationToken'
 import { useState } from 'react'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 
 interface Props {
   query: MultiFactorAuthenticationTokenFragment$key
@@ -23,6 +24,8 @@ export default function MultiFactorAuthenticationToken (props: Props): JSX.Eleme
   const data = useFragment(MultiFactorFragmentGQL, query)
 
   const [useRecovery, setUseRecovery] = useState(false)
+
+  usePreventWindowUnload(true)
 
   if (useRecovery) {
     return (

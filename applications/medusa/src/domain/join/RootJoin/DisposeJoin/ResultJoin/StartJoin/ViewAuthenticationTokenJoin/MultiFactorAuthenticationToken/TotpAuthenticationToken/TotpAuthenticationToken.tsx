@@ -169,7 +169,7 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
         </Heading>
         <Form {...methods} onSubmit={onSubmitTotp}>
           <Stack spacing={3}>
-            <FormInput size='lg' id='code'>
+            <FormInput size='xl' id='code'>
               <InputBody>
                 <TextInput
                   borderColor='transparent'
@@ -180,7 +180,7 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
               <InputFooter />
             </FormInput>
             <FormSubmitButton
-              size='lg'
+              size='xl'
               variant='solid'
               colorScheme='primary'
               isLoading={isSubmittingTotp}

@@ -45,22 +45,20 @@ export default function RegisterAuthenticationTokenForm (props: Props): JSX.Elem
     <Form {...methods} onSubmit={onSubmit}>
       <Stack spacing={6}>
         <FormInput
-          size='lg'
+          size='xl'
           id='username'
         >
           <InputBody>
             <TextInput
-              borderColor='transparent'
               placeholder={i18n._(t`Enter a username`)}
-              variant='outline'
             />
           </InputBody>
           <InputFooter />
         </FormInput>
         <FormSubmitButton
-          size='lg'
+          size='xl'
           variant='solid'
-          colorScheme='green'
+          colorScheme='primary'
           isLoading={isLoading}
           w='100%'
         >

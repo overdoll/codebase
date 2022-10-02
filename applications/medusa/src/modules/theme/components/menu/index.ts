@@ -3,7 +3,7 @@ import { menuAnatomy as parts } from '@chakra-ui/anatomy'
 
 const baseStyleList: SystemStyleFunction = (props) => {
   return {
-    bg: mode('#fff', 'gray.900')(props),
+    bg: mode('#fff', 'gray.800')(props),
     boxShadow: mode('sm', 'lg')(props),
     color: 'inherit',
     minW: '4xs',

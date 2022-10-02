@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ae3956ada90487a1aa6a5f82799a2b71>>
- * @relayHash eb6ab95398470cbb2c92b2aa906df7e5
+ * @generated SignedSource<<36b3df44e30b4caa83a3b3c7f7dc1740>>
+ * @relayHash f7195b218db4df4043547c4696b317b1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eb6ab95398470cbb2c92b2aa906df7e5
+// @relayRequestID f7195b218db4df4043547c4696b317b1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -353,6 +353,13 @@ return {
                               (v15/*: any*/)
                             ],
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "canSupport",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -608,7 +615,7 @@ return {
     ]
   },
   "params": {
-    "id": "eb6ab95398470cbb2c92b2aa906df7e5",
+    "id": "f7195b218db4df4043547c4696b317b1",
     "metadata": {},
     "name": "LazyClubPostsQuery",
     "operationKind": "query",

@@ -5,7 +5,7 @@ export default function SuspenseVerifyToken (): JSX.Element {
   return (
     <MobileContainer pt={2}>
       <Center h={300} w='100%'>
-        <Spinner thickness='8px' w={12} h={12} color='primary.400' />
+        <Spinner thickness='6px' w={12} h={12} color='primary.400' />
       </Center>
     </MobileContainer>
   )

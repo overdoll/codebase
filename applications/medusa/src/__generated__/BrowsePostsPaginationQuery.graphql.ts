@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ff5bb904a102fb09be035fc14e9d3a89>>
- * @relayHash 5fca223bfba716e5ef763f6cefc3caf1
+ * @generated SignedSource<<581af5cbf4db463e79a047b07b6e9f56>>
+ * @relayHash 814a6cff2b5088536ffaf8fe980d55ab
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5fca223bfba716e5ef763f6cefc3caf1
+// @relayRequestID 814a6cff2b5088536ffaf8fe980d55ab
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -328,6 +328,13 @@ return {
                           (v13/*: any*/)
                         ],
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "canSupport",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -570,7 +577,7 @@ return {
     ]
   },
   "params": {
-    "id": "5fca223bfba716e5ef763f6cefc3caf1",
+    "id": "814a6cff2b5088536ffaf8fe980d55ab",
     "metadata": {},
     "name": "BrowsePostsPaginationQuery",
     "operationKind": "query",

@@ -1,24 +1,28 @@
 import { PlayerType } from '../types'
 import { UseSnifferReturn } from '../../../../hooks/useSniffer'
 
-export const playVideo = (player: PlayerType): void => {
+export const playVideo = (player: PlayerType, emitScrollPlay?: boolean): void => {
   player.off('canplay', playVideo)
   const playPromise = player.play()
   if (playPromise != null) {
-    playPromise.catch(e => {
+    playPromise.then((e) => {
+      if (emitScrollPlay === true) {
+        player.emit('scroll-play', e)
+      }
+    }).catch(e => {
       player.video.muted = true
       player.emit('autoplay-failure', e)
     })
   }
 }
 
-export const startOrPlayVideo = (player: PlayerType): void => {
+export const startOrPlayVideo = (player: PlayerType, emitScrollPlay?: boolean): void => {
   if (player.video == null) return
   if (!(player.root.contains(player.video))) {
     player.once('canplay', playVideo)
     player.start()
   } else {
-    playVideo(player)
+    playVideo(player, emitScrollPlay)
   }
 }
 

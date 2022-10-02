@@ -14,7 +14,21 @@ import { PageProps } from '@//:types/app'
 import NoScript from './NoScript/NoScript'
 import SafeModal from './SafeModal/SafeModal'
 import RootRichObject from '../../../common/rich-objects/default/RootRichObject/RootRichObject'
-import LocalStorageEvents from './LocalStorageEvents/LocalStorageEvents'
+import dynamic from 'next/dynamic'
+
+const DynamicRouteProgressBar = dynamic(
+  async () => {
+    return await import('./RouteProgressBar/RouteProgressBar')
+  },
+  { ssr: false }
+)
+
+const DynamicNavigationPopup = dynamic(
+  async () => {
+    return await import('./NavigationPopup/NavigationPopup')
+  },
+  { ssr: false }
+)
 
 interface Props {
   children: ReactNode
@@ -29,6 +43,7 @@ const Query = graphql`
       id
       ...AccountAuthorizerFragment
       ...UniversalNavigatorFragment
+      ...NavigationPopupFragment
     }
   }
 `
@@ -51,11 +66,12 @@ const Root: PageProps<Props> = (props: Props): JSX.Element => {
         <UniversalNavigator queryRef={data.viewer} />
         <PageContents>
           {props.children}
-          <SafeModal />
-          <LocalStorageEvents />
         </PageContents>
         <NoScript />
       </AccountAuthorizer>
+      <DynamicRouteProgressBar />
+      <DynamicNavigationPopup query={data.viewer} />
+      <SafeModal />
       <RootRichObject />
     </>
   )

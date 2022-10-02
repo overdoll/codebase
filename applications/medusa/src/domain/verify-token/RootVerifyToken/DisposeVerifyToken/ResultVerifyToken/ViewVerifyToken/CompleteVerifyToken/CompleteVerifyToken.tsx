@@ -8,6 +8,7 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { SuccessBox } from '@//:assets/icons'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 
 interface Props {
   query: CompleteVerifyTokenFragment$key
@@ -19,6 +20,9 @@ const Fragment = graphql`
     sameDevice
     accountStatus {
       registered
+      multiFactor {
+        __typename
+      }
     }
   }
 `
@@ -41,6 +45,8 @@ export default function CompleteVerifyToken (props: Props): JSX.Element {
     }
   }, [])
 
+  usePreventWindowUnload(data.sameDevice)
+
   if (data.sameDevice) {
     return (
       <>
@@ -48,14 +54,12 @@ export default function CompleteVerifyToken (props: Props): JSX.Element {
           <title>Verification complete - overdoll</title>
         </Head>
         <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
-          <Stack spacing={4}>
-            <Spinner thickness='12px' color='gray.00' w={16} h={16} />
-            <Heading fontSize='4xl' color='gray.00'>
-              <Trans>
-                Just a few more seconds to log you in.
-              </Trans>
-            </Heading>
-          </Stack>
+          <Spinner thickness='6px' color='gray.00' w={16} h={16} />
+          <Heading fontSize='4xl' color='gray.00'>
+            <Trans>
+              Just a few more seconds to log you in.
+            </Trans>
+          </Heading>
         </Stack>
       </>
     )
@@ -74,11 +78,29 @@ export default function CompleteVerifyToken (props: Props): JSX.Element {
             h={16}
             fill='gray.00'
           />
-          <Heading fontSize='4xl' color='gray.00'>
-            <Trans>
-              We have logged you into the requested device.
-            </Trans>
-          </Heading>
+          {data.accountStatus?.registered === false
+            ? (
+              <Heading fontSize='4xl' color='gray.00'>
+                <Trans>
+                  Complete your account setup on the requested device.
+                </Trans>
+              </Heading>
+              )
+            : data.accountStatus?.multiFactor != null
+              ? (
+                <Heading fontSize='4xl' color='gray.00'>
+                  <Trans>
+                    You must finish your account login on the requested device.
+                  </Trans>
+                </Heading>
+                )
+              : (
+                <Heading fontSize='4xl' color='gray.00'>
+                  <Trans>
+                    We have logged you into the requested device.
+                  </Trans>
+                </Heading>
+                )}
         </Stack>
         <Flex
           justify='center'

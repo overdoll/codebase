@@ -56,7 +56,7 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
   const onLoadNext = (): void => {
     setHasError(false)
     const disposedLoad = (): Disposable => {
-      return loadNext(9, {
+      return loadNext(8, {
         onComplete: (error) => {
           if (error != null) {
             setHasError(true)
