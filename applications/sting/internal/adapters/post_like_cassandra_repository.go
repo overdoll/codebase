@@ -12,6 +12,7 @@ import (
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
+	"sort"
 	"time"
 )
 
@@ -214,6 +215,11 @@ func (r PostsCassandraElasticsearchRepository) getAccountPostLikesBuckets(ctx co
 	for _, l := range pstLike {
 		buckets = append(buckets, l.Bucket)
 	}
+
+	// sort by decreasing order
+	sort.Slice(buckets, func(i, j int) bool {
+		return buckets[i] > buckets[j]
+	})
 
 	return buckets, nil
 }
