@@ -1,7 +1,7 @@
 import posthog from 'posthog-js'
 
 interface Props {
-  from?: string
+  from?: string | null
 }
 
 export default function captureRegistration (props: Props): void {

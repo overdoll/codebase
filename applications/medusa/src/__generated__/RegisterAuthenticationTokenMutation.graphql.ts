@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e4168b10c59e0af14ad6f2dee1cda82e>>
- * @relayHash 390336e30632a75f18937cd33b9021e8
+ * @generated SignedSource<<5f8627b8bcb2a125938ab483afca9e67>>
+ * @relayHash 35b77543603f9c0ab208f1440e1d4cf1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 390336e30632a75f18937cd33b9021e8
+// @relayRequestID 35b77543603f9c0ab208f1440e1d4cf1
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -28,8 +28,10 @@ export type RegisterAuthenticationTokenMutation$data = {
       readonly isArtist: boolean;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isWorker: boolean;
+      readonly reference: string;
       readonly username: string;
-      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment" | "identifyAccountFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: CreateAccountWithAuthenticationTokenValidation | null;
@@ -103,6 +105,20 @@ v8 = {
   "kind": "ScalarField",
   "name": "isArtist",
   "storageKey": null
+},
+v9 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reference",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isWorker",
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -134,15 +150,12 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "AccountIconFragment"
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "identifyAccountFragment"
               }
             ],
             "storageKey": null
@@ -183,6 +196,8 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -201,20 +216,6 @@ return {
                   (v4/*: any*/)
                 ],
                 "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isWorker",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "reference",
-                "storageKey": null
               }
             ],
             "storageKey": null
@@ -225,7 +226,7 @@ return {
     ]
   },
   "params": {
-    "id": "390336e30632a75f18937cd33b9021e8",
+    "id": "35b77543603f9c0ab208f1440e1d4cf1",
     "metadata": {},
     "name": "RegisterAuthenticationTokenMutation",
     "operationKind": "mutation",
@@ -234,6 +235,6 @@ return {
 };
 })();
 
-(node as any).hash = "f896b7e1d59648daa12d8fdfe166828c";
+(node as any).hash = "0d14012d17926f5010ce23401d329c2a";
 
 export default node;

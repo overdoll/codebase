@@ -48,6 +48,8 @@ const Mutation = graphql`
         username
         isModerator
         isStaff
+        reference
+        isWorker
         isArtist
         deleting {
           __typename
@@ -56,7 +58,6 @@ const Mutation = graphql`
           __typename
         }
         ...AccountIconFragment
-        ...identifyAccountFragment
       }
     }
   }
@@ -128,7 +129,20 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
           })
           return
         }
-        identifyAccount({ query: data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account ?? null })
+        const tokenAccount = data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode?.account
+
+        identifyAccount({
+          account: tokenAccount != null
+            ? {
+                username: tokenAccount.username,
+                reference: tokenAccount.reference,
+                isStaff: tokenAccount.isStaff,
+                isArtist: tokenAccount.isArtist,
+                isModerator: tokenAccount.isModerator,
+                isWorker: tokenAccount.isWorker
+              }
+            : null
+        })
         notify({
           status: 'success',
           title: t`A recovery code was successfully used up to log you in`

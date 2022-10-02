@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7bd507108fafce5106a5c56895cd2934>>
- * @relayHash 6a8b0e2e28eee4527535cd0dc2a4bc53
+ * @generated SignedSource<<2d48c0f2651885206660c81ed4c13cd7>>
+ * @relayHash 3ad261c6974c62640d4940947e34ad92
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 6a8b0e2e28eee4527535cd0dc2a4bc53
+// @relayRequestID 3ad261c6974c62640d4940947e34ad92
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -31,11 +31,13 @@ export type TotpAuthenticationTokenMutation$data = {
       readonly isArtist: boolean;
       readonly isModerator: boolean;
       readonly isStaff: boolean;
+      readonly isWorker: boolean;
       readonly lock: {
         readonly __typename: "AccountLock";
       } | null;
+      readonly reference: string;
       readonly username: string;
-      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment" | "identifyAccountFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"AccountIconFragment">;
     } | null;
     readonly revokedAuthenticationTokenId: string;
     readonly validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation | null;
@@ -114,30 +116,44 @@ v9 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "isWorker",
+  "storageKey": null
+},
+v10 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "reference",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v10 = [
-  (v9/*: any*/)
+v12 = [
+  (v11/*: any*/)
 ],
-v11 = {
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountDeleting",
   "kind": "LinkedField",
   "name": "deleting",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 },
-v12 = {
+v14 = {
   "alias": null,
   "args": null,
   "concreteType": "AccountLock",
   "kind": "LinkedField",
   "name": "lock",
   "plural": false,
-  "selections": (v10/*: any*/),
+  "selections": (v12/*: any*/),
   "storageKey": null
 };
 return {
@@ -170,17 +186,14 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v11/*: any*/),
-              (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v13/*: any*/),
+              (v14/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "AccountIconFragment"
-              },
-              {
-                "args": null,
-                "kind": "FragmentSpread",
-                "name": "identifyAccountFragment"
               }
             ],
             "storageKey": null
@@ -221,8 +234,10 @@ return {
               (v6/*: any*/),
               (v7/*: any*/),
               (v8/*: any*/),
-              (v11/*: any*/),
-              (v12/*: any*/),
+              (v9/*: any*/),
+              (v10/*: any*/),
+              (v13/*: any*/),
+              (v14/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -231,23 +246,9 @@ return {
                 "name": "avatar",
                 "plural": false,
                 "selections": [
-                  (v9/*: any*/),
+                  (v11/*: any*/),
                   (v4/*: any*/)
                 ],
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "isWorker",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "reference",
                 "storageKey": null
               }
             ],
@@ -259,7 +260,7 @@ return {
     ]
   },
   "params": {
-    "id": "6a8b0e2e28eee4527535cd0dc2a4bc53",
+    "id": "3ad261c6974c62640d4940947e34ad92",
     "metadata": {},
     "name": "TotpAuthenticationTokenMutation",
     "operationKind": "mutation",
@@ -268,6 +269,6 @@ return {
 };
 })();
 
-(node as any).hash = "aadae1672c597a7ffc861069e6dba63c";
+(node as any).hash = "ea3224cda7731082927472c1ccf333ad";
 
 export default node;

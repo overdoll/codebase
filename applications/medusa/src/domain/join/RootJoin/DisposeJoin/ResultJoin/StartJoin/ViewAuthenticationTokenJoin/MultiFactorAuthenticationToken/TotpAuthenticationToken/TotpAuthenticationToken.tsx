@@ -55,6 +55,8 @@ const Mutation = graphql`
         isModerator
         isStaff
         isArtist
+        isWorker
+        reference
         deleting {
           __typename
         }
@@ -62,7 +64,6 @@ const Mutation = graphql`
           __typename
         }
         ...AccountIconFragment
-        ...identifyAccountFragment
       }
     }
   }
@@ -115,7 +116,22 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
           })
           return
         }
-        identifyAccount({ query: data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account ?? null })
+
+        const tokenAccount = data?.grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp?.account
+
+        identifyAccount({
+          account: tokenAccount != null
+            ? {
+                username: tokenAccount.username,
+                reference: tokenAccount.reference,
+                isStaff: tokenAccount.isStaff,
+                isArtist: tokenAccount.isArtist,
+                isModerator: tokenAccount.isModerator,
+                isWorker: tokenAccount.isWorker
+              }
+            : null
+        })
+
         notify({
           status: 'success',
           title: t`Welcome back! Thanks for using two-factor to log in!`

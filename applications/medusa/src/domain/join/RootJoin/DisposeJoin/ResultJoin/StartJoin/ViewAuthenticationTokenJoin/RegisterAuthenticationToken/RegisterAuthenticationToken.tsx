@@ -50,8 +50,9 @@ const Mutation = graphql`
         isModerator
         isStaff
         isArtist
+        reference
+        isWorker
         ...AccountIconFragment
-        ...identifyAccountFragment
       }
     }
   }
@@ -140,7 +141,20 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
         })
       },
       onCompleted (data) {
-        identifyAccount({ query: data?.createAccountWithAuthenticationToken?.account ?? null })
+        const tokenAccount = data?.createAccountWithAuthenticationToken?.account
+
+        identifyAccount({
+          account: tokenAccount != null
+            ? {
+                username: tokenAccount.username,
+                reference: tokenAccount.reference,
+                isStaff: tokenAccount.isStaff,
+                isArtist: tokenAccount.isArtist,
+                isModerator: tokenAccount.isModerator,
+                isWorker: tokenAccount.isWorker
+              }
+            : null
+        })
         captureRegistration({ from: from })
       },
       onError () {
