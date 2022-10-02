@@ -66,7 +66,7 @@ type TestSlug struct {
 func createFakeSlug(t *testing.T) string {
 	fake := TestSlug{}
 	err := faker.FakeData(&fake)
-	require.NoError(t, err, "no error creating fake slug")
+	require.NoError(t, err, "no error creating fake slugs")
 	return fake.Slug
 }
 
