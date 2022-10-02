@@ -29,6 +29,12 @@ func (r EventTemporalRepository) SendCompletedPixelatedResources(ctx context.Con
 	if err := r.client.SignalWorkflow(ctx, "sting.SubmitPost_"+postId, "", workflows.SubmitPostPixelatedMediaSignalChannel, &workflows.PixelatedPostMediaFinished{
 		MediaId: media.ID(),
 	}); err != nil {
+		// ignore not found
+		var notFound *serviceerror.NotFound
+		if errors.As(err, &notFound) {
+			return nil
+		}
+
 		if strings.Contains(err.Error(), "Workflow execution already finished successfully") {
 			return nil
 		}
@@ -44,7 +50,6 @@ func (r EventTemporalRepository) SendPostCompletedProcessing(ctx context.Context
 		MediaId: media.ID(),
 		Failed:  media.IsFailed(),
 	}); err != nil {
-
 		// ignore not found
 		var notFound *serviceerror.NotFound
 		if errors.As(err, &notFound) {

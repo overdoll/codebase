@@ -303,9 +303,6 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 
 			args := ffmpeg_go.KwArgs{
 				"map": []string{"0:v:0", "0:a:0"},
-				"ar":  "48k",
-				"c:a": "aac",
-				"ac":  "2",
 				////	"af":     "loudnorm=print_format=summary:linear=true:" + loudNorm,
 				"format": "mp4",
 			}
@@ -317,17 +314,17 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 				args["crf"] = "1"
 			}
 
+			////
+			//// process our audio
+			//if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "progress": "unix://" + validationSocket}).
+			//	Output(newFileName, args).
+			//	WithErrorOutput(ffmpegLogger).
+			//	OverWriteOutput().
+			//	Run(); err != nil {
+			//	return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
+			//}
 			//
-			// process our audio
-			if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "progress": "unix://" + validationSocket}).
-				Output(newFileName, args).
-				WithErrorOutput(ffmpegLogger).
-				OverWriteOutput().
-				Run(); err != nil {
-				return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
-			}
-
-			targetFileName = newFileName
+			//targetFileName = newFileName
 		} else {
 			videoNoAudio = true
 		}
@@ -619,6 +616,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		} else {
 			hlsArgs["b:a"] = scale.ar
 			hlsArgs["map"] = []string{"0:a:0"}
+			hlsArgs["ar"] = "48k"
+			hlsArgs["c:a"] = "aac"
+			hlsArgs["ac"] = "2"
 		}
 
 		createVariant(index, fileName+"/pl_"+index+"_%v.m3u8", hlsArgs)
@@ -641,6 +641,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			if !videoNoAudio {
 				mp4FileArgs["b:a"] = scale.ar
 				mp4FileArgs["map"] = []string{"0:a:0"}
+				mp4FileArgs["ar"] = "48k"
+				mp4FileArgs["c:a"] = "aac"
+				mp4FileArgs["ac"] = "2"
 			} else {
 				mp4FileArgs["an"] = ""
 			}
