@@ -561,7 +561,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 			),
 	)
 
-	seed, err := r.getRandomizerSeed(ctx, "suggestedPostsByPost")
+	seed, err := r.getRandomizerSeed(ctx, "suggestedPostsByPost:"+pst.ID())
 
 	if err != nil {
 		return nil, err
