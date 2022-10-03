@@ -17,7 +17,7 @@ export default function identifyAccount (props: Props): void {
     account
   } = props
 
-  posthog.identify(account?.reference, {
+  posthog?.identify(account?.reference, {
     isStaff: account?.isStaff,
     isArtist: account?.isArtist,
     isModerator: account?.isModerator,
@@ -32,6 +32,6 @@ export default function identifyAccount (props: Props): void {
   })
 
   if (account != null && (account?.isStaff || account?.isWorker)) {
-    posthog.opt_out_capturing()
+    posthog?.opt_out_capturing()
   }
 }

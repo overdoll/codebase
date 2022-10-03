@@ -1,28 +1,19 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { Suspense, useEffect, useRef } from 'react'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
-import { Center, Flex, Grid, GridItem, Heading, Stack } from '@chakra-ui/react'
+import { Box, Center, Flex, Grid, GridItem, Heading, Stack, Text } from '@chakra-ui/react'
 import type {
   LobbyAuthenticationTokenJoinFragment$key
 } from '@//:artifacts/LobbyAuthenticationTokenJoinFragment.graphql'
 import Head from 'next/head'
 import { EmailSent } from '@//:assets/icons'
-import { useSearch } from '@//:modules/content/HookedComponents/Search'
-import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
 import { useCookies } from 'react-cookie'
-import RefreshLobbyAuthenticationTokenJoin
-  from './RefreshLobbyAuthenticationTokenJoin/RefreshLobbyAuthenticationTokenJoin'
 import RevokeViewAuthenticationTokenButton
   from '../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
 import { Trans } from '@lingui/macro'
-import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
+import { BeatLoader } from 'react-spinners'
 
 interface Props {
   query: LobbyAuthenticationTokenJoinFragment$key
-}
-
-interface SearchProps {
-  token: string
 }
 
 const Fragment = graphql`
@@ -39,37 +30,7 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
 
   const data = useFragment(Fragment, query)
 
-  const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)
-
   const [cookies] = useCookies<string>(['token'])
-
-  const {
-    searchArguments,
-    loadQuery
-  } = useSearch<SearchProps>({
-    defaultValue: {
-      token: data.token
-    }
-  })
-
-  // refresh the token until we get the desired result
-  useEffect(() => {
-    const refreshLoop = (): void => {
-      loadQuery()
-      timeout.current = setTimeout(refreshLoop, 2000)
-    }
-
-    timeout.current = setTimeout(refreshLoop, 2000)
-
-    return () => {
-      if (timeout.current != null) {
-        clearTimeout(timeout.current)
-        timeout.current = null
-      }
-    }
-  }, [])
-
-  usePreventWindowUnload(true)
 
   return (
     <>
@@ -120,11 +81,18 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
             {data.email ?? (cookies.token != null ? cookies.token.split(';')[1] : undefined)}
           </Heading>
         </Flex>
-        <QueryErrorBoundary loadQuery={loadQuery}>
-          <Suspense fallback={<></>}>
-            <RefreshLobbyAuthenticationTokenJoin query={data} searchArguments={searchArguments} />
-          </Suspense>
-        </QueryErrorBoundary>
+        <Flex align='center' justify='center'>
+          <Stack w={60} align='center' justify='center' spacing={2}>
+            <Box opacity={0.5}>
+              <BeatLoader color='white' size={6} />
+            </Box>
+            <Text textAlign='center' color='whiteAlpha.300' fontSize='md'>
+              <Trans>
+                Also check your spam and don't close this page
+              </Trans>
+            </Text>
+          </Stack>
+        </Flex>
       </Stack>
     </>
   )

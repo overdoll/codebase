@@ -109,7 +109,7 @@ export default function AccountAuthorizer ({
 
     function onRouteChangeComplete (): void {
       if (trackingCode !== '') {
-        posthog.capture('$pageview')
+        posthog?.capture('$pageview')
       }
     }
 

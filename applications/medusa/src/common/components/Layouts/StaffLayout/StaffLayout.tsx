@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import VerticalNavigation from '@//:modules/content/Navigation/VerticalNavigation/VerticalNavigation'
-import { CategoryIdentifier, PayoutMethod } from '@//:assets/icons'
+import { CategoryIdentifier, FreshLeaf, PayoutMethod } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Can from '@//:modules/authorization/Can'
 import TitleRichObject from '../../../rich-objects/default/TitleRichObject/TitleRichObject'
@@ -40,6 +40,16 @@ export default function StaffLayout ({ children }: Props): JSX.Element {
               icon={PayoutMethod}
               title={
                 <Trans>Deposit Requests</Trans>
+              }
+            />
+          </Can>
+          <Can I='staff' a='Entity'>
+            <VerticalNavigation.Button
+              prefetch={false}
+              href='/staff/clubs'
+              icon={FreshLeaf}
+              title={
+                <Trans>View Clubs</Trans>
               }
             />
           </Can>

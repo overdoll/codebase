@@ -59,6 +59,14 @@ export default function ViewCounterPostObserver (props: ViewCounterPostObserverP
   }, [ref])
 
   return (
-    <Box pointerEvents='none' position='absolute' top={0} bottom={0} left={0} right={0} />
+    <Box
+      ref={ref}
+      pointerEvents='none'
+      position='absolute'
+      top={0}
+      bottom={0}
+      left={0}
+      right={0}
+    />
   )
 }

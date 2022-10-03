@@ -28,6 +28,7 @@ export default function DisposeJoin (props: Props): JSX.Element {
     }
   }, [])
 
+  // if token cookie changes or is set we run the query
   useUpdateEffect(() => {
     onLoadQuery()
   }, [cookies.token])

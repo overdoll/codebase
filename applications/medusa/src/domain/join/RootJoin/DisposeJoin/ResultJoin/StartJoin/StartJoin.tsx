@@ -24,7 +24,7 @@ export default function StartJoin (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, query)
 
-  const [cookies] = useCookies<string>(['token', 'od.session'])
+  const [cookies] = useCookies<string>(['token'])
 
   // if token cookie exists but data is null, we force a refetch
   useUpdateEffect(() => {

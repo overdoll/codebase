@@ -25,11 +25,11 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:49
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:50
 msgid "Join"
 msgstr ""
 
-#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:43
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:44
 msgid "Join overdoll to save posts and let the artist know you like their content"
 msgstr ""
 
@@ -58,6 +58,6 @@ msgid "Your Saved Posts"
 msgstr ""
 
 #: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/MetaLikedPosts/ContainerLikedPosts/ScrollLikedPosts/ScrollLikedPosts.tsx:56
-#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:38
+#: src/domain/clubs/liked-posts/RootLikedPosts/DisposeLikedPosts/ResultLikedPosts/ResultLikedPosts.tsx:39
 msgid "Your saved posts will show up here"
 msgstr ""

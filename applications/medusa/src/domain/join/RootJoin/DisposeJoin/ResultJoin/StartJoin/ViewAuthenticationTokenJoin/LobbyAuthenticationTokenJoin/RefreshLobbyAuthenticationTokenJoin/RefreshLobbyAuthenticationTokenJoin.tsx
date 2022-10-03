@@ -6,16 +6,14 @@ import type {
 import type {
   RefreshLobbyAuthenticationTokenJoinFragment$key
 } from '@//:artifacts/RefreshLobbyAuthenticationTokenJoinFragment.graphql'
-import { Box, Flex, Stack, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
-import { BeatLoader } from 'react-spinners'
-import { useRouter } from 'next/router'
-import { usePageVisibility } from '@//:modules/hooks/usePageVisibility'
 import { useUpdateEffect } from 'usehooks-ts'
+import { useRouter } from 'next/router'
+import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 
 interface Props extends ComponentSearchArguments<RefreshLobbyAuthenticationTokenJoinQuery$variables> {
-  query: RefreshLobbyAuthenticationTokenJoinFragment$key
+  query: RefreshLobbyAuthenticationTokenJoinFragment$key | null
+  loadQuery: () => void
 }
 
 const Fragment = graphql`
@@ -27,7 +25,24 @@ const Fragment = graphql`
 const Query = graphql`
   query RefreshLobbyAuthenticationTokenJoinQuery($token: String!) {
     viewAuthenticationToken (token: $token) {
+      verified
       ...ViewAuthenticationTokenJoinFragment
+    }
+    viewer {
+      id
+      username
+      isModerator
+      isStaff
+      reference
+      isWorker
+      isArtist
+      deleting {
+        __typename
+      }
+      lock {
+        __typename
+      }
+      ...AccountIconFragment
     }
   }
 `
@@ -38,10 +53,13 @@ export default function RefreshLobbyAuthenticationTokenJoin (props: Props): JSX.
       variables,
       options
     },
-    query
+    query,
+    loadQuery
   } = props
 
   const data = useFragment(Fragment, query)
+
+  const router = useRouter()
 
   const queryData = useLazyLoadQuery<RefreshLobbyAuthenticationTokenJoinQuery>(
     Query,
@@ -49,37 +67,19 @@ export default function RefreshLobbyAuthenticationTokenJoin (props: Props): JSX.
     options
   )
 
-  const router = useRouter()
-
-  const isVisible = usePageVisibility()
-
   useUpdateEffect(() => {
-    if (queryData.viewAuthenticationToken == null && data != null && isVisible) {
+    if (queryData.viewer != null && queryData.viewAuthenticationToken == null) {
       router.reload()
     }
-  }, [queryData.viewAuthenticationToken, isVisible])
+  }, [queryData.viewer, queryData.viewAuthenticationToken])
 
-  return (
-    <Flex align='center' justify='center'>
-      <Stack w={60} align='center' justify='center' spacing={2}>
-        <Box opacity={0.5}>
-          <BeatLoader color='white' size={6} />
-        </Box>
-        {(queryData.viewAuthenticationToken == null && data != null)
-          ? (
-            <Text textAlign='center' color='whiteAlpha.300' fontSize='md'>
-              <Trans>
-                Redirecting...
-              </Trans>
-            </Text>)
-          : (
-            <Text textAlign='center' color='whiteAlpha.300' fontSize='md'>
-              <Trans>
-                Also check your spam and don't close this page
-              </Trans>
-            </Text>
-            )}
-      </Stack>
-    </Flex>
-  )
+  useUpdateEffect(() => {
+    if (queryData.viewer == null && queryData.viewAuthenticationToken == null && data != null) {
+      loadQuery()
+    }
+  }, [queryData.viewer, queryData.viewAuthenticationToken, data])
+
+  usePreventWindowUnload(queryData.viewAuthenticationToken != null && !queryData.viewAuthenticationToken?.verified)
+
+  return <></>
 }

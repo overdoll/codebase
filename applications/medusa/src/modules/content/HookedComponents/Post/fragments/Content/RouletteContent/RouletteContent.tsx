@@ -49,7 +49,7 @@ export default function RouletteContent (props: Props): JSX.Element {
         <Box h='100%' position='relative'>
           {ability.can('configure', 'Account') && (
             <ViewCounterPostObserver
-              delay={10000}
+              delay={5000}
               postId={postData.id}
             />)}
           <RouletteGallery postQuery={postData} onSwiper={onInit} />

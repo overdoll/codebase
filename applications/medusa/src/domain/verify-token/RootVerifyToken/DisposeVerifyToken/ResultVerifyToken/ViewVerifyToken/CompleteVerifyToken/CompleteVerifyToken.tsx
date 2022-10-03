@@ -78,29 +78,11 @@ export default function CompleteVerifyToken (props: Props): JSX.Element {
             h={16}
             fill='gray.00'
           />
-          {data.accountStatus?.registered === false
-            ? (
-              <Heading fontSize='4xl' color='gray.00'>
-                <Trans>
-                  Complete your account setup on the requested device.
-                </Trans>
-              </Heading>
-              )
-            : data.accountStatus?.multiFactor != null
-              ? (
-                <Heading fontSize='4xl' color='gray.00'>
-                  <Trans>
-                    You must finish your account login on the requested device.
-                  </Trans>
-                </Heading>
-                )
-              : (
-                <Heading fontSize='4xl' color='gray.00'>
-                  <Trans>
-                    We have logged you into the requested device.
-                  </Trans>
-                </Heading>
-                )}
+          <Heading fontSize='4xl' color='gray.00'>
+            <Trans>
+              We have logged you into the requested device.
+            </Trans>
+          </Heading>
         </Stack>
         <Flex
           justify='center'

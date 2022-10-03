@@ -33,7 +33,11 @@ type ReducerFunction = (state: ReducerState, action: ReducerAction) => ReducerSt
 const reducer: ReducerFunction = (state, action) => {
   switch (action.type) {
     case 'add':
-      return { postIds: [...state.postIds, ...action.value] }
+      if (typeof action.value === 'string') {
+        return { postIds: [...state.postIds, action.value] }
+      } else {
+        return { postIds: [...state.postIds, ...action.value] }
+      }
     case 'reset':
       return initialState
     case 'replace':
@@ -70,7 +74,6 @@ export function ViewCounterProvider (props: ViewCounterProviderProps): JSX.Eleme
   )
 
   const countView: ViewCounterContextProps['countView'] = (postId) => {
-    console.log('added view count', postId)
     dispatch({
       type: 'add',
       value: postId
@@ -91,11 +94,10 @@ export function ViewCounterProvider (props: ViewCounterProviderProps): JSX.Eleme
     commit({
       variables: {
         input: {
-          postIds: [...savePosts]
+          postIds: savePosts
         }
       },
       onCompleted () {
-        console.log('post views committed', savePosts)
       },
       onError () {
         dispatch({

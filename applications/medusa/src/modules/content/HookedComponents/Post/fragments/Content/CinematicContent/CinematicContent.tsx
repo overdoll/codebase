@@ -49,7 +49,7 @@ export default function CinematicContent (props: Props): JSX.Element {
         <Box h='100%' position='relative'>
           {ability.can('configure', 'Account') && (
             <ViewCounterPostObserver
-              delay={3000}
+              delay={1000}
               postId={postData.id}
             />)}
           <CinematicGallery postQuery={postData} onSwiper={onInit} />

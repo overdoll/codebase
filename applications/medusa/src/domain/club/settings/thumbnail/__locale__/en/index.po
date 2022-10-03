@@ -40,3 +40,7 @@ msgstr ""
 #: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:57
 msgid "There was an error updating your club thumbnail"
 msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:48
+msgid "Your club thumbnail is currently processing. We'll update it shortly."
+msgstr ""

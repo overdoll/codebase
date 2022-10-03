@@ -21,8 +21,8 @@ msgstr ""
 #~ msgid "Random Posts"
 #~ msgstr ""
 
-#: src/domain/random/RootRandom/DisposeRandom/ResultRandom/MetaRandom/ContainerRandom/HeaderRandom/RandomizeButton/RandomizeButton.tsx:60
-#: src/domain/random/RootRandom/DisposeRandom/ResultRandom/MetaRandom/ContainerRandom/HeaderRandom/RandomizeButton/RandomizeButton.tsx:72
+#: src/domain/random/RootRandom/DisposeRandom/ResultRandom/MetaRandom/ContainerRandom/HeaderRandom/RandomizeButton/RandomizeButton.tsx:58
+#: src/domain/random/RootRandom/DisposeRandom/ResultRandom/MetaRandom/ContainerRandom/HeaderRandom/RandomizeButton/RandomizeButton.tsx:70
 msgid "Randomize!"
 msgstr ""
 

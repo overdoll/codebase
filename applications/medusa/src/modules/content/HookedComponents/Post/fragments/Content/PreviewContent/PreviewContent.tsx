@@ -52,7 +52,7 @@ export default function PreviewContent (props: Props): JSX.Element {
         <Box h='100%' position='relative'>
           {ability.can('configure', 'Account') && (
             <ViewCounterPostObserver
-              delay={5000}
+              delay={2000}
               postId={postData.id}
             />)}
           <PreviewGallery postQuery={postData} onSwiper={onSwiperInit} onPlayerInit={onPlayerInit} />

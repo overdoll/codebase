@@ -30,7 +30,7 @@ msgstr ""
 msgid "Become a Supporter and get access to exclusive content!"
 msgstr ""
 
-#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton.tsx:68
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton.tsx:65
 msgid "Become a Supporter {price}"
 msgstr ""
 

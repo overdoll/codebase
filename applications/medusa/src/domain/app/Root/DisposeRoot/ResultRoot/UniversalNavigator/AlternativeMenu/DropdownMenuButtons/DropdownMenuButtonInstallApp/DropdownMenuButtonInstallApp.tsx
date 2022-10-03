@@ -39,7 +39,7 @@ export default function DropdownMenuButtonInstallApp (): JSX.Element {
   useEffect(() => {
     const onInstallApp = (): void => {
       setIsInstalled(true)
-      posthog.capture(
+      posthog?.capture(
         'pwa-install'
       )
     }

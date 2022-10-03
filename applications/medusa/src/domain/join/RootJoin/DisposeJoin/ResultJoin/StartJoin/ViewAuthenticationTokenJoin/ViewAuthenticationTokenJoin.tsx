@@ -39,6 +39,7 @@ export default function ViewAuthenticationTokenJoin (props: Props): JSX.Element 
 
   const isVisible = usePageVisibility()
 
+  // if the user tabs back in we should reload the query
   useUpdateEffect(() => {
     if (isVisible && data?.accountStatus != null && data?.verified) {
       loadQuery()

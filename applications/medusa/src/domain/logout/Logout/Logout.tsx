@@ -32,7 +32,7 @@ const Logout: PageProps<{}> = () => {
       variables: {},
       onCompleted () {
         // reset user from posthog && reset sentry user
-        posthog.reset()
+        posthog?.reset()
         Sentry.configureScope(scope => scope.setUser(null))
         notify({
           status: 'success',

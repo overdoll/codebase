@@ -7,7 +7,7 @@ interface Props {
 export default function captureRegistration (props: Props): void {
   const { from = 'generic' } = props
 
-  posthog.capture(
+  posthog?.capture(
     'registered',
     { source: from }
   )
