@@ -27,13 +27,21 @@ func (h ReprocessPostsMediaHandler) Handle(ctx context.Context, cmd ReprocessPos
 		var content []*media.Media
 
 		for _, pst := range post.Content() {
-			if !pst.Media().IsLegacy() && pst.Media().HasAudio() {
+
+			if cmd.PostId != "" {
 				content = append(content, pst.Media())
+				if pst.MediaHidden() != nil {
+					content = append(content, pst.MediaHidden())
+				}
+			} else {
+				if !pst.Media().IsLegacy() && pst.Media().HasAudio() {
+					content = append(content, pst.Media())
+				}
+				if pst.MediaHidden() != nil && !pst.MediaHidden().IsLegacy() && pst.Media().HasAudio() {
+					content = append(content, pst.MediaHidden())
+				}
 			}
 
-			if pst.MediaHidden() != nil && !pst.MediaHidden().IsLegacy() && pst.Media().HasAudio() {
-				content = append(content, pst.MediaHidden())
-			}
 		}
 
 		if len(content) == 0 {
