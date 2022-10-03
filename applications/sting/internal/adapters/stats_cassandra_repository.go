@@ -28,7 +28,7 @@ var accountPostObservationsTable = table.New(table.Metadata{
 	Columns: []string{
 		"bucket",
 		"observer_account_id",
-		"observer_account_id",
+		"post_id",
 		"observed_at",
 	},
 	PartKey: []string{"bucket", "observer_account_id"},
@@ -38,7 +38,7 @@ var accountPostObservationsTable = table.New(table.Metadata{
 type accountPostObservations struct {
 	PostId            string    `db:"post_id"`
 	Bucket            int       `db:"bucket"`
-	ObservedAccountId string    `db:"observed_account_id"`
+	ObservedAccountId string    `db:"observer_account_id"`
 	ObservedAt        time.Time `db:"observed_at"`
 }
 
@@ -51,6 +51,10 @@ func NewStatsCassandraRepository(session gocqlx.Session) StatsCassandraRepositor
 }
 
 func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, requester *principal.Principal, posts []*post.Post) ([]string, error) {
+
+	if len(posts) == 0 {
+		return nil, nil
+	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
