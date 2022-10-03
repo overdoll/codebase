@@ -11,6 +11,7 @@ import RevokeViewAuthenticationTokenButton
   from '../../RevokeViewAuthenticationTokenButton/RevokeViewAuthenticationTokenButton'
 import { Trans } from '@lingui/macro'
 import { BeatLoader } from 'react-spinners'
+import { useMemo } from 'react'
 
 interface Props {
   query: LobbyAuthenticationTokenJoinFragment$key
@@ -32,6 +33,8 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
 
   const [cookies] = useCookies<string>(['token'])
 
+  const memo = useMemo(() => <RevokeViewAuthenticationTokenButton query={data} />, [data])
+
   return (
     <>
       <Head>
@@ -42,7 +45,7 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
           <Grid w='100%' templateColumns='1fr 1fr 1fr'>
             <GridItem>
               <Flex h='100%' align='center'>
-                <RevokeViewAuthenticationTokenButton query={data} />
+                {memo}
               </Flex>
             </GridItem>
             <GridItem>

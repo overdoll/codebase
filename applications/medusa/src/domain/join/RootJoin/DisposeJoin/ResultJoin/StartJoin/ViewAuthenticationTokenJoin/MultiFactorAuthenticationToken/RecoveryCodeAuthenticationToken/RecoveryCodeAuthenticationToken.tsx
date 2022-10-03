@@ -201,8 +201,6 @@ export default function RecoveryCodeAuthenticationToken (props: Props): JSX.Elem
             <FormInput size='xl' id='code'>
               <InputBody>
                 <TextInput
-                  borderColor='transparent'
-                  variant='outline'
                   placeholder={i18n._(t`An 8-character recovery code`)}
                 />
                 <InputFeedback />

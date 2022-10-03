@@ -90,7 +90,14 @@ export default function ShowJoinToast (): JSX.Element {
               </Trans>
             </Heading>
             <Stack spacing={2}>
-              <LinkButton onClick={closePopup} w='100%' colorScheme='primary' size='lg' ref={buttonRef} href='/join'>
+              <LinkButton
+                onClick={closePopup}
+                w='100%'
+                colorScheme='primary'
+                size='lg'
+                ref={buttonRef}
+                href='/join?from=join_modal_popup'
+              >
                 <Trans>
                   Join
                 </Trans>

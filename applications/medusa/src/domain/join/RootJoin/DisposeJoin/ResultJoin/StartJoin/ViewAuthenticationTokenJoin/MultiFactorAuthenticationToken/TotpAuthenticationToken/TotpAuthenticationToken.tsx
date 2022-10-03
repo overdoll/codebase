@@ -191,8 +191,6 @@ export default function TotpAuthenticationToken (props: Props): JSX.Element {
             <FormInput size='xl' id='code'>
               <InputBody>
                 <TextInput
-                  borderColor='transparent'
-                  variant='outline'
                   placeholder='123456'
                 />
               </InputBody>
