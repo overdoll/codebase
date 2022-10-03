@@ -1,16 +1,6 @@
 import { graphql, useFragment } from 'react-relay/hooks'
-import { useLingui } from '@lingui/react'
-import MobileHorizontalNavigationDropdownMenu
-  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu'
-import { t, Trans } from '@lingui/macro'
-import {
-  CogDouble,
-  ContentBrushPen,
-  LoginKeys,
-  PageControllerSettings,
-  SafetyExitDoorLeft,
-  SafetyFloat
-} from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
+import { CogDouble, ContentBrushPen, LoginKeys, SafetyExitDoorLeft, SafetyFloat } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import HorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'

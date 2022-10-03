@@ -36,7 +36,7 @@ export function getIsDocumentHidden (): boolean {
     return false
   }
 
-  return hiddenProp != null ? !(document[hiddenProp]) : false
+  return hiddenProp != null ? (document[hiddenProp]) === false : false
 }
 
 export function usePageVisibility (): boolean {
