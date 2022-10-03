@@ -205,11 +205,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			AccountLikedPosts: query.NewAccountLikedPosts(postRepo),
 
 			ClubCharactersCount: query.NewClubCharactersCountHandler(clubRepo),
-
-			PrincipalById:    query.NewPrincipalByIdHandler(eva, clubRepo),
-			SearchCharacters: query.NewSearchCharactersHandler(postRepo),
-			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
-			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),
+			PrincipalById:       query.NewPrincipalByIdHandler(eva, clubRepo),
+			SearchCharacters:    query.NewSearchCharactersHandler(postRepo),
+			CharacterBySlug:     query.NewCharacterBySlugHandler(postRepo),
+			CharactersByIds:     query.NewCharactersByIdsHandler(postRepo),
 
 			SearchCategories: query.NewSearchCategoriesHandler(postRepo),
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
