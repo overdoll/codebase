@@ -30,9 +30,9 @@ func init() {
 
 const (
 	defaultPreset         = "slow"
-	defaultIntensityLevel = "-23.0"
-	defaultLoudnessRange  = "+7.0"
-	defaultTruePeak       = "-2.0"
+	defaultIntensityLevel = "-14.0"
+	defaultLoudnessRange  = "+11.0"
+	defaultTruePeak       = "-1.0"
 )
 
 type ffmpegProbeStream struct {
@@ -77,6 +77,24 @@ type ffmpegLoudNormData struct {
 	OutputThresh      string `json:"output_thresh"`
 	NormalizationType string `json:"normalization_type"`
 	TargetOffset      string `json:"target_offset"`
+}
+
+func Max(x, y float64) float64 {
+	if x < y {
+		return y
+	}
+	return x
+}
+
+func Min(x, y float64) float64 {
+	if x > y {
+		return y
+	}
+	return x
+}
+
+func constrain(target float64, min float64, max float64) float64 {
+	return Max(Min(target, max), min)
 }
 
 func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) {
@@ -218,16 +236,49 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			return nil, errors.Wrap(err, "failed to unmarshal ffmpeg normalization data")
 		}
 
-		// if these are infinite, we need to ignore
+		//fmt.Println(string(buffer))
+
+		// if these are infinite, we need to ignore - usually means that there is no audio for this video
 		if ffmpegNormalizationData.InputI != "-inf" && ffmpegNormalizationData.TargetOffset != "inf" {
-			loudNorm := "I=" + defaultIntensityLevel +
-				":LRA=" + defaultLoudnessRange +
-				":tp=" + defaultTruePeak +
-				":measured_I=" + ffmpegNormalizationData.InputI +
-				":measured_LRA=" + ffmpegNormalizationData.InputLra +
-				":measured_tp=" + ffmpegNormalizationData.InputTp +
-				":measured_thresh=" + ffmpegNormalizationData.InputThresh +
-				":offset=" + ffmpegNormalizationData.TargetOffset
+
+			parsedMeasuredI, err := strconv.ParseFloat(ffmpegNormalizationData.InputI, 64)
+			if err != nil {
+				return nil, errors.Wrap(err, "failed to parse measured_I float")
+			}
+
+			if parsedMeasuredI > 0 {
+				parsedMeasuredI = 0
+			}
+
+			//parsedMeasuredLRA, err := strconv.ParseFloat(ffmpegNormalizationData.InputLra, 64)
+			//if err != nil {
+			//	return nil, errors.Wrap(err, "failed to parse measured_LRA float")
+			//}
+			//
+			//parsedMeasuredTP, err := strconv.ParseFloat(ffmpegNormalizationData.InputTp, 64)
+			//if err != nil {
+			//	return nil, errors.Wrap(err, "failed to parse measured_tp float")
+			//}
+			//
+			//parsedOffset, err := strconv.ParseFloat(ffmpegNormalizationData.TargetOffset, 64)
+			//if err != nil {
+			//	return nil, errors.Wrap(err, "failed to parse offset float")
+			//}
+			//
+			//parsedMeasuredThresh, err := strconv.ParseFloat(ffmpegNormalizationData.InputThresh, 64)
+			//if err != nil {
+			//	return nil, errors.Wrap(err, "failed to parse offset float")
+			//}
+
+			//loudNorm := "I=" + defaultIntensityLevel +
+			//	":LRA=" + defaultLoudnessRange +
+			//	":tp=" + defaultTruePeak +
+			//	":measured_I=" + fmt.Sprintf("%.2f", constrain(parsedMeasuredI, -99, 0)) +
+			//	":measured_LRA=" + fmt.Sprintf("%.2f", constrain(parsedMeasuredLRA, 0, 99)) +
+			//	":measured_tp=" + fmt.Sprintf("%.2f", constrain(parsedMeasuredTP, -99, 99)) +
+			//	":measured_thresh=" + fmt.Sprintf("%.2f", constrain(parsedMeasuredThresh, -99, 0)) +
+			//	":offset=" + fmt.Sprintf("%.2f", constrain(parsedOffset, -99, 99)) +
+			//	":linear=true"
 
 			newFileName := uuid.New().String()
 			defer os.Remove(newFileName)
@@ -251,11 +302,8 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			}
 
 			args := ffmpeg_go.KwArgs{
-				"map":    []string{"0:v:0", "0:a:0"},
-				"ar":     "48k",
-				"c:a":    "aac",
-				"ac":     "2",
-				"af":     "loudnorm=print_format=summary:linear=true:" + loudNorm,
+				"map": []string{"0:v:0", "0:a:0"},
+				////	"af":     "loudnorm=print_format=summary:linear=true:" + loudNorm,
 				"format": "mp4",
 			}
 
@@ -266,21 +314,17 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 				args["crf"] = "1"
 			}
 
-			// start a channel that will send fake progress
-			done := startFakeProgress(target.RawProto().Id)
-
-			// process our audio
-			if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "loglevel": "error", "progress": "unix://" + validationSocket}).
-				Output(newFileName, args).
-				WithErrorOutput(ffmpegLogger).
-				OverWriteOutput().
-				Run(); err != nil {
-				done()
-				return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
-			}
-			done()
-
-			targetFileName = newFileName
+			////
+			//// process our audio
+			//if err := ffmpeg_go.Input(targetFileName, ffmpeg_go.KwArgs{"hide_banner": "", "progress": "unix://" + validationSocket}).
+			//	Output(newFileName, args).
+			//	WithErrorOutput(ffmpegLogger).
+			//	OverWriteOutput().
+			//	Run(); err != nil {
+			//	return nil, errors.Wrap(err, "failed to generate audio file: "+string(ffmpegLogger.Output))
+			//}
+			//
+			//targetFileName = newFileName
 		} else {
 			videoNoAudio = true
 		}
@@ -572,6 +616,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		} else {
 			hlsArgs["b:a"] = scale.ar
 			hlsArgs["map"] = []string{"0:a:0"}
+			hlsArgs["ar"] = "48k"
+			hlsArgs["c:a"] = "aac"
+			hlsArgs["ac"] = "2"
 		}
 
 		createVariant(index, fileName+"/pl_"+index+"_%v.m3u8", hlsArgs)
@@ -594,6 +641,9 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 			if !videoNoAudio {
 				mp4FileArgs["b:a"] = scale.ar
 				mp4FileArgs["map"] = []string{"0:a:0"}
+				mp4FileArgs["ar"] = "48k"
+				mp4FileArgs["c:a"] = "aac"
+				mp4FileArgs["ac"] = "2"
 			} else {
 				mp4FileArgs["an"] = ""
 			}

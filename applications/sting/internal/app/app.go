@@ -120,6 +120,9 @@ type Commands struct {
 	MigrateSeriesResources     command.MigrateSeriesResourcesHandler
 	MigratePostsResources      command.MigratePostsResourcesHandler
 
+	RemoveCategory      command.RemoveCategoryHandler
+	ReprocessPostsMedia command.ReprocessPostsMediaHandler
+
 	ObservePosts command.ObservePostsHandler
 }
 

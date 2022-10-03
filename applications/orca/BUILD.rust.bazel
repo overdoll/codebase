@@ -29,9 +29,9 @@ _DATA = [
 
 _SRCS = [
     "src/main.rs",
-    #"src/plugins/passport.rs",
+    "src/plugins/passport.rs",
     "src/plugins/persisted_queries.rs",
-    "src/plugins/mod.rs",
+    "src/plugins/mod.rs"
 ]
 
 rust_binary(

@@ -194,6 +194,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			MigrateCategoryResources:   command.NewMigrateCategoriesResourcesHandler(postRepo, loader),
 
 			ObservePosts: command.NewObservePostsHandler(postRepo, statsRepo),
+
+			RemoveCategory:      command.NewRemoveCategoryHandler(postRepo),
+			ReprocessPostsMedia: command.NewReprocessPostsMediaHandler(postRepo, loader),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
@@ -202,11 +205,10 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			AccountLikedPosts: query.NewAccountLikedPosts(postRepo),
 
 			ClubCharactersCount: query.NewClubCharactersCountHandler(clubRepo),
-
-			PrincipalById:    query.NewPrincipalByIdHandler(eva, clubRepo),
-			SearchCharacters: query.NewSearchCharactersHandler(postRepo),
-			CharacterBySlug:  query.NewCharacterBySlugHandler(postRepo),
-			CharactersByIds:  query.NewCharactersByIdsHandler(postRepo),
+			PrincipalById:       query.NewPrincipalByIdHandler(eva, clubRepo),
+			SearchCharacters:    query.NewSearchCharactersHandler(postRepo),
+			CharacterBySlug:     query.NewCharacterBySlugHandler(postRepo),
+			CharactersByIds:     query.NewCharactersByIdsHandler(postRepo),
 
 			SearchCategories: query.NewSearchCategoriesHandler(postRepo),
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),

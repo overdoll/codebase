@@ -608,6 +608,23 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 	return nil
 }
 
+func (p *Post) RemoveCategory(categoryId string) error {
+	var categoryIds []string
+
+	for _, c := range p.categoryIds {
+
+		if c != categoryId {
+			categoryIds = append(categoryIds, c)
+		}
+
+	}
+
+	p.categoryIds = categoryIds
+	p.update()
+
+	return nil
+}
+
 func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categories []*Category) error {
 
 	if err := p.CanUpdate(requester); err != nil {

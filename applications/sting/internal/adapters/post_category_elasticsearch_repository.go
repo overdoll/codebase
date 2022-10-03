@@ -118,6 +118,21 @@ func (r PostsCassandraElasticsearchRepository) unmarshalCategoryDocument(ctx con
 	return newCategory, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) deleteIndexCategory(ctx context.Context, category *post.Category) error {
+
+	_, err := r.client.
+		Delete().
+		Index(categoryWriterIndex).
+		Id(category.ID()).
+		Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to delete category index")
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) indexCategory(ctx context.Context, category *post.Category) error {
 
 	cat, err := marshalCategoryToDocument(category)

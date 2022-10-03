@@ -232,6 +232,35 @@ func (r PostsCassandraElasticsearchRepository) deleteUniqueCategorySlug(ctx cont
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) DeleteCategory(ctx context.Context, category *post.Category) error {
+
+	pst, err := marshalCategoryToDatabase(category)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.deleteUniqueCategorySlug(ctx, pst.Id, pst.Slug); err != nil {
+		return err
+	}
+
+	if err := r.session.
+		Query(categoryTable.Delete()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return errors.Wrap(err, "failed to delete category")
+	}
+
+	if err := r.deleteIndexCategory(ctx, category); err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) CreateCategory(ctx context.Context, requester *principal.Principal, category *post.Category) error {
 
 	pst, err := marshalCategoryToDatabase(category)

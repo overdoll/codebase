@@ -32,6 +32,8 @@ type Repository interface {
 	UpdatePost(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostCategoriesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
+
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -105,6 +107,8 @@ type Repository interface {
 	GetCategoryIdsFromSlugs(ctx context.Context, categoryIds []string) ([]string, error)
 
 	CreateCategory(ctx context.Context, requester *principal.Principal, category *Category) error
+	DeleteCategory(ctx context.Context, category *Category) error
+
 	UpdateCategoryBannerOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTitle(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTopic(ctx context.Context, requester *principal.Principal, id string, updateFn func(category *Category) error) (*Category, error)

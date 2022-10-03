@@ -48,9 +48,14 @@ message ConvertResourceToMediaRequest {
   repeated string resourceIds = 2;
 }
 
+message ReprocessMediaRequest {
+  repeated overdoll.libraries.Media media = 1;
+}
+
 service Loader {
   rpc ConvertResourcesToMedia(ConvertResourceToMediaRequest) returns (ConvertResourceToMediaResponse);
   rpc CancelMediaProcessing(CancelMediaProcessingRequest) returns (google.protobuf.Empty);
+  rpc ReprocessMedia(ReprocessMediaRequest) returns (google.protobuf.Empty);
   rpc ProcessMediaFromUploads(ProcessMediaFromUploadsRequest) returns (ProcessMediaFromUploadsResponse);
   rpc GenerateImageFromMedia(GenerateImageFromMediaRequest) returns (GenerateImageFromMediaResponse);
 }

@@ -130,3 +130,22 @@ func (s LoaderGrpc) ConvertResourcesToMedia(ctx context.Context, sourceId string
 
 	return medias, nil
 }
+
+func (s LoaderGrpc) ReprocessMedia(ctx context.Context, legacyMedia []*media.Media) error {
+
+	var mediaSources []*proto.Media
+
+	for _, source := range legacyMedia {
+		mediaSources = append(mediaSources, source.RawProto())
+	}
+
+	_, err := s.client.ReprocessMedia(ctx, &loader.ReprocessMediaRequest{
+		Media: mediaSources,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "failed to reprocess media")
+	}
+
+	return nil
+}

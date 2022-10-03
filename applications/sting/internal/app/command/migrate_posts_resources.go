@@ -31,8 +31,8 @@ func (h MigratePostsResourcesHandler) Handle(ctx context.Context, cmd MigratePos
 				content = append(content, pst.Media())
 			}
 
-			// only convert hidden media if it's not legacy
-			if pst.MediaHidden() != nil && !pst.Media().IsLegacy() {
+			// only convert hidden media if main media is not legacy and the hidden media is legacy
+			if pst.MediaHidden() != nil && !pst.Media().IsLegacy() && pst.MediaHidden().IsLegacy() {
 				content = append(content, pst.MediaHidden())
 			}
 		}
@@ -53,7 +53,7 @@ func (h MigratePostsResourcesHandler) Handle(ctx context.Context, cmd MigratePos
 			return err
 		}
 
-		zap.S().Infow("migrated posts banner", zap.String("id", post.ID()))
+		zap.S().Infow("migrated posts", zap.String("id", post.ID()))
 
 		return nil
 	})
