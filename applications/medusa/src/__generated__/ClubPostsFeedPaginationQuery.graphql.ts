@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ceb4be67e08b04f999fe2240ecb7a30d>>
- * @relayHash a072082483723356d7d89194582d51ca
+ * @generated SignedSource<<66c2881ea7b6c8a41e81a1098325e21d>>
+ * @relayHash 151598544afc7d552bb9b078d0e36137
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID a072082483723356d7d89194582d51ca
+// @relayRequestID 151598544afc7d552bb9b078d0e36137
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -351,6 +351,13 @@ return {
                                   (v12/*: any*/)
                                 ],
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "canSupport",
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -598,7 +605,7 @@ return {
     ]
   },
   "params": {
-    "id": "a072082483723356d7d89194582d51ca",
+    "id": "151598544afc7d552bb9b078d0e36137",
     "metadata": {},
     "name": "ClubPostsFeedPaginationQuery",
     "operationKind": "query",

@@ -1,61 +1,32 @@
 import React, { ReactNode } from 'react'
-import {
-  graphql,
-  PreloadedQuery,
-  usePreloadedQuery,
-  useQueryLoader,
-  useSubscribeToInvalidationState
-} from 'react-relay/hooks'
-import type { RootQuery as RootQueryType } from '@//:artifacts/RootQuery.graphql'
-import AccountAuthorizer from './AccountAuthorizer/AccountAuthorizer'
-import PageContents from './PageContents/PageContents'
-import UniversalNavigator from './UniversalNavigator/UniversalNavigator'
+import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
+import type { ResultRootQuery as ResultRootQueryType } from '@//:artifacts/ResultRootQuery.graphql'
+import ResultRootQuery from '@//:artifacts/ResultRootQuery.graphql'
 import { PageProps } from '@//:types/app'
-import NoScript from './NoScript/NoScript'
-import SafeModal from './SafeModal/SafeModal'
-import RootRichObject from '../../../common/rich-objects/default/RootRichObject/RootRichObject'
+import DisposeRoot from './DisposeRoot/DisposeRoot'
 
 interface Props {
   children: ReactNode
   queryRefs: {
-    rootQuery: PreloadedQuery<RootQueryType>
+    rootQuery: PreloadedQuery<ResultRootQueryType>
   }
 }
 
-const Query = graphql`
-  query RootQuery {
-    viewer {
-      id
-      ...AccountAuthorizerFragment
-      ...UniversalNavigatorFragment
-    }
-  }
-`
-
 const Root: PageProps<Props> = (props: Props): JSX.Element => {
-  const [queryRef, loadQuery] = useQueryLoader(
-    Query,
-    props.queryRefs.rootQuery
+  const {
+    queryRefs: { rootQuery },
+    children
+  } = props
+
+  const params = useQueryLoader(
+    ResultRootQuery,
+    rootQuery
   )
 
-  const data = usePreloadedQuery<RootQueryType>(Query, queryRef as PreloadedQuery<RootQueryType>)
-
-  useSubscribeToInvalidationState([data?.viewer?.id as string], () => {
-    loadQuery({}, { fetchPolicy: 'network-only' })
-  })
-
   return (
-    <>
-      <AccountAuthorizer queryRef={data.viewer}>
-        <UniversalNavigator queryRef={data.viewer} />
-        <PageContents>
-          {props.children}
-          <SafeModal />
-        </PageContents>
-        <NoScript />
-      </AccountAuthorizer>
-      <RootRichObject />
-    </>
+    <DisposeRoot params={params}>
+      {children}
+    </DisposeRoot>
   )
 }
 

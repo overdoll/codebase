@@ -4,6 +4,8 @@ import StorageVideoContainer, { StorageVideoProps } from './StorageVideoContaine
 import useObserveVideo, { UseObserveVideoProps } from '../../support/useObserveVideo'
 import { Flex } from '@chakra-ui/react'
 import { pauseVideo, playVideo, startOrPlayVideo } from '../../support/controls'
+import { usePageVisibility } from '../../../../../hooks/usePageVisibility'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface ObserveVideoProps extends UseObserveVideoProps {
   isActive: boolean
@@ -43,12 +45,23 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
     isObserving
   } = useObserveVideo({ ...restObserver })
 
+  const isVisible = usePageVisibility()
+
   // TODO experiment with destroying the player after the user scrolls away and doesn't play the video for a while
+  // TODO this needs a rewrite but it would take too long
+
+  // pause video when user tabs out
+  useUpdateEffect(() => {
+    if (player == null || !player.hasStart) return
+    if (!player.video.paused && !isVisible) {
+      pauseVideo(player)
+    }
+  }, [isVisible, player])
 
   // play video if it hasn't been loaded yet, and you're focused into it
   useEffect(() => {
     if (player != null && !player.hasStart && isObserving && isActive) {
-      startOrPlayVideo(player)
+      startOrPlayVideo(player, true)
     }
   }, [isObserving, isActive, player])
 
@@ -56,7 +69,7 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
   useEffect(() => {
     if (player == null || !player.hasStart) return
     if (isObserving && isActive && player.video.paused) {
-      playVideo(player)
+      playVideo(player, true)
     }
   }, [isObserving, isActive, player])
 
@@ -81,21 +94,15 @@ export default function ObserveVideoContainer (props: ObserveVideoContainerProps
     if (player == null) return
     if (isObserving) return
     const onPlay = (): void => {
-      if (!player.hasStart) return
-      player.off('play', onPlay)
+      player.off('scroll-play', onPlay)
       if (!isObserving) {
         pauseVideo(player)
       }
     }
 
-    const onCanPlay = (): void => {
-      player.once('play', onPlay)
-    }
-
-    player.on('canplay', onCanPlay)
+    player.on('scroll-play', onPlay)
     return () => {
-      player.off('canplay', onCanPlay)
-      player.off('play', onPlay)
+      player.off('scroll-play', onPlay)
     }
   }, [isObserving, player])
 

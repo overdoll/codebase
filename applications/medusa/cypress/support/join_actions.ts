@@ -13,13 +13,13 @@ export const join = (email: string): void => {
 
   // wait until button isn't disabled (it's ready to be interacted with)
   // TODO fix flakiness with timestamp - the subtraction is a temp solution
-  cy.waitUntil(() => cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')).then(() => {
+  cy.waitUntil(() => cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')).then(() => {
     startTimestamp = Date.now() - 500
   })
 
   typeIntoPlaceholder(/Enter an email/iu, email)
 
-  cy.findByRole('button', { name: /Continue/iu })
+  cy.findByRole('button', { name: /Next/iu })
     .click()
 
   cy.contains(email).then(() => {

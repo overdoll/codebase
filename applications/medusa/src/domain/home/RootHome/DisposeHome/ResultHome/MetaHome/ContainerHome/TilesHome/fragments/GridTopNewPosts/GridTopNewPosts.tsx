@@ -52,39 +52,39 @@ export default function GridTopNewPosts (props: Props): JSX.Element {
     <Stack overflowX='scroll' spacing={1}>
       <GridLayoutHome columns={6} rows={2}>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[8].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[8]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[0].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[0]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem colSpan={2}>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[9].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[9]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[10].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[10]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[1].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[1]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem colSpan={2}>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[2].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[2]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[3].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[3]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[4].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[4]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem colSpan={2}>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[11].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[11]?.node ?? fallbackPost} />
         </GridItem>
       </GridLayoutHome>
       <GridLayoutHome columns={6} rows={2}>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[5].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[5]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[12].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[12]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem colSpan={2}>
           <StaticTile
@@ -104,13 +104,13 @@ export default function GridTopNewPosts (props: Props): JSX.Element {
           />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[13].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[13]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[14].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[14]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[6].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[6]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
           <StaticTile
@@ -130,7 +130,7 @@ export default function GridTopNewPosts (props: Props): JSX.Element {
           />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[15].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[15]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
           <StaticTile
@@ -150,10 +150,10 @@ export default function GridTopNewPosts (props: Props): JSX.Element {
           />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='new' postQuery={allPosts[7].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='new' postQuery={allPosts?.[7]?.node ?? fallbackPost} />
         </GridItem>
         <GridItem>
-          <PreviewPostTileHome badge='trending' postQuery={allPosts[16].node ?? fallbackPost} />
+          <PreviewPostTileHome badge='trending' postQuery={allPosts?.[16]?.node ?? fallbackPost} />
         </GridItem>
       </GridLayoutHome>
     </Stack>

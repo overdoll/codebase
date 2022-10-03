@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server'
-import RootQuery from '@//:artifacts/RootQuery.graphql'
+import ResultRootQuery from '@//:artifacts/ResultRootQuery.graphql'
 import { AppAbility } from '../authorization/types'
 import defineAbility from '../authorization/defineAbility'
 import { serverMiddlewareFetch } from './relayGQLFetch'
@@ -10,7 +10,7 @@ const getAbilityFromRequest = async (request: NextRequest): Promise<AppAbility> 
   const environment = createEnvironment(serverMiddlewareFetch(request), null)
   const data = await environment
     .getNetwork()
-    .execute(RootQuery.params, {}, {})
+    .execute(ResultRootQuery.params, {}, {})
     .toPromise() as GraphQLResponseWithData
 
   // catch any network errors

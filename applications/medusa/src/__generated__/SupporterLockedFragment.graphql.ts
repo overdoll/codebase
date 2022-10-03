@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0f379c91dbdb1d5ade0430b136ba06d3>>
+ * @generated SignedSource<<f98b9902063a696f089e2d62f01ea06c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SupporterLockedFragment$data = {
   readonly club: {
+    readonly canSupport: boolean;
     readonly slug: string;
   };
   readonly " $fragmentType": "SupporterLockedFragment";
@@ -41,6 +42,13 @@ const node: ReaderFragment = {
           "kind": "ScalarField",
           "name": "slug",
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "canSupport",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -50,6 +58,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "f13d115094cfa5dea7524cad0e420a1a";
+(node as any).hash = "c2f952960882b21c8f0aca97575c4fb6";
 
 export default node;

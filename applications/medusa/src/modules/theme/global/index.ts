@@ -20,7 +20,7 @@ export default function global (props): any {
       height: 2
     },
     '*::-webkit-scrollbar-thumb': {
-      background: 'hsla(1,0%,75%,0.05)',
+      background: 'whiteAlpha.300',
       borderRadius: 'md'
     },
     '*::-webkit-scrollbar-track': {

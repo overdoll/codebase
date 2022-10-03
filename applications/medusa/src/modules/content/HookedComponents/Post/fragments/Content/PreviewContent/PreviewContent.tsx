@@ -8,6 +8,8 @@ import { Box, GridItem } from '@chakra-ui/react'
 import PreviewGallery from '../../Gallery/PreviewGallery/PreviewGallery'
 import PreviewCarousel from '../../Carousel/PreviewCarousel/PreviewCarousel'
 import { OnPlayerInitType } from '../../../../Media/types'
+import useAbility from '../../../../../../authorization/useAbility'
+import ViewCounterPostObserver from '@//:domain/app/Root/DisposeRoot/ResultRoot/ViewCounter/ViewCounterPostObserver'
 
 interface Props {
   postQuery: PreviewContentFragment$key
@@ -37,19 +39,27 @@ export default function PreviewContent (props: Props): JSX.Element {
 
   const [swiper, setSwiper] = useState<SwiperType | null>(null)
 
+  const ability = useAbility()
+
   const onSwiperInit: OnSwiperInitType = (swiper) => {
     onSwiper?.(swiper)
     setSwiper(swiper)
   }
 
   return (
-    <ContentGrid contentLength={postData.content.length} key={postData.id}>
+    <ContentGrid position='relative' contentLength={postData.content.length} key={postData.id}>
       <GridItem overflow='hidden' area='gallery'>
         <Box h='100%' position='relative'>
+          {ability.can('configure', 'Account') && (
+            <ViewCounterPostObserver
+              delay={2000}
+              postId={postData.id}
+            />)}
           <PreviewGallery postQuery={postData} onSwiper={onSwiperInit} onPlayerInit={onPlayerInit} />
         </Box>
       </GridItem>
       <GridItem
+        pointerEvents='auto'
         overflow='hidden'
         area='carousel'
       >

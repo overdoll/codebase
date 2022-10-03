@@ -27,7 +27,7 @@ export default function useObserveVideo (props: UseObserveVideoProps): UseObserv
 
   const [observing, setObserving] = useState(false)
 
-  const setThreshold = threshold != null ? threshold : ((width == null || height == null) ? 0.45 : ((height / width) >= 1 ? 0.23 : 0.45))
+  const setThreshold = threshold != null ? threshold : ((width == null || height == null) ? [0, 0.45] : ((height / width) >= 1 ? [0, 0.23] : [0, 0.45]))
 
   const observerOptions = {
     rootMargin: '-19% 0% -45% 0%',

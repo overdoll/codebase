@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1551a3db4c3124323043e51768926cd7>>
- * @relayHash 777bb5f2c002123b210a015a777e3a1e
+ * @generated SignedSource<<4a7c6b79a01de6e6db16459b5ed384bc>>
+ * @relayHash 769d3cad110e71cbcf9ceadde7ec1420
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 777bb5f2c002123b210a015a777e3a1e
+// @relayRequestID 769d3cad110e71cbcf9ceadde7ec1420
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -99,6 +99,13 @@ v9 = [
 v10 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "state",
+  "storageKey": null
+},
+v11 = {
+  "alias": null,
+  "args": null,
   "concreteType": "ColorPalette",
   "kind": "LinkedField",
   "name": "colorPalettes",
@@ -128,7 +135,7 @@ v10 = {
   ],
   "storageKey": null
 },
-v11 = {
+v12 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaVariants",
@@ -274,6 +281,7 @@ return {
                             ],
                             "storageKey": null
                           },
+                          (v10/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -309,8 +317,8 @@ return {
                                         "name": "cover",
                                         "plural": false,
                                         "selections": [
-                                          (v10/*: any*/),
                                           (v11/*: any*/),
+                                          (v12/*: any*/),
                                           (v8/*: any*/)
                                         ],
                                         "storageKey": null
@@ -338,8 +346,8 @@ return {
                                     "kind": "InlineFragment",
                                     "selections": [
                                       (v8/*: any*/),
-                                      (v10/*: any*/),
-                                      (v11/*: any*/)
+                                      (v11/*: any*/),
+                                      (v12/*: any*/)
                                     ],
                                     "type": "ImageMedia",
                                     "abstractKey": null
@@ -370,13 +378,7 @@ return {
                                             "name": "progress",
                                             "storageKey": null
                                           },
-                                          {
-                                            "alias": null,
-                                            "args": null,
-                                            "kind": "ScalarField",
-                                            "name": "state",
-                                            "storageKey": null
-                                          },
+                                          (v10/*: any*/),
                                           (v8/*: any*/)
                                         ],
                                         "storageKey": null
@@ -397,6 +399,25 @@ return {
                                     "abstractKey": "__isMedia"
                                   }
                                 ],
+                                "storageKey": null
+                              },
+                              (v8/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "Character",
+                            "kind": "LinkedField",
+                            "name": "characters",
+                            "plural": true,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "name",
                                 "storageKey": null
                               },
                               (v8/*: any*/)
@@ -467,7 +488,7 @@ return {
     ]
   },
   "params": {
-    "id": "777bb5f2c002123b210a015a777e3a1e",
+    "id": "769d3cad110e71cbcf9ceadde7ec1420",
     "metadata": {},
     "name": "UploadRewindSingleSelectorPaginationFragment",
     "operationKind": "query",

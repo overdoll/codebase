@@ -404,6 +404,10 @@ const StaffCatalog = [
   {
     path: 'src/domain/staff/entity/topic/view/__locale__/{locale}/index',
     include: ['src/domain/staff/entity/topic/view/']
+  },
+  {
+    path: 'src/domain/staff/clubs/__locale__/{locale}/index',
+    include: ['src/domain/staff/clubs/']
   }
 ]
 

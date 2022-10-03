@@ -42,7 +42,7 @@ export default function VideoAdvancedFooterControls (props: Props): JSX.Element 
   })
 
   const onUnMute = (): void => {
-    if (device === 'pc') {
+    if (device === 'desktop') {
       request('volume')
     }
   }

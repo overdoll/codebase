@@ -18,8 +18,8 @@ import {
   SimpleGrid,
   useDisclosure
 } from '@chakra-ui/react'
-import HorizontalNavigation from '../HorizontalNavigation'
-import SiteLinkLogo from '../../../../../domain/app/Root/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
+import HorizontalNavigationButton from '../HorizontalNavigationButton/HorizontalNavigationButton'
+import SiteLinkLogo from '../../../../../domain/app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 import { IconType } from '@//:types/components'
 
 interface Props {
@@ -57,7 +57,7 @@ const HorizontalNavigationDropdownMenu = ({
         }}
         >
           <Box h='100%'>
-            <HorizontalNavigation.Button
+            <HorizontalNavigationButton
               colorScheme='gray'
               icon={icon}
               isActive={isOpen}
@@ -103,7 +103,7 @@ const HorizontalNavigationDropdownMenu = ({
               pointerEvents='none'
               as={Box}
             >
-              <HorizontalNavigation.Button
+              <HorizontalNavigationButton
                 colorScheme='gray'
                 icon={icon}
                 isActive={isOpenMenu}

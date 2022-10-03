@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<94a0ffcc0de54d9d39a7ed6b34a60eac>>
- * @relayHash 08bd80ca33a5ac4fd6baddcbd0cab950
+ * @generated SignedSource<<0401fbe88a1bd8d07c7f015fb615727e>>
+ * @relayHash 335ec8333ef8d6900a37efb54c7b0b0d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 08bd80ca33a5ac4fd6baddcbd0cab950
+// @relayRequestID 335ec8333ef8d6900a37efb54c7b0b0d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -352,6 +352,13 @@ return {
                               (v10/*: any*/)
                             ],
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "canSupport",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -595,7 +602,7 @@ return {
     ]
   },
   "params": {
-    "id": "08bd80ca33a5ac4fd6baddcbd0cab950",
+    "id": "335ec8333ef8d6900a37efb54c7b0b0d",
     "metadata": {},
     "name": "ResultLikedPostsQuery",
     "operationKind": "query",

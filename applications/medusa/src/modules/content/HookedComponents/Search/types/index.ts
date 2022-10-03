@@ -48,5 +48,5 @@ export interface UseSearchReturn<TArguments> extends ComponentSearchArguments<TA
   register: RegisterFunction
   changeArguments: (args: TArguments) => void
   setArguments: (args: TArguments) => void
-  loadQuery: () => void
+  loadQuery: (args?: TArguments) => void
 }

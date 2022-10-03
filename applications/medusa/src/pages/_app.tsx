@@ -30,6 +30,7 @@ import Head from 'next/head'
 import '@fontsource/inter/400.css'
 import '@fontsource/inter/600.css'
 import '@fontsource/source-code-pro/400.css'
+import '@//:modules/css/nprogress.css'
 import { ConfigurationProvider } from '@//:modules/configuration'
 import { UserAgentProvider } from '@//:modules/agent'
 

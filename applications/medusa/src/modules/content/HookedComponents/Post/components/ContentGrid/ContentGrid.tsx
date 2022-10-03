@@ -1,7 +1,7 @@
-import { Grid } from '@chakra-ui/react'
+import { Grid, GridProps } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
-interface Props {
+interface Props extends GridProps {
   children: ReactNode
   contentLength: number
 }
@@ -9,7 +9,8 @@ interface Props {
 export default function ContentGrid (props: Props): JSX.Element {
   const {
     children,
-    contentLength
+    contentLength,
+    ...rest
   } = props
 
   const template = contentLength > 1 ? '1fr 60px' : '1fr'
@@ -24,6 +25,7 @@ export default function ContentGrid (props: Props): JSX.Element {
       "carousel"
       `}
       templateRows={template}
+      {...rest}
     >
       {children}
     </Grid>

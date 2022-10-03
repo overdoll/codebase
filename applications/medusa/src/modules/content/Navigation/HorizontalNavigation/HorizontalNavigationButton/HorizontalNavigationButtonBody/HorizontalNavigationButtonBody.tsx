@@ -22,14 +22,14 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
   isActive = false,
   ...rest
 }: Props, forwardRef): JSX.Element => {
-  const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.300`
+  const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
   const ButtonProps = {
     borderRadius: {
       base: 2,
       md: 10
     },
-    bg: isActive ? 'gray.500' : 'transparent',
+    bg: isActive ? 'whiteAlpha.100' : 'transparent',
     h: '46px',
     w: {
       base: '58px',

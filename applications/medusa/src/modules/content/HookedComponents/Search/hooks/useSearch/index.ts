@@ -74,9 +74,9 @@ function useSearch<TArguments extends SearchValues> (props: UseSearchProps<TArgu
     })
   }, [])
 
-  const loadQuery = useCallback(() => {
+  const loadQuery = useCallback((args?: any) => {
     startTransition(() => {
-      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, {}, true))
+      setSearchArgs(prev => replaceOrCreateQueryArguments(prev, args ?? {}, true))
     })
   }, [])
 

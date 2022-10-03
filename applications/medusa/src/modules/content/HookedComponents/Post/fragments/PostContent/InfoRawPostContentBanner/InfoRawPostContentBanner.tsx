@@ -6,6 +6,7 @@ import { Flex, Text } from '@chakra-ui/react'
 import { Icon } from '../../../../../PageLayout'
 import { ControlPlayButton, ControlVolumeMissing } from '@//:assets/icons'
 import BannerImageMedia from '../../../../Media/fragments/Media/BannerImageMedia/BannerImageMedia'
+import formatSecondsIntoMinutes from '../../../../Media/support/formatSecondsIntoMinutes'
 
 const Fragment = graphql`
   fragment InfoRawPostContentBannerFragment on PostContent {
@@ -48,7 +49,7 @@ export default function InfoRawPostContentBanner (props: Props): JSX.Element {
               flexShrink={0}
             />
             <Text ml={2} noOfLines={1} color='gray.00' fontSize='xs'>
-              {(data.media.duration / 1000).toFixed(0)}s
+              {formatSecondsIntoMinutes(data.media.duration / 1000)}
             </Text>
           </Flex>
         </Flex>

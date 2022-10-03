@@ -134,6 +134,8 @@ declare global {
     mozFullScreenElement?: Element
     msFullscreenElement?: Element
     webkitFullscreenElement?: Element
+    msHidden?: boolean
+    webkitHidden?: boolean
   }
 
   interface HTMLElement {

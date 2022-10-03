@@ -13,19 +13,40 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/EmptyVerifyToken/EmptyVerifyToken.tsx:34
+msgid "Back"
+msgstr ""
+
 #: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:56
-msgid "Back to the Join page"
+#~ msgid "Back to the Join page"
+#~ msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ConfirmVerifyToken/ConfirmVerifyToken.tsx:156
+msgid "Confirm that it's really you trying to join."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ConfirmVerifyToken/ConfirmVerifyToken.tsx:133
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ValidationVerifyToken/ValidationVerifyToken.tsx:32
+msgid "Home"
 msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:114
 #~ msgid "I closed the original tab"
 #~ msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:115
-msgid "If you closed the original tab, just open it back up!"
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:108
+msgid "If you closed the original page, just open it back up."
 msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:150
+#: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:115
+#~ msgid "If you closed the original tab, just open it back up!"
+#~ msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:61
+msgid "Just a few more seconds to log you in."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ConfirmVerifyToken/ConfirmVerifyToken.tsx:209
 msgid "No, this is not me"
 msgstr ""
 
@@ -34,29 +55,57 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:94
-msgid "Please confirm that you are attempting to login from the following device and location"
-msgstr ""
+#~ msgid "Please confirm that you are attempting to login from the following device and location"
+#~ msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:43
-msgid "Please try logging in with another link"
+#~ msgid "Please try logging in with another link"
+#~ msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ErrorVerifyToken/ErrorVerifyToken.tsx:41
+msgid "Retry"
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ConfirmVerifyToken/ConfirmVerifyToken.tsx:96
+msgid "Thanks. You prevented this device from logging in."
 msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:38
-msgid "The login link you are attempting to use is either invalid or expired"
-msgstr ""
+#~ msgid "The login link you are attempting to use is either invalid or expired"
+#~ msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Invalid/Invalid.tsx:21
 #~ msgid "The login link you are using is either invalid or expired"
 #~ msgstr ""
 
-#: src/domain/verify-token/VerifyToken/Confirm/Confirm.tsx:138
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/EmptyVerifyToken/EmptyVerifyToken.tsx:23
+msgid "This link is either invalid or has expired."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ValidationVerifyToken/ValidationVerifyToken.tsx:22
+msgid "This login link is invalid."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ErrorVerifyToken/ErrorVerifyToken.tsx:30
+msgid "We couldn't verify this login link."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:84
+msgid "We have logged you into the requested device."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/PendingVerifyToken/PendingVerifyToken.tsx:46
+msgid "We're confirming your login."
+msgstr ""
+
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/ConfirmVerifyToken/ConfirmVerifyToken.tsx:197
 msgid "Yes, this is me"
 msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:76
-msgid "You have been successfully logged in to the requested device"
-msgstr ""
+#~ msgid "You have been successfully logged in to the requested device"
+#~ msgstr ""
 
 #: src/domain/verify-token/VerifyToken/Complete/Complete.tsx:82
-msgid "You may safely close this window"
-msgstr ""
+#~ msgid "You may safely close this window"
+#~ msgstr ""

@@ -79,7 +79,7 @@ export default function ClubJoinLoggedOutButton (props: Props): JSX.Element {
           />
           <ModalBody my={3}>
             <Stack justify='center' align='center' spacing={6}>
-              <Icon icon={PlusCircle} w={12} h={12} fill='green.400' />
+              <Icon icon={PlusCircle} w={12} h={12} fill='green.300' />
               <Box>
                 <Heading color='gray.00' fontSize='lg'>
                   <Trans>

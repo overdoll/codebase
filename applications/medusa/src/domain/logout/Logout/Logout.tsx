@@ -6,7 +6,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import { PageProps } from '@//:types/app'
 import { useRouter } from 'next/router'
 import type { LogoutMutation } from '@//:artifacts/LogoutMutation.graphql'
-import { invalidateToken } from '../../join/Join/support/support'
+import { invalidateToken } from '../../join/RootJoin/DisposeJoin/ResultJoin/StartJoin/support/support'
 import DefaultRichObject from '../../../common/rich-objects/default/DefaultRichObject/DefaultRichObject'
 import TitleRichObject from '../../../common/rich-objects/default/TitleRichObject/TitleRichObject'
 import posthog from 'posthog-js'
@@ -32,7 +32,7 @@ const Logout: PageProps<{}> = () => {
       variables: {},
       onCompleted () {
         // reset user from posthog && reset sentry user
-        posthog.reset()
+        posthog?.reset()
         Sentry.configureScope(scope => scope.setUser(null))
         notify({
           status: 'success',

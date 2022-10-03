@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e652119cec4fd11fcc6eb33b65c8868a>>
- * @relayHash 66683d845cbbd15ab0e46e504dd75e9a
+ * @generated SignedSource<<80b4a4b62e77c6b05fae136663b6c1d8>>
+ * @relayHash d34aebe045281db37b944473e9f7d506
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 66683d845cbbd15ab0e46e504dd75e9a
+// @relayRequestID d34aebe045281db37b944473e9f7d506
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -310,6 +310,13 @@ return {
                           (v12/*: any*/)
                         ],
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "canSupport",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -551,7 +558,7 @@ return {
     ]
   },
   "params": {
-    "id": "66683d845cbbd15ab0e46e504dd75e9a",
+    "id": "d34aebe045281db37b944473e9f7d506",
     "metadata": {},
     "name": "LazyHomePostsQuery",
     "operationKind": "query",

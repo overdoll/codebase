@@ -1,6 +1,6 @@
 import type { PrepareSuggestedPostsFragment$key } from '@//:artifacts/PrepareSuggestedPostsFragment.graphql'
 import { graphql } from 'react-relay'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { useFragment } from 'react-relay/hooks'
 import LazySuggestedPosts from './LazySuggestedPosts/LazySuggestedPosts'
 import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
@@ -38,11 +38,11 @@ export default function PrepareSuggestedPosts (props: Props): JSX.Element {
     }
   })
 
-  return (
+  return useMemo(() => (
     <LazyPostsErrorBoundary loadQuery={loadQuery}>
       <SuspenseLazyPosts>
         <LazySuggestedPosts lazyArguments={lazyArguments} />
       </SuspenseLazyPosts>
     </LazyPostsErrorBoundary>
-  )
+  ), [postData.reference])
 }

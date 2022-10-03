@@ -1,25 +1,28 @@
-import JoinRootWrap from './Join/JoinRootWrap'
-import JoinRootData from '@//:artifacts/JoinRootQuery.graphql'
+import RootJoin from './RootJoin/RootJoin'
+import ResultJoinQuery from '@//:artifacts/ResultJoinQuery.graphql'
 
-JoinRootWrap.getTranslationProps = async (ctx) => ({
+RootJoin.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
 })
 
-JoinRootWrap.getRelayPreloadProps = (ctx) => {
-  let tokenCookie = ctx.cookies.get('token')
+RootJoin.getRelayPreloadProps = (ctx) => {
+  const tokenCookie = ctx.cookies.get('token') != null ? decodeURIComponent(ctx.cookies.get('token')) : null
 
-  if (tokenCookie != null) {
-    tokenCookie = tokenCookie.split(';')[0]
-  }
+  const formattedCookie = tokenCookie != null ? tokenCookie.split(';')[0] : ''
+
+  // cookie empty sometimes for some reason, esp when refreshing the page
   return {
     queries: {
       joinQuery: {
-        params: JoinRootData.params,
+        params: ResultJoinQuery.params,
         variables: {
-          token: tokenCookie ?? ''
+          token: formattedCookie
+        },
+        options: {
+          fetchPolicy: 'network-only'
         }
       }
     }
   }
 }
-export default JoinRootWrap
+export default RootJoin

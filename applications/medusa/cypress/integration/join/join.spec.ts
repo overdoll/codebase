@@ -11,7 +11,12 @@ describe('Join', () => {
      */
     const [username, email] = generateUsernameAndEmail()
     join(email)
-    cy.findByRole('button', { name: /Register/iu }).should('not.be.disabled')
+    cy.findByText(/What should we call/iu).should('be.visible')
+
+    // refresh should restore state
+    cy.reload()
+    cy.findByText(/What should we call/iu).should('be.visible')
+
     typeIntoPlaceholder('Enter a username', username)
     clickOnButton(/Register/iu)
     cy.url().should('include', '/')
@@ -45,20 +50,24 @@ describe('Join', () => {
     const [, email] = generateUsernameAndEmail()
     cy.visit('/join')
     typeIntoPlaceholder(/Enter an email/iu, email)
-    clickOnButton(/Continue/iu)
-    cy.findByText(/Tap on the link/iu).should('be.visible')
-    cy.findByText(/Waiting for you to/iu).should('be.visible')
+    clickOnButton(/Next/iu)
+    cy.findByText(/Check your email and click on/iu).should('be.visible')
+
+    // refresh should restore state
+    cy.reload()
+    cy.findByText(/Check your email and click on/iu).should('be.visible')
 
     /**
      * Cancel join in lobby and check state
      */
-    cy.get('button[aria-label="Close"]').should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText(email).should('be.visible')
+    cy.get('button[aria-label="Cancel"]').should('be.visible').should('not.be.disabled').click({ force: true })
     cy.waitUntil(() => cy.findByText(/Confirm Join Cancellation/iu).should('be.visible'))
     clickOnButton(/Yes, cancel/iu)
-    clickOnButton(/Continue/iu)
+    clickOnButton(/Next/iu)
     typeIntoPlaceholder(/Enter an email/iu, email)
-    clickOnButton(/Continue/iu)
-    cy.findByText(/Tap on the link you received/iu).should('be.visible')
+    clickOnButton(/Next/iu)
+    cy.findByText(/Check your email and click on/iu).should('be.visible')
   })
 
   it('revoke token in multi factor', () => {
@@ -75,17 +84,16 @@ describe('Join', () => {
      */
     join(email)
     cy.findByText(/Enter the 6-digit code/iu).should('be.visible')
-    // TODO fix this unmounting issue
-    // cy.get('button[aria-label="Close"]').should('be.visible').should('not.be.disabled').click({ force: true })
-    // cy.findByText(/Confirm Join Cancellation/iu).should('be.visible')
-    // clickOnButton(/Yes, cancel/iu)
-    // cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')
+    cy.get('button[aria-label="Cancel"]').should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText(/Confirm Join Cancellation/iu).should('be.visible')
+    clickOnButton(/Yes, cancel/iu)
+    cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
   })
 
   it('invalid token page', () => {
     cy.visit('/verify-token')
-    cy.findByText(/The login link you are attempting to use is either invalid/iu).should('be.visible')
-    clickOnButton(/Back to the Join page/iu)
-    cy.findByRole('button', { name: /Continue/iu }).should('not.be.disabled')
+    cy.findByText(/This link is either invalid or/iu).should('be.visible')
+    clickOnButton('Back')
+    cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
   })
 })

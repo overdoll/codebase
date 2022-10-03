@@ -7,10 +7,11 @@ interface Props {
 
 export default function RenderOnDesktop ({ children }: Props): JSX.Element {
   return (
-    <Box display={{
-      base: 'none',
-      md: 'inherit'
-    }}
+    <Box
+      display={{
+        base: 'none',
+        md: 'inherit'
+      }}
     >
       {children}
     </Box>

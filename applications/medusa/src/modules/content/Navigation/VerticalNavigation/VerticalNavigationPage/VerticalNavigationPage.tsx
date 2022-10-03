@@ -10,8 +10,8 @@ export default function VerticalNavigationPage ({ children }: Props): JSX.Elemen
     <Box
       ml={{
         base: 0,
-        md: 330,
-        xl: 0
+        md: '300px',
+        '3xl': 0
       }}
       w='100%'
     >

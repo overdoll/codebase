@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8745ed3787291f29e89f40b230ba3d1b>>
- * @relayHash 52c416dfffb0db710c749e556f1e4c4b
+ * @generated SignedSource<<c954a9c15175b74e002ffb8d6bbe9e76>>
+ * @relayHash 06e8d05f6f7e2f1d66e0783d4fde9816
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 52c416dfffb0db710c749e556f1e4c4b
+// @relayRequestID 06e8d05f6f7e2f1d66e0783d4fde9816
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -438,6 +438,13 @@ return {
             ],
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "description",
+            "storageKey": null
+          },
           (v6/*: any*/),
           {
             "alias": null,
@@ -699,7 +706,7 @@ return {
     ]
   },
   "params": {
-    "id": "52c416dfffb0db710c749e556f1e4c4b",
+    "id": "06e8d05f6f7e2f1d66e0783d4fde9816",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",
