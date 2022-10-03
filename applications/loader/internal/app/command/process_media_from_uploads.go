@@ -12,10 +12,11 @@ import (
 )
 
 type ProcessMediaFromUploads struct {
-	Link      *proto.MediaLink
-	UploadIds []string
-	Source    string
-	Reprocess bool
+	Link          *proto.MediaLink
+	UploadIds     []string
+	ExistingMedia []*proto.Media
+	Source        string
+	Reprocess     bool
 }
 
 type ProcessMediaFromUploadsHandler struct {
@@ -30,16 +31,25 @@ func NewProcessMediaFromUploadsHandler(ur upload.Repository, sr media_storage.Re
 
 func (h ProcessMediaFromUploadsHandler) Handle(ctx context.Context, cmd ProcessMediaFromUploads) ([]*media.Media, error) {
 
-	existingMedia, err := h.sr.GetMediaByLink(ctx, media.LinkFromProto(cmd.Link))
+	var existingMedia []*media.Media
 
-	if err != nil {
-		return nil, err
-	}
+	if cmd.Link != nil {
+		existingMedia, err := h.sr.GetMediaByLink(ctx, media.LinkFromProto(cmd.Link))
 
-	// if reprocessing, set existing media as current upload ids - basically reprocess all resources associated to this post id
-	if len(cmd.UploadIds) == 0 && cmd.Reprocess {
-		for _, existing := range existingMedia {
-			cmd.UploadIds = append(cmd.UploadIds, existing.ID())
+		if err != nil {
+			return nil, err
+		}
+
+		// if reprocessing, set existing media as current upload ids - basically reprocess all resources associated to this post id
+		if len(cmd.UploadIds) == 0 && cmd.Reprocess {
+			for _, existing := range existingMedia {
+				cmd.UploadIds = append(cmd.UploadIds, existing.ID())
+			}
+		}
+	} else {
+		for _, med := range cmd.ExistingMedia {
+			existingMedia = append(existingMedia, media.FromProto(med))
+			cmd.UploadIds = append(cmd.UploadIds, med.Id)
 		}
 	}
 

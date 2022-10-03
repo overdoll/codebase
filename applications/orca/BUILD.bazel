@@ -1,62 +1,74 @@
+load("@io_bazel_rules_docker//rust:image.bzl", "rust_image")
 load("@io_bazel_rules_docker//container:container.bzl", "container_push")
-load("@npm_orca//@bazel/typescript:index.bzl", "ts_project")
-load("@io_bazel_rules_docker//nodejs:image.bzl", "nodejs_image")
-load("@build_bazel_rules_nodejs//:index.bzl", "nodejs_binary")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
 
 package(default_visibility = ["//visibility:public"])
 
-exports_files([
-    "package.json",
-    "tsconfig.json",
-])
+_PROC_MACRO_DEPS = [
+    "@crates//:async-trait",
+]
 
 _DEPS = [
-    "@npm_orca//@apollo/gateway",
-    "@npm_orca//apollo-server",
-    "@npm_orca//@apollo/core-schema",
-    "@npm_orca//apollo-server-express",
-    "@npm_orca//@apollo/federation",
-    "@npm_orca//express",
-    "@npm_orca//graphql",
-    "@npm_orca//body-parser",
-    "@npm_orca//ioredis",
-    "@npm_orca//dotenv",
-    "@npm_orca//@types/node",
-    "@npm_orca//node-fetch",
-    "@npm_orca//cors",
-    "@npm_orca//@sentry/node",
-    "@npm_orca//pino",
-    "@npm_orca//pino-http",
+    "@crates//:anyhow",
+    "@crates//:apollo-router",
+    "@crates//:futures",
+    "@crates//:schemars",
+    "@crates//:serde",
+    "@crates//:serde_json",
+    "@crates//:tokio",
+    "@crates//:tower",
+    "@crates//:dotenv",
+    "@crates//:redis",
+    "@crates//:http",
 ]
 
 _DATA = [
     "schema/schema.graphql",
-    "tsconfig.json",
+    "router.yaml",
 ]
 
 _SRCS = [
-    "apollo-gateway.ts",
+    "src/main.rs",
+    #"src/plugins/passport.rs",
+    "src/plugins/persisted_queries.rs",
+    "src/plugins/mod.rs",
 ]
 
-ts_project(
-    name = "internal_lib",
+rust_binary(
+    name = "internal",
     srcs = _SRCS,
-    data = _DATA + glob([".*"]),
-    tsconfig = "tsconfig.json",
+    data = _DATA,
+    proc_macro_deps = _PROC_MACRO_DEPS,
     deps = _DEPS,
 )
 
-nodejs_binary(
-    name = "internal",
-    data = ["internal_lib"],
-    entry_point = "apollo-gateway.js",
+rust_image(
+    name = "local-image",
+    srcs = _SRCS,
+    base = "@rust_base_image//image",
+    data = _DATA + [
+        ".env",
+    ],
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
 )
 
-nodejs_image(
+rust_image(
     name = "image",
-    binary = ":internal",
-    include_node_repo_args = False,
-    node_repository_name = "nodejs_linux_amd64",
+    srcs = _SRCS,
+    base = "@rust_base_image//image",
+    data = _DATA,
+    proc_macro_deps = _PROC_MACRO_DEPS,
+    deps = _DEPS,
+)
+
+container_push(
+    name = "publish-testing",
+    format = "Docker",
+    image = ":image",
+    registry = "$(CONTAINER_REGISTRY)",
+    repository = "sting/dev",
+    tag = "$(CONTAINER_TAG)",
 )
 
 container_push(
@@ -64,6 +76,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "orca/dev",
+    repository = "sting",
+    skip_unchanged_digest = True,
     tag = "$(CONTAINER_TAG)",
 )

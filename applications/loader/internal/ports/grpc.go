@@ -110,3 +110,18 @@ func (s Server) GenerateImageFromMedia(ctx context.Context, request *loader.Gene
 
 	return &loader.GenerateImageFromMediaResponse{Media: response}, nil
 }
+
+func (s Server) ReprocessMedia(ctx context.Context, request *loader.ReprocessMediaRequest) (*emptypb.Empty, error) {
+
+	_, err := s.app.Commands.ProcessMediaFromUploads.Handle(context.Background(), command.ProcessMediaFromUploads{
+		ExistingMedia: request.Media,
+		Source:        "STING",
+		Reprocess:     true,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &emptypb.Empty{}, nil
+}

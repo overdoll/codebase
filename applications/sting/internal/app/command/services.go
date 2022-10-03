@@ -15,4 +15,5 @@ type LoaderService interface {
 	GenerateImageFromMedia(ctx context.Context, sources []*media.Media, link *media.Link, pixelate *int64) ([]*media.Media, error)
 	CancelMediaProcessing(ctx context.Context, media []*media.Media) error
 	ConvertResourcesToMedia(ctx context.Context, sourceId string, legacyMedia []*media.Media) ([]*media.Media, error)
+	ReprocessMedia(ctx context.Context, legacyMedia []*media.Media) error
 }

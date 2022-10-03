@@ -194,6 +194,9 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			MigrateCategoryResources:   command.NewMigrateCategoriesResourcesHandler(postRepo, loader),
 
 			ObservePosts: command.NewObservePostsHandler(postRepo, statsRepo),
+
+			RemoveCategory:      command.NewRemoveCategoryHandler(postRepo),
+			ReprocessPostsMedia: command.NewReprocessPostsMediaHandler(postRepo, loader),
 		},
 		Queries: app.Queries{
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),

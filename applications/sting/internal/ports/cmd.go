@@ -320,5 +320,41 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources}
+	remove := &cobra.Command{
+		Use: "remove",
+	}
+	remove.AddCommand(&cobra.Command{
+		Use:  "category [category_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.RemoveCategory.Handle(context.Background(), command.RemoveCategory{
+				CategoryId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to remove category", zap.Error(err))
+			}
+		},
+	})
+
+	reprocess := &cobra.Command{
+		Use: "reprocess-media",
+	}
+
+	reprocessPostsResources := &cobra.Command{
+		Use: "posts",
+		Run: func(cmd *cobra.Command, args []string) {
+			postId, _ := cmd.Flags().GetString("post_id")
+			clubId, _ := cmd.Flags().GetString("club_id")
+			if err := app().Commands.ReprocessPostsMedia.Handle(context.Background(), command.ReprocessPostsMedia{
+				PostId: postId,
+				ClubId: clubId,
+			}); err != nil {
+				zap.S().Fatalw("failed to reprocess posts", zap.Error(err))
+			}
+		},
+	}
+	reprocessPostsResources.PersistentFlags().String("post_id", "", "Select a specific post for reprocessing.")
+	reprocessPostsResources.PersistentFlags().String("club_id", "", "Select a specific club to perform the reprocessing for.")
+	reprocess.AddCommand(reprocessPostsResources)
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources, remove, reprocess}
 }
