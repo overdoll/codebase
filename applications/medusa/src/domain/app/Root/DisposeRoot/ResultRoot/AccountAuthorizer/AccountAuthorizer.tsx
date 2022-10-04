@@ -109,7 +109,10 @@ export default function AccountAuthorizer ({
 
     function onRouteChangeComplete (): void {
       if (trackingCode !== '') {
-        posthog?.capture('$pageview')
+        posthog?.capture('$pageview', {
+          next_pathname: router.pathname,
+          next_query: router.query
+        })
       }
     }
 
@@ -120,7 +123,7 @@ export default function AccountAuthorizer ({
     return () => {
       router.events.off('routeChangeComplete', onRouteChangeComplete)
     }
-  }, [])
+  }, [router])
 
   return (
     <AbilityContext.Provider value={ability}>

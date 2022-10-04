@@ -7,6 +7,7 @@ import { EmptyJoinMutation } from '@//:artifacts/EmptyJoinMutation.graphql'
 import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import EmptyJoinForm from './EmptyJoinForm/EmptyJoinForm'
+import posthog from 'posthog-js'
 
 const Mutation = graphql`
   mutation EmptyJoinMutation($input: GrantAuthenticationTokenInput!) {
@@ -69,6 +70,7 @@ export default function EmptyJoin (): JSX.Element {
           secure: true,
           sameSite: 'lax'
         })
+        posthog?.capture('submit-email')
       },
       onCompleted () {
       },
