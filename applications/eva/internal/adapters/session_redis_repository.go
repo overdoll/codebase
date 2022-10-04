@@ -163,6 +163,31 @@ func (r SessionRepository) DeleteAccountSessionData(ctx context.Context, account
 	return nil
 }
 
+func (r SessionRepository) GetSessionsByAccountIdOperator(ctx context.Context, accountId string) ([]*session.Session, error) {
+
+	keys, err := r.scanKeys(ctx, accountId, 0)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var sessions []*session.Session
+
+	for _, sessionID := range keys {
+
+		// remove prefix
+		sess, err := r.getSessionById(ctx, nil, strings.TrimLeft(sessionID, sessionPrefix))
+
+		if err != nil {
+			return nil, err
+		}
+
+		sessions = append(sessions, sess)
+	}
+
+	return sessions, nil
+}
+
 func (r SessionRepository) GetLastActiveSessionByAccountIdOperator(ctx context.Context, accountId string) (*session.Session, error) {
 
 	keys, err := r.scanKeys(ctx, accountId, 0)

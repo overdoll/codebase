@@ -12,6 +12,7 @@ go_library(
         "account_recovery_codes_by_account.go",
         "account_session_by_id.go",
         "account_sessions_by_account.go",
+        "account_sessions_by_account_operator.go",
         "accounts_by_id.go",
         "are_account_multi_factor_recovery_codes_generated.go",
         "is_account_multi_factor_totp_enabled.go",

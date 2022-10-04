@@ -63,6 +63,7 @@ type Queries struct {
 	AccountEmailsLimit                          query.AccountEmailsLimitHandler
 	AccountSessionById                          query.AccountSessionByIdHandler
 	AccountSessionsByAccount                    query.AccountSessionsByAccountHandler
+	AccountSessionsByAccountOperator            query.AccountSessionsByAccountOperatorHandler
 	AccountRecoveryCodesByAccount               query.AccountRecoveryCodesByAccountHandler
 	IsAccountMultiFactorTOTPEnabled             query.IsAccountMultiFactorTOTPEnabledHandler
 	AreAccountMultiFactorRecoveryCodesGenerated query.AreAccountMultiFactorRecoveryCodesGeneratedHandler

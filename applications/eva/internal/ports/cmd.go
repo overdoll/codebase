@@ -6,6 +6,8 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/eva/internal/app"
 	"overdoll/applications/eva/internal/app/command"
+	"overdoll/applications/eva/internal/app/query"
+	"time"
 )
 
 func InitializeCommands(app func() *app.Application) []*cobra.Command {
@@ -49,5 +51,22 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	}
 
-	return []*cobra.Command{accountRoleRootCmd, sendNewRegistrationNotification}
+	accountSessions := &cobra.Command{
+		Use: "sessions [account_id]",
+		Run: func(cmd *cobra.Command, args []string) {
+			sessions, err := app().Queries.AccountSessionsByAccountOperator.Handle(context.Background(), query.AccountSessionsByAccountOperator{
+				AccountId: args[0],
+			})
+
+			if err != nil {
+				zap.S().Fatalw("failed to send new account registration", zap.Error(err))
+			}
+
+			for _, sess := range sessions {
+				zap.S().Info("account session: " + sess.ID() + ". last seen: " + time.Now().Sub(sess.LastSeen()).String() + ".")
+			}
+		},
+	}
+
+	return []*cobra.Command{accountRoleRootCmd, sendNewRegistrationNotification, accountSessions}
 }
