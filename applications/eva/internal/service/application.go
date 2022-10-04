@@ -164,6 +164,7 @@ func createApplication(
 			IsAccountMultiFactorTOTPEnabled:             query.NewIsAccountMultiFactorTOTPEnabledHandler(accountRepo),
 			ViewAuthenticationToken:                     query.NewViewAuthenticationTokenHandler(tokenRepo, accountRepo),
 			AccountEmailsLimit:                          query.NewAccountEmailsLimitHandler(accountRepo),
+			AccountSessionsByAccountOperator:            query.NewAccountSessionsByAccountOperatorHandler(sessionRepo),
 
 			LocationFromIp: query.NewLocationFromIpHandler(locationRepo),
 		},
