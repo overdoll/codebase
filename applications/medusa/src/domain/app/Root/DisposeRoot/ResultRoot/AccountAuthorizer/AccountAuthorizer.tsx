@@ -67,11 +67,11 @@ export default function AccountAuthorizer ({
     if (trackingCode !== '') {
       let disableSessionRecording = !isInProperHostName || (data != null ? (data?.isStaff || data?.isWorker) : false)
 
-      let random = Math.floor(Math.random() * 11)
-      // only record 1/10 sessions (around 10%))
+      let random = Math.floor(Math.random() * 5)
+      // only record 1/10 sessions (around 20%))
 
-      // always record artist sessions
-      if (data?.isArtist === true) {
+      // always record logged in sessions
+      if (data?.isArtist === true || (data != null && !data?.isStaff && !data?.isWorker)) {
         random = 0
       }
 
