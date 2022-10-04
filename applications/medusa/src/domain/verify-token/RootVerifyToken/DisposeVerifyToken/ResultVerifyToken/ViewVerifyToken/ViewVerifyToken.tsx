@@ -9,6 +9,7 @@ import { useQueryParam } from 'use-query-params'
 import { useState } from 'react'
 import ErrorVerifyToken from './ErrorVerifyToken/ErrorVerifyToken'
 import ValidationVerifyToken from './ValidationVerifyToken/ValidationVerifyToken'
+import posthog from 'posthog-js'
 
 interface Props {
   query: ViewVerifyTokenFragment$key
@@ -70,7 +71,9 @@ export default function ViewVerifyToken (props: Props): JSX.Element {
       onCompleted (payload) {
         if (payload.verifyAuthenticationToken?.validation != null) {
           setHasValidation(true)
+          return
         }
+        posthog?.capture('token-verified')
       },
       onError () {
         setHasError(true)
