@@ -65,19 +65,19 @@ export default function AccountAuthorizer ({
     const trackingCode: string = process.env.NEXT_PUBLIC_POSTHOG_TRACKING_CODE as string
     const isInProperHostName = [process.env.NEXT_PUBLIC_POSTHOG_DOMAIN as string].includes(window.location.hostname)
     if (trackingCode !== '') {
-      let disableSessionRecording = !isInProperHostName || (data != null ? (data?.isStaff || data?.isWorker) : false)
+      const disableSessionRecording = !isInProperHostName || (data != null ? (data?.isStaff || data?.isWorker) : false)
 
-      let random = Math.floor(Math.random() * 5)
-      // only record 1/10 sessions (around 20%))
-
-      // always record logged in sessions
-      if (data?.isArtist === true || (data != null && !data?.isStaff && !data?.isWorker)) {
-        random = 0
-      }
-
-      if (random !== 0 && !disableSessionRecording) {
-        disableSessionRecording = true
-      }
+      // let random = Math.floor(Math.random() * 5)
+      // // only record 1/10 sessions (around 20%))
+      //
+      // // always record logged in sessions
+      // if (data?.isArtist === true || (data != null && !data?.isStaff && !data?.isWorker)) {
+      //   random = 0
+      // }
+      //
+      // if (random !== 0 && !disableSessionRecording) {
+      //   disableSessionRecording = true
+      // }
 
       posthog.init(trackingCode, {
         api_host: 'https://app.posthog.com',
