@@ -19,6 +19,7 @@ import {
   FormInput,
   FormSubmitButton,
   InputBody,
+  InputFeedback,
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
@@ -208,6 +209,7 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
                 <TextInput
                   placeholder={i18n._(t`Enter a username`)}
                 />
+                <InputFeedback />
               </InputBody>
               <InputFooter />
             </FormInput>

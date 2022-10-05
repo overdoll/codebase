@@ -6,6 +6,7 @@ import { useMutation } from 'react-relay/hooks'
 import { ButtonProps } from '@chakra-ui/react'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../../../../support/runIfFunction'
+import posthog from 'posthog-js'
 
 interface ChildrenCallable {
   likePost: () => void
@@ -22,6 +23,10 @@ interface Props extends ButtonProps {
 const PostFragment = graphql`
   fragment PostLikeWrapperFragment on Post {
     id
+    club {
+      slug
+    }
+    reference
     viewerLiked {
       __typename
     }
@@ -73,6 +78,12 @@ export default function PostLikeWrapper ({
             node.setLinkedRecord(payload, 'viewerLiked')
           }
         }
+      },
+      onCompleted () {
+        posthog?.capture('liked-post', {
+          reference: postData.reference,
+          club: postData.club.slug
+        })
       }
     })
   }
