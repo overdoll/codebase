@@ -15,6 +15,11 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) HasClubSupporterSubscription(ctx context.Context, obj *types.Account) (bool, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (r AccountResolver) LikedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

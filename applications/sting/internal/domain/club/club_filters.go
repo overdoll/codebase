@@ -8,9 +8,10 @@ type Filters struct {
 	suspended      *bool
 	terminated     *bool
 	excludeEmpty   bool
+	canSupport     *bool
 }
 
-func NewFilters(search *string, suspended *bool, sortBy string, slugs []string, ownerAccountId *string, terminated *bool, excludeEmpty bool) (*Filters, error) {
+func NewFilters(search *string, suspended *bool, sortBy string, slugs []string, ownerAccountId *string, terminated *bool, excludeEmpty bool, canSupport *bool) (*Filters, error) {
 
 	sorting := UnknownSort
 	var err error
@@ -31,6 +32,7 @@ func NewFilters(search *string, suspended *bool, sortBy string, slugs []string, 
 		ownerAccountId: ownerAccountId,
 		terminated:     terminated,
 		excludeEmpty:   excludeEmpty,
+		canSupport:     canSupport,
 	}, nil
 }
 
@@ -56,6 +58,10 @@ func (e *Filters) Suspended() *bool {
 
 func (e *Filters) Terminated() *bool {
 	return e.terminated
+}
+
+func (e *Filters) CanSupport() *bool {
+	return e.canSupport
 }
 
 func (e *Filters) ExcludeEmpty() bool {

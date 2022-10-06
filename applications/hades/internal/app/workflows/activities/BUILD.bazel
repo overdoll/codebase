@@ -44,6 +44,7 @@ go_library(
     deps = [
         "//applications/hades/internal/app/command",
         "//applications/hades/internal/domain/billing",
+        "//applications/hades/internal/domain/capture",
         "//applications/hades/internal/domain/ccbill",
         "//applications/hades/internal/domain/metrics",
         "//libraries/errors/apperror",

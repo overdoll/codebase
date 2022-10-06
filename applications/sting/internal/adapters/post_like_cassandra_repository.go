@@ -244,6 +244,13 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 
 	var posts []*post.LikedPost
 
+	var afterValue time.Time
+	if cursor.After() != nil {
+		if err := cursor.After().Decode(&afterValue); err != nil {
+			return nil, errors.Wrap(err, "failed to decode after value")
+		}
+	}
+
 	// iterate through all buckets starting from x bucket until we have enough values
 	for _, bucketId := range buckets {
 
@@ -258,12 +265,6 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 		info["liked_account_id"] = accountId
 
 		if cursor.After() != nil {
-			var afterValue time.Time
-
-			if err := cursor.After().Decode(&afterValue); err != nil {
-				return nil, err
-			}
-
 			builder.Where(qb.Lt("liked_at"))
 			info["liked_at"] = afterValue
 		}

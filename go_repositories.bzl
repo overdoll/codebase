@@ -1772,6 +1772,13 @@ def go_repositories():
         sum = "h1:ccV59UEOTzVDnDUEFdT95ZzHVZ+5+158q8+SJb2QV5w=",
         version = "v1.1.1",
     )
+    go_repository(
+        name = "com_github_posthog_posthog_go",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/posthog/posthog-go",
+        sum = "h1:h0p1aZ9F5d6IXOygysob3g4B07b+HuVUQC0VJKD8wA4=",
+        version = "v0.0.0-20220817142604-0b0bbf0f9c0f",
+    )
 
     go_repository(
         name = "com_github_pquerna_otp",
@@ -2166,6 +2173,13 @@ def go_repositories():
         sum = "h1:t92gobL9l3HE202wg3rlk19F6X+JOxl9BBrCCMYEYd8=",
         version = "v0.5.10",
     )
+    go_repository(
+        name = "com_github_urfave_cli",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/urfave/cli",
+        sum = "h1:lNq9sAHXK2qfdI8W+GRItjCEkI+2oR4d+MEHy1CKXoU=",
+        version = "v1.22.5",
+    )
 
     go_repository(
         name = "com_github_urfave_cli_v2",
@@ -2246,6 +2260,13 @@ def go_repositories():
         importpath = "github.com/xrash/smetrics",
         sum = "h1:bAn7/zixMGCfxrRTfdpNzjtPYqr8smhKouy9mxVdGPU=",
         version = "v0.0.0-20201216005158-039620a65673",
+    )
+    go_repository(
+        name = "com_github_xtgo_uuid",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/xtgo/uuid",
+        sum = "h1:3lbZUMbMiGUW/LMkfsEABsc5zNT9+b1CvsJx47JzJ8g=",
+        version = "v0.0.0-20140804021211-a0b114877d4c",
     )
 
     go_repository(

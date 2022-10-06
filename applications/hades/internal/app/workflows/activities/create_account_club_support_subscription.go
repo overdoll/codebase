@@ -26,6 +26,10 @@ type CreateAccountClubSupportSubscriptionInput struct {
 
 func (h *Activities) CreateAccountClubSupportSubscription(ctx context.Context, input CreateAccountClubSupportSubscriptionInput) error {
 
+	if err := h.capture.CaptureNewAccountClubSupporterSubscription(ctx, input.AccountId, input.ClubId); err != nil {
+		return err
+	}
+
 	// get an existing expired subscription, if it exists
 	expired, err := h.billing.GetExpiredAccountClubSupporterSubscriptionByAccountAndClubIdOperator(ctx, input.AccountId, input.ClubId)
 

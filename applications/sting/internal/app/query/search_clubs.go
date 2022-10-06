@@ -18,6 +18,7 @@ type SearchClubs struct {
 	Slugs          []string
 	Terminated     *bool
 	ExcludeEmpty   bool
+	CanSupport     *bool
 }
 
 type SearchClubsHandler struct {
@@ -38,6 +39,7 @@ func (h SearchClubsHandler) Handle(ctx context.Context, query SearchClubs) ([]*c
 		query.OwnerAccountId,
 		query.Terminated,
 		query.ExcludeEmpty,
+		query.CanSupport,
 	)
 
 	if err != nil {

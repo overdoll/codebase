@@ -30,7 +30,7 @@ func (r *QueryResolver) DiscoverClubs(ctx context.Context, after *string, before
 	return types.MarshalClubsToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
+func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, canSupport *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) (*types.ClubConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -47,6 +47,7 @@ func (r *QueryResolver) Clubs(ctx context.Context, after *string, before *string
 		Suspended:    suspended,
 		Terminated:   terminated,
 		ExcludeEmpty: excludeEmpty,
+		CanSupport:   canSupport,
 	})
 
 	if err != nil {

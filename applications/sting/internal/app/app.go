@@ -196,4 +196,6 @@ type Queries struct {
 	GameSessionStatus query.GameSessionStatusHandler
 
 	AccountStats query.AccountStatsHandler
+
+	HasClubSupporterSubscription query.HasClubSupporterSubscriptionHandler
 }

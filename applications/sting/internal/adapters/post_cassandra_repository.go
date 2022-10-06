@@ -21,6 +21,23 @@ import (
 	"overdoll/libraries/principal"
 )
 
+var clubWeightsTable = table.New(table.Metadata{
+	Name: "club_weights",
+	Columns: []string{
+		"bucket",
+		"club_id",
+		"weight",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"club_id"},
+})
+
+type clubWeights struct {
+	Bucket int     `db:"bucket"`
+	ClubId string  `db:"club_id"`
+	Weight float64 `db:"weight"`
+}
+
 var postsOccupiedMediaTable = table.New(table.Metadata{
 	Name: "posts_occupied_resources",
 	Columns: []string{
@@ -430,6 +447,40 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 	}
 
 	return r.unmarshalPost(ctx, *postPending)
+}
+
+func (r PostsCassandraElasticsearchRepository) addClubWeightsToESQuery(ctx context.Context, query *elastic.BoolQuery) error {
+	return addClubWeightsToESQuery(r.session, ctx, "club_id", query)
+}
+
+func addClubWeightsToESQuery(session gocqlx.Session, ctx context.Context, key string, query *elastic.BoolQuery) error {
+
+	var clubWeighted []*clubWeights
+
+	if err := qb.Select(clubWeightsTable.Name()).
+		Where(qb.Eq("bucket")).
+		Query(session).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.One).
+		BindStruct(&clubWeights{Bucket: 0}).
+		SelectRelease(&clubWeighted); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to get club weights")
+	}
+
+	if len(clubWeighted) > 0 {
+		fnQuery := elastic.NewFunctionScoreQuery().Boost(2).BoostMode("multiply")
+		for _, w := range clubWeighted {
+			fnQuery.Add(
+				elastic.NewTermsQuery(key, w.ClubId),
+				elastic.
+					NewWeightFactorFunction(float64(w.Weight)),
+			)
+		}
+		query.Must(fnQuery)
+	}
+
+	return nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.Context) ([]string, error) {

@@ -46,8 +46,6 @@ type Club struct {
 
 	supporterOnlyPostsDisabled bool
 
-	canSupport bool
-
 	newClubMembers []string
 
 	charactersEnabled bool

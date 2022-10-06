@@ -551,7 +551,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 				foundContent = true
 				removedMedia = append(removedMedia, content.media)
 
-				if content.isSupporterOnly {
+				if content.mediaHidden != nil {
 					removedMedia = append(removedMedia, content.mediaHidden)
 				}
 

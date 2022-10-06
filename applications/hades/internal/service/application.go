@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/posthog/posthog-go"
 	"go.temporal.io/sdk/client"
 	temporalmocks "go.temporal.io/sdk/mocks"
 	"net/http"
@@ -11,6 +12,7 @@ import (
 	"overdoll/applications/hades/internal/app/command"
 	"overdoll/applications/hades/internal/app/query"
 	"overdoll/applications/hades/internal/app/workflows/activities"
+	"overdoll/libraries/testing_tools"
 	"overdoll/libraries/testing_tools/mocks"
 
 	"overdoll/libraries/bootstrap"
@@ -29,6 +31,8 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 
 	ccbillClient := &http.Client{}
 
+	posthogClient := clients.NewPosthogClient()
+
 	return createApplication(ctx,
 			adapters.NewEvaGrpc(evaClient),
 			adapters.NewStingGrpc(stingClient),
@@ -36,12 +40,14 @@ func NewApplication(ctx context.Context) (*app.Application, func()) {
 			adapters.NewRingerGrpc(ringerClient),
 			ccbillClient,
 			clients.NewTemporalClient(ctx),
+			posthogClient,
 		),
 		func() {
 			cleanup()
 			cleanup2()
 			cleanup3()
 			cleanup4()
+			_ = posthogClient.Close()
 		}
 }
 
@@ -62,6 +68,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	stingClient := &mocks.MockStingClient{}
 	carrierClient := &mocks.MockCarrierClient{}
 	ringerClient := &mocks.MockRingerClient{}
+	posthogClient := testing_tools.PosthogClientMock{}
 
 	return &ComponentTestApplication{
 		App: createApplication(
@@ -72,6 +79,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 			adapters.NewRingerGrpc(ringerClient),
 			MockCCBillHttpClient{},
 			temporalClient,
+			posthogClient,
 		),
 		TemporalClient: temporalClient,
 		EvaClient:      evaClient,
@@ -81,7 +89,7 @@ func NewComponentTestApplication(ctx context.Context) *ComponentTestApplication 
 	}
 }
 
-func createApplication(ctx context.Context, eva query.EvaService, sting command.StingService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client) *app.Application {
+func createApplication(ctx context.Context, eva query.EvaService, sting command.StingService, carrier command.CarrierService, ringer command.RingerService, ccbillClient adapters.CCBillHttpClient, client client.Client, posthogClient posthog.Client) *app.Application {
 
 	session := bootstrap.InitializeDatabaseSession()
 	esClient := bootstrap.InitializeElasticSearchSession()
@@ -93,6 +101,7 @@ func createApplication(ctx context.Context, eva query.EvaService, sting command.
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	metricRepo := adapters.NewMetricsCassandraRepository(session)
+	captureRepo := adapters.NewCapturePosthogRepository(posthogClient)
 
 	return &app.Application{
 		Commands: app.Commands{
@@ -138,6 +147,6 @@ func createApplication(ctx context.Context, eva query.EvaService, sting command.
 			CanDeleteAccountData:   query.NewCanDeleteAccountDataHandler(billingRepo),
 			ClubTransactionMetrics: query.NewClubTransactionMetricsHandler(metricRepo),
 		},
-		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, sting, carrier, ringer),
+		Activities: activities.NewActivitiesHandler(billingRepo, metricRepo, billingFileRepo, ccbillRepo, sting, carrier, ringer, captureRepo),
 	}
 }

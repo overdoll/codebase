@@ -194,6 +194,11 @@ type Account implements Node
   hasActiveOrCancelledAccountClubSupporterSubscriptions: Boolean! @join__field(graph: HADES)
 
   """
+  Whether or not this account has at least 1 club supporter subscription.
+  """
+  hasClubSupporterSubscription: Boolean! @join__field(graph: STING)
+
+  """
   Whether or not this club has non-terminated clubs.
   
   Cannot delete account if this is true.
@@ -4979,6 +4984,13 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+
+    """
+    Filter by whether or not you can support the clubs.
+    
+    Useful for getting a list of all clubs that can be supported.
+    """
+    canSupport: Boolean
 
     """Exclude empty clubs (clubs that have 0 posts)."""
     excludeEmpty: Boolean! = false

@@ -563,7 +563,9 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, err
 	}
 
-	query.Must(elastic.NewFunctionScoreQuery().BoostMode("multiply").AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
+	query.Must(elastic.NewFunctionScoreQuery().BoostMode("multiply").
+		// add a score func to randomly multiply
+		AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 
 	builder.Query(query)
 
@@ -656,18 +658,28 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 
 	var posts []*post.Post
 
-	for _, hit := range response.Hits.Hits {
+	if len(response.Hits.Hits) != 0 {
+		for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+			createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
-		if err != nil {
-			return nil, err
+			if err != nil {
+				return nil, err
+			}
+
+			posts = append(posts, createdPost)
 		}
 
-		posts = append(posts, createdPost)
+		return posts, nil
 	}
 
-	return posts, nil
+	filters, err := post.NewPostFeed(nil, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	// get some random posts
+	return r.PostsFeed(ctx, requester, cursor, filters)
 }
 
 func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
@@ -705,6 +717,10 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 
 	if filterQueries != nil {
 		query.Filter(filterQueries...)
+	}
+
+	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
+		return nil, err
 	}
 
 	if filter.Seed() != nil {
@@ -811,6 +827,10 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	if filter.State() != post.Unknown {
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
+	}
+
+	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
+		return nil, err
 	}
 
 	if len(filter.SupporterOnlyStatus()) > 0 {

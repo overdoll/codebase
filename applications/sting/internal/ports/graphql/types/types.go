@@ -25,6 +25,8 @@ type Search interface {
 }
 
 type Account struct {
+	// Whether or not this account has at least 1 club supporter subscription.
+	HasClubSupporterSubscription bool `json:"hasClubSupporterSubscription"`
 	// Maximum amount of clubs that you can create.
 	ClubsLimit int `json:"clubsLimit"`
 	// Current count of the amount of clubs that the account has created.

@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"os"
 	"overdoll/applications/carrier/internal/domain/formatters"
 	"overdoll/applications/carrier/internal/domain/links"
 	"time"
@@ -79,7 +80,7 @@ func (h NewClubSupporterSubscriptionHandler) Handle(ctx context.Context, cmd New
 		return err
 	}
 
-	recipient, err := mailing.NewRecipientFromIdentifier(acc)
+	recipient, err := mailing.NewRecipient("overdoll", os.Getenv("STAFF_ADDRESS"))
 
 	if err != nil {
 		return err

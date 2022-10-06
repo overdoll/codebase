@@ -735,6 +735,13 @@ extend type Query {
     suspended: Boolean
 
     """
+    Filter by whether or not you can support the clubs.
+
+    Useful for getting a list of all clubs that can be supported.
+    """
+    canSupport: Boolean
+
+    """
     Filter by all the clubs that are terminated.
 
     By default, will show all terminated clubs.
@@ -758,6 +765,11 @@ extend type Query {
 }
 
 extend type Account {
+
+  """
+  Whether or not this account has at least 1 club supporter subscription.
+  """
+  hasClubSupporterSubscription: Boolean! @goField(forceResolver: true)
 
   """
   Maximum amount of clubs that you can create.

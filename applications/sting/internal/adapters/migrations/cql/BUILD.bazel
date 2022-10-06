@@ -16,6 +16,7 @@ go_library(
         "1662669760_add_club_links.cql",
         "1662738890_add_media_columns.cql",
         "1664646651_add_post_observations.cql",
+        "1665087298_add_club_weight.cql",
     ],
     importpath = "overdoll/applications/sting/internal/adapters/migrations/cql",
     visibility = ["//applications/sting:__subpackages__"],

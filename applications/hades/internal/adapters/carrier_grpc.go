@@ -19,6 +19,20 @@ func NewCarrierGrpc(client carrier.CarrierClient) CarrierGrpc {
 }
 
 func (s CarrierGrpc) NewClubSupporterSubscription(ctx context.Context, subscription *billing.AccountClubSupporterSubscription) error {
+
+	_, err := s.client.NewClubSupporterSubscription(ctx, &carrier.NewClubSupporterSubscriptionRequest{
+		Account:         &carrier.Account{Id: subscription.AccountId()},
+		Club:            &carrier.Club{Id: subscription.ClubId()},
+		Subscription:    &carrier.Subscription{Id: subscription.Id()},
+		Payment:         &carrier.Payment{Amount: subscription.BillingAmount(), Currency: subscription.BillingCurrency().String()},
+		BillingDate:     timestamppb.New(subscription.LastBillingDate()),
+		NextBillingDate: timestamppb.New(subscription.NextBillingDate()),
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "error sending new club supporter subscription email")
+	}
+
 	return nil
 }
 

@@ -63,18 +63,19 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Account struct {
-		ClubMembersPostsFeed  func(childComplexity int, after *string, before *string, first *int, last *int) int
-		ClubMemberships       func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
-		ClubMembershipsCount  func(childComplexity int) int
-		ClubMembershipsLimit  func(childComplexity int) int
-		Clubs                 func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
-		ClubsCount            func(childComplexity int) int
-		ClubsLimit            func(childComplexity int) int
-		CurationProfile       func(childComplexity int) int
-		HasNonTerminatedClubs func(childComplexity int) int
-		ID                    func(childComplexity int) int
-		LikedPosts            func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Posts                 func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
+		ClubMembersPostsFeed         func(childComplexity int, after *string, before *string, first *int, last *int) int
+		ClubMemberships              func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
+		ClubMembershipsCount         func(childComplexity int) int
+		ClubMembershipsLimit         func(childComplexity int) int
+		Clubs                        func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
+		ClubsCount                   func(childComplexity int) int
+		ClubsLimit                   func(childComplexity int) int
+		CurationProfile              func(childComplexity int) int
+		HasClubSupporterSubscription func(childComplexity int) int
+		HasNonTerminatedClubs        func(childComplexity int) int
+		ID                           func(childComplexity int) int
+		LikedPosts                   func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Posts                        func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
 	}
 
 	AddCategoryAlternativeTitlePayload struct {
@@ -578,7 +579,7 @@ type ComplexityRoot struct {
 		Character          func(childComplexity int, slug string, seriesSlug *string, clubSlug *string) int
 		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug *string, clubSlug *string, name *string, excludeEmpty bool, sortBy types.CharactersSort) int
 		Club               func(childComplexity int, slug string) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) int
+		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, canSupport *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) int
 		DiscoverClubs      func(childComplexity int, after *string, before *string, first *int, last *int) int
 		GameSessionStatus  func(childComplexity int, reference string) int
 		Post               func(childComplexity int, reference string) int
@@ -863,6 +864,7 @@ type ComplexityRoot struct {
 }
 
 type AccountResolver interface {
+	HasClubSupporterSubscription(ctx context.Context, obj *types.Account) (bool, error)
 	ClubsLimit(ctx context.Context, obj *types.Account) (int, error)
 	ClubsCount(ctx context.Context, obj *types.Account) (int, error)
 	HasNonTerminatedClubs(ctx context.Context, obj *types.Account) (bool, error)
@@ -1004,7 +1006,7 @@ type QueryResolver interface {
 	Characters(ctx context.Context, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug *string, clubSlug *string, name *string, excludeEmpty bool, sortBy types.CharactersSort) (*types.CharacterConnection, error)
 	Character(ctx context.Context, slug string, seriesSlug *string, clubSlug *string) (*types.Character, error)
 	DiscoverClubs(ctx context.Context, after *string, before *string, first *int, last *int) (*types.ClubConnection, error)
-	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
+	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, canSupport *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
 	GameSessionStatus(ctx context.Context, reference string) (types.GameSessionStatus, error)
 	Search(ctx context.Context, after *string, before *string, first *int, last *int, query string) (*types.SearchConnection, error)
@@ -1118,6 +1120,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.CurationProfile(childComplexity), true
+
+	case "Account.hasClubSupporterSubscription":
+		if e.complexity.Account.HasClubSupporterSubscription == nil {
+			break
+		}
+
+		return e.complexity.Account.HasClubSupporterSubscription(childComplexity), true
 
 	case "Account.hasNonTerminatedClubs":
 		if e.complexity.Account.HasNonTerminatedClubs == nil {
@@ -3690,7 +3699,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(*bool), args["terminated"].(*bool), args["excludeEmpty"].(bool), args["sortBy"].(types.ClubsSort)), true
+		return e.complexity.Query.Clubs(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["name"].(*string), args["suspended"].(*bool), args["canSupport"].(*bool), args["terminated"].(*bool), args["excludeEmpty"].(bool), args["sortBy"].(types.ClubsSort)), true
 
 	case "Query.discoverClubs":
 		if e.complexity.Query.DiscoverClubs == nil {
@@ -6202,6 +6211,13 @@ extend type Query {
     suspended: Boolean
 
     """
+    Filter by whether or not you can support the clubs.
+
+    Useful for getting a list of all clubs that can be supported.
+    """
+    canSupport: Boolean
+
+    """
     Filter by all the clubs that are terminated.
 
     By default, will show all terminated clubs.
@@ -6225,6 +6241,11 @@ extend type Query {
 }
 
 extend type Account {
+
+  """
+  Whether or not this account has at least 1 club supporter subscription.
+  """
+  hasClubSupporterSubscription: Boolean! @goField(forceResolver: true)
 
   """
   Maximum amount of clubs that you can create.
@@ -10578,32 +10599,41 @@ func (ec *executionContext) field_Query_clubs_args(ctx context.Context, rawArgs 
 	}
 	args["suspended"] = arg6
 	var arg7 *bool
-	if tmp, ok := rawArgs["terminated"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("terminated"))
+	if tmp, ok := rawArgs["canSupport"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("canSupport"))
 		arg7, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["terminated"] = arg7
-	var arg8 bool
+	args["canSupport"] = arg7
+	var arg8 *bool
+	if tmp, ok := rawArgs["terminated"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("terminated"))
+		arg8, err = ec.unmarshalOBoolean2ᚖbool(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["terminated"] = arg8
+	var arg9 bool
 	if tmp, ok := rawArgs["excludeEmpty"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("excludeEmpty"))
-		arg8, err = ec.unmarshalNBoolean2bool(ctx, tmp)
+		arg9, err = ec.unmarshalNBoolean2bool(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["excludeEmpty"] = arg8
-	var arg9 types.ClubsSort
+	args["excludeEmpty"] = arg9
+	var arg10 types.ClubsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg9, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
+		arg10, err = ec.unmarshalNClubsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClubsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg9
+	args["sortBy"] = arg10
 	return args, nil
 }
 
@@ -11370,6 +11400,50 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Account_hasClubSupporterSubscription(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().HasClubSupporterSubscription(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Account_hasClubSupporterSubscription(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _Account_clubsLimit(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Account_clubsLimit(ctx, field)
@@ -16098,6 +16172,8 @@ func (ec *executionContext) fieldContext_Club_owner(ctx context.Context, field g
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -17245,6 +17321,8 @@ func (ec *executionContext) fieldContext_ClubIssuedSuspensionLog_account(ctx con
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -17641,6 +17719,8 @@ func (ec *executionContext) fieldContext_ClubMember_account(ctx context.Context,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -18046,6 +18126,8 @@ func (ec *executionContext) fieldContext_ClubRemovedSuspensionLog_account(ctx co
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -18396,6 +18478,8 @@ func (ec *executionContext) fieldContext_ClubTermination_account(ctx context.Con
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -20286,6 +20370,8 @@ func (ec *executionContext) fieldContext_Entity_findAccountByID(ctx context.Cont
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -26374,6 +26460,8 @@ func (ec *executionContext) fieldContext_Post_contributor(ctx context.Context, f
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -27960,6 +28048,8 @@ func (ec *executionContext) fieldContext_PostLike_account(ctx context.Context, f
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "hasClubSupporterSubscription":
+				return ec.fieldContext_Account_hasClubSupporterSubscription(ctx, field)
 			case "clubsLimit":
 				return ec.fieldContext_Account_clubsLimit(ctx, field)
 			case "clubsCount":
@@ -28590,7 +28680,7 @@ func (ec *executionContext) _Query_clubs(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Clubs(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["suspended"].(*bool), fc.Args["terminated"].(*bool), fc.Args["excludeEmpty"].(bool), fc.Args["sortBy"].(types.ClubsSort))
+		return ec.resolvers.Query().Clubs(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["slugs"].([]string), fc.Args["name"].(*string), fc.Args["suspended"].(*bool), fc.Args["canSupport"].(*bool), fc.Args["terminated"].(*bool), fc.Args["excludeEmpty"].(bool), fc.Args["sortBy"].(types.ClubsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -39734,6 +39824,26 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Account")
+		case "hasClubSupporterSubscription":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_hasClubSupporterSubscription(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "clubsLimit":
 			field := field
 

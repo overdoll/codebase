@@ -234,6 +234,10 @@ func (r ClubCassandraElasticsearchRepository) GetClubsByIds(ctx context.Context,
 	return clubs, nil
 }
 
+func (r ClubCassandraElasticsearchRepository) addClubWeightsToESQuery(ctx context.Context, query *elastic.BoolQuery) error {
+	return addClubWeightsToESQuery(r.session, ctx, "_id", query)
+}
+
 func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*club.Club, error) {
 
 	builder := r.client.Search().
@@ -243,7 +247,7 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	if err := cursor.BuildElasticsearch(builder, "total_posts", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -255,6 +259,10 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 
 	query := elastic.NewBoolQuery()
 
+	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
+		return nil, err
+	}
+
 	query.Filter(elastic.NewBoolQuery().
 		// don't include clubs in the discovery if you are already a member of that club
 		MustNot(elastic.NewTermsQueryFromStrings("id", clubMembershipIds...)),
@@ -262,9 +270,10 @@ func (r ClubCassandraElasticsearchRepository) DiscoverClubs(ctx context.Context,
 
 	// only show clubs that have made at least 1 post
 	query.Filter(elastic.NewRangeQuery("total_posts").Gt(0))
-
 	query.Filter(elastic.NewTermQuery("terminated", false))
 
+	// total posts should be a priority
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewFieldValueFactorFunction().Field("total_posts").Factor(2)))
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)
@@ -352,6 +361,16 @@ func (r ClubCassandraElasticsearchRepository) SearchClubs(ctx context.Context, r
 
 	if filter.ExcludeEmpty() {
 		query.Must(elastic.NewRangeQuery("total_posts").Gt(0))
+	}
+
+	if filter.CanSupport() != nil {
+		if *filter.CanSupport() {
+			query.Filter(elastic.NewTermQuery("terminated", false))
+			query.Filter(elastic.NewTermQuery("suspended", false))
+			query.Filter(elastic.NewTermQuery("has_created_supporter_only_post", true))
+		} else {
+			query.Filter(elastic.NewTermQuery("has_created_supporter_only_post", false))
+		}
 	}
 
 	builder.Query(query)
