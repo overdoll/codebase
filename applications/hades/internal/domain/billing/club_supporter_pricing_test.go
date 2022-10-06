@@ -46,7 +46,7 @@ func TestGetLocalizedPricingEU(t *testing.T) {
 	require.NoError(t, err, "no error grabbing price")
 
 	require.Equal(t, money.EUR, localizedPrice.Currency(), "EUR currency")
-	require.Equal(t, 769, int(localizedPrice.Amount()), "correct amount")
+	require.Equal(t, 727, int(localizedPrice.Amount()), "correct amount")
 }
 
 func TestGetLocalizedPricingJPY(t *testing.T) {
@@ -67,7 +67,7 @@ func TestGetLocalizedPricingJPY(t *testing.T) {
 	require.NoError(t, err, "no error grabbing price")
 
 	require.Equal(t, money.JPY, localizedPrice.Currency(), "JPY currency")
-	require.Equal(t, 909, int(localizedPrice.Amount()), "correct amount")
+	require.Equal(t, 1049, int(localizedPrice.Amount()), "correct amount")
 }
 
 func TestGetLocalizedPricingCAD(t *testing.T) {
@@ -88,7 +88,7 @@ func TestGetLocalizedPricingCAD(t *testing.T) {
 	require.NoError(t, err, "no error grabbing price")
 
 	require.Equal(t, money.CAD, localizedPrice.Currency(), "CAD currency")
-	require.Equal(t, 1014, int(localizedPrice.Amount()), "correct amount")
+	require.Equal(t, 979, int(localizedPrice.Amount()), "correct amount")
 }
 
 func TestGetLocalizedPricingAUD(t *testing.T) {
@@ -109,7 +109,7 @@ func TestGetLocalizedPricingAUD(t *testing.T) {
 	require.NoError(t, err, "no error grabbing price")
 
 	require.Equal(t, money.AUD, localizedPrice.Currency(), "CAD currency")
-	require.Equal(t, 1083, int(localizedPrice.Amount()), "correct amount")
+	require.Equal(t, 1132, int(localizedPrice.Amount()), "correct amount")
 }
 
 func TestGetLocalizedPricingGB(t *testing.T) {
@@ -130,5 +130,5 @@ func TestGetLocalizedPricingGB(t *testing.T) {
 	require.NoError(t, err, "no error grabbing price")
 
 	require.Equal(t, money.GBP, localizedPrice.Currency(), "GBP currency")
-	require.Equal(t, 629, int(localizedPrice.Amount()), "correct amount")
+	require.Equal(t, 643, int(localizedPrice.Amount()), "correct amount")
 }
