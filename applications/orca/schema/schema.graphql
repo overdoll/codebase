@@ -1259,6 +1259,9 @@ type AuthenticationToken {
   """The location where this token was created at."""
   location: Location!
 
+  """The method that is used by this authentication token."""
+  method: AuthenticationTokenMethod!
+
   """
   When the token is viewed with the correct ID, whether or not the devices match (you cannot use the token unless the device is the same).
   """
@@ -1292,6 +1295,12 @@ type AuthenticationTokenAccountStatus {
   When verified, whether or not there is an account belonging to this token.
   """
   registered: Boolean!
+}
+
+"""The type of authentication token."""
+enum AuthenticationTokenMethod {
+  CODE
+  MAGIC_LINK
 }
 
 """Localization formatted in BCP47."""
@@ -3461,6 +3470,11 @@ enum GrantAccountAccessWithAuthenticationTokenValidation {
 input GrantAuthenticationTokenInput {
   """The email that the token will be granted for"""
   email: String!
+
+  """
+  The method that will be used for the authentication token. By default, MAGIC_LINK is used.
+  """
+  method: AuthenticationTokenMethod
 }
 
 """Payload for starting an authentication"""
@@ -6781,7 +6795,9 @@ type UpdateTopicWeightPayload {
 
 """Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {
-  """Secret (get it from the email)"""
+  """
+  Secret (get it from the email). Will either be a code or can be used as a link
+  """
   secret: String!
 
   """The original token"""

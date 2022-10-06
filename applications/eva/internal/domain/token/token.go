@@ -169,6 +169,10 @@ func (c *AuthenticationToken) Token() string {
 	return c.token
 }
 
+func (c *AuthenticationToken) Method() Method {
+	return c.method
+}
+
 func (c *AuthenticationToken) SameDevice(pass *passport.Passport) bool {
 	return pass.DeviceID() == c.deviceId
 }

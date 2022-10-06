@@ -125,9 +125,20 @@ func MarshalAuthenticationTokenToGraphQL(ctx context.Context, result *token.Auth
 		}
 	}
 
+	var method AuthenticationTokenMethod
+
+	if result.Method() == token.MagicLink {
+		method = AuthenticationTokenMethodMagicLink
+	}
+
+	if result.Method() == token.Code {
+		method = AuthenticationTokenMethodCode
+	}
+
 	return &AuthenticationToken{
 		ID:            relay.NewID(AuthenticationToken{}, result.Token()),
 		Token:         result.Token(),
+		Method:        method,
 		SameDevice:    result.SameDevice(p),
 		Verified:      result.Verified(),
 		UserAgent:     result.UserAgent(),
