@@ -94,6 +94,8 @@ func TestInternalEmails(t *testing.T) {
 	// need a sleep function here or else the emails conflict
 	time.Sleep(time.Second * 3)
 
+	timestampFrom = time.Now()
+
 	tm, _ := time.Parse("2006-01-02T15:04:05.000Z", "2014-11-12T11:45:26.371Z")
 
 	_, err = client.NewClubSupporterSubscription(context.Background(), &carrier.NewClubSupporterSubscriptionRequest{
