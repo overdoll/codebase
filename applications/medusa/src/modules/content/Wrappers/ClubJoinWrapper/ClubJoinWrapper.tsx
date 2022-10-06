@@ -7,6 +7,7 @@ import { t } from '@lingui/macro'
 import { useToast } from '../../ThemeComponents'
 import { MaybeRenderProp } from '@//:types/components'
 import runIfFunction from '../../../support/runIfFunction'
+import posthog from 'posthog-js'
 
 interface ChildrenCallable {
   joinClub: () => void
@@ -24,6 +25,7 @@ const ClubFragment = graphql`
   fragment ClubJoinWrapperFragment on Club {
     id
     name
+    slug
   }
 `
 
@@ -79,6 +81,9 @@ export default function ClubJoinWrapper ({
         notify({
           status: 'success',
           title: t`You are now a member of ${clubData.name}!`
+        })
+        posthog?.capture('joined-club', {
+          club: clubData.slug
         })
       },
       updater: (store) => {

@@ -37,6 +37,7 @@ import {
   useSequence,
   ValueResolver
 } from '@//:modules/content/HookedComponents/Sequence'
+import posthog from 'posthog-js'
 
 interface Props {
   query: PreloadedQuery<CurationProfileSetupQuery>
@@ -151,6 +152,7 @@ export default function CurationProfileSetup (props: Props): JSX.Element | null 
 
   useUpdateEffect(() => {
     if (queryData?.viewer?.curationProfile?.completed === true) {
+      posthog?.capture('complete-curation-profile')
       onOpen()
     }
   }, [queryData?.viewer?.curationProfile?.completed])

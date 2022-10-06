@@ -6,6 +6,7 @@ import compareTwoArrays from '@//:modules/support/compareTwoArrays'
 import { FlowBuilderNextButton, FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import posthog from 'posthog-js'
 
 interface Props {
   nextStep: () => void
@@ -65,6 +66,7 @@ export default function CurationAudienceNextButton ({
         skipped: false
       },
       onCompleted () {
+        posthog?.capture('update-curation-audience')
         nextStep()
       },
       onError () {
