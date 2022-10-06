@@ -563,6 +563,10 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, err
 	}
 
+	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
+		return nil, err
+	}
+
 	query.Must(elastic.NewFunctionScoreQuery().BoostMode("multiply").
 		// add a score func to randomly multiply
 		AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))

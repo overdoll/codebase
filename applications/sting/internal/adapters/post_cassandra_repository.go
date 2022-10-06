@@ -469,13 +469,29 @@ func addClubWeightsToESQuery(session gocqlx.Session, ctx context.Context, key st
 	}
 
 	if len(clubWeighted) > 0 {
-		fnQuery := elastic.NewFunctionScoreQuery().Boost(2).BoostMode("multiply")
+
+		boost := 2
+
+		if key == "_id" {
+			boost = 100
+		}
+
+		fnQuery := elastic.NewFunctionScoreQuery().Boost(float64(boost)).BoostMode("multiply")
 		for _, w := range clubWeighted {
-			fnQuery.Add(
-				elastic.NewTermsQuery(key, w.ClubId),
-				elastic.
-					NewWeightFactorFunction(float64(w.Weight)),
-			)
+			if key == "_id" {
+				fnQuery.Add(
+					elastic.NewTermsQuery(key, w.ClubId),
+					elastic.
+						NewWeightFactorFunction(w.Weight),
+				)
+			} else {
+				fnQuery.Add(
+					elastic.NewTermsQuery(key, w.ClubId),
+					elastic.
+						NewRandomFunction().Weight(w.Weight),
+				)
+			}
+
 		}
 		query.Must(fnQuery)
 	}
