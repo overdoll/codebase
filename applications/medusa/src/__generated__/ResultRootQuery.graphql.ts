@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d33c39dd353fd27534dbf84206b48e53>>
- * @relayHash 3c4ca4bcc8b51107c7ff33a33a5029e6
+ * @generated SignedSource<<59bf3e2ba457977ff8f1fb5e51be36e6>>
+ * @relayHash f619ae51d54490078c43cf042aeb0688
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3c4ca4bcc8b51107c7ff33a33a5029e6
+// @relayRequestID f619ae51d54490078c43cf042aeb0688
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type ResultRootQuery$variables = {};
 export type ResultRootQuery$data = {
   readonly viewer: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment" | "UniversalNavigatorFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment">;
   } | null;
 };
 export type ResultRootQuery = {
@@ -63,11 +63,6 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "AccountAuthorizerFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "UniversalNavigatorFragment"
           },
           {
             "args": null,
@@ -158,19 +153,6 @@ return {
             "name": "isWorker",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "avatar",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              (v0/*: any*/)
-            ],
-            "storageKey": null
-          },
           (v1/*: any*/)
         ],
         "storageKey": null
@@ -178,7 +160,7 @@ return {
     ]
   },
   "params": {
-    "id": "3c4ca4bcc8b51107c7ff33a33a5029e6",
+    "id": "f619ae51d54490078c43cf042aeb0688",
     "metadata": {},
     "name": "ResultRootQuery",
     "operationKind": "query",
@@ -187,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "c077ed281d9fb0799f7b9e56987bb015";
+(node as any).hash = "7550a3d0b6b61d8348fb7a7b99a7226b";
 
 export default node;

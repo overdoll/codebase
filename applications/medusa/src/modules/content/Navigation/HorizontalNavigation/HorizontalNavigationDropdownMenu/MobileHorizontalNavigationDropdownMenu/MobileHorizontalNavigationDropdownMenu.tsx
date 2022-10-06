@@ -1,9 +1,8 @@
 import { ReactNode } from 'react'
 import { IconType } from '@//:types/components'
-import { Box, HStack, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { Box, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure, Wrap } from '@chakra-ui/react'
 import { HorizontalNavigationDropdownMenuContext } from '../context'
 import HorizontalNavigationButton from '../../HorizontalNavigationButton/HorizontalNavigationButton'
-import SiteLinkLogo from '@//:domain/app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 
 interface Props {
   children: ReactNode
@@ -47,13 +46,12 @@ const MobileHorizontalNavigationDropdownMenu = (props: Props): JSX.Element => {
       >
         <ModalOverlay />
         <ModalContent>
-          <SiteLinkLogo />
           <ModalBody
-            px={3}
+            p={3}
           >
-            <HStack isInline spacing={3}>
+            <Wrap justify='center' align='center'>
               {children}
-            </HStack>
+            </Wrap>
           </ModalBody>
         </ModalContent>
       </Modal>

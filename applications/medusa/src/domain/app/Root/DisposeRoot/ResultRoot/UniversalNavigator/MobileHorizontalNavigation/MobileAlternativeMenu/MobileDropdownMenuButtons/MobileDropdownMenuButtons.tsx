@@ -1,41 +1,21 @@
-import { graphql, useFragment } from 'react-relay/hooks'
 import { Trans } from '@lingui/macro'
 import { CogDouble, ContentBrushPen, LoginKeys, SafetyExitDoorLeft, SafetyFloat } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
-import HorizontalNavigationDropdownMenu
-  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/HorizontalNavigationDropdownMenu'
-import DropdownMenuButtonProfile from './DropdownMenuButtonProfile/DropdownMenuButtonProfile'
-import DropdownMenuButtonInstallApp from './DropdownMenuButtonInstallApp/DropdownMenuButtonInstallApp'
 import React, { Suspense } from 'react'
 import SkeletonDropdownMenuButton
   from '@//:modules/content/Placeholder/Loading/SkeletonDropdownMenuButton/SkeletonDropdownMenuButton'
-import DropdownMenuButtonClub from './DropdownMenuButtonClub/DropdownMenuButtonClub'
-import DropdownMenuSocialLinks from './DropdownMenuSocialLinks/DropdownMenuSocialLinks'
-import { DropdownMenuButtonsFragment$key } from '@//:artifacts/DropdownMenuButtonsFragment.graphql'
+import MobileHorizontalNavigationDropdownMenuButton
+  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenuButton/MobileHorizontalNavigationDropdownMenuButton'
+import MobileDropdownMenuButtonClub from './MobileDropdownMenuButtonClub/MobileDropdownMenuButtonClub'
+import MobileDropdownMenuButtonProfile from './MobileDropdownMenuButtonProfile/MobileDropdownMenuButtonProfile'
 
-interface Props {
-  query: DropdownMenuButtonsFragment$key | null
-}
-
-const Fragment = graphql`
-  fragment DropdownMenuButtonsFragment on Account {
-    ...DropdownMenuButtonProfileFragment
-    ...QuickAccessButtonProfileFragment
-  }
-`
-
-export default function DropdownMenuButtons (props: Props): JSX.Element {
-  const { query } = props
-
-  const data = useFragment(Fragment, query)
-
+export default function MobileDropdownMenuButtons (): JSX.Element {
   return (
     <>
       <Can not I='configure' a='Account'>
-        <HorizontalNavigationDropdownMenu.Button
+        <MobileHorizontalNavigationDropdownMenuButton
           href='/join'
           icon={LoginKeys}
-          colorScheme='primary'
           label={
             <Trans>
               Join
@@ -44,12 +24,16 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
         />
       </Can>
       <Can I='configure' a='Account'>
-        <DropdownMenuButtonProfile queryRef={data} />
+        <Suspense fallback={
+          <SkeletonDropdownMenuButton />
+        }
+        >
+          <MobileDropdownMenuButtonProfile />
+        </Suspense>
       </Can>
       <Can I='staff' a='Entity'>
-        <HorizontalNavigationDropdownMenu.Button
+        <MobileHorizontalNavigationDropdownMenuButton
           href='/staff/entity'
-          colorScheme='purple'
           icon={LoginKeys}
           label={
             <Trans>
@@ -59,9 +43,8 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
         />
       </Can>
       <Can I='moderate' a='Post'>
-        <HorizontalNavigationDropdownMenu.Button
+        <MobileHorizontalNavigationDropdownMenuButton
           href='/moderation/post-queue'
-          colorScheme='purple'
           icon={LoginKeys}
           label={
             <Trans>
@@ -70,11 +53,9 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
           }
         />
       </Can>
-      <DropdownMenuButtonInstallApp />
       <Can not I='create' a='Club'>
-        <HorizontalNavigationDropdownMenu.Button
+        <MobileHorizontalNavigationDropdownMenuButton
           href='/artists'
-          colorScheme='primary'
           icon={ContentBrushPen}
           label={
             <Trans>
@@ -88,13 +69,12 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
           <SkeletonDropdownMenuButton />
         }
         >
-          <DropdownMenuButtonClub />
+          <MobileDropdownMenuButtonClub />
         </Suspense>
       </Can>
       <Can I='configure' a='Account'>
-        <HorizontalNavigationDropdownMenu.Button
+        <MobileHorizontalNavigationDropdownMenuButton
           href='/settings/profile'
-          colorScheme='green'
           icon={CogDouble}
           label={
             <Trans>
@@ -103,9 +83,8 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
           }
         />
       </Can>
-      <HorizontalNavigationDropdownMenu.Button
+      <MobileHorizontalNavigationDropdownMenuButton
         href='/help'
-        colorScheme='primary'
         icon={SafetyFloat}
         label={
           <Trans>
@@ -114,9 +93,8 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
         }
       />
       <Can I='configure' a='Account'>
-        <HorizontalNavigationDropdownMenu.Button
+        <MobileHorizontalNavigationDropdownMenuButton
           href='/logout'
-          color='orange.300'
           icon={SafetyExitDoorLeft}
           label={
             <Trans>
@@ -125,7 +103,6 @@ export default function DropdownMenuButtons (props: Props): JSX.Element {
           }
         />
       </Can>
-      <DropdownMenuSocialLinks />
     </>
   )
 }

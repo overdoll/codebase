@@ -86,10 +86,6 @@ export function ViewCounterProvider (props: ViewCounterProviderProps): JSX.Eleme
 
   const commitViews = (): void => {
     const savePosts = [...state.postIds]
-    dispatch({
-      type: 'reset',
-      value: ''
-    })
 
     commit({
       variables: {
@@ -98,12 +94,12 @@ export function ViewCounterProvider (props: ViewCounterProviderProps): JSX.Eleme
         }
       },
       onCompleted () {
+        dispatch({
+          type: 'reset',
+          value: ''
+        })
       },
       onError () {
-        dispatch({
-          type: 'replace',
-          value: savePosts
-        })
       }
     })
   }

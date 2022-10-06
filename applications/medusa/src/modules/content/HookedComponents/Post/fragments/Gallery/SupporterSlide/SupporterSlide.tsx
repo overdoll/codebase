@@ -9,12 +9,14 @@ interface Props {
   postContentQuery: SupporterSlideFragment$key
   postQuery: SupporterSlidePostFragment$key
   children: ReactNode
+  isActive: boolean
 }
 
 const PostContentFragment = graphql`
   fragment SupporterSlideFragment on PostContent {
     viewerCanViewSupporterOnlyContent
     isSupporterOnly
+    ...SupporterLockedContentFragment
   }
 `
 
@@ -28,7 +30,8 @@ export default function SupporterSlide (props: Props): JSX.Element {
   const {
     postContentQuery,
     postQuery,
-    children
+    children,
+    isActive
   } = props
 
   const postContentData = useFragment(PostContentFragment, postContentQuery)
@@ -36,9 +39,22 @@ export default function SupporterSlide (props: Props): JSX.Element {
 
   if (postContentData.isSupporterOnly) {
     if (postContentData.viewerCanViewSupporterOnlyContent) {
-      return <SupporterUnlocked>{children}</SupporterUnlocked>
+      return (
+        <SupporterUnlocked
+          isActive={isActive}
+        >
+          {children}
+        </SupporterUnlocked>
+      )
     }
-    return <SupporterLocked postQuery={postData}>{children}</SupporterLocked>
+    return (
+      <SupporterLocked
+        postContentQuery={postContentData}
+        postQuery={postData}
+      >
+        {children}
+      </SupporterLocked>
+    )
   }
 
   return <>{children}</>

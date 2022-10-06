@@ -28,12 +28,7 @@ export default function ClubGuestSupportWrapper ({
 
   const router = useRouter()
 
-  const redirect = encodeJoinRedirect({
-    pathname: '/[slug]?support=true',
-    query: {
-      slug: data.slug
-    }
-  })
+  const redirect = encodeJoinRedirect(`/${data.slug}?support=true`)
 
   const onSupportClub = (): void => {
     void router.push(redirect)

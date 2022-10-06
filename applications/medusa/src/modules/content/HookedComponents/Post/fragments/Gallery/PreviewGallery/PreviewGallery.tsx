@@ -51,6 +51,7 @@ export default function PreviewGallery (props: Props): JSX.Element {
           {({ isActive }) => (
             <PreviewSlide>
               <SupporterSlide
+                isActive={isActive}
                 postContentQuery={content}
                 postQuery={postData}
               >

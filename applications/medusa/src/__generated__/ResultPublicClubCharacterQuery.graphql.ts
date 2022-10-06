@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<31ec70eb315e8dee6ac870c26e657941>>
- * @relayHash 19db41883f003aac549384b4a21f9d8d
+ * @generated SignedSource<<443647f60ee06975b8333e34522f3dcb>>
+ * @relayHash 8c3cbbf4e580629f59764daae5956898
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 19db41883f003aac549384b4a21f9d8d
+// @relayRequestID 8c3cbbf4e580629f59764daae5956898
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -673,6 +673,13 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "supporterOnlyVideoMediaDuration",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -751,7 +758,7 @@ return {
     ]
   },
   "params": {
-    "id": "19db41883f003aac549384b4a21f9d8d",
+    "id": "8c3cbbf4e580629f59764daae5956898",
     "metadata": {},
     "name": "ResultPublicClubCharacterQuery",
     "operationKind": "query",

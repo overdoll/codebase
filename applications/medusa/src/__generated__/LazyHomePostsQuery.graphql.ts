@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<4fe2a94706e38fc48cc1faf6b0cc3d32>>
- * @relayHash f8b26e6c16177c068a485a8eb4e8dbdf
+ * @generated SignedSource<<470a715ec3b77263552c10879a7b9d1e>>
+ * @relayHash 8fbe57e0fbc9538f951fe420fa50b281
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f8b26e6c16177c068a485a8eb4e8dbdf
+// @relayRequestID 8fbe57e0fbc9538f951fe420fa50b281
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -485,6 +485,13 @@ return {
                         "kind": "ScalarField",
                         "name": "isSupporterOnly",
                         "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "supporterOnlyVideoMediaDuration",
+                        "storageKey": null
                       }
                     ],
                     "storageKey": null
@@ -558,7 +565,7 @@ return {
     ]
   },
   "params": {
-    "id": "f8b26e6c16177c068a485a8eb4e8dbdf",
+    "id": "8fbe57e0fbc9538f951fe420fa50b281",
     "metadata": {},
     "name": "LazyHomePostsQuery",
     "operationKind": "query",

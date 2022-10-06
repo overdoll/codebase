@@ -10,6 +10,7 @@ import NoScript from './NoScript/NoScript'
 import RootRichObject from '@//:common/rich-objects/default/RootRichObject/RootRichObject'
 import dynamic from 'next/dynamic'
 import { ViewCounterProvider } from './ViewCounter/ViewCounter'
+import { JoinModalProvider } from './JoinModal/JoinModal'
 
 const DynamicRouteProgressBar = dynamic(
   async () => {
@@ -36,7 +37,6 @@ const Query = graphql`
     viewer {
       id
       ...AccountAuthorizerFragment
-      ...UniversalNavigatorFragment
       ...NavigationPopupFragment
     }
   }
@@ -60,12 +60,14 @@ export default function ResultRoot (props: Props): JSX.Element {
   return (
     <>
       <AccountAuthorizer queryRef={data.viewer}>
-        <ViewCounterProvider>
-          <UniversalNavigator queryRef={data.viewer} />
-          <PageContents>
-            {children}
-          </PageContents>
-        </ViewCounterProvider>
+        <JoinModalProvider>
+          <ViewCounterProvider>
+            <UniversalNavigator />
+            <PageContents>
+              {children}
+            </PageContents>
+          </ViewCounterProvider>
+        </JoinModalProvider>
       </AccountAuthorizer>
       <NoScript />
       <DynamicRouteProgressBar />

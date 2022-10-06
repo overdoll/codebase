@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<86b235ff2e92c66e9c295fcd8905a9ae>>
+ * @generated SignedSource<<faa630092fbb6993efe444e7548fb901>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type PreviewCarouselFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
+    readonly isSupporterOnly: boolean;
     readonly media: {
       readonly " $fragmentSpreads": FragmentRefs<"ThumbnailCarouseItemFragment">;
     };
@@ -64,6 +65,13 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "isSupporterOnly",
+          "storageKey": null
         }
       ],
       "storageKey": null
@@ -74,6 +82,6 @@ return {
 };
 })();
 
-(node as any).hash = "5ca05880eb1cb3bdc33e50f210406b27";
+(node as any).hash = "3ba454b7fed98a7175f0e462e185c74e";
 
 export default node;

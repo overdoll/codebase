@@ -62,6 +62,7 @@ export default function CinematicGallery (props: Props): JSX.Element {
               <SupporterSlide
                 postContentQuery={content}
                 postQuery={postData}
+                isActive={isActive}
               >
                 <CinematicMedia
                   mediaQuery={content.media}
