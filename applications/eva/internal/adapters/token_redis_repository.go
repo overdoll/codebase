@@ -18,11 +18,13 @@ const (
 
 type authenticationToken struct {
 	Email     string                `json:"email"`
+	Secret    string                `json:"secret"`
 	Verified  int                   `json:"verified"`
 	IP        string                `json:"ip"`
 	UniqueId  string                `json:"uniqueId"`
 	DeviceId  string                `json:"deviceId"`
 	UserAgent string                `json:"userAgent"`
+	Method    string                `json:"method"`
 	Location  location.Serializable `json:"location"`
 }
 
@@ -60,6 +62,18 @@ func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Contex
 		return nil, errors.Wrap(err, "failed to unmarshal token")
 	}
 
+	var method token.Method
+
+	if cookieItem.Method == "" {
+		method = token.MagicLink
+	} else {
+		mt, err := token.MethodFromString(cookieItem.Method)
+		if err != nil {
+			return nil, err
+		}
+		method = mt
+	}
+
 	instance := token.UnmarshalAuthenticationTokenFromDatabase(
 		tk,
 		cookieItem.Email,
@@ -69,6 +83,8 @@ func (r AuthenticationTokenRepository) GetAuthenticationToken(ctx context.Contex
 		cookieItem.DeviceId,
 		location.UnmarshalLocationFromSerialized(cookieItem.Location),
 		cookieItem.UniqueId,
+		cookieItem.Secret,
+		method,
 	)
 
 	if err := instance.CanView(passport, secret); err != nil {
@@ -101,12 +117,13 @@ func (r AuthenticationTokenRepository) DeleteAuthenticationToken(ctx context.Con
 }
 
 // CreateAuthenticationToken - Create a authenticationToken
-func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Context, instance *token.AuthenticationToken) error {
+func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Context, instance *token.AuthenticationToken, temp *token.TemporaryState) error {
 
 	// run a query to create the authentication token
 	authCookie := &authenticationToken{
 		IP:        instance.IP(),
-		Email:     "",
+		Email:     temp.Email(),
+		Secret:    temp.Secret(),
 		Verified:  0,
 		UserAgent: instance.UserAgent(),
 		DeviceId:  instance.DeviceId(),
@@ -171,6 +188,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		Verified:  redeemed,
 		DeviceId:  instance.DeviceId(),
 		Email:     email,
+		Secret:    secret,
 		UserAgent: instance.UserAgent(),
 		Location:  location.Serialize(instance.Location()),
 		UniqueId:  instance.UniqueId(),

@@ -1,3 +1,9 @@
+"""The type of authentication token."""
+enum AuthenticationTokenMethod {
+  MAGIC_LINK
+  CODE
+}
+
 """Types of multi factor enabled for this account"""
 type MultiFactor {
   totp: Boolean!
@@ -25,6 +31,9 @@ type AuthenticationToken {
   """Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow)."""
   verified: Boolean!
 
+  """The method that is used by this authentication token."""
+  method: AuthenticationTokenMethod!
+
   """
   Whether or not this token is "secure"
   Secure means that the token has been viewed from the same network as originally created
@@ -47,6 +56,9 @@ type AuthenticationToken {
 input GrantAuthenticationTokenInput {
   """The email that the token will be granted for"""
   email: String!
+
+  """The method that will be used for the authentication token. By default, MAGIC_LINK is used."""
+  method: AuthenticationTokenMethod
 }
 
 """Payload for granting access to an account using the token and the totp code"""
@@ -72,7 +84,7 @@ input VerifyAuthenticationTokenInput {
   """The original token"""
   token: String!
 
-  """Secret (get it from the email)"""
+  """Secret (get it from the email). Will either be a code or can be used as a link"""
   secret: String!
 }
 

@@ -205,6 +205,8 @@ type AuthenticationToken struct {
 	SameDevice bool `json:"sameDevice"`
 	// Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow).
 	Verified bool `json:"verified"`
+	// The method that is used by this authentication token.
+	Method AuthenticationTokenMethod `json:"method"`
 	// Whether or not this token is "secure"
 	// Secure means that the token has been viewed from the same network as originally created
 	// if it wasn't viewed in the same network, the interface should take care and double-check with
@@ -386,6 +388,8 @@ type GrantAccountAccessWithAuthenticationTokenPayload struct {
 type GrantAuthenticationTokenInput struct {
 	// The email that the token will be granted for
 	Email string `json:"email"`
+	// The method that will be used for the authentication token. By default, MAGIC_LINK is used.
+	Method *AuthenticationTokenMethod `json:"method"`
 }
 
 // Payload for starting an authentication
@@ -553,7 +557,7 @@ type UpdateAccountUsernamePayload struct {
 type VerifyAuthenticationTokenInput struct {
 	// The original token
 	Token string `json:"token"`
-	// Secret (get it from the email)
+	// Secret (get it from the email). Will either be a code or can be used as a link
 	Secret string `json:"secret"`
 }
 
@@ -686,6 +690,48 @@ func (e *AddAccountEmailValidation) UnmarshalGQL(v interface{}) error {
 }
 
 func (e AddAccountEmailValidation) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// The type of authentication token.
+type AuthenticationTokenMethod string
+
+const (
+	AuthenticationTokenMethodMagicLink AuthenticationTokenMethod = "MAGIC_LINK"
+	AuthenticationTokenMethodCode      AuthenticationTokenMethod = "CODE"
+)
+
+var AllAuthenticationTokenMethod = []AuthenticationTokenMethod{
+	AuthenticationTokenMethodMagicLink,
+	AuthenticationTokenMethodCode,
+}
+
+func (e AuthenticationTokenMethod) IsValid() bool {
+	switch e {
+	case AuthenticationTokenMethodMagicLink, AuthenticationTokenMethodCode:
+		return true
+	}
+	return false
+}
+
+func (e AuthenticationTokenMethod) String() string {
+	return string(e)
+}
+
+func (e *AuthenticationTokenMethod) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = AuthenticationTokenMethod(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid AuthenticationTokenMethod", str)
+	}
+	return nil
+}
+
+func (e AuthenticationTokenMethod) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

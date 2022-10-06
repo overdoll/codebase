@@ -5,7 +5,6 @@ import (
 	"encoding/hex"
 	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/nacl/secretbox"
-	"io"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
@@ -24,10 +23,12 @@ type AuthenticationToken struct {
 	deviceId string
 
 	userAgent string
+	method    Method
 
 	ip string
 
-	token string
+	token  string
+	secret string
 
 	location *location.Location
 
@@ -42,7 +43,76 @@ var (
 	ErrInvalidDevice   = domainerror.NewValidation("token viewed or used on an invalid device")
 )
 
-func NewAuthenticationToken(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, *TemporaryState, error) {
+// Characters that are allowed to show up in our random string
+const allowedCodeCharacters = "0123456789abcdefghijklmnopqrstuvwxyz"
+
+// how long is each code
+const codeLength = 6
+
+func generateTokenKey() (string, error) {
+	tokenKeyBytes := make([]byte, 64)
+	_, err := rand.Read(tokenKeyBytes)
+	if err != nil {
+		return "", errors.Wrap(err, "failed to create new token key")
+	}
+
+	return hex.EncodeToString(tokenKeyBytes), nil
+}
+
+func NewAuthenticationTokenCode(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, *TemporaryState, error) {
+
+	properEmail := strings.ToLower(email)
+
+	if err := validateEmail(email); err != nil {
+		return nil, nil, err
+	}
+
+	bytes := make([]byte, codeLength)
+
+	if _, err := rand.Read(bytes); err != nil {
+		return nil, nil, err
+	}
+
+	for i, b := range bytes {
+		bytes[i] = allowedCodeCharacters[b%byte(len(allowedCodeCharacters))]
+	}
+
+	tokenKeyEncoded, err := generateTokenKey()
+	if err != nil {
+		return nil, nil, err
+	}
+
+	secret := string(bytes)
+
+	ck := &AuthenticationToken{
+		token:      tokenKeyEncoded,
+		expiration: time.Minute * 10,
+		email:      properEmail,
+		secret:     secret,
+		verified:   false,
+		userAgent:  pass.UserAgent(),
+		deviceId:   pass.DeviceID(),
+		location:   location,
+		ip:         pass.IP(),
+		uniqueId:   uuid.New().String(),
+		method:     Code,
+	}
+
+	t := &TemporaryState{
+		email:  properEmail,
+		secret: secret,
+	}
+
+	return ck, t, nil
+}
+
+func NewAuthenticationTokenMagicLink(email string, location *location.Location, pass *passport.Passport) (*AuthenticationToken, *TemporaryState, error) {
+
+	properEmail := strings.ToLower(email)
+
+	if err := validateEmail(email); err != nil {
+		return nil, nil, err
+	}
 
 	secretKeyBytes := make([]byte, 64)
 	_, err := rand.Read(secretKeyBytes)
@@ -52,39 +122,23 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 
 	secretKeyEncoded := hex.EncodeToString(secretKeyBytes)
 
-	var secretKey [32]byte
-	copy(secretKey[:], secretKeyBytes)
-
-	var nonce [24]byte
-	if _, err := io.ReadFull(rand.Reader, nonce[:]); err != nil {
-		return nil, nil, errors.Wrap(err, "failed to create nonce")
-	}
-
-	properEmail := strings.ToLower(email)
-
-	if err := validateEmail(email); err != nil {
+	tokenKeyEncoded, err := generateTokenKey()
+	if err != nil {
 		return nil, nil, err
 	}
 
-	// seal the email related to this authentication token, if one exists
-	// the secret is saved in the state and will be discarded once GetSecretAndDispose is called
-	// the email is also discarded, since it's also required as part of the email sending
-
-	// when we decrypt it, we will know the email on the other end, and will be able to determine if an account belongs to
-	// this token
-	encrypted := secretbox.Seal(nonce[:], []byte(properEmail), &nonce, &secretKey)
-	encryptedEncoded := hex.EncodeToString(encrypted)
-
 	ck := &AuthenticationToken{
-		token:      encryptedEncoded,
-		expiration: time.Minute * 15,
-		email:      "",
+		token:      tokenKeyEncoded,
+		secret:     secretKeyEncoded,
+		expiration: time.Minute * 10,
+		email:      properEmail,
 		verified:   false,
 		userAgent:  pass.UserAgent(),
 		deviceId:   pass.DeviceID(),
 		location:   location,
 		ip:         pass.IP(),
 		uniqueId:   uuid.New().String(),
+		method:     MagicLink,
 	}
 
 	t := &TemporaryState{
@@ -95,7 +149,7 @@ func NewAuthenticationToken(email string, location *location.Location, pass *pas
 	return ck, t, nil
 }
 
-func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool, userAgent, ip, deviceId string, location *location.Location, uniqueId string) *AuthenticationToken {
+func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool, userAgent, ip, deviceId string, location *location.Location, uniqueId, secret string, method Method) *AuthenticationToken {
 	return &AuthenticationToken{
 		ip:         ip,
 		token:      token,
@@ -106,6 +160,8 @@ func UnmarshalAuthenticationTokenFromDatabase(token, email string, verified bool
 		location:   location,
 		expiration: time.Minute * 15,
 		uniqueId:   uniqueId,
+		secret:     secret,
+		method:     method,
 	}
 }
 
@@ -152,32 +208,52 @@ func (c *AuthenticationToken) Verified() bool {
 // MakeVerified the original secret is required to verify the token
 func (c *AuthenticationToken) MakeVerified(secret string) error {
 
+	secret = strings.ToLower(secret)
+
 	if c.verified {
 		return ErrAlreadyVerified
 	}
 
-	decrypted, err := decryptBox(c.token, secret)
+	if c.email == "" {
 
-	if err != nil {
-		return err
+		decrypted, err := decryptBox(c.token, secret)
+
+		if err != nil {
+			return err
+		}
+
+		c.email = decrypted
+	} else {
+		if c.secret != secret {
+			return ErrInvalidSecret
+		}
 	}
 
 	c.verified = true
-	c.email = decrypted
 
 	return nil
 }
 
 func (c *AuthenticationToken) ViewEmailWithSecret(secret string) (string, error) {
 
+	secret = strings.ToLower(secret)
+
 	if !c.verified {
 		return "", ErrNotVerified
 	}
 
-	_, err := decryptBox(c.token, secret)
+	if c.secret == "" {
 
-	if err != nil {
-		return "", err
+		_, err := decryptBox(c.token, secret)
+
+		if err != nil {
+			return "", err
+		}
+
+	} else {
+		if c.secret != secret {
+			return "", ErrInvalidSecret
+		}
 	}
 
 	return c.email, nil
@@ -203,12 +279,19 @@ func (c *AuthenticationToken) CanView(pass *passport.Passport, secret *string) e
 func (c *AuthenticationToken) CanDelete(pass *passport.Passport, secret *string) error {
 
 	if secret != nil {
-		_, err := decryptBox(c.token, *secret)
+		if c.secret == "" {
 
-		if err != nil {
-			return err
+			_, err := decryptBox(c.token, *secret)
+
+			if err != nil {
+				return err
+			}
+
+		} else {
+			if c.secret != *secret {
+				return ErrInvalidSecret
+			}
 		}
-
 		return nil
 	}
 

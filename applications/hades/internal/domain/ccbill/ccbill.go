@@ -12,12 +12,12 @@ const (
 )
 
 var (
-	currencyStringToCCBillCode = map[string]int{
-		"USD": 840,
-		"EUR": 978,
-		"AUD": 036,
-		"CAD": 124,
-		"GBP": 826,
-		"JPY": 392,
+	currencyStringToCCBillCode = map[string]string{
+		"USD": "840",
+		"EUR": "978",
+		"AUD": "036",
+		"CAD": "124",
+		"GBP": "826",
+		"JPY": "392",
 	}
 )

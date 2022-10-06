@@ -10,7 +10,7 @@ var (
 
 type Refund struct {
 	amount        *uint64
-	currency      int
+	currency      string
 	transactionId string
 }
 

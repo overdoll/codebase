@@ -3,6 +3,7 @@
     <mj-body>
         <mj-include path="../../support/email-header.mjml"/>
         <mj-section>
+            <!--{{ if .Link }}-->
             <mj-column>
                 <mj-text align="center">
                     <h1>
@@ -16,6 +17,22 @@
                     Authenticate
                 </mj-button>
             </mj-column>
+            <!--{{ end }}-->
+            <!--{{ if .Code }}-->
+            <mj-column>
+                <mj-text align="center">
+                    <h1>
+                        New Login
+                    </h1>
+                    <text font-color="#bfbfbf">
+                        Enter the code below to finish logging into your overdoll account
+                    </text>
+                </mj-text>
+                <mj-text align="center" css-class="auth-code">
+                    <p>{{.Code}}</p>
+                </mj-text>
+            </mj-column>
+            <!--{{ end }}-->
         </mj-section>
         <mj-include path="../../support/email-footer.mjml"/>
     </mj-body>

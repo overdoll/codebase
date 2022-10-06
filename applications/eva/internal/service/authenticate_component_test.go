@@ -38,6 +38,51 @@ func TestLogout_user(t *testing.T) {
 	require.Error(t, modified.Authenticated())
 }
 
+// TestAccountAuthenticate_with_code - test is similar to login but we do it with a code
+// existing user
+func TestAccountAuthenticate_with_code(t *testing.T) {
+	t.Parallel()
+
+	email := "i2fhz.artist_verified@inbox.testmail.app"
+
+	client, pass := getHttpClient(t)
+
+	var authenticate GrantAuthenticationToken
+
+	mt := types.AuthenticationTokenMethodCode
+	err := client.Mutate(context.Background(), &authenticate, map[string]interface{}{
+		"input": types.GrantAuthenticationTokenInput{Email: email, Method: &mt},
+	})
+
+	require.NoError(t, err)
+
+	require.NotNil(t, authenticate.GrantAuthenticationToken.AuthenticationToken)
+
+	token, sec := getAuthTokenAndSecretFromEmail(t, email)
+
+	ck := verifyAuthenticationToken(t, client, token, sec)
+
+	// make sure cookie is valid
+	require.NotNil(t, ck.VerifyAuthenticationToken)
+
+	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
+	// so we check for that here
+	require.Equal(t, true, ck.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered, "should be registered")
+	require.Equal(t, types.AuthenticationTokenMethodCode, ck.VerifyAuthenticationToken.AuthenticationToken.Method, "should be a code method")
+
+	// we need to now grant account access after verifying the token
+	grant := grantAccountAccessWithAuthenticationToken(t, client, ck.VerifyAuthenticationToken.AuthenticationToken.Token)
+	require.NotNil(t, grant.GrantAccountAccessWithAuthenticationToken.Account)
+
+	// the third parameter of getClient contains the most up-to-date version of the passport
+	modified := pass.GetPassport()
+
+	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
+	// that the user is logged into the correct one
+	require.NoError(t, modified.Authenticated())
+	require.Equal(t, "1q7MIqqnkzew33q4elXuN1Ri27d", modified.AccountID(), "account ids should be equal")
+}
+
 // TestAccountAuthenticate_existing - test is similar to registration, except that we do a login with an
 // existing user
 func TestAccountAuthenticate_existing(t *testing.T) {

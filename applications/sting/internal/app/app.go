@@ -194,4 +194,6 @@ type Queries struct {
 	ClubSupporterMembersCount query.ClubSupporterMembersCountHandler
 
 	GameSessionStatus query.GameSessionStatusHandler
+
+	AccountStats query.AccountStatsHandler
 }

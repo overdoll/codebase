@@ -151,6 +151,7 @@ type ComplexityRoot struct {
 		AccountStatus func(childComplexity int) int
 		ID            func(childComplexity int) int
 		Location      func(childComplexity int) int
+		Method        func(childComplexity int) int
 		SameDevice    func(childComplexity int) int
 		Secure        func(childComplexity int) int
 		Token         func(childComplexity int) int
@@ -903,6 +904,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.AuthenticationToken.Location(childComplexity), true
+
+	case "AuthenticationToken.method":
+		if e.complexity.AuthenticationToken.Method == nil {
+			break
+		}
+
+		return e.complexity.AuthenticationToken.Method(childComplexity), true
 
 	case "AuthenticationToken.sameDevice":
 		if e.complexity.AuthenticationToken.SameDevice == nil {
@@ -2925,7 +2933,13 @@ extend type Mutation {
   revokeAccountArtistRole(input: RevokeAccountArtistRole!): RevokeAccountArtistRolePayload
 }
 `, BuiltIn: false},
-	{Name: "../../../schema/token/schema.graphql", Input: `"""Types of multi factor enabled for this account"""
+	{Name: "../../../schema/token/schema.graphql", Input: `"""The type of authentication token."""
+enum AuthenticationTokenMethod {
+  MAGIC_LINK
+  CODE
+}
+
+"""Types of multi factor enabled for this account"""
 type MultiFactor {
   totp: Boolean!
 }
@@ -2952,6 +2966,9 @@ type AuthenticationToken {
   """Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow)."""
   verified: Boolean!
 
+  """The method that is used by this authentication token."""
+  method: AuthenticationTokenMethod!
+
   """
   Whether or not this token is "secure"
   Secure means that the token has been viewed from the same network as originally created
@@ -2974,6 +2991,9 @@ type AuthenticationToken {
 input GrantAuthenticationTokenInput {
   """The email that the token will be granted for"""
   email: String!
+
+  """The method that will be used for the authentication token. By default, MAGIC_LINK is used."""
+  method: AuthenticationTokenMethod
 }
 
 """Payload for granting access to an account using the token and the totp code"""
@@ -2999,7 +3019,7 @@ input VerifyAuthenticationTokenInput {
   """The original token"""
   token: String!
 
-  """Secret (get it from the email)"""
+  """Secret (get it from the email). Will either be a code or can be used as a link"""
   secret: String!
 }
 
@@ -6814,6 +6834,50 @@ func (ec *executionContext) fieldContext_AuthenticationToken_verified(ctx contex
 	return fc, nil
 }
 
+func (ec *executionContext) _AuthenticationToken_method(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_AuthenticationToken_method(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Method, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(types.AuthenticationTokenMethod)
+	fc.Result = res
+	return ec.marshalNAuthenticationTokenMethod2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenMethod(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_AuthenticationToken_method(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "AuthenticationToken",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type AuthenticationTokenMethod does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _AuthenticationToken_secure(ctx context.Context, field graphql.CollectedField, obj *types.AuthenticationToken) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_AuthenticationToken_secure(ctx, field)
 	if err != nil {
@@ -8845,6 +8909,8 @@ func (ec *executionContext) fieldContext_GrantAuthenticationTokenPayload_authent
 				return ec.fieldContext_AuthenticationToken_sameDevice(ctx, field)
 			case "verified":
 				return ec.fieldContext_AuthenticationToken_verified(ctx, field)
+			case "method":
+				return ec.fieldContext_AuthenticationToken_method(ctx, field)
 			case "secure":
 				return ec.fieldContext_AuthenticationToken_secure(ctx, field)
 			case "userAgent":
@@ -12406,6 +12472,8 @@ func (ec *executionContext) fieldContext_Query_viewAuthenticationToken(ctx conte
 				return ec.fieldContext_AuthenticationToken_sameDevice(ctx, field)
 			case "verified":
 				return ec.fieldContext_AuthenticationToken_verified(ctx, field)
+			case "method":
+				return ec.fieldContext_AuthenticationToken_method(ctx, field)
 			case "secure":
 				return ec.fieldContext_AuthenticationToken_secure(ctx, field)
 			case "userAgent":
@@ -14621,6 +14689,8 @@ func (ec *executionContext) fieldContext_VerifyAuthenticationTokenPayload_authen
 				return ec.fieldContext_AuthenticationToken_sameDevice(ctx, field)
 			case "verified":
 				return ec.fieldContext_AuthenticationToken_verified(ctx, field)
+			case "method":
+				return ec.fieldContext_AuthenticationToken_method(ctx, field)
 			case "secure":
 				return ec.fieldContext_AuthenticationToken_secure(ctx, field)
 			case "userAgent":
@@ -17084,6 +17154,14 @@ func (ec *executionContext) unmarshalInputGrantAuthenticationTokenInput(ctx cont
 			if err != nil {
 				return it, err
 			}
+		case "method":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("method"))
+			it.Method, err = ec.unmarshalOAuthenticationTokenMethod2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenMethod(ctx, v)
+			if err != nil {
+				return it, err
+			}
 		}
 	}
 
@@ -18320,6 +18398,13 @@ func (ec *executionContext) _AuthenticationToken(ctx context.Context, sel ast.Se
 		case "verified":
 
 			out.Values[i] = ec._AuthenticationToken_verified(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "method":
+
+			out.Values[i] = ec._AuthenticationToken_method(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -21011,6 +21096,16 @@ func (ec *executionContext) unmarshalNAssignAccountStaffRole2overdollᚋapplicat
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNAuthenticationTokenMethod2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenMethod(ctx context.Context, v interface{}) (types.AuthenticationTokenMethod, error) {
+	var res types.AuthenticationTokenMethod
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNAuthenticationTokenMethod2overdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenMethod(ctx context.Context, sel ast.SelectionSet, v types.AuthenticationTokenMethod) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNBCP472string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalString(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -21975,6 +22070,22 @@ func (ec *executionContext) marshalOAuthenticationTokenAccountStatus2ᚖoverdoll
 		return graphql.Null
 	}
 	return ec._AuthenticationTokenAccountStatus(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOAuthenticationTokenMethod2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenMethod(ctx context.Context, v interface{}) (*types.AuthenticationTokenMethod, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.AuthenticationTokenMethod)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOAuthenticationTokenMethod2ᚖoverdollᚋapplicationsᚋevaᚋinternalᚋportsᚋgraphqlᚋtypesᚐAuthenticationTokenMethod(ctx context.Context, sel ast.SelectionSet, v *types.AuthenticationTokenMethod) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {

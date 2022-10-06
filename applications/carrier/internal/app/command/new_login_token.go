@@ -4,12 +4,14 @@ import (
 	"context"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
+	"strings"
 )
 
 type NewLoginToken struct {
 	Email  string
 	Token  string
 	Secret string
+	IsCode bool
 }
 
 type NewLoginTokenHandler struct {
@@ -22,17 +24,32 @@ func NewNewLoginTokenHandler(mr mailing.Repository) NewLoginTokenHandler {
 
 func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) error {
 
-	link, err := links.CreateVerifyTokenUrl(cmd.Token, cmd.Secret)
+	args := map[string]interface{}{}
 
-	if err != nil {
-		return err
+	if !cmd.IsCode {
+
+		link, err := links.CreateVerifyTokenUrl(cmd.Token, cmd.Secret)
+
+		if err != nil {
+			return err
+		}
+
+		args["Link"] = link.String()
+
+	} else {
+
+		secret := strings.ToUpper(cmd.Secret)
+
+		if len(secret) == 6 {
+			secret = secret[:3] + "-" + secret[3:]
+		}
+
+		args["Code"] = secret
 	}
 
 	template, err := mailing.NewTemplate(
 		"new_login_token",
-		map[string]interface{}{
-			"Link": link.String(),
-		},
+		args,
 	)
 
 	if err != nil {

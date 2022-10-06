@@ -3,6 +3,7 @@ load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
 go_library(
     name = "adapters",
     srcs = [
+        "account_stats_cassandra_repository.go",
         "carrier_grpc.go",
         "club_account_digest_cassandra_redis_repository.go",
         "club_cassandra_repository.go",

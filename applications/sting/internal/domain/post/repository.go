@@ -90,6 +90,8 @@ type Repository interface {
 	UpdateSeriesTotalPostsOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 	UpdateSeriesTotalLikesOperator(ctx context.Context, id string, updateFn func(series *Series) error) (*Series, error)
 
+	GetStatsByAccountId(ctx context.Context, accountId string) (*AccountStats, error)
+
 	GetTopicById(ctx context.Context, topicId string) (*Topic, error)
 	GetTopicsByIds(ctx context.Context, topicIds []string) ([]*Topic, error)
 	GetTopicBySlug(ctx context.Context, slug string) (*Topic, error)

@@ -71,7 +71,6 @@ type FileRepository interface {
 }
 
 type PricingRepository interface {
-	GetClubSupporterPricingForLocation(ctx context.Context, location *location.Location, clubId string) (*Price, error)
 	GetClubSupporterPricingForCurrency(ctx context.Context, currency money.Currency, clubId string) (*Price, error)
-	GetClubSupporterAllPricing(ctx context.Context, clubId string) ([]*Price, error)
+	GetClubSupporterPricing(ctx context.Context, loc *location.Location, clubId string) (*Price, []*Price, error)
 }

@@ -119,6 +119,7 @@ message NewLoginTokenRequest {
   string email = 1;
   string token = 2;
   string secret = 3;
+  bool isCode = 4;
 }
 
 message ClubSupporterSubscriptionDuplicateRequest {

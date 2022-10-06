@@ -19,7 +19,7 @@ type ClubSupporterPaymentLink struct {
 	email              string
 
 	amount   uint64
-	currency int
+	currency string
 }
 
 func NewClubSupporterPaymentLink(requester *principal.Principal, club *club.Club, savePaymentDetails bool, price *billing.Price) (*ClubSupporterPaymentLink, error) {
@@ -75,7 +75,7 @@ func (c *ClubSupporterPaymentLink) generateEncryptedPaymentToken() (*string, err
 	billRecurringPeriod := strconv.Itoa(ccbillRecurringPeriod)
 	billNumberRebills := strconv.Itoa(ccbillNumRebills)
 
-	billCurrencyCode := strconv.Itoa(c.currency)
+	billCurrencyCode := c.currency
 
 	ccbillFormDigestBuilder := md5.New()
 	ccbillFormDigestBuilder.Write([]byte(billInitialPrice))

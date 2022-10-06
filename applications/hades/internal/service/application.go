@@ -89,7 +89,7 @@ func createApplication(ctx context.Context, eva query.EvaService, sting command.
 
 	eventRepo := adapters.NewEventTemporalRepository(client)
 	billingRepo := adapters.NewBillingCassandraRepository(session, esClient)
-	pricingRepo := adapters.NewBillingPricingRepository()
+	pricingRepo := adapters.NewBillingPricingRepository(session)
 	billingFileRepo := adapters.NewBillingCassandraS3TemporalFileRepository(session, awsSession, client)
 	ccbillRepo := adapters.NewCCBillHttpRepository(ccbillClient)
 	metricRepo := adapters.NewMetricsCassandraRepository(session)

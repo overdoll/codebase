@@ -16,7 +16,7 @@ type ChargeByPreviousClubSupporterPaymentUrl struct {
 	ccbillSubscriptionId string
 
 	amount   uint64
-	currency int
+	currency string
 }
 
 func NewChargeByPreviousClubSupporterPaymentUrl(requester *principal.Principal, club *club.Club, ccbillSubscriptionId string, price *billing.Price) (*ChargeByPreviousClubSupporterPaymentUrl, error) {
@@ -71,7 +71,7 @@ func (c *ChargeByPreviousClubSupporterPaymentUrl) GenerateUrl() (string, *string
 	billRecurringPeriod := strconv.Itoa(ccbillRecurringPeriod)
 	billNumberRebills := strconv.Itoa(ccbillNumRebills)
 
-	billCurrencyCode := strconv.Itoa(c.currency)
+	billCurrencyCode := c.currency
 
 	paymentLink := &hades.CCBillPayment{
 		CcbillClubSupporter: &hades.CCBillClubSupporter{

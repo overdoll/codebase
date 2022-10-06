@@ -33,23 +33,23 @@ func ParseCCBillDate(timestamp string) (time.Time, error) {
 	return tm, nil
 }
 
-func ConvertAmountToCCBillFloat(amount uint64, currencyCode int) (float64, error) {
+func ConvertAmountToCCBillFloat(amount uint64, currencyCode string) (float64, error) {
 	switch currencyCode {
-	case 840:
+	case "840":
 		fallthrough
-	case 978:
+	case "978":
 		fallthrough
-	case 036:
+	case "036":
 		fallthrough
-	case 826:
+	case "826":
 		fallthrough
-	case 124:
+	case "124":
 		return float64(amount) / 100, nil
-	case 392:
+	case "392":
 		return float64(amount), nil
 	}
 
-	return 0, fmt.Errorf("invalid currency code passed: %s", strconv.Itoa(currencyCode))
+	return 0, fmt.Errorf("invalid currency code passed: %s", currencyCode)
 }
 
 func ParseCCBillCurrencyAmount(amount string, currency string) (uint64, error) {

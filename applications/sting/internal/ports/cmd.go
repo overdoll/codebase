@@ -6,6 +6,7 @@ import (
 	"go.uber.org/zap"
 	"overdoll/applications/sting/internal/app"
 	"overdoll/applications/sting/internal/app/command"
+	"overdoll/applications/sting/internal/app/query"
 )
 
 func InitializeCommands(app func() *app.Application) []*cobra.Command {
@@ -356,5 +357,29 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 	reprocessPostsResources.PersistentFlags().String("club_id", "", "Select a specific club to perform the reprocessing for.")
 	reprocess.AddCommand(reprocessPostsResources)
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources, remove, reprocess}
+	accountStats := &cobra.Command{
+		Use: "acc-stats [account_id]",
+		Run: func(cmd *cobra.Command, args []string) {
+			stats, err := app().Queries.AccountStats.Handle(context.Background(), query.AccountStats{
+				AccountIds: args,
+			})
+
+			if err != nil {
+				zap.S().Fatalw("failed to get account stats", zap.Error(err))
+			}
+
+			for _, stat := range stats {
+				zap.S().Infow("status for account: "+stat.AccountId(),
+					zap.Bool("has_curation_profile", stat.HasCurationProfile()),
+					zap.Bool("has_likes", stat.HasLikes()),
+					zap.Time("last_like", stat.LastLike()),
+					zap.Strings("clubs_joined", stat.ClubsJoined()),
+					zap.Int("game_sessions_count", stat.RouletteGameSessions()),
+					zap.Int("game_sessions_spins", stat.RouletteTotalSpins()),
+				)
+			}
+		},
+	}
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources, remove, reprocess, accountStats}
 }

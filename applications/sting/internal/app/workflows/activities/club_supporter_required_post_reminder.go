@@ -22,5 +22,8 @@ func (h *Activities) ClubSupporterRequiredPostReminder(ctx context.Context, inpu
 		return nil
 	}
 
-	return h.carrier.ClubSupporterRequiredPostReminder(ctx, input.ClubId, input.DurationPassed)
+	return nil
+
+	// TODO: dont send this email, might get annoying
+	//return h.carrier.ClubSupporterRequiredPostReminder(ctx, input.ClubId, input.DurationPassed)
 }

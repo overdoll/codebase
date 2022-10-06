@@ -13,9 +13,16 @@ import (
 
 func (r *MutationResolver) GrantAuthenticationToken(ctx context.Context, input types.GrantAuthenticationTokenInput) (*types.GrantAuthenticationTokenPayload, error) {
 
+	var method string
+
+	if input.Method != nil {
+		method = input.Method.String()
+	}
+
 	instance, err := r.App.Commands.GrantAuthenticationToken.Handle(ctx, command.GrantAuthenticationToken{
 		Email:    input.Email,
 		Passport: passport.FromContext(ctx),
+		Method:   method,
 	})
 
 	if err != nil {

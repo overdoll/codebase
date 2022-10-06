@@ -82,6 +82,7 @@ func (s Server) NewLoginToken(ctx context.Context, request *carrier.NewLoginToke
 			Email:  request.Email,
 			Token:  request.Token,
 			Secret: request.Secret,
+			IsCode: request.IsCode,
 		},
 	); err != nil {
 		return nil, err

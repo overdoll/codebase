@@ -28,13 +28,7 @@ func (h ClubSupporterPricingHandler) Handle(ctx context.Context, cmd ClubSupport
 		return nil, nil, err
 	}
 
-	pricing, err := h.pr.GetClubSupporterPricingForLocation(ctx, loc, cmd.ClubId)
-
-	if err != nil {
-		return nil, nil, err
-	}
-
-	allPrices, err := h.pr.GetClubSupporterAllPricing(ctx, cmd.ClubId)
+	pricing, allPrices, err := h.pr.GetClubSupporterPricing(ctx, loc, cmd.ClubId)
 
 	if err != nil {
 		return nil, nil, err
