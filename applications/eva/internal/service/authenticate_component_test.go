@@ -80,7 +80,7 @@ func TestAccountAuthenticate_with_code(t *testing.T) {
 	// since our passport is a pointer that is modified from a response, we can use it to check to make sure
 	// that the user is logged into the correct one
 	require.NoError(t, modified.Authenticated())
-	require.Equal(t, "1q7MIqqnkzew33q4elXuN1Ri27d", modified.AccountID(), "account ids should be equal")
+	require.Equal(t, "1q7MIw0U6TEpELH0FqnxrcXt3E0", modified.AccountID(), "account ids should be equal")
 }
 
 // TestAccountAuthenticate_existing - test is similar to registration, except that we do a login with an
