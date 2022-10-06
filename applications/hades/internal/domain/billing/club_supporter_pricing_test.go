@@ -18,7 +18,9 @@ func TestGetLocalizedPricingDefault(t *testing.T) {
 			"",
 			0,
 			0,
-		))
+		),
+		UnmarshalPricingFromDatabase(money.USD, 699),
+	)
 
 	require.NoError(t, err, "no error grabbing price")
 
@@ -37,7 +39,9 @@ func TestGetLocalizedPricingEU(t *testing.T) {
 			"",
 			0,
 			0,
-		))
+		),
+		UnmarshalPricingFromDatabase(money.USD, 699),
+	)
 
 	require.NoError(t, err, "no error grabbing price")
 
@@ -56,7 +60,9 @@ func TestGetLocalizedPricingJPY(t *testing.T) {
 			"",
 			0,
 			0,
-		))
+		),
+		UnmarshalPricingFromDatabase(money.USD, 699),
+	)
 
 	require.NoError(t, err, "no error grabbing price")
 
@@ -75,7 +81,9 @@ func TestGetLocalizedPricingCAD(t *testing.T) {
 			"",
 			0,
 			0,
-		))
+		),
+		UnmarshalPricingFromDatabase(money.USD, 699),
+	)
 
 	require.NoError(t, err, "no error grabbing price")
 
@@ -94,7 +102,9 @@ func TestGetLocalizedPricingAUD(t *testing.T) {
 			"",
 			0,
 			0,
-		))
+		),
+		UnmarshalPricingFromDatabase(money.USD, 699),
+	)
 
 	require.NoError(t, err, "no error grabbing price")
 
@@ -113,7 +123,9 @@ func TestGetLocalizedPricingGB(t *testing.T) {
 			"",
 			0,
 			0,
-		))
+		),
+		UnmarshalPricingFromDatabase(money.USD, 699),
+	)
 
 	require.NoError(t, err, "no error grabbing price")
 
