@@ -93,6 +93,7 @@ func TestAccountAuthenticate_existing(t *testing.T) {
 	// the VerifyAuthenticationToken function will also log you in, if you redeem a cookie that's for a registered user
 	// so we check for that here
 	require.Equal(t, true, token.VerifyAuthenticationToken.AuthenticationToken.AccountStatus.Registered, "should be registered")
+	require.Equal(t, types.AuthenticationTokenMethodMagicLink, token.VerifyAuthenticationToken.AuthenticationToken.Method, "should be a code method")
 
 	// we need to now grant account access after verifying the token
 	grant := grantAccountAccessWithAuthenticationToken(t, client, token.VerifyAuthenticationToken.AuthenticationToken.Token)

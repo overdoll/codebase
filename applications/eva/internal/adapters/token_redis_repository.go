@@ -129,6 +129,7 @@ func (r AuthenticationTokenRepository) CreateAuthenticationToken(ctx context.Con
 		DeviceId:  instance.DeviceId(),
 		Location:  location.Serialize(instance.Location()),
 		UniqueId:  instance.UniqueId(),
+		Method:    instance.Method().String(),
 	}
 
 	val, err := json.Marshal(authCookie)
@@ -192,6 +193,7 @@ func (r AuthenticationTokenRepository) UpdateAuthenticationToken(ctx context.Con
 		UserAgent: instance.UserAgent(),
 		Location:  location.Serialize(instance.Location()),
 		UniqueId:  instance.UniqueId(),
+		Method:    instance.Method().String(),
 	}
 
 	val, err := json.Marshal(authCookie)
