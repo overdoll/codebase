@@ -5,8 +5,8 @@ import { Heading, Modal, ModalBody, ModalContent, ModalOverlay, Stack, useDisclo
 import { Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { BirdHouse, BookmarkFull } from '@//:assets/icons'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import Button from '@//:modules/form/Button/Button'
+import { useJoin } from '../../JoinModal/JoinModal'
 
 export default function ShowJoinToast (): JSX.Element {
   const timeoutRef = useRef<Timeout | null>(null)
@@ -29,6 +29,8 @@ export default function ShowJoinToast (): JSX.Element {
     if (closedJoinPopupStorage) return
     onOpen()
   }
+
+  const onJoin = useJoin()
 
   useEffect(() => {
     if (isOpen || closedJoinPopupStorage) return
@@ -90,18 +92,20 @@ export default function ShowJoinToast (): JSX.Element {
               </Trans>
             </Heading>
             <Stack spacing={2}>
-              <LinkButton
-                onClick={closePopup}
+              <Button
+                onClick={() => {
+                  closePopup()
+                  onJoin()
+                }}
                 w='100%'
                 colorScheme='primary'
                 size='lg'
                 ref={buttonRef}
-                href='/join?from=join_modal_popup'
               >
                 <Trans>
                   Join
                 </Trans>
-              </LinkButton>
+              </Button>
               <Button onClick={closePopup} size='md' variant='ghost'>
                 <Trans>
                   Leave me alone

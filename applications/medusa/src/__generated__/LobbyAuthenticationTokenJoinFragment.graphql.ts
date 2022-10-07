@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<eb56ef843c509072818251602e99febc>>
+ * @generated SignedSource<<fee279f618ff857d8bfbf880b9f41136>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,7 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type LobbyAuthenticationTokenJoinFragment$data = {
   readonly email: string | null;
   readonly token: string;
-  readonly " $fragmentSpreads": FragmentRefs<"RefreshLobbyAuthenticationTokenJoinFragment" | "RevokeViewAuthenticationTokenButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"RevokeViewAuthenticationTokenButtonFragment">;
   readonly " $fragmentType": "LobbyAuthenticationTokenJoinFragment";
 };
 export type LobbyAuthenticationTokenJoinFragment$key = {
@@ -40,11 +40,6 @@ const node: ReaderFragment = {
       "name": "RevokeViewAuthenticationTokenButtonFragment"
     },
     {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "RefreshLobbyAuthenticationTokenJoinFragment"
-    },
-    {
       "kind": "ClientExtension",
       "selections": [
         {
@@ -61,6 +56,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "06b17b801eab7d98213ce071fcfb061c";
+(node as any).hash = "c7cf6c97b3c0405557852db41608ef6e";
 
 export default node;

@@ -175,6 +175,11 @@ type Account implements Node {
   hasActiveOrCancelledAccountClubSupporterSubscriptions: Boolean!
 
   """
+  Whether or not this account has at least 1 club supporter subscription.
+  """
+  hasClubSupporterSubscription: Boolean!
+
+  """
   Whether or not this club has non-terminated clubs.
   
   Cannot delete account if this is true.
@@ -1219,6 +1224,9 @@ type AuthenticationToken {
   """The location where this token was created at."""
   location: Location!
 
+  """The method that is used by this authentication token."""
+  method: AuthenticationTokenMethod!
+
   """
   When the token is viewed with the correct ID, whether or not the devices match
   (you cannot use the token unless the device is the same).
@@ -1254,6 +1262,12 @@ type AuthenticationTokenAccountStatus {
   When verified, whether or not there is an account belonging to this token.
   """
   registered: Boolean!
+}
+
+"""The type of authentication token."""
+enum AuthenticationTokenMethod {
+  CODE
+  MAGIC_LINK
 }
 
 """
@@ -3399,6 +3413,11 @@ enum GrantAccountAccessWithAuthenticationTokenValidation {
 input GrantAuthenticationTokenInput {
   """The email that the token will be granted for"""
   email: String!
+
+  """
+  The method that will be used for the authentication token. By default, MAGIC_LINK is used.
+  """
+  method: AuthenticationTokenMethod
 }
 
 """Payload for starting an authentication"""
@@ -4892,6 +4911,13 @@ type Query {
     Returns the elements in the list that come before the specified cursor.
     """
     before: String
+
+    """
+    Filter by whether or not you can support the clubs.
+    
+    Useful for getting a list of all clubs that can be supported.
+    """
+    canSupport: Boolean
 
     """Exclude empty clubs (clubs that have 0 posts)."""
     excludeEmpty: Boolean! = false
@@ -6695,7 +6721,9 @@ scalar URI
 
 """Input for verifying authentication token"""
 input VerifyAuthenticationTokenInput {
-  """Secret (get it from the email)"""
+  """
+  Secret (get it from the email). Will either be a code or can be used as a link
+  """
   secret: String!
 
   """The original token"""

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<510c24d2eb05b3b58d2c239af6c7ac18>>
- * @relayHash eeed3551f1b6a1388a9f23ce9b5010d0
+ * @generated SignedSource<<a638b527d2367165c1c86cb43506e18c>>
+ * @relayHash a2cb55cfc9d5d771cf57366f33b453b9
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID eeed3551f1b6a1388a9f23ce9b5010d0
+// @relayRequestID a2cb55cfc9d5d771cf57366f33b453b9
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -18,9 +18,7 @@ export type ResultJoinQuery$variables = {
 };
 export type ResultJoinQuery$data = {
   readonly viewAuthenticationToken: {
-    readonly token: string;
-    readonly verified: boolean;
-    readonly " $fragmentSpreads": FragmentRefs<"RefreshLobbyAuthenticationTokenJoinFragment" | "StartJoinFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"RootStartJoinFragment">;
   } | null;
 };
 export type ResultJoinQuery = {
@@ -47,20 +45,6 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "token",
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "verified",
-  "storageKey": null
-},
-v4 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 };
@@ -79,17 +63,10 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "StartJoinFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "RefreshLobbyAuthenticationTokenJoinFragment"
+            "name": "RootStartJoinFragment"
           }
         ],
         "storageKey": null
@@ -112,8 +89,27 @@ return {
         "name": "viewAuthenticationToken",
         "plural": false,
         "selections": [
-          (v2/*: any*/),
-          (v3/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "verified",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "token",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "method",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -144,14 +140,13 @@ return {
                 "name": "multiFactor",
                 "plural": false,
                 "selections": [
-                  (v4/*: any*/)
+                  (v2/*: any*/)
                 ],
                 "storageKey": null
               }
             ],
             "storageKey": null
           },
-          (v4/*: any*/),
           {
             "kind": "ClientExtension",
             "selections": [
@@ -163,14 +158,15 @@ return {
                 "storageKey": null
               }
             ]
-          }
+          },
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "eeed3551f1b6a1388a9f23ce9b5010d0",
+    "id": "a2cb55cfc9d5d771cf57366f33b453b9",
     "metadata": {},
     "name": "ResultJoinQuery",
     "operationKind": "query",
@@ -179,7 +175,7 @@ return {
 };
 })();
 
-(node as any).hash = "3df4b80738a681306b17a8e1c38e69fc";
+(node as any).hash = "a4f7c9a5119dcaa77bbcb2a20d6a23f8";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

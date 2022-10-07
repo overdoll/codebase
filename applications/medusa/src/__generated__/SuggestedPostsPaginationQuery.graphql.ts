@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<59fe640c4d1cb7279d544ea05e277698>>
- * @relayHash 69e33581abf0649fb3b500df2d7dd608
+ * @generated SignedSource<<4177dca6a645ca1635bccf72d22e0a6a>>
+ * @relayHash d80ccf7f7bcaf881b985264f53e13e59
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 69e33581abf0649fb3b500df2d7dd608
+// @relayRequestID d80ccf7f7bcaf881b985264f53e13e59
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -527,6 +527,13 @@ return {
                                 "kind": "ScalarField",
                                 "name": "isSupporterOnly",
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "supporterOnlyVideoMediaDuration",
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -605,7 +612,7 @@ return {
     ]
   },
   "params": {
-    "id": "69e33581abf0649fb3b500df2d7dd608",
+    "id": "d80ccf7f7bcaf881b985264f53e13e59",
     "metadata": {},
     "name": "SuggestedPostsPaginationQuery",
     "operationKind": "query",

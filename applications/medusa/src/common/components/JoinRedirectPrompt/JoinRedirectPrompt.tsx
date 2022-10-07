@@ -1,4 +1,4 @@
-import { LinkTile } from '@//:modules/content/ContentSelection'
+import { ClickableTile } from '@//:modules/content/ContentSelection'
 import { Center, CenterProps, Flex, HStack, Stack, Text } from '@chakra-ui/react'
 import useAbility from '@//:modules/authorization/useAbility'
 import React, { useMemo } from 'react'
@@ -9,6 +9,7 @@ import ImageMedia
 import { Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { InfoCircle } from '@//:assets/icons'
+import { useJoin } from '@//:domain/app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
 
 interface Props extends CenterProps {
   seed: string
@@ -27,13 +28,15 @@ export default function JoinRedirectPrompt (props: Props): JSX.Element {
 
   const chosen = useMemo(() => memoized.nextInt32([0, images.length]), [seed])
 
+  const onJoin = useJoin()
+
   if (ability.can('configure', 'Account')) {
     return <></>
   }
 
   return (
     <Center w='100%' {...rest}>
-      <LinkTile w='auto' href='/join'>
+      <ClickableTile w='auto' onClick={onJoin}>
         <Stack spacing={1}>
           <Flex
             borderRadius='lg'
@@ -57,7 +60,7 @@ export default function JoinRedirectPrompt (props: Props): JSX.Element {
             </Text>
           </HStack>
         </Stack>
-      </LinkTile>
+      </ClickableTile>
     </Center>
 
   )

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<d33c39dd353fd27534dbf84206b48e53>>
- * @relayHash 3c4ca4bcc8b51107c7ff33a33a5029e6
+ * @generated SignedSource<<2cc4c6d691449bc30d0b8f5c495352c2>>
+ * @relayHash 9e81e3226464285f6263e7fe33a1bcea
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3c4ca4bcc8b51107c7ff33a33a5029e6
+// @relayRequestID 9e81e3226464285f6263e7fe33a1bcea
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type ResultRootQuery$variables = {};
 export type ResultRootQuery$data = {
   readonly viewer: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment" | "UniversalNavigatorFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "JoinModalProviderFragment" | "NavigationPopupFragment">;
   } | null;
 };
 export type ResultRootQuery = {
@@ -67,12 +67,12 @@ return {
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "UniversalNavigatorFragment"
+            "name": "NavigationPopupFragment"
           },
           {
             "args": null,
             "kind": "FragmentSpread",
-            "name": "NavigationPopupFragment"
+            "name": "JoinModalProviderFragment"
           }
         ],
         "storageKey": null
@@ -158,19 +158,6 @@ return {
             "name": "isWorker",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Resource",
-            "kind": "LinkedField",
-            "name": "avatar",
-            "plural": false,
-            "selections": [
-              (v1/*: any*/),
-              (v0/*: any*/)
-            ],
-            "storageKey": null
-          },
           (v1/*: any*/)
         ],
         "storageKey": null
@@ -178,7 +165,7 @@ return {
     ]
   },
   "params": {
-    "id": "3c4ca4bcc8b51107c7ff33a33a5029e6",
+    "id": "9e81e3226464285f6263e7fe33a1bcea",
     "metadata": {},
     "name": "ResultRootQuery",
     "operationKind": "query",
@@ -187,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "c077ed281d9fb0799f7b9e56987bb015";
+(node as any).hash = "d4e3b355d88c22d561ec4aa8266b0688";
 
 export default node;

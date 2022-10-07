@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1a7a9e0120289e1aff7849452846d040>>
- * @relayHash e836f37e55b93cb645373cfd42d574b6
+ * @generated SignedSource<<5f5f48263bdc5773fe1d932b0aea8f62>>
+ * @relayHash 9aca97ef0780bc6cc05105444862c4a4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e836f37e55b93cb645373cfd42d574b6
+// @relayRequestID 9aca97ef0780bc6cc05105444862c4a4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -216,6 +216,13 @@ return {
           {
             "alias": null,
             "args": null,
+            "kind": "ScalarField",
+            "name": "method",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
             "concreteType": "AuthenticationTokenAccountStatus",
             "kind": "LinkedField",
             "name": "accountStatus",
@@ -248,7 +255,6 @@ return {
             "name": "token",
             "storageKey": null
           },
-          (v10/*: any*/),
           {
             "kind": "ClientExtension",
             "selections": [
@@ -300,7 +306,7 @@ return {
     ]
   },
   "params": {
-    "id": "e836f37e55b93cb645373cfd42d574b6",
+    "id": "9aca97ef0780bc6cc05105444862c4a4",
     "metadata": {},
     "name": "RefreshLobbyAuthenticationTokenJoinQuery",
     "operationKind": "query",

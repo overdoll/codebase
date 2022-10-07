@@ -29,6 +29,7 @@ import SelectPaymentMethodInput from './SelectPaymentMethodInput/SelectPaymentMe
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import SupporterGuidelinesAgreement from '../../../../SupporterGuidelinesAgreement/SupporterGuidelinesAgreement'
 import { useQueryParam } from 'use-query-params'
+import posthog from 'posthog-js'
 
 interface Props {
   query: CCBillSelectSavedPaymentFormFragment$key
@@ -121,6 +122,7 @@ export default function CCBillSelectSavedPaymentForm ({
         }
       },
       onCompleted (payload) {
+        posthog?.capture('submit-existing-payment')
         setTokenParam(payload?.becomeClubSupporterWithAccountSavedPaymentMethod?.ccbillTransactionToken)
       },
       onError () {

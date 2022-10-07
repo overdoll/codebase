@@ -8,8 +8,8 @@ export default function SiteLinkLogo (): JSX.Element {
     <Box h={8}>
       <LinkTile href='/'>
         <HStack spacing={2} align='center' justify='center'>
-          <Icon icon={OverdollLogo} fill='orange.400' w={8} h={8} />
-          <Heading fontSize='2xl' color='orange.400'>
+          <Icon icon={OverdollLogo} fill='primary.400' w={8} h={8} />
+          <Heading fontSize='xl' color='primary.400'>
             overdoll
           </Heading>
         </HStack>

@@ -5,8 +5,9 @@ import { Box, Heading, Stack, Text } from '@chakra-ui/react'
 import { Icon, LargeBackgroundBox, MobileContainer } from '@//:modules/content/PageLayout'
 import { BookmarkLarge } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import MetaLikedPosts from './MetaLikedPosts/MetaLikedPosts'
+import { useJoin } from '../../../../../app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
+import Button from '@//:modules/form/Button/Button'
 
 interface Props {
   query: PreloadedQuery<ResultLikedPostsQuery>
@@ -28,6 +29,8 @@ export default function ResultLikedPosts (props: Props): JSX.Element {
     query
   )
 
+  const onJoin = useJoin()
+
   if (queryData.viewer == null) {
     return (
       <MobileContainer>
@@ -46,11 +49,11 @@ export default function ResultLikedPosts (props: Props): JSX.Element {
                 </Trans>
               </Text>
             </Box>
-            <LinkButton size='lg' colorScheme='primary' w='100%' href='/join'>
+            <Button onClick={onJoin} size='lg' colorScheme='primary' w='100%'>
               <Trans>
                 Join
               </Trans>
-            </LinkButton>
+            </Button>
           </Stack>
         </LargeBackgroundBox>
       </MobileContainer>

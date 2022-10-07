@@ -12,14 +12,18 @@ export default function GameContainer ({
   return (
     <Center w='100%' h='100%'>
       <Container
-        w='100%'
         maxW='container.2xl'
-        h={{
-          base: '100%',
-          md: 'calc(100% - 54px)'
+        top={{
+          base: undefined,
+          md: '54px'
         }}
+        bottom={{
+          base: '54px',
+          md: undefined
+        }}
+        h='calc(100% - 54px)'
         position='fixed'
-        bottom={0}
+        w='100%'
         minH='300px'
         px={0}
         {...rest}

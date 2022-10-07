@@ -18,6 +18,9 @@ const PostFragment = graphql`
       id
       name
       slug
+      viewerMember {
+        __typename
+      }
       ...ClubIconFragment
       ...ClubJoinButtonFragment
     }
@@ -40,9 +43,6 @@ export default function ClubPublicPost (props: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  const onClick = (): void => {
-  }
-
   return (
     <Flex position='relative'>
       <Link
@@ -54,7 +54,7 @@ export default function ClubPublicPost (props: Props): JSX.Element {
           }
         }}
       >
-        <Box onClick={onClick} position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
+        <Box position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
       </Link>
       <Flex w='100%' align='center' direction='column'>
         <HStack w='100%' align='center' justify='space-between'>
@@ -69,7 +69,9 @@ export default function ClubPublicPost (props: Props): JSX.Element {
               </Text>
             </Flex>
           </HStack>
-          <ClubJoinButton clubQuery={postData.club} viewerQuery={viewerData} />
+          {postData.club.viewerMember == null && (
+            <ClubJoinButton clubQuery={postData.club} viewerQuery={viewerData} />
+          )}
         </HStack>
         {postData.description.length > 0 && (
           <Text mt={1} lineHeight='20px' fontSize='sm' color='gray.200'>

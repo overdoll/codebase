@@ -25,7 +25,7 @@ msgstr ""
 msgid "An \"audience\" can also be called a \"preference\". Select the type of targeted content you are only interested in seeing. Leaving other options unselected tells us you don't want to see this content at all."
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationAudienceNextButton/CurationAudienceNextButton.tsx:93
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationAudienceNextButton/CurationAudienceNextButton.tsx:95
 msgid "Audience preference was skipped"
 msgstr ""
 
@@ -45,15 +45,15 @@ msgstr ""
 msgid "Categories are a quick way to search for content. We group categories by topics. Select a topic to see all available categories. Leaving other categories blank will still show posts with those categories to you."
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationCategoryNextButton/CurationCategoryNextButton.tsx:93
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationCategoryNextButton/CurationCategoryNextButton.tsx:94
 msgid "Category preference was skipped"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:218
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:220
 msgid "Curation Profile Setup Complete"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:234
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:236
 msgid "Go home"
 msgstr ""
 
@@ -77,11 +77,11 @@ msgstr ""
 msgid "Telling us your age helps us to better tailor the content you are presented on the platform."
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationAudienceNextButton/CurationAudienceNextButton.tsx:73
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationAudienceNextButton/CurationAudienceNextButton.tsx:75
 msgid "There was an error saving the audiences"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationCategoryNextButton/CurationCategoryNextButton.tsx:73
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationCategoryNextButton/CurationCategoryNextButton.tsx:74
 msgid "There was an error saving the categories"
 msgstr ""
 
@@ -89,11 +89,11 @@ msgstr ""
 msgid "There was an error saving the date of birth"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationAudienceNextButton/CurationAudienceNextButton.tsx:100
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationAudienceNextButton/CurationAudienceNextButton.tsx:102
 msgid "There was an error skipping audience"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationCategoryNextButton/CurationCategoryNextButton.tsx:99
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationStepperFooter/CurationCategoryNextButton/CurationCategoryNextButton.tsx:100
 msgid "There was an error skipping the categories"
 msgstr ""
 
@@ -101,7 +101,7 @@ msgstr ""
 msgid "There was an error skipping the date of birth"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:225
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:227
 msgid "You've successfully set up your curation profile! Now we'll show you the content based on the preferences you gave us."
 msgstr ""
 
@@ -109,6 +109,6 @@ msgstr ""
 msgid "Your age"
 msgstr ""
 
-#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:167
+#: src/domain/settings/preferences/curation-profile/RootCurationProfileSetup/CurationProfileSetup/CurationProfileSetup.tsx:169
 msgid "Your curation profile is already complete. Going through the setup will overwrite your current profile."
 msgstr ""

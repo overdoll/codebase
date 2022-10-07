@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4f0fa97e6d2249759cc90b1257ac696a>>
+ * @generated SignedSource<<64d5734ec856e8689351bf162df36245>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type AuthenticationTokenMethod = "CODE" | "MAGIC_LINK" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type ViewAuthenticationTokenJoinFragment$data = {
   readonly accountStatus: {
@@ -18,8 +19,9 @@ export type ViewAuthenticationTokenJoinFragment$data = {
     readonly registered: boolean;
   } | null;
   readonly id: string;
+  readonly method: AuthenticationTokenMethod;
   readonly verified: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"GrantAuthenticationTokenJoinFragment" | "LobbyAuthenticationTokenJoinFragment" | "MultiFactorAuthenticationTokenFragment" | "RegisterAuthenticationTokenFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"CodeAuthenticationTokenJoinFragment" | "GrantAuthenticationTokenJoinFragment" | "LobbyAuthenticationTokenJoinFragment" | "MultiFactorAuthenticationTokenFragment" | "RegisterAuthenticationTokenFragment">;
   readonly " $fragmentType": "ViewAuthenticationTokenJoinFragment";
 };
 export type ViewAuthenticationTokenJoinFragment$key = {
@@ -45,6 +47,13 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "ScalarField",
       "name": "verified",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "method",
       "storageKey": null
     },
     {
@@ -102,12 +111,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RegisterAuthenticationTokenFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CodeAuthenticationTokenJoinFragment"
     }
   ],
   "type": "AuthenticationToken",
   "abstractKey": null
 };
 
-(node as any).hash = "f2f57d2638647c6c73cf9361c9094dc9";
+(node as any).hash = "a57ce4af4f9e7e8b7737b212f97c0ca4";
 
 export default node;

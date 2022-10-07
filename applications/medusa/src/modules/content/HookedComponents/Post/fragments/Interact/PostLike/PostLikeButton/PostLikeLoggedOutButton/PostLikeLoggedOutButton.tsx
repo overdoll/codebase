@@ -16,11 +16,11 @@ import { t, Trans } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
 import CloseButton from '../../../../../../../ThemeComponents/CloseButton/CloseButton'
-import encodeJoinRedirect from '../../../../../../../../support/encodeJoinRedirect'
 import { graphql, useFragment } from 'react-relay'
 import { PostLikeLoggedOutButtonFragment$key } from '@//:artifacts/PostLikeLoggedOutButtonFragment.graphql'
-import LinkButton from '../../../../../../../ThemeComponents/LinkButton/LinkButton'
 import { Icon } from '../../../../../../../PageLayout'
+import { useJoin } from '@//:domain/app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
+import Button from '../../../../../../../../form/Button/Button'
 
 interface Props extends ButtonProps {
   postQuery: PostLikeLoggedOutButtonFragment$key
@@ -53,7 +53,7 @@ export default function PostLikeLoggedOutButton ({
     onOpen()
   }
 
-  const redirect = encodeJoinRedirect({
+  const onJoin = useJoin({
     pathname: '/[slug]/post/[reference]',
     query: {
       slug: postData.club.slug,
@@ -96,17 +96,17 @@ export default function PostLikeLoggedOutButton ({
                   </Trans>
                 </Text>
               </Box>
-              <LinkButton
+              <Button
                 leftIcon={<Icon icon={LoginKeys} w={5} h={5} fill='primary.900' />}
                 w='100%'
                 size='lg'
                 colorScheme='primary'
-                href={redirect}
+                onClick={onJoin}
               >
                 <Trans>
                   Join
                 </Trans>
-              </LinkButton>
+              </Button>
             </Stack>
           </ModalBody>
         </ModalContent>

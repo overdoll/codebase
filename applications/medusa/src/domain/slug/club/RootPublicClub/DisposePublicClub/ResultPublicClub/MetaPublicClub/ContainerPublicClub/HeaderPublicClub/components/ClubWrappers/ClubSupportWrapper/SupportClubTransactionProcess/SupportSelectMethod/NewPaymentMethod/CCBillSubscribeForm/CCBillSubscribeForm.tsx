@@ -15,6 +15,7 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 import SupporterGuidelinesAgreement from '../../../../SupporterGuidelinesAgreement/SupporterGuidelinesAgreement'
 import { Icon } from '@//:modules/content/PageLayout'
 import { PaymentMethodIdentifier } from '@//:assets/icons'
+import posthog from 'posthog-js'
 
 interface Props {
   query: CCBillSubscribeFormFragment$key
@@ -101,6 +102,7 @@ export default function CCBillSubscribeForm ({
         }
       },
       onCompleted (payload) {
+        posthog?.capture('submit-new-payment')
         const paymentLink = payload?.generateCCBillClubSupporterPaymentLink?.paymentLink as string
         if (paymentLink == null) return
         windowReference.current = window.open(paymentLink, '_blank', 'width=600,height=800')

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<af46c9aa085380bc4fa0cf8facbb83fa>>
- * @relayHash e1ed23be805fba7ab615b03da3479947
+ * @generated SignedSource<<230f2be667be9a6f96cdc99b9665fce1>>
+ * @relayHash a3a1f4d669f15fc7ad04395e92d9e56d
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e1ed23be805fba7ab615b03da3479947
+// @relayRequestID a3a1f4d669f15fc7ad04395e92d9e56d
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -601,6 +601,13 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "supporterOnlyVideoMediaDuration",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -753,7 +760,7 @@ return {
     ]
   },
   "params": {
-    "id": "e1ed23be805fba7ab615b03da3479947",
+    "id": "a3a1f4d669f15fc7ad04395e92d9e56d",
     "metadata": {},
     "name": "ResultClubsFeedQuery",
     "operationKind": "query",
