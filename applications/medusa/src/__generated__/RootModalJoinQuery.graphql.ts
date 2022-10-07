@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c927556a39becb6e0cebefff91d6c652>>
- * @relayHash ad45298888436e53b3d80a5561e2716b
+ * @generated SignedSource<<0cd2ce8a332e1b1f5f745dddbac03e87>>
+ * @relayHash ab6cd32b27f53d127842cf2dde8089db
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,21 +9,21 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ad45298888436e53b3d80a5561e2716b
+// @relayRequestID ab6cd32b27f53d127842cf2dde8089db
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ResultJoinQuery$variables = {
+export type RootModalJoinQuery$variables = {
   token: string;
 };
-export type ResultJoinQuery$data = {
+export type RootModalJoinQuery$data = {
   readonly viewAuthenticationToken: {
     readonly " $fragmentSpreads": FragmentRefs<"RootStartJoinFragment">;
   } | null;
 };
-export type ResultJoinQuery = {
-  response: ResultJoinQuery$data;
-  variables: ResultJoinQuery$variables;
+export type RootModalJoinQuery = {
+  response: RootModalJoinQuery$data;
+  variables: RootModalJoinQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -53,7 +53,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ResultJoinQuery",
+    "name": "RootModalJoinQuery",
     "selections": [
       {
         "alias": null,
@@ -79,7 +79,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ResultJoinQuery",
+    "name": "RootModalJoinQuery",
     "selections": [
       {
         "alias": null,
@@ -159,16 +159,16 @@ return {
     ]
   },
   "params": {
-    "id": "ad45298888436e53b3d80a5561e2716b",
+    "id": "ab6cd32b27f53d127842cf2dde8089db",
     "metadata": {},
-    "name": "ResultJoinQuery",
+    "name": "RootModalJoinQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "a4f7c9a5119dcaa77bbcb2a20d6a23f8";
+(node as any).hash = "dcee0fb324df26bc1d5755e4c80dfc87";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

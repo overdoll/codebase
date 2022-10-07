@@ -5,28 +5,31 @@ import React, { Suspense } from 'react'
 import DesktopHorizontalNavigationDropdownMenu
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/DesktopHorizontalNavigationDropdownMenu/DesktopHorizontalNavigationDropdownMenu'
 import Can from '@//:modules/authorization/Can'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import { Icon } from '@//:modules/content/PageLayout'
 import QuickAccessButtonProfile from './QuickAccessButtonProfile/QuickAccessButtonProfile'
 import DesktopDropdownMenuButtons from './DesktopDropdownMenuButtons/DesktopDropdownMenuButtons'
+import { useJoin } from '../../../JoinModal/JoinModal'
+import Button from '@//:modules/form/Button/Button'
 
 export default function DesktopAlternativeMenu (): JSX.Element {
   const { i18n } = useLingui()
 
+  const onJoin = useJoin()
+
   return (
     <>
       <Can not I='configure' a='Account'>
-        <LinkButton
+        <Button
           ml={1}
           borderRadius='lg'
           colorScheme='primary'
           leftIcon={<Icon icon={LoginKeys} w={4} h={4} fill='primary.900' />}
-          href='/join'
+          onClick={onJoin}
         >
           <Trans>
             Join
           </Trans>
-        </LinkButton>
+        </Button>
       </Can>
       <Can I='configure' a='Account'>
         <Suspense fallback={<></>}>

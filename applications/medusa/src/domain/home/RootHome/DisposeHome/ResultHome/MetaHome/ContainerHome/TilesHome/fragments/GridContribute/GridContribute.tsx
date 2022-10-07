@@ -34,9 +34,9 @@ export default function GridContribute (): JSX.Element {
             )
           : (
             <StaticTile
+              href='/join'
               color='primary.300'
               icon={LoginKeys}
-              href='/join'
               header={(
                 <Trans>
                   Join overdoll
@@ -49,7 +49,6 @@ export default function GridContribute (): JSX.Element {
               )}
             />
             )}
-
       </GridItem>
       <GridItem colSpan={1}>
         <StaticTile

@@ -8,13 +8,16 @@ import MobileHorizontalNavigationDropdownMenuButton
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenuButton/MobileHorizontalNavigationDropdownMenuButton'
 import MobileDropdownMenuButtonClub from './MobileDropdownMenuButtonClub/MobileDropdownMenuButtonClub'
 import MobileDropdownMenuButtonProfile from './MobileDropdownMenuButtonProfile/MobileDropdownMenuButtonProfile'
+import { useJoin } from '../../../../JoinModal/JoinModal'
 
 export default function MobileDropdownMenuButtons (): JSX.Element {
+  const onJoin = useJoin()
+
   return (
     <>
       <Can not I='configure' a='Account'>
         <MobileHorizontalNavigationDropdownMenuButton
-          href='/join'
+          onClick={onJoin}
           icon={LoginKeys}
           label={
             <Trans>

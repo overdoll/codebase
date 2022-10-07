@@ -1,9 +1,8 @@
 import { MaybeRenderProp } from '@//:types/components'
-import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubGuestSupportWrapperFragment$key } from '@//:artifacts/ClubGuestSupportWrapperFragment.graphql'
 import runIfFunction from '@//:modules/support/runIfFunction'
-import { useRouter } from 'next/router'
+import { useJoin } from '../../../../../../../../../../../app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
 
 interface ChildrenCallable {
   supportClub: () => void
@@ -26,12 +25,10 @@ export default function ClubGuestSupportWrapper ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const router = useRouter()
-
-  const redirect = encodeJoinRedirect(`/${data.slug}?support=true`)
+  const onJoin = useJoin(`/${data.slug}?support=true`, 'club_support_button')
 
   const onSupportClub = (): void => {
-    void router.push(redirect)
+    onJoin()
   }
 
   return (

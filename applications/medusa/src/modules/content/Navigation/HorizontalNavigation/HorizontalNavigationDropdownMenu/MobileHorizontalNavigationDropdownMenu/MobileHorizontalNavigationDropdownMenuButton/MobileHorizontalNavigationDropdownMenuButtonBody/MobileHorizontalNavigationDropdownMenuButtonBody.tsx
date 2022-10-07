@@ -20,7 +20,7 @@ const MobileHorizontalNavigationDropdownMenuButtonBody = forwardRef(({
   ...rest
 }: Props, forwardRef): JSX.Element => {
   return (
-    <Flex h='100%' w='100%'>
+    <Flex py={1}>
       <ClickableBox
         ref={forwardRef}
         ignoreTransition

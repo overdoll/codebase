@@ -1,8 +1,14 @@
-import { createContext, ReactNode, useContext } from 'react'
-import { Flex, Modal, ModalBody, ModalContent, ModalOverlay, Stack, useDisclosure } from '@chakra-ui/react'
+import { createContext, ReactNode, Suspense, useContext } from 'react'
+import { Box, Flex, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
-import { OverdollLogo } from '@//:assets/logos'
-import Icon from '../../../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
+import { useRouter } from 'next/router'
+import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
+import { UrlObject } from 'url'
+import posthog from 'posthog-js'
+import { SkeletonStack } from '@//:modules/content/Placeholder'
+import RootModalJoin from './RootModalJoin/RootModalJoin'
+import { useCookies } from 'react-cookie'
+import { useSearch } from '@//:modules/content/HookedComponents/Search'
 
 interface JoinModalContextProps {
   onOpen: () => void
@@ -15,6 +21,10 @@ interface JoinModalProviderProps {
 const defaultValue = {
   onOpen: () => {
   }
+}
+
+interface SearchProps {
+  token: string
 }
 
 const JoinModalContext = createContext<JoinModalContextProps>(defaultValue)
@@ -30,6 +40,18 @@ export function JoinModalProvider (props: JoinModalProviderProps): JSX.Element {
     onClose
   } = useDisclosure()
 
+  const [cookies] = useCookies<string>(['token'])
+  const cookieToken = cookies.token != null ? cookies.token.split(';')[0] : ''
+
+  const {
+    searchArguments,
+    loadQuery
+  } = useSearch<SearchProps>({
+    defaultValue: {
+      token: cookieToken
+    }
+  })
+
   return (
     <>
       <Modal
@@ -38,22 +60,21 @@ export function JoinModalProvider (props: JoinModalProviderProps): JSX.Element {
         size='lg'
         isCentered
         scrollBehavior='inside'
+        closeOnOverlayClick={false}
+        closeOnEsc={false}
         preserveScrollBarGap
       >
         <ModalOverlay />
         <ModalContent>
-          <ModalBody p={3}>
-            <Stack spacing={2}>
-              <Flex w='100%' justify='space-between'>
-                <Icon
-                  icon={OverdollLogo}
-                  w={12}
-                  h={12}
-                  fill='gray.00'
-                />
-                <CloseButton onClick={onClose} size='md' />
+          <ModalBody p={4}>
+            <Box position='relative'>
+              <Flex h={16} align='center' position='absolute' top={0} right={0}>
+                <CloseButton borderRadius='lg' variant='solid' onClick={onClose} size='md' />
               </Flex>
-            </Stack>
+              <Suspense fallback={<SkeletonStack />}>
+                <RootModalJoin loadQuery={loadQuery} searchArguments={searchArguments} />
+              </Suspense>
+            </Box>
           </ModalBody>
         </ModalContent>
       </Modal>
@@ -68,6 +89,21 @@ export function useJoinContext (): JoinModalContextProps {
   return useContext(JoinModalContext)
 }
 
-export function useJoin () {
-  const joinLink
+export function useJoin (redirect?: string | UrlObject, from?: string): () => void {
+  const { onOpen } = useJoinContext()
+
+  const gotoRedirect = redirect != null ? encodeJoinRedirect(redirect, from) : '/join'
+
+  const router = useRouter()
+
+  const onOpenJoin = (): void => {
+    posthog?.capture('open-join-modal', { from: from })
+    onOpen()
+  }
+
+  const onRedirectJoin = (): void => {
+    void router.push(gotoRedirect)
+  }
+
+  return onOpenJoin
 }

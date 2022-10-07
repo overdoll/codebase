@@ -86,7 +86,7 @@ export default function EmptyJoin (): JSX.Element {
   // Ask user to authenticate
   return (
     <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
-      <Stack spacing={4}>
+      <Stack w='100%' spacing={4}>
         <Icon
           icon={OverdollLogoOutline}
           w={16}
@@ -95,7 +95,7 @@ export default function EmptyJoin (): JSX.Element {
         />
         <Heading fontSize='4xl' color='gray.00'>
           <Trans>
-            Join the next digital adult content platform.
+            Join overdoll.
           </Trans>
         </Heading>
       </Stack>

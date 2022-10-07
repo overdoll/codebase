@@ -4,12 +4,13 @@ import { graphql } from 'react-relay'
 import { Box, Flex, Heading, HStack, Stack } from '@chakra-ui/react'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Trans } from '@lingui/macro'
-import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import AccountInformationBanner
   from '../../../../../common/components/AccountInformationBanner/AccountInformationBanner'
 import BackButton from '@//:modules/content/PageLayout/BuildingBlocks/BackButton/BackButton'
 import DiscoverClubsList from './DiscoverClubsList/DiscoverClubsList'
 import SearchButton from '../../../../../common/components/PageHeader/SearchButton/SearchButton'
+import { useJoin } from '../../../../app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
+import Button from '@//:modules/form/Button/Button'
 
 interface Props {
   query: PreloadedQuery<DiscoverClubsQuery>
@@ -42,6 +43,8 @@ export default function DiscoverClubs (props: Props): JSX.Element {
 
   const noFeed = !notLoggedIn && (queryData?.viewer?.clubMembershipsCount < 1 || queryData?.viewer?.clubMembersPostsFeed?.edges.length < 1)
 
+  const onJoin = useJoin()
+
   return (
     <Box>
       <AccountInformationBanner query={queryData.viewer} />
@@ -65,8 +68,8 @@ export default function DiscoverClubs (props: Props): JSX.Element {
                     </Trans>
                   </AlertDescription>
                 </HStack>
-                <LinkButton
-                  href='/join'
+                <Button
+                  onClick={onJoin}
                   size='sm'
                   colorScheme='teal'
                   variant='solid'
@@ -74,7 +77,7 @@ export default function DiscoverClubs (props: Props): JSX.Element {
                   <Trans>
                     Create Account
                   </Trans>
-                </LinkButton>
+                </Button>
               </Flex>
             </Alert>
             )

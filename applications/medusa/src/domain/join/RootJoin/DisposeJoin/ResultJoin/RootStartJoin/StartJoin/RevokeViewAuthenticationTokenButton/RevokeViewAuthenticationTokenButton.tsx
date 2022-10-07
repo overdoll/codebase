@@ -23,7 +23,7 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import useGrantCleanup from '../support/useGrantCleanup'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { useLingui } from '@lingui/react'
-import Icon from '../../../../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { ArrowThickLeft } from '@//:assets/icons'
 
 interface Props {

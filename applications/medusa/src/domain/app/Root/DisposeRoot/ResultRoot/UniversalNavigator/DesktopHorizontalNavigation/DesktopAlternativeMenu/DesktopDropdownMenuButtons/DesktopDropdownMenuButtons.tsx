@@ -8,13 +8,16 @@ import DesktopHorizontalNavigationDropdownMenuButton
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/DesktopHorizontalNavigationDropdownMenu/DesktopHorizontalNavigationDropdownMenuButton/DesktopHorizontalNavigationDropdownMenuButton'
 import DesktopDropdownMenuButtonProfile from './DesktopDropdownMenuButtonProfile/DesktopDropdownMenuButtonProfile'
 import DesktopDropdownMenuButtonClub from './DesktopDropdownMenuButtonClub/DesktopDropdownMenuButtonClub'
+import { useJoin } from '../../../../JoinModal/JoinModal'
 
 export default function DesktopDropdownMenuButtons (): JSX.Element {
+  const onJoin = useJoin()
+
   return (
     <>
       <Can not I='configure' a='Account'>
         <DesktopHorizontalNavigationDropdownMenuButton
-          href='/join'
+          onClick={onJoin}
           icon={LoginKeys}
           label={
             <Trans>
