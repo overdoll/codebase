@@ -4,7 +4,7 @@ import { useFragment } from 'react-relay/hooks'
 import { ThumbnailMedia } from '../../../../Media'
 import { Flex } from '@chakra-ui/react'
 import { Icon } from '../../../../../PageLayout'
-import { ControlPlayButton } from '@//:assets/icons'
+import { ControlPlayButton, PremiumStar } from '@//:assets/icons'
 import { ThumbnailImageMediaProps } from '../../../../Media/fragments/Media/ThumbnailImageMedia/ThumbnailImageMedia'
 
 const Fragment = graphql`
@@ -16,12 +16,14 @@ const Fragment = graphql`
 
 interface Props extends ThumbnailImageMediaProps {
   mediaQuery: ThumbnailCarouseItemFragment$key
+  isSupporter: boolean
 }
 
 export default function ThumbnailCarouseItem (props: Props): JSX.Element {
   const {
     mediaQuery,
-    imageProps
+    imageProps,
+    isSupporter
   } = props
 
   const data = useFragment(Fragment, mediaQuery)
@@ -29,9 +31,14 @@ export default function ThumbnailCarouseItem (props: Props): JSX.Element {
   return (
     <>
       <ThumbnailMedia mediaQuery={data} imageProps={imageProps} />
-      {data.__typename === 'VideoMedia' && (
+      {isSupporter && (
         <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
-          <Icon icon={ControlPlayButton} w={3} h={3} fill='whiteAlpha.800' />
+          <Icon icon={PremiumStar} w={4} h={4} fill='orange.300' />
+        </Flex>
+      )}
+      {(data.__typename === 'VideoMedia' && !isSupporter) && (
+        <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
+          <Icon icon={ControlPlayButton} w={4} h={4} fill='whiteAlpha.800' />
         </Flex>
       )}
     </>

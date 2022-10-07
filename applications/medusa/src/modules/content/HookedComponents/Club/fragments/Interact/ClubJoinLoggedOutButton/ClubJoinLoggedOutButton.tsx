@@ -16,11 +16,11 @@ import { t, Trans } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
 import CloseButton from '../../../../../ThemeComponents/CloseButton/CloseButton'
-import encodeJoinRedirect from '../../../../../../support/encodeJoinRedirect'
 import { graphql, useFragment } from 'react-relay'
 import { ClubJoinLoggedOutButtonFragment$key } from '@//:artifacts/ClubJoinLoggedOutButtonFragment.graphql'
-import LinkButton from '../../../../../ThemeComponents/LinkButton/LinkButton'
 import { Icon } from '../../../../../PageLayout'
+import { useJoin } from '@//:domain/app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
+import Button from '../../../../../../form/Button/Button'
 
 interface Props extends ButtonProps {
   clubQuery: ClubJoinLoggedOutButtonFragment$key
@@ -50,7 +50,7 @@ export default function ClubJoinLoggedOutButton (props: Props): JSX.Element {
     onOpen()
   }
 
-  const redirect = encodeJoinRedirect({
+  const onJoin = useJoin({
     pathname: '/[slug]',
     query: {
       slug: clubData.slug
@@ -92,17 +92,17 @@ export default function ClubJoinLoggedOutButton (props: Props): JSX.Element {
                   </Trans>
                 </Text>
               </Box>
-              <LinkButton
+              <Button
                 leftIcon={<Icon icon={LoginKeys} w={5} h={5} fill='green.900' />}
                 w='100%'
                 size='lg'
                 colorScheme='green'
-                href={redirect}
+                onClick={onJoin}
               >
                 <Trans>
                   Join
                 </Trans>
-              </LinkButton>
+              </Button>
             </Stack>
           </ModalBody>
         </ModalContent>

@@ -11,6 +11,7 @@ export default function FixedContainer (props: Props): JSX.Element {
   return (
     <Center px={1} mt={4} position='fixed' w='100%'>
       <Center
+        w='100%'
         maxW='container.xs'
       >
         {children}

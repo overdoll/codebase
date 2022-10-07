@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7a577315c461d49e2c0b8c31d9bd3edd>>
- * @relayHash 4ff6d447194f12981c238d379eee5384
+ * @generated SignedSource<<2c0ee79989182c182dd59f30f88227c4>>
+ * @relayHash 909c4f2cfa4ac9980ba7c5a84ece67e3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4ff6d447194f12981c238d379eee5384
+// @relayRequestID 909c4f2cfa4ac9980ba7c5a84ece67e3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -528,6 +528,13 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "supporterOnlyVideoMediaDuration",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -602,7 +609,7 @@ return {
     ]
   },
   "params": {
-    "id": "4ff6d447194f12981c238d379eee5384",
+    "id": "909c4f2cfa4ac9980ba7c5a84ece67e3",
     "metadata": {},
     "name": "ResultLikedPostsQuery",
     "operationKind": "query",

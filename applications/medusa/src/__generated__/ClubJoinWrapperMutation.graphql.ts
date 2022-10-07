@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<6262b920bbb29334e8b1119a066ab84d>>
- * @relayHash 84c6736e68833bf44d6a7079a1f38a64
+ * @generated SignedSource<<402562a48581a9c02201afbab2042b4a>>
+ * @relayHash 58fa0c12bd092a4f7581a7856c1e1221
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 84c6736e68833bf44d6a7079a1f38a64
+// @relayRequestID 58fa0c12bd092a4f7581a7856c1e1221
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type JoinClubInput = {
@@ -26,6 +26,9 @@ export type ClubJoinWrapperMutation$data = {
       };
       readonly club: {
         readonly id: string;
+        readonly viewerMember: {
+          readonly __typename: "ClubMember";
+        } | null;
       };
       readonly id: string;
       readonly joinedAt: any;
@@ -45,81 +48,103 @@ var v0 = [
     "name": "input"
   }
 ],
-v1 = {
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "input",
+    "variableName": "input"
+  }
+],
+v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
 },
-v2 = [
-  (v1/*: any*/)
-],
-v3 = [
-  {
-    "alias": null,
-    "args": [
-      {
-        "kind": "Variable",
-        "name": "input",
-        "variableName": "input"
-      }
-    ],
-    "concreteType": "JoinClubPayload",
-    "kind": "LinkedField",
-    "name": "joinClub",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "ClubMember",
-        "kind": "LinkedField",
-        "name": "clubMember",
-        "plural": false,
-        "selections": [
-          (v1/*: any*/),
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Club",
-            "kind": "LinkedField",
-            "name": "club",
-            "plural": false,
-            "selections": (v2/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "Account",
-            "kind": "LinkedField",
-            "name": "account",
-            "plural": false,
-            "selections": (v2/*: any*/),
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "joinedAt",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
+v3 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
+v4 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Account",
+  "kind": "LinkedField",
+  "name": "account",
+  "plural": false,
+  "selections": [
+    (v2/*: any*/)
+  ],
+  "storageKey": null
+},
+v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "joinedAt",
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "ClubJoinWrapperMutation",
-    "selections": (v3/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "JoinClubPayload",
+        "kind": "LinkedField",
+        "name": "joinClub",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubMember",
+            "kind": "LinkedField",
+            "name": "clubMember",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Club",
+                "kind": "LinkedField",
+                "name": "club",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ClubMember",
+                    "kind": "LinkedField",
+                    "name": "viewerMember",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/),
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Mutation",
     "abstractKey": null
   },
@@ -128,10 +153,61 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "ClubJoinWrapperMutation",
-    "selections": (v3/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": (v1/*: any*/),
+        "concreteType": "JoinClubPayload",
+        "kind": "LinkedField",
+        "name": "joinClub",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "ClubMember",
+            "kind": "LinkedField",
+            "name": "clubMember",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "Club",
+                "kind": "LinkedField",
+                "name": "club",
+                "plural": false,
+                "selections": [
+                  (v2/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ClubMember",
+                    "kind": "LinkedField",
+                    "name": "viewerMember",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              (v4/*: any*/),
+              (v5/*: any*/)
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "id": "84c6736e68833bf44d6a7079a1f38a64",
+    "id": "58fa0c12bd092a4f7581a7856c1e1221",
     "metadata": {},
     "name": "ClubJoinWrapperMutation",
     "operationKind": "mutation",
@@ -140,6 +216,6 @@ return {
 };
 })();
 
-(node as any).hash = "fa00524529d4708810bcc7fee170c504";
+(node as any).hash = "ddf30e2f8d630814f058df5b22f2706b";
 
 export default node;

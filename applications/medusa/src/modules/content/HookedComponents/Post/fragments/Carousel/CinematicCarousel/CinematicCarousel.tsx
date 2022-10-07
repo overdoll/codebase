@@ -18,6 +18,7 @@ const PostFragment = graphql`
       media {
         ...ThumbnailCarouseItemFragment
       }
+      isSupporterOnly
     }
   }
 `
@@ -37,12 +38,14 @@ export default function CinematicCarousel (props: Props): JSX.Element {
           key={item.id}
           swiper={swiper}
           index={index}
+          isSupporter={item.isSupporterOnly}
         >
           <ThumbnailCarouseItem
             imageProps={{
               loadFirst: true
             }}
             mediaQuery={item.media}
+            isSupporter={item.isSupporterOnly}
           />
         </CarouselGridItem>
       ))}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c202c1675fe3d355582766f40ba913f4>>
- * @relayHash 69e9b822c2f9855515dd18b90e4eb826
+ * @generated SignedSource<<1c4019f5af3a622e92e7ca1509a95c50>>
+ * @relayHash 359be9c22d58b739b35b52986b733c14
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 69e9b822c2f9855515dd18b90e4eb826
+// @relayRequestID 359be9c22d58b739b35b52986b733c14
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -559,6 +559,13 @@ return {
                                 "kind": "ScalarField",
                                 "name": "isSupporterOnly",
                                 "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "supporterOnlyVideoMediaDuration",
+                                "storageKey": null
                               }
                             ],
                             "storageKey": null
@@ -648,7 +655,7 @@ return {
     ]
   },
   "params": {
-    "id": "69e9b822c2f9855515dd18b90e4eb826",
+    "id": "359be9c22d58b739b35b52986b733c14",
     "metadata": {},
     "name": "ScrollClubPostsFragmentPaginationQuery",
     "operationKind": "query",

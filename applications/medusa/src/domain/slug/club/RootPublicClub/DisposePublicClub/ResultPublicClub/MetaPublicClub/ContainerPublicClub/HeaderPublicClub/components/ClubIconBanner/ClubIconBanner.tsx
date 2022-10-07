@@ -44,11 +44,11 @@ export default function ClubIconBanner ({
     <TileOverlay
       backdrop={<RandomPattern seed={seed} />}
     >
-      <Stack {...STACK_PROPS}>
+      <Stack w='100%' {...STACK_PROPS}>
         <Box borderRadius='lg' bg={`${colorScheme}.300`} p={2}>
           <Icon icon={icon} w={10} h={10} fill={`${colorScheme}.100`} />
         </Box>
-        <Stack spacing={2}>
+        <Stack w='100%' spacing={2}>
           <Heading
             textAlign={{
               base: 'center',

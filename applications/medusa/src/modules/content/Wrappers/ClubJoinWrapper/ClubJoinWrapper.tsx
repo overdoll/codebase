@@ -43,6 +43,9 @@ const Mutation = graphql`
         id
         club {
           id
+          viewerMember {
+            __typename
+          }
         }
         account {
           id

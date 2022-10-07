@@ -25,9 +25,8 @@ import useSearch from '../../../../../Search/hooks/useSearch'
 import { useChoice } from '../../../../../Choice'
 import Button from '../../../../../../../form/Button/Button'
 import { useToast } from '../../../../../../ThemeComponents'
-import encodeJoinRedirect from '../../../../../../../support/encodeJoinRedirect'
-import { useRouter } from 'next/router'
 import useAbility from '../../../../../../../authorization/useAbility'
+import { useJoin } from '@//:domain/app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
 
 interface Props {
   query: PostReportButtonFragment$key
@@ -70,8 +69,6 @@ export default function PostReportButton ({
 
   const [commit, isInFlight] = useMutation<PostReportButtonMutation>(Mutation)
 
-  const router = useRouter()
-
   const {
     isOpen,
     onOpen,
@@ -97,7 +94,7 @@ export default function PostReportButton ({
 
   const ability = useAbility()
 
-  const redirect = encodeJoinRedirect({
+  const onJoin = useJoin({
     pathname: '/[slug]/post/[reference]',
     query: {
       slug: data.club.slug,
@@ -145,7 +142,7 @@ export default function PostReportButton ({
     if (!ability.can('configure', 'Account')) {
       return (
         <MenuItem
-          onClick={async () => await router.push(redirect)}
+          onClick={onJoin}
           text={<Trans>Report Post</Trans>}
           icon={FlagReport}
         />

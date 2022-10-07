@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<623af391ad828cb524dd44a1a28d2210>>
+ * @generated SignedSource<<0b548b36f7cef4dbe4e4ffa2b77b6a83>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,6 +13,7 @@ import { FragmentRefs } from "relay-runtime";
 export type SupporterSlideFragment$data = {
   readonly isSupporterOnly: boolean;
   readonly viewerCanViewSupporterOnlyContent: boolean;
+  readonly " $fragmentSpreads": FragmentRefs<"SupporterLockedContentFragment">;
   readonly " $fragmentType": "SupporterSlideFragment";
 };
 export type SupporterSlideFragment$key = {
@@ -39,12 +40,17 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "isSupporterOnly",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "SupporterLockedContentFragment"
     }
   ],
   "type": "PostContent",
   "abstractKey": null
 };
 
-(node as any).hash = "0278b53b0c05c9b2e0a44bd3a56efc8b";
+(node as any).hash = "32b49e7ce946cea3a896a2e19d104623";
 
 export default node;

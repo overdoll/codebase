@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<060d139ec3842f2637c4fb848fddc92f>>
- * @relayHash 58611e307d2283f96a33532ab24ed163
+ * @generated SignedSource<<1f872018ed193be900b7f158c3290e1d>>
+ * @relayHash 0428594a08ce55814dbc8dc3fef4ffaa
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,14 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 58611e307d2283f96a33532ab24ed163
+// @relayRequestID 0428594a08ce55814dbc8dc3fef4ffaa
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
+export type AuthenticationTokenMethod = "CODE" | "MAGIC_LINK" | "%future added value";
 export type GrantAuthenticationTokenInput = {
   email: string;
+  method?: AuthenticationTokenMethod | null;
 };
 export type EmptyJoinMutation$variables = {
   input: GrantAuthenticationTokenInput;
@@ -24,6 +26,7 @@ export type EmptyJoinMutation$data = {
     readonly authenticationToken: {
       readonly email: string | null;
       readonly id: string;
+      readonly method: AuthenticationTokenMethod;
       readonly sameDevice: boolean;
       readonly token: string;
       readonly " $fragmentSpreads": FragmentRefs<"ViewAuthenticationTokenJoinFragment">;
@@ -72,6 +75,13 @@ v4 = {
   "storageKey": null
 },
 v5 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "method",
+  "storageKey": null
+},
+v6 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -82,13 +92,6 @@ v5 = {
       "storageKey": null
     }
   ]
-},
-v6 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
 };
 return {
   "fragment": {
@@ -116,12 +119,13 @@ return {
               (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "ViewAuthenticationTokenJoinFragment"
               },
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -157,6 +161,7 @@ return {
               (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
+              (v5/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -187,15 +192,20 @@ return {
                     "name": "multiFactor",
                     "plural": false,
                     "selections": [
-                      (v6/*: any*/)
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__typename",
+                        "storageKey": null
+                      }
                     ],
                     "storageKey": null
                   }
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/),
-              (v5/*: any*/)
+              (v6/*: any*/)
             ],
             "storageKey": null
           }
@@ -205,7 +215,7 @@ return {
     ]
   },
   "params": {
-    "id": "58611e307d2283f96a33532ab24ed163",
+    "id": "0428594a08ce55814dbc8dc3fef4ffaa",
     "metadata": {},
     "name": "EmptyJoinMutation",
     "operationKind": "mutation",
@@ -214,6 +224,6 @@ return {
 };
 })();
 
-(node as any).hash = "7739672a752490057c8e97dff3925812";
+(node as any).hash = "8c05c4ea652c5faf06e41507327f5bb2";
 
 export default node;

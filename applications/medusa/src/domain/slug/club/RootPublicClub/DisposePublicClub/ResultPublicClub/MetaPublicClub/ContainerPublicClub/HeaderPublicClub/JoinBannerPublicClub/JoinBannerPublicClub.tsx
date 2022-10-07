@@ -51,7 +51,10 @@ export default function JoinBannerPublicClub (props: Props): JSX.Element {
       }}
     >
       <Flex
-        h={300}
+        h={{
+          base: 150,
+          md: 300
+        }}
         w={{
           base: '100%',
           md: '50%'
@@ -60,13 +63,16 @@ export default function JoinBannerPublicClub (props: Props): JSX.Element {
         <ClubHeaderBanner query={clubData} />
       </Flex>
       <Flex
-        h={300}
+        h={{
+          base: '100%',
+          md: 300
+        }}
         w={{
           base: '100%',
           md: '50%'
         }}
       >
-        <Stack spacing={6} w='100%' bg='dimmers.100' borderRadius='md' h='100%' align='center' justify='center'>
+        <Stack py={4} spacing={6} w='100%' bg='dimmers.100' borderRadius='md' h='100%' align='center' justify='center'>
           <ClubJoinBanner clubQuery={clubData} viewerQuery={viewerData} />
           <Stack align='center' spacing={2}>
             <HStack spacing={2}>

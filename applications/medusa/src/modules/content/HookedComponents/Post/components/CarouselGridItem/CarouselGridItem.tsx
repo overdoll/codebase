@@ -8,13 +8,15 @@ interface Props {
   swiper: SwiperType | null
   index: number
   children: ReactNode
+  isSupporter: boolean
 }
 
 export default function CarouselGridItem (props: Props): JSX.Element {
   const {
     swiper,
     index,
-    children
+    children,
+    isSupporter
   } = props
 
   const [activeIndex, setActiveIndex] = useState(0)
@@ -38,12 +40,13 @@ export default function CarouselGridItem (props: Props): JSX.Element {
         isDisabled={swiper == null}
         onClick={() => swiper?.slideTo(index, 50)}
         borderRadius='lg'
+        position='relative'
         h='100%'
         w='100%'
       >
         <Flex
           borderWidth={isActive ? 2 : 0}
-          borderColor={isActive ? 'whiteAlpha.800' : 'gray.50'}
+          borderColor={isActive ? (isSupporter ? 'orange.300' : 'whiteAlpha.800') : 'gray.50'}
           borderRadius='inherit'
           position='relative'
           w='100%'

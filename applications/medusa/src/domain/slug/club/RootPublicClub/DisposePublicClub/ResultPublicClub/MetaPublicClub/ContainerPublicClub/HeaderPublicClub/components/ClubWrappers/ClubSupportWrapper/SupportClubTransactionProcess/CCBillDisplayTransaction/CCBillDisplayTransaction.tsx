@@ -11,6 +11,7 @@ import { useQueryParam } from 'use-query-params'
 import useHistoryDisclosureContext
   from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 import ContactButton from '@//:common/components/Contact/ContactButton'
+import posthog from 'posthog-js'
 
 interface Props extends ComponentSearchArguments<any> {
   loadQuery: () => void
@@ -97,6 +98,10 @@ export default function CCBillDisplayTransaction ({
     }
     return () => clearInterval(interval)
   }, [isVerifying])
+
+  useEffect(() => {
+    posthog?.capture('display-transaction')
+  })
 
   if (queryData?.ccbillTransactionDetails == null) {
     return (

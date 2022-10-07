@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<064135fe8e76fc499df1d9bdc052eb82>>
- * @relayHash ddc3e637e3288c2cd8e3e1a0377e9a79
+ * @generated SignedSource<<fd2f0466edb9516dd1a636601f42e1d2>>
+ * @relayHash 91f7f0942921242230616ab6b64714bd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ddc3e637e3288c2cd8e3e1a0377e9a79
+// @relayRequestID 91f7f0942921242230616ab6b64714bd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -705,6 +705,13 @@ return {
                             "kind": "ScalarField",
                             "name": "isSupporterOnly",
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "supporterOnlyVideoMediaDuration",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -836,7 +843,7 @@ return {
     ]
   },
   "params": {
-    "id": "ddc3e637e3288c2cd8e3e1a0377e9a79",
+    "id": "91f7f0942921242230616ab6b64714bd",
     "metadata": {},
     "name": "ResultPublicClubPostsQuery",
     "operationKind": "query",
