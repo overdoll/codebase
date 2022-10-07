@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4ebe6fc2c131c7f4a2711308e5ebbc60>>
+ * @generated SignedSource<<f904149966687cbd083c52d6bd5d67b6>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,14 @@ export type ModerationPostActionsFragment$data = {
   readonly club: {
     readonly slug: string;
   };
+  readonly content: ReadonlyArray<{
+    readonly id: string;
+    readonly media: {
+      readonly containers?: ReadonlyArray<{
+        readonly url?: string;
+      }>;
+    };
+  }>;
   readonly reference: string;
   readonly " $fragmentSpreads": FragmentRefs<"ModerationRemovePostFormFragment">;
   readonly " $fragmentType": "ModerationPostActionsFragment";
@@ -55,6 +63,67 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "PostContent",
+      "kind": "LinkedField",
+      "name": "content",
+      "plural": true,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "id",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": null,
+          "kind": "LinkedField",
+          "name": "media",
+          "plural": false,
+          "selections": [
+            {
+              "kind": "InlineFragment",
+              "selections": [
+                {
+                  "alias": null,
+                  "args": null,
+                  "concreteType": null,
+                  "kind": "LinkedField",
+                  "name": "containers",
+                  "plural": true,
+                  "selections": [
+                    {
+                      "kind": "InlineFragment",
+                      "selections": [
+                        {
+                          "alias": null,
+                          "args": null,
+                          "kind": "ScalarField",
+                          "name": "url",
+                          "storageKey": null
+                        }
+                      ],
+                      "type": "MP4VideoContainer",
+                      "abstractKey": null
+                    }
+                  ],
+                  "storageKey": null
+                }
+              ],
+              "type": "VideoMedia",
+              "abstractKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ModerationRemovePostFormFragment"
@@ -64,6 +133,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "a507d633ba20f8faf746f7fc98e0dcd0";
+(node as any).hash = "aa67e369ce5bbdace5840a972ab68188";
 
 export default node;

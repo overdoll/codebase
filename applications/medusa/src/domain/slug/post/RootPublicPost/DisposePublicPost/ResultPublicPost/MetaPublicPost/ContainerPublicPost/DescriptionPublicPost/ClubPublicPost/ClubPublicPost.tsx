@@ -56,7 +56,7 @@ export default function ClubPublicPost (props: Props): JSX.Element {
       >
         <Box position='absolute' top={0} bottom={0} left={0} right={0} as='a' />
       </Link>
-      <Flex w='100%' align='center' direction='column'>
+      <Flex w='100%' align='flex-start' direction='column'>
         <HStack w='100%' align='center' justify='space-between'>
           <HStack justify='center'>
             <ClubIcon size='lg' clubQuery={postData.club} />

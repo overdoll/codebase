@@ -2,7 +2,7 @@ import { graphql, useFragment } from 'react-relay'
 import type { ModerationPostActionsFragment$key } from '@//:artifacts/ModerationPostActionsFragment.graphql'
 import { PageSectionTitle, PageSectionWrap } from '@//:modules/content/PageLayout'
 import { Trans } from '@lingui/macro'
-import { Box, Stack } from '@chakra-ui/react'
+import { Box, Stack, Text } from '@chakra-ui/react'
 import { Collapse, CollapseBody, CollapseButton } from '@//:modules/content/ThemeComponents/Collapse/Collapse'
 import ModerationRemovePostForm from './ModerationRemovePostForm/ModerationRemovePostForm'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
@@ -16,6 +16,18 @@ const Fragment = graphql`
     reference
     club {
       slug
+    }
+    content {
+      id
+      media {
+        ...on VideoMedia {
+          containers {
+            ...on MP4VideoContainer {
+              url
+            }
+          }
+        }
+      }
     }
     ...ModerationRemovePostFormFragment
   }
@@ -68,6 +80,19 @@ export default function ModerationPostActions ({ query }: Props): JSX.Element {
             Edit Post
           </Trans>
         </LinkButton>
+      </Box>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              MP4 Videos
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        {data.content.map((item) => (
+          <Text key={item.id}>
+            {JSON.stringify(item?.media?.containers)}
+          </Text>))}
       </Box>
     </Stack>
   )

@@ -59,8 +59,6 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
 
   const canLoadNext = limit == null || (data.edges.length <= limit)
 
-  console.log(data?.edges.length)
-
   if (data?.edges.length < 1) {
     return <EmptyPaginationScroller />
   }
