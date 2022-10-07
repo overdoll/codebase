@@ -53,6 +53,7 @@ export default function ClubSupportWrapper ({
   const closeButtonRef = useRef(null)
 
   const methods = useDisclosure({
+    defaultIsOpen: ((supportParam != null || tokenParam != null) && clubData.viewerMember?.isSupporter !== true && clubData.canSupport),
     onOpen () {
       posthog?.capture('open-support-modal')
     },
@@ -73,23 +74,17 @@ export default function ClubSupportWrapper ({
     }
   }, [isOpen])
 
-  const requestOpen = (): void => {
-    if ((supportParam != null || tokenParam != null) && clubData.viewerMember?.isSupporter !== true && clubData.canSupport) {
-      onOpen()
-    }
-  }
-
   useEffect(() => {
-    if (supportParam != null) {
-      requestOpen()
+    if (isOpen && supportParam != null) {
+      posthog?.capture('open-support-modal')
     }
-  }, [supportParam])
+  }, [isOpen, supportParam])
 
   return (
     <HistoryDisclosureProvider {...methods}>
       {runIfFunction(children, {
         onSupport: () => {
-          setSupportParam(true)
+          onOpen()
         },
         canSupport: clubData.canSupport
       })}

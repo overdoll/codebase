@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<363a5e2775432318d26c0efc87f8309a>>
+ * @generated SignedSource<<6b19a463bd55f5224a2d445bb65336e7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type RegisterAuthenticationTokenFragment$data = {
+  readonly accountStatus: {
+    readonly registered: boolean;
+  } | null;
   readonly id: string;
   readonly token: string;
   readonly " $fragmentSpreads": FragmentRefs<"RevokeViewAuthenticationTokenButtonFragment">;
@@ -42,6 +45,24 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": "AuthenticationTokenAccountStatus",
+      "kind": "LinkedField",
+      "name": "accountStatus",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "registered",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "RevokeViewAuthenticationTokenButtonFragment"
@@ -51,6 +72,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "2dc6c32fc2e01f0bdc3c586cff6c9881";
+(node as any).hash = "62d5c3102874f49758377dac6f90b3ca";
 
 export default node;
