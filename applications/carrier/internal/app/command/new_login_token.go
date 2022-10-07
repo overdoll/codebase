@@ -4,7 +4,6 @@ import (
 	"context"
 	"overdoll/applications/carrier/internal/domain/links"
 	"overdoll/applications/carrier/internal/domain/mailing"
-	"strings"
 )
 
 type NewLoginToken struct {
@@ -37,14 +36,7 @@ func (h NewLoginTokenHandler) Handle(ctx context.Context, cmd NewLoginToken) err
 		args["Link"] = link.String()
 
 	} else {
-
-		secret := strings.ToUpper(cmd.Secret)
-
-		if len(secret) == 6 {
-			secret = secret[:3] + "-" + secret[3:]
-		}
-
-		args["Code"] = secret
+		args["Code"] = cmd.Secret
 	}
 
 	template, err := mailing.NewTemplate(
