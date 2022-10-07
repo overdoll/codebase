@@ -264,6 +264,8 @@ func (c *AuthenticationToken) CanDelete(pass *passport.Passport, secret *string)
 		if strings.ToLower(c.secret) != strings.ToLower(*secret) {
 			return ErrInvalidSecret
 		}
+
+		return nil
 	}
 
 	if !c.SameDevice(pass) {
