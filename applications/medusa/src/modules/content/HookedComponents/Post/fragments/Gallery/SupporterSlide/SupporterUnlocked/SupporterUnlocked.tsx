@@ -27,7 +27,7 @@ export default function SupporterUnlocked (props: Props): JSX.Element {
     if (isActive) {
       timeoutRef.current = setTimeout(() => {
         setOpen(false)
-      })
+      }, 3000)
     } else {
       setOpen(true)
     }

@@ -33,12 +33,16 @@ export default function ThumbnailCarouseItem (props: Props): JSX.Element {
       <ThumbnailMedia mediaQuery={data} imageProps={imageProps} />
       {isSupporter && (
         <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
-          <Icon icon={PremiumStar} w={4} h={4} fill='orange.300' />
+          <Flex p={2} bg='dimmers.500' borderRadius='full'>
+            <Icon icon={PremiumStar} w={3} h={3} fill='orange.300' />
+          </Flex>
         </Flex>
       )}
       {(data.__typename === 'VideoMedia' && !isSupporter) && (
         <Flex position='absolute' w='100%' h='100%' align='center' justify='center'>
-          <Icon icon={ControlPlayButton} w={4} h={4} fill='whiteAlpha.800' />
+          <Flex p={2} bg='dimmers.500' borderRadius='full'>
+            <Icon icon={ControlPlayButton} w={3} h={3} fill='whiteAlpha.800' />
+          </Flex>
         </Flex>
       )}
     </>
