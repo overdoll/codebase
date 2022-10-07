@@ -16,6 +16,7 @@ export default function LinkTile (props: LinkTileProps): JSX.Element {
     children,
     w,
     linkProps,
+    h,
     isExternal = false,
     ...rest
   } = props
@@ -32,7 +33,7 @@ export default function LinkTile (props: LinkTileProps): JSX.Element {
 
   return (
     <Link passHref href={href} {...linkProps}>
-      <Box w={w ?? '100%'} as='a'>
+      <Box w={w ?? '100%'} h={h ?? undefined} as='a'>
         <ClickableTile {...rest}>
           {children}
         </ClickableTile>

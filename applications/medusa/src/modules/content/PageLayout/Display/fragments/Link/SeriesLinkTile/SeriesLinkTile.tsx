@@ -27,9 +27,6 @@ export default function SeriesLinkTile (props: Props): JSX.Element {
   return (
     <LinkTile
       {...rest}
-      linkProps={{
-        prefetch: false
-      }}
       href={{
         pathname: '/search/series/[seriesSlug]',
         query: {

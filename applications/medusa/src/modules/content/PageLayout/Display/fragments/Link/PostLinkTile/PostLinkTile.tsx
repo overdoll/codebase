@@ -1,8 +1,8 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { PostLinkTileFragment$key } from '@//:artifacts/PostLinkTileFragment.graphql'
 import { LinkTile } from '../../../../../ContentSelection'
-import { LinkTileProps } from '../../../../../ContentSelection/LinkTile/LinkTile'
 import { ReactNode } from 'react'
+import { LinkTileProps } from '../../../../../ContentSelection/LinkTile/LinkTile'
 
 interface Props extends Omit<LinkTileProps, 'href'> {
   query: PostLinkTileFragment$key
@@ -30,9 +30,6 @@ export default function PostLinkTile (props: Props): JSX.Element {
   return (
     <LinkTile
       {...rest}
-      linkProps={{
-        prefetch: false
-      }}
       href={{
         pathname: '/[slug]/post/[reference]',
         query: {
@@ -40,6 +37,7 @@ export default function PostLinkTile (props: Props): JSX.Element {
           reference: data.reference
         }
       }}
+      h='100%'
       overflow='visible'
     >
       {children}
