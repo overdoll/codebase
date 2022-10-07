@@ -4,12 +4,19 @@ import (
 	"github.com/posthog/posthog-go"
 	"go.uber.org/zap"
 	"os"
+	"overdoll/libraries/testing_tools"
 )
 
 func NewPosthogClient() posthog.Client {
 
+	posthogApiKey := os.Getenv("POSTHOG_PROJECT_API_KEY")
+
+	if posthogApiKey == "" {
+		return testing_tools.PosthogClientMock{}
+	}
+
 	posthogClient, err := posthog.NewWithConfig(
-		os.Getenv("POSTHOG_API_KEY"),
+		posthogApiKey,
 		posthog.Config{
 			Endpoint:       posthog.DefaultEndpoint,
 			PersonalApiKey: os.Getenv("POSTHOG_PERSONAL_API_KEY"),
