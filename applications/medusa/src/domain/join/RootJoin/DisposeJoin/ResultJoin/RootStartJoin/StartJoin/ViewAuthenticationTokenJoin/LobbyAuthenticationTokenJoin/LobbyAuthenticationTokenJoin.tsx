@@ -22,7 +22,6 @@ const Fragment = graphql`
     token
     email
     ...RevokeViewAuthenticationTokenButtonFragment
-    ...RefreshLobbyAuthenticationTokenJoinFragment
   }
 `
 
@@ -38,7 +37,7 @@ export default function LobbyAuthenticationTokenJoin (props: Props): JSX.Element
   return (
     <>
       <Head>
-        <title>Waiting for authentication - overdoll</title>
+        <title>Check your email - overdoll</title>
       </Head>
       <Stack w='100%' h='100%' justify='center' align='center' spacing={4}>
         <Stack spacing={4}>

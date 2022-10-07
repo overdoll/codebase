@@ -56,11 +56,11 @@ msgstr ""
 msgid "Discover clubs posting content"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:96
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:95
 msgid "Follow Twitter"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:101
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:100
 msgid "Follow us on Twitter"
 msgstr ""
 
@@ -77,7 +77,7 @@ msgstr ""
 msgid "GeneralButch's content archive"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:113
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:112
 msgid "Give Feedback"
 msgstr ""
 
@@ -103,11 +103,11 @@ msgstr ""
 msgid "Japanese-style pornography"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:78
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:77
 msgid "Join Discord"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:83
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:82
 msgid "Join our community Discord"
 msgstr ""
 
@@ -147,11 +147,11 @@ msgstr ""
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:60
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:59
 msgid "Post Content"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:65
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:64
 msgid "Post your adult content"
 msgstr ""
 
@@ -223,7 +223,7 @@ msgstr ""
 msgid "Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last"
 msgstr ""
 
-#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:118
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:117
 msgid "Tell us what you really think"
 msgstr ""
 

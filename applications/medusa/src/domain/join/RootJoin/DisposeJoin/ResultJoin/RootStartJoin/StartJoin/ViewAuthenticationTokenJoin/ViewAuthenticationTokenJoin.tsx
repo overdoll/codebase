@@ -6,6 +6,7 @@ import MultiFactorAuthenticationToken from './MultiFactorAuthenticationToken/Mul
 import GrantAuthenticationTokenJoin from './GrantAuthenticationTokenJoin/GrantAuthenticationTokenJoin'
 import { usePageVisibility } from '@//:modules/hooks/usePageVisibility'
 import { useUpdateEffect } from 'usehooks-ts'
+import CodeAuthenticationTokenJoin from './CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoin'
 
 interface Props {
   query: ViewAuthenticationTokenJoinFragment$key
@@ -16,6 +17,7 @@ const Fragment = graphql`
   fragment ViewAuthenticationTokenJoinFragment on AuthenticationToken {
     id
     verified
+    method
     accountStatus {
       registered
       multiFactor {
@@ -26,6 +28,7 @@ const Fragment = graphql`
     ...LobbyAuthenticationTokenJoinFragment
     ...MultiFactorAuthenticationTokenFragment
     ...RegisterAuthenticationTokenFragment
+    ...CodeAuthenticationTokenJoinFragment
   }
 `
 
@@ -46,9 +49,15 @@ export default function ViewAuthenticationTokenJoin (props: Props): JSX.Element 
     }
   }, [isVisible, data])
 
-  if (!data.verified) {
+  if (!data.verified && data.method === 'MAGIC_LINK') {
     return (
       <LobbyAuthenticationTokenJoin query={data} />
+    )
+  }
+
+  if (!data.verified && data.method === 'CODE') {
+    return (
+      <CodeAuthenticationTokenJoin query={data} />
     )
   }
 

@@ -1,5 +1,14 @@
-import { createContext, ReactNode, Suspense, useContext } from 'react'
-import { Box, Flex, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure } from '@chakra-ui/react'
+import { createContext, ReactNode, Suspense, useContext, useEffect, useState } from 'react'
+import {
+  Box,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalOverlay,
+  useDisclosure,
+  useUpdateEffect
+} from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import { useRouter } from 'next/router'
 import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
@@ -9,6 +18,8 @@ import { SkeletonStack } from '@//:modules/content/Placeholder'
 import RootModalJoin from './RootModalJoin/RootModalJoin'
 import { useCookies } from 'react-cookie'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import { graphql, useFragment } from 'react-relay/hooks'
+import { JoinModalProviderFragment$key } from '@//:artifacts/JoinModalProviderFragment.graphql'
 
 interface JoinModalContextProps {
   onOpen: () => void
@@ -16,6 +27,7 @@ interface JoinModalContextProps {
 
 interface JoinModalProviderProps {
   children: ReactNode
+  query: JoinModalProviderFragment$key | null
 }
 
 const defaultValue = {
@@ -29,10 +41,19 @@ interface SearchProps {
 
 const JoinModalContext = createContext<JoinModalContextProps>(defaultValue)
 
+const Fragment = graphql`
+  fragment JoinModalProviderFragment on Account {
+    __typename
+  }
+`
+
 export function JoinModalProvider (props: JoinModalProviderProps): JSX.Element {
   const {
-    children
+    children,
+    query
   } = props
+
+  const data = useFragment(Fragment, query)
 
   const {
     isOpen,
@@ -51,6 +72,12 @@ export function JoinModalProvider (props: JoinModalProviderProps): JSX.Element {
       token: cookieToken
     }
   })
+
+  useUpdateEffect(() => {
+    if (isOpen && data != null) {
+      onClose()
+    }
+  }, [data, isOpen])
 
   return (
     <>
@@ -91,6 +118,7 @@ export function useJoinContext (): JoinModalContextProps {
 
 export function useJoin (redirect?: string | UrlObject, from?: string): () => void {
   const { onOpen } = useJoinContext()
+  const [canFlag, setCanFlag] = useState(false)
 
   const gotoRedirect = redirect != null ? encodeJoinRedirect(redirect, from) : '/join'
 
@@ -105,5 +133,23 @@ export function useJoin (redirect?: string | UrlObject, from?: string): () => vo
     void router.push(gotoRedirect)
   }
 
-  return onOpenJoin
+  useEffect(() => {
+    posthog.onFeatureFlags(() => {
+      setCanFlag(true)
+    })
+  }, [])
+
+  if (!canFlag) {
+    return onRedirectJoin
+  }
+
+  if (posthog.getFeatureFlag('join-modal') === 'control') {
+    return onRedirectJoin
+  }
+
+  if (posthog.getFeatureFlag('join-modal') === 'test_modal') {
+    return onOpenJoin
+  }
+
+  return onRedirectJoin
 }

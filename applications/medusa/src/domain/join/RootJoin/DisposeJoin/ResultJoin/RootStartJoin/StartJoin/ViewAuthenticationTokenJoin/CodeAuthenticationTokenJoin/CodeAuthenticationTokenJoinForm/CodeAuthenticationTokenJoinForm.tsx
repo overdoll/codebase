@@ -3,59 +3,55 @@ import { Stack } from '@chakra-ui/react'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi'
 import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-import Email from '@//:modules/validation/Email'
 import {
   Form,
   FormInput,
   FormSubmitButton,
   InputBody,
-  InputFeedback,
   InputFooter,
   TextInput
 } from '@//:modules/content/HookedComponents/Form'
+import { useLingui } from '@lingui/react'
+import VerifyToken6DigitSecret from '@//:modules/validation/VerifyToken6DigitSecret'
 
-interface JoinValues {
-  email: string
+interface RegisterValues {
+  secret: string
 }
 
 interface Props {
-  onSubmit: (JoinValues) => void
+  onSubmit: (props) => void
   isLoading: boolean
 }
 
-export default function EmptyJoinForm (props: Props): JSX.Element {
+export default function CodeAuthenticationTokenJoinForm (props: Props): JSX.Element {
   const {
     onSubmit,
     isLoading
   } = props
 
+  const { i18n } = useLingui()
+
   const schema = Joi.object({
-    email: Email()
+    secret: VerifyToken6DigitSecret()
   })
 
-  const methods = useForm<JoinValues>({
+  const methods = useForm<RegisterValues>({
     resolver: joiResolver(
       schema
     )
   })
 
-  const { i18n } = useLingui()
-
   return (
-    <Form onSubmit={onSubmit} {...methods}>
-      <Stack w='100%' spacing={4}>
+    <Form {...methods} onSubmit={onSubmit}>
+      <Stack w='100%' spacing={6}>
         <FormInput
-          id='email'
           size='xl'
+          id='secret'
         >
           <InputBody>
             <TextInput
-              placeholder={
-                i18n._(t`Enter an email`)
-              }
+              placeholder={i18n._(t`Enter 6-digit code`)}
             />
-            <InputFeedback />
           </InputBody>
           <InputFooter />
         </FormInput>
@@ -64,6 +60,7 @@ export default function EmptyJoinForm (props: Props): JSX.Element {
           variant='solid'
           colorScheme='primary'
           isLoading={isLoading}
+          w='100%'
         >
           <Trans>
             Next

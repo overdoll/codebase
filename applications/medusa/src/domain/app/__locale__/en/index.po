@@ -234,7 +234,7 @@ msgstr ""
 #~ msgid "Exclusive Supporter Content"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterUnlocked/SupporterUnlocked.tsx:41
+#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterUnlocked/SupporterUnlocked.tsx:64
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
@@ -274,7 +274,7 @@ msgstr ""
 msgid "Join overdoll to get updates when {0} makes a new post"
 msgstr ""
 
-#: src/common/components/JoinRedirectPrompt/JoinRedirectPrompt.tsx:54
+#: src/common/components/JoinRedirectPrompt/JoinRedirectPrompt.tsx:57
 msgid "Join overdoll to hide this"
 msgstr ""
 
@@ -545,6 +545,10 @@ msgstr ""
 msgid "Please enter an email"
 msgstr ""
 
+#: src/modules/validation/VerifyToken6DigitSecret.ts:13
+msgid "Please enter the 6-character code you received in your email"
+msgstr ""
+
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:82
 msgid "Please review the <0>Club Guidelines</0> to make sure this doesn't happen again."
 msgstr ""
@@ -561,7 +565,7 @@ msgstr ""
 msgid "Post queued for processing"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:121
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:118
 msgid "Post report was submitted successfully"
 msgstr ""
 
@@ -617,9 +621,9 @@ msgstr ""
 #~ msgid "Remove Upload"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:149
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:168
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:186
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:146
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:165
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:183
 msgid "Report Post"
 msgstr ""
 
@@ -627,7 +631,7 @@ msgstr ""
 #~ msgid "Report post"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:159
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:156
 msgid "Reported"
 msgstr ""
 
@@ -780,7 +784,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:212
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:209
 msgid "Submit Report"
 msgstr ""
 
@@ -836,6 +840,14 @@ msgstr ""
 msgid "The code can only contain numbers"
 msgstr ""
 
+#: src/modules/validation/VerifyToken6DigitSecret.ts:15
+msgid "The code can only contain numbers and letters"
+msgstr ""
+
+#: src/modules/validation/VerifyToken6DigitSecret.ts:14
+msgid "The code must be 6 characters long"
+msgstr ""
+
 #: src/modules/validation/Totp.ts:14
 msgid "The code must be 6 digits long"
 msgstr ""
@@ -868,7 +880,7 @@ msgstr ""
 msgid "There was an error deleting the post"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:138
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:135
 msgid "There was an error submitting the report"
 msgstr ""
 
@@ -917,7 +929,7 @@ msgstr ""
 msgid "This code is either invalid or has expired"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterLocked/SupporterLocked.tsx:49
+#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterLocked/SupporterLocked.tsx:60
 msgid "This content can only be seen if you are a supporter of the club"
 msgstr ""
 
@@ -977,7 +989,7 @@ msgstr ""
 msgid "Unlock Account"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterLocked/SupporterLocked.tsx:64
+#: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterLocked/SupporterLocked.tsx:75
 msgid "Unlock Supporter Content"
 msgstr ""
 
@@ -1055,7 +1067,7 @@ msgstr ""
 msgid "Yesterday"
 msgstr ""
 
-#: src/modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:81
+#: src/modules/content/Wrappers/ClubJoinWrapper/ClubJoinWrapper.tsx:86
 msgid "You are now a member of {0}!"
 msgstr ""
 

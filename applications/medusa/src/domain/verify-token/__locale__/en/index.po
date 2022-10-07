@@ -34,7 +34,7 @@ msgstr ""
 #~ msgid "I closed the original tab"
 #~ msgstr ""
 
-#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:108
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:106
 msgid "If you closed the original page, just open it back up."
 msgstr ""
 
@@ -42,7 +42,7 @@ msgstr ""
 #~ msgid "If you closed the original tab, just open it back up!"
 #~ msgstr ""
 
-#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:61
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:59
 msgid "Just a few more seconds to log you in."
 msgstr ""
 
@@ -90,7 +90,7 @@ msgstr ""
 msgid "We couldn't verify this login link."
 msgstr ""
 
-#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:84
+#: src/domain/verify-token/RootVerifyToken/DisposeVerifyToken/ResultVerifyToken/ViewVerifyToken/CompleteVerifyToken/CompleteVerifyToken.tsx:82
 msgid "We have logged you into the requested device."
 msgstr ""
 

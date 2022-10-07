@@ -9,7 +9,7 @@ import { useUpdateEffect } from 'usehooks-ts'
 import StartJoin from './StartJoin/StartJoin'
 import { QueryErrorBoundary } from '@//:modules/content/Placeholder'
 import RefreshLobbyAuthenticationTokenJoin
-  from './StartJoin/ViewAuthenticationTokenJoin/LobbyAuthenticationTokenJoin/RefreshLobbyAuthenticationTokenJoin/RefreshLobbyAuthenticationTokenJoin'
+  from './RefreshLobbyAuthenticationTokenJoin/RefreshLobbyAuthenticationTokenJoin'
 
 interface SearchProps {
   token: string
@@ -24,6 +24,7 @@ const Fragment = graphql`
   fragment RootStartJoinFragment on AuthenticationToken {
     verified
     token
+    method
     ...StartJoinFragment
     ...RefreshLobbyAuthenticationTokenJoinFragment
   }
@@ -58,7 +59,7 @@ export default function RootStartJoin (props: Props): JSX.Element {
 
   // refresh the token when in lobby
   useEffect(() => {
-    if (data == null || data?.verified) return
+    if (data == null || data?.verified || data.method === 'CODE') return
     const refreshLoop = (): void => {
       loadSearchQuery({ token: cookieToken })
       timeout.current = setTimeout(refreshLoop, 2000)

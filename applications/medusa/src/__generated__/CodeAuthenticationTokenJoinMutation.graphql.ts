@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1f872018ed193be900b7f158c3290e1d>>
- * @relayHash 0428594a08ce55814dbc8dc3fef4ffaa
+ * @generated SignedSource<<5005b0cb9a951a51e07e465fc0677ab7>>
+ * @relayHash e370f724ac5236c9351ca29ff724096f
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,33 +9,38 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 0428594a08ce55814dbc8dc3fef4ffaa
+// @relayRequestID e370f724ac5236c9351ca29ff724096f
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type AuthenticationTokenMethod = "CODE" | "MAGIC_LINK" | "%future added value";
-export type GrantAuthenticationTokenInput = {
-  email: string;
-  method?: AuthenticationTokenMethod | null;
+export type VerifyAuthenticationTokenValidation = "TOKEN_INVALID" | "%future added value";
+export type VerifyAuthenticationTokenInput = {
+  secret: string;
+  token: string;
 };
-export type EmptyJoinMutation$variables = {
-  input: GrantAuthenticationTokenInput;
+export type CodeAuthenticationTokenJoinMutation$variables = {
+  input: VerifyAuthenticationTokenInput;
 };
-export type EmptyJoinMutation$data = {
-  readonly grantAuthenticationToken: {
+export type CodeAuthenticationTokenJoinMutation$data = {
+  readonly verifyAuthenticationToken: {
     readonly authenticationToken: {
+      readonly accountStatus: {
+        readonly multiFactor: {
+          readonly totp: boolean;
+        } | null;
+        readonly registered: boolean;
+      } | null;
       readonly email: string | null;
       readonly id: string;
-      readonly method: AuthenticationTokenMethod;
-      readonly sameDevice: boolean;
-      readonly token: string;
+      readonly verified: boolean;
       readonly " $fragmentSpreads": FragmentRefs<"ViewAuthenticationTokenJoinFragment">;
     } | null;
+    readonly validation: VerifyAuthenticationTokenValidation | null;
   } | null;
 };
-export type EmptyJoinMutation = {
-  response: EmptyJoinMutation$data;
-  variables: EmptyJoinMutation$variables;
+export type CodeAuthenticationTokenJoinMutation = {
+  response: CodeAuthenticationTokenJoinMutation$data;
+  variables: CodeAuthenticationTokenJoinMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -57,31 +62,38 @@ v2 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "validation",
   "storageKey": null
 },
 v3 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "token",
+  "name": "id",
   "storageKey": null
 },
 v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "sameDevice",
+  "name": "verified",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "method",
+  "name": "registered",
   "storageKey": null
 },
 v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "totp",
+  "storageKey": null
+},
+v7 = {
   "kind": "ClientExtension",
   "selections": [
     {
@@ -98,16 +110,17 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "EmptyJoinMutation",
+    "name": "CodeAuthenticationTokenJoinMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "GrantAuthenticationTokenPayload",
+        "concreteType": "VerifyAuthenticationTokenPayload",
         "kind": "LinkedField",
-        "name": "grantAuthenticationToken",
+        "name": "verifyAuthenticationToken",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -116,16 +129,38 @@ return {
             "name": "authenticationToken",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
-              (v5/*: any*/),
+              {
+                "alias": null,
+                "args": null,
+                "concreteType": "AuthenticationTokenAccountStatus",
+                "kind": "LinkedField",
+                "name": "accountStatus",
+                "plural": false,
+                "selections": [
+                  (v5/*: any*/),
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "MultiFactor",
+                    "kind": "LinkedField",
+                    "name": "multiFactor",
+                    "plural": false,
+                    "selections": [
+                      (v6/*: any*/)
+                    ],
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
               {
                 "args": null,
                 "kind": "FragmentSpread",
                 "name": "ViewAuthenticationTokenJoinFragment"
               },
-              (v6/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -140,16 +175,17 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "EmptyJoinMutation",
+    "name": "CodeAuthenticationTokenJoinMutation",
     "selections": [
       {
         "alias": null,
         "args": (v1/*: any*/),
-        "concreteType": "GrantAuthenticationTokenPayload",
+        "concreteType": "VerifyAuthenticationTokenPayload",
         "kind": "LinkedField",
-        "name": "grantAuthenticationToken",
+        "name": "verifyAuthenticationToken",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -158,17 +194,8 @@ return {
             "name": "authenticationToken",
             "plural": false,
             "selections": [
-              (v2/*: any*/),
               (v3/*: any*/),
               (v4/*: any*/),
-              (v5/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "verified",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -177,13 +204,7 @@ return {
                 "name": "accountStatus",
                 "plural": false,
                 "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "registered",
-                    "storageKey": null
-                  },
+                  (v5/*: any*/),
                   {
                     "alias": null,
                     "args": null,
@@ -192,6 +213,7 @@ return {
                     "name": "multiFactor",
                     "plural": false,
                     "selections": [
+                      (v6/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -205,7 +227,21 @@ return {
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/)
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "method",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "token",
+                "storageKey": null
+              },
+              (v7/*: any*/)
             ],
             "storageKey": null
           }
@@ -215,15 +251,15 @@ return {
     ]
   },
   "params": {
-    "id": "0428594a08ce55814dbc8dc3fef4ffaa",
+    "id": "e370f724ac5236c9351ca29ff724096f",
     "metadata": {},
-    "name": "EmptyJoinMutation",
+    "name": "CodeAuthenticationTokenJoinMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "8c05c4ea652c5faf06e41507327f5bb2";
+(node as any).hash = "16f48ecf819b9f5fdbd56dd40b9a6858";
 
 export default node;

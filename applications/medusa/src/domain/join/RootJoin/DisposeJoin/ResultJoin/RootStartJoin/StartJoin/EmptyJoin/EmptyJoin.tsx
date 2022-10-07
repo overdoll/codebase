@@ -8,6 +8,7 @@ import { t, Trans } from '@lingui/macro'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import EmptyJoinForm from './EmptyJoinForm/EmptyJoinForm'
 import posthog from 'posthog-js'
+import { AuthenticationTokenMethod } from '@//:artifacts/RootStartJoinFragment.graphql'
 
 const Mutation = graphql`
   mutation EmptyJoinMutation($input: GrantAuthenticationTokenInput!) {
@@ -17,6 +18,7 @@ const Mutation = graphql`
         email
         token
         sameDevice
+        method
         ...ViewAuthenticationTokenJoinFragment
       }
     }
@@ -31,10 +33,23 @@ export default function EmptyJoin (): JSX.Element {
   const [cookies, setCookie] = useCookies<string>(['token'])
 
   const onSubmit = ({ email }): void => {
+    const getMethod = (): string => {
+      if (posthog.getFeatureFlag('join-six-digit-code') === 'control') {
+        return 'MAGIC_LINK'
+      }
+
+      if (posthog.getFeatureFlag('join-six-digit-code') === 'code') {
+        return 'CODE'
+      }
+
+      return 'MAGIC_LINK'
+    }
+
     commit({
       variables: {
         input: {
-          email: email
+          email: email,
+          method: getMethod() as AuthenticationTokenMethod
         }
       },
       updater: (store, payload) => {

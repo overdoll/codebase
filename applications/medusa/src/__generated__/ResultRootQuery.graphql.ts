@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<59bf3e2ba457977ff8f1fb5e51be36e6>>
- * @relayHash f619ae51d54490078c43cf042aeb0688
+ * @generated SignedSource<<2cc4c6d691449bc30d0b8f5c495352c2>>
+ * @relayHash 9e81e3226464285f6263e7fe33a1bcea
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f619ae51d54490078c43cf042aeb0688
+// @relayRequestID 9e81e3226464285f6263e7fe33a1bcea
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type ResultRootQuery$variables = {};
 export type ResultRootQuery$data = {
   readonly viewer: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "JoinModalProviderFragment" | "NavigationPopupFragment">;
   } | null;
 };
 export type ResultRootQuery = {
@@ -68,6 +68,11 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "NavigationPopupFragment"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "JoinModalProviderFragment"
           }
         ],
         "storageKey": null
@@ -160,7 +165,7 @@ return {
     ]
   },
   "params": {
-    "id": "f619ae51d54490078c43cf042aeb0688",
+    "id": "9e81e3226464285f6263e7fe33a1bcea",
     "metadata": {},
     "name": "ResultRootQuery",
     "operationKind": "query",
@@ -169,6 +174,6 @@ return {
 };
 })();
 
-(node as any).hash = "7550a3d0b6b61d8348fb7a7b99a7226b";
+(node as any).hash = "d4e3b355d88c22d561ec4aa8266b0688";
 
 export default node;

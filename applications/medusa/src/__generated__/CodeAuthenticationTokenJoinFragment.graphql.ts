@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fee279f618ff857d8bfbf880b9f41136>>
+ * @generated SignedSource<<2c84df4640cf44d073c473220667f10c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,22 +10,22 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type LobbyAuthenticationTokenJoinFragment$data = {
+export type CodeAuthenticationTokenJoinFragment$data = {
   readonly email: string | null;
   readonly token: string;
   readonly " $fragmentSpreads": FragmentRefs<"RevokeViewAuthenticationTokenButtonFragment">;
-  readonly " $fragmentType": "LobbyAuthenticationTokenJoinFragment";
+  readonly " $fragmentType": "CodeAuthenticationTokenJoinFragment";
 };
-export type LobbyAuthenticationTokenJoinFragment$key = {
-  readonly " $data"?: LobbyAuthenticationTokenJoinFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"LobbyAuthenticationTokenJoinFragment">;
+export type CodeAuthenticationTokenJoinFragment$key = {
+  readonly " $data"?: CodeAuthenticationTokenJoinFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"CodeAuthenticationTokenJoinFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "LobbyAuthenticationTokenJoinFragment",
+  "name": "CodeAuthenticationTokenJoinFragment",
   "selections": [
     {
       "alias": null,
@@ -56,6 +56,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "c7cf6c97b3c0405557852db41608ef6e";
+(node as any).hash = "7ffd2bca510cadc0d51c17046f568d46";
 
 export default node;

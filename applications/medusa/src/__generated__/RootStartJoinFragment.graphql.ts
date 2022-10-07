@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6bd9bf06fc7a850d65e705c3d4cf5ac5>>
+ * @generated SignedSource<<053b2324ceb4d4055b1f1c38e9817201>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,8 +9,10 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type AuthenticationTokenMethod = "CODE" | "MAGIC_LINK" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type RootStartJoinFragment$data = {
+  readonly method: AuthenticationTokenMethod;
   readonly token: string;
   readonly verified: boolean;
   readonly " $fragmentSpreads": FragmentRefs<"RefreshLobbyAuthenticationTokenJoinFragment" | "StartJoinFragment">;
@@ -42,6 +44,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "method",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "StartJoinFragment"
@@ -56,6 +65,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "90a1a4d5708e1c537e4b8b804dcbd124";
+(node as any).hash = "b0f33c2809fbd2975faf767ebb5ccf73";
 
 export default node;
