@@ -260,8 +260,10 @@ func (c *AuthenticationToken) CanView(pass *passport.Passport, secret *string) e
 
 func (c *AuthenticationToken) CanDelete(pass *passport.Passport, secret *string) error {
 
-	if strings.ToLower(c.secret) != strings.ToLower(*secret) {
-		return ErrInvalidSecret
+	if secret != nil {
+		if strings.ToLower(c.secret) != strings.ToLower(*secret) {
+			return ErrInvalidSecret
+		}
 	}
 
 	if !c.SameDevice(pass) {
