@@ -27,9 +27,6 @@ export default function CategoryLinkTile (props: Props): JSX.Element {
   return (
     <LinkTile
       {...rest}
-      linkProps={{
-        prefetch: false
-      }}
       href={{
         pathname: '/search/category/[slug]',
         query: {

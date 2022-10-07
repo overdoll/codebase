@@ -49,9 +49,6 @@ export default function CharacterLinkTile (props: Props): JSX.Element {
   return (
     <LinkTile
       {...rest}
-      linkProps={{
-        prefetch: false
-      }}
       href={decideHref}
       overflow='visible'
     >
