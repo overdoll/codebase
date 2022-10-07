@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5f5f48263bdc5773fe1d932b0aea8f62>>
- * @relayHash 9aca97ef0780bc6cc05105444862c4a4
+ * @generated SignedSource<<ce4970b9fdfad66599561b5ed8c5d1ed>>
+ * @relayHash e9f1a2540f596b565c5ffd6e19ccfcc6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9aca97ef0780bc6cc05105444862c4a4
+// @relayRequestID e9f1a2540f596b565c5ffd6e19ccfcc6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -306,7 +306,7 @@ return {
     ]
   },
   "params": {
-    "id": "9aca97ef0780bc6cc05105444862c4a4",
+    "id": "e9f1a2540f596b565c5ffd6e19ccfcc6",
     "metadata": {},
     "name": "RefreshLobbyAuthenticationTokenJoinQuery",
     "operationKind": "query",

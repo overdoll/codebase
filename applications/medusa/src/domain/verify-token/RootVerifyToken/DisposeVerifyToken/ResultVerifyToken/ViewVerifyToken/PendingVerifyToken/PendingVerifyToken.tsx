@@ -33,7 +33,7 @@ export default function PendingVerifyToken (props: Props): JSX.Element {
     }
   }, [data])
 
-  usePreventWindowUnload(true)
+  usePreventWindowUnload(!data.verified)
 
   return (
     <>

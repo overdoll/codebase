@@ -15,11 +15,17 @@ import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
 import { UrlObject } from 'url'
 import posthog from 'posthog-js'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
-import RootModalJoin from './RootModalJoin/RootModalJoin'
 import { useCookies } from 'react-cookie'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { JoinModalProviderFragment$key } from '@//:artifacts/JoinModalProviderFragment.graphql'
+import dynamic from 'next/dynamic'
+
+const Lazy = dynamic(
+  async () => {
+    return await import('./RootModalJoin/RootModalJoin')
+  }
+)
 
 interface JoinModalContextProps {
   onOpen: () => void
@@ -99,7 +105,7 @@ export function JoinModalProvider (props: JoinModalProviderProps): JSX.Element {
                 <CloseButton borderRadius='lg' variant='solid' onClick={onClose} size='md' />
               </Flex>
               <Suspense fallback={<SkeletonStack />}>
-                <RootModalJoin loadQuery={loadQuery} searchArguments={searchArguments} />
+                <Lazy loadQuery={loadQuery} searchArguments={searchArguments} />
               </Suspense>
             </Box>
           </ModalBody>

@@ -25,7 +25,7 @@ export default function MultiFactorAuthenticationToken (props: Props): JSX.Eleme
 
   const [useRecovery, setUseRecovery] = useState(false)
 
-  usePreventWindowUnload(true)
+  usePreventWindowUnload(data != null)
 
   if (useRecovery) {
     return (

@@ -63,6 +63,9 @@ const Fragment = graphql`
   fragment RegisterAuthenticationTokenFragment on AuthenticationToken {
     id
     token
+    accountStatus {
+      registered
+    }
     ...RevokeViewAuthenticationTokenButtonFragment
   }
 `
@@ -168,7 +171,7 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
     })
   }
 
-  usePreventWindowUnload(true)
+  usePreventWindowUnload(data.accountStatus?.registered === false)
 
   return (
     <>

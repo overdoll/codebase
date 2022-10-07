@@ -1,6 +1,6 @@
 import { forwardRef, ReactNode, useContext } from 'react'
 import { IconType } from '@//:types/components'
-import { UrlObject } from 'url'
+import type { UrlObject } from 'url'
 import { HorizontalNavigationDropdownMenuContext } from '../../context'
 import NavLink from '../../../../../../routing/NavLink'
 import { Box } from '@chakra-ui/react'
