@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"github.com/go-playground/validator/v10"
-	"golang.org/x/crypto/nacl/secretbox"
 	"overdoll/applications/eva/internal/domain/location"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
@@ -44,7 +43,7 @@ var (
 )
 
 // Characters that are allowed to show up in our random string
-const allowedCodeCharacters = "0123456789abcdefghijklmnopqrstuvwxyz"
+const allowedCodeCharacters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 // how long is each code
 const codeLength = 6
@@ -86,7 +85,7 @@ func NewAuthenticationTokenCode(email string, location *location.Location, pass 
 
 	ck := &AuthenticationToken{
 		token:      tokenKeyEncoded,
-		expiration: time.Minute * 10,
+		expiration: time.Minute * 15,
 		email:      properEmail,
 		secret:     secret,
 		verified:   false,
@@ -130,7 +129,7 @@ func NewAuthenticationTokenMagicLink(email string, location *location.Location, 
 	ck := &AuthenticationToken{
 		token:      tokenKeyEncoded,
 		secret:     secretKeyEncoded,
-		expiration: time.Minute * 10,
+		expiration: time.Minute * 15,
 		email:      properEmail,
 		verified:   false,
 		userAgent:  pass.UserAgent(),
@@ -218,19 +217,8 @@ func (c *AuthenticationToken) MakeVerified(secret string) error {
 		return ErrAlreadyVerified
 	}
 
-	if c.email == "" {
-
-		decrypted, err := decryptBox(c.token, secret)
-
-		if err != nil {
-			return err
-		}
-
-		c.email = decrypted
-	} else {
-		if c.secret != secret {
-			return ErrInvalidSecret
-		}
+	if strings.ToLower(c.secret) != strings.ToLower(secret) {
+		return ErrInvalidSecret
 	}
 
 	c.verified = true
@@ -246,18 +234,8 @@ func (c *AuthenticationToken) ViewEmailWithSecret(secret string) (string, error)
 		return "", ErrNotVerified
 	}
 
-	if c.secret == "" {
-
-		_, err := decryptBox(c.token, secret)
-
-		if err != nil {
-			return "", err
-		}
-
-	} else {
-		if c.secret != secret {
-			return "", ErrInvalidSecret
-		}
+	if strings.ToLower(c.secret) != strings.ToLower(secret) {
+		return "", ErrInvalidSecret
 	}
 
 	return c.email, nil
@@ -282,21 +260,8 @@ func (c *AuthenticationToken) CanView(pass *passport.Passport, secret *string) e
 
 func (c *AuthenticationToken) CanDelete(pass *passport.Passport, secret *string) error {
 
-	if secret != nil {
-		if c.secret == "" {
-
-			_, err := decryptBox(c.token, *secret)
-
-			if err != nil {
-				return err
-			}
-
-		} else {
-			if c.secret != *secret {
-				return ErrInvalidSecret
-			}
-		}
-		return nil
+	if strings.ToLower(c.secret) != strings.ToLower(*secret) {
+		return ErrInvalidSecret
 	}
 
 	if !c.SameDevice(pass) {
@@ -304,32 +269,6 @@ func (c *AuthenticationToken) CanDelete(pass *passport.Passport, secret *string)
 	}
 
 	return nil
-}
-
-func decryptBox(content, secret string) (string, error) {
-
-	secretKeyBytes, err := hex.DecodeString(secret)
-	if err != nil {
-		return "", errors.Wrap(err, "failed to decode string")
-	}
-
-	contentBytes, err := hex.DecodeString(content)
-	if err != nil {
-		return "", errors.Wrap(err, "failed to decode string")
-	}
-
-	var secretKey [32]byte
-	copy(secretKey[:], secretKeyBytes)
-
-	var decryptNonce [24]byte
-	copy(decryptNonce[:], contentBytes[:24])
-
-	decrypted, ok := secretbox.Open(nil, contentBytes[24:], &decryptNonce, &secretKey)
-	if !ok {
-		return "", ErrInvalidSecret
-	}
-
-	return string(decrypted), nil
 }
 
 func validateEmail(email string) error {

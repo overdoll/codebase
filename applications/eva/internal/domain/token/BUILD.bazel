@@ -17,6 +17,5 @@ go_library(
         "//libraries/passport",
         "//libraries/uuid",
         "@com_github_go_playground_validator_v10//:validator",
-        "@org_golang_x_crypto//nacl/secretbox",
     ],
 )
