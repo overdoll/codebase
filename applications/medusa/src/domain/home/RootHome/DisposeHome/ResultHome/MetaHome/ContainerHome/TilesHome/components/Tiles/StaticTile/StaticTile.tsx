@@ -30,7 +30,7 @@ export default function StaticTile (props: Props): JSX.Element {
   } = props
 
   return (
-    <LinkTile onClick={onClick} isExternal={isExternal} linkProps={{ prefetch: false }} href={href}>
+    <LinkTile onClick={onClick} isExternal={isExternal} href={href}>
       <Flex
         h='100%'
         w='100%'

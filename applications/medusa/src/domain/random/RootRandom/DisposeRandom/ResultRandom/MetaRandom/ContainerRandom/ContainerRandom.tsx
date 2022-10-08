@@ -4,9 +4,7 @@ import { ContainerRandomFragment$key } from '@//:artifacts/ContainerRandomFragme
 import { ContainerRandomViewerFragment$key } from '@//:artifacts/ContainerRandomViewerFragment.graphql'
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import BannerRandom from './BannerRandom/BannerRandom'
-import HeaderRandom from './HeaderRandom/HeaderRandom'
 import ScrollRandom from './ScrollRandom/ScrollRandom'
-import { Stack } from '@chakra-ui/react'
 
 interface Props {
   rootQuery: ContainerRandomFragment$key
@@ -40,10 +38,7 @@ export default function ContainerRandom (props: Props): JSX.Element {
         <BannerRandom viewerQuery={viewerData} />
       </BannerContainer>
       <ContentContainer>
-        <Stack spacing={8}>
-          <HeaderRandom />
-          <ScrollRandom rootQuery={rootData} />
-        </Stack>
+        <ScrollRandom rootQuery={rootData} />
       </ContentContainer>
     </>
   )

@@ -107,6 +107,8 @@ export default function AccountAuthorizer ({
       })
     }
 
+    // posthog.feature_flags.override({ 'post-suggested': 'grid' })
+
     function onRouteChangeComplete (): void {
       if (trackingCode !== '') {
         posthog?.capture('$pageview', {

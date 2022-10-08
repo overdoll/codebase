@@ -43,6 +43,7 @@ export default function ScrollSuggestedPosts (props: Props): JSX.Element {
 
   return (
     <VerticalPaginationScroller
+      limit={12}
       postConnectionQuery={data.suggestedPosts}
       hasNext={hasNext}
       loadNext={loadNext}

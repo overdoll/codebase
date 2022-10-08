@@ -1,4 +1,4 @@
-import { Disposable, useFragment } from 'react-relay/hooks'
+import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { Box } from '@chakra-ui/react'
 import type { VerticalPaginationScrollerFragment$key } from '@//:artifacts/VerticalPaginationScrollerFragment.graphql'
@@ -7,11 +7,11 @@ import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import runIfFunction from '../../../../../support/runIfFunction'
 import { MaybeRenderProp } from '@//:types/components'
 import VerticalPaginationFooter from './VerticalPaginationFooter/VerticalPaginationFooter'
-import { Fragment, useEffect, useState, useTransition } from 'react'
-import { DisposeFn } from 'relay-runtime/lib/util/RelayRuntimeTypes'
+import { Fragment } from 'react'
 import EmptyPaginationScroller from './EmptyPaginationScroller/EmptyPaginationScroller'
 import MemoKey from './MemoKey/MemoKey'
 import JoinRedirectPrompt from '@//:common/components/JoinRedirectPrompt/JoinRedirectPrompt'
+import usePaginationScroller from './usePaginationScroller'
 
 interface ChildrenCallable {
   index: number
@@ -23,6 +23,7 @@ interface Props {
   loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
   children: MaybeRenderProp<ChildrenCallable>
+  limit?: number
 }
 
 const PostConnectionFragment = graphql`
@@ -41,47 +42,22 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     hasNext,
     loadNext,
     isLoadingNext,
-    children
+    children,
+    limit
   } = props
 
   const data = useFragment(PostConnectionFragment, postConnectionQuery)
 
-  const [hasError, setHasError] = useState(false)
-  const [dispose, setDispose] = useState<DisposeFn | null>(null)
-  // @ts-expect-error
-  const [isPending, startTransition] = useTransition({
-    timeoutMs: 300
+  const {
+    hasError,
+    onLoadNext,
+    isPending
+  } = usePaginationScroller({
+    loadNext,
+    isLoadingNext
   })
 
-  const onLoadNext = (): void => {
-    setHasError(false)
-    const disposedLoad = (): Disposable => {
-      return loadNext(8, {
-        onComplete: (error) => {
-          if (error != null) {
-            setHasError(true)
-          }
-        }
-      })
-    }
-
-    // this might cause errors but its really necessary to prevent noticeable
-    // lag that happens when loading more on mobile
-    // gives a much smoother experience
-    startTransition(() => {
-      disposedLoad()
-    })
-    setDispose(disposedLoad().dispose)
-  }
-
-  // on unmount, we dispose of the query if it's loading data
-  useEffect(() => {
-    return () => {
-      if (dispose != null && isLoadingNext) {
-        dispose()
-      }
-    }
-  }, [dispose, isLoadingNext])
+  const canLoadNext = limit == null || (data.edges.length <= limit)
 
   if (data?.edges.length < 1) {
     return <EmptyPaginationScroller />
@@ -94,7 +70,7 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     <Box>
       {data?.edges.map((item, index) => (
         <Fragment key={item.node.id}>
-          {(hasNext && !isPending && !isLoadingNext && !hasError && data.edges.length - 2 === index) &&
+          {(canLoadNext && hasNext && !isPending && !isLoadingNext && !hasError && data.edges.length - 2 === index) &&
             <LoadMoreObserver onObserve={onLoadNext} />}
           {(index % 10 === 0 && index !== 0) && (
             <JoinRedirectPrompt mb={16} seed={item.node.id} />
@@ -108,12 +84,14 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
           </MemoKey>
         </Fragment>
       ))}
-      <VerticalPaginationFooter
-        loadNext={onLoadNext}
-        hasNext={hasNext}
-        hasError={hasError}
-        isLoadingNext={isLoadingNext || isPending}
-      />
+      {canLoadNext && (
+        <VerticalPaginationFooter
+          loadNext={onLoadNext}
+          hasNext={hasNext}
+          hasError={hasError}
+          isLoadingNext={isLoadingNext || isPending}
+        />
+      )}
     </Box>
   )
 }
