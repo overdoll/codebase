@@ -33,6 +33,12 @@ var newClubSupporterSubscriptionHtml string
 //go:embed file_fixtures/new_club_supporter_subscription_test.txt
 var newClubSupporterSubscriptionText string
 
+//go:embed file_fixtures/new_creator_lead_test.html
+var newCreatorLeadHtml string
+
+//go:embed file_fixtures/new_creator_lead_test.txt
+var newCreatorLeadText string
+
 func TestInternalEmails(t *testing.T) {
 	t.Parallel()
 
@@ -121,5 +127,29 @@ func TestInternalEmails(t *testing.T) {
 		require.Equal(t, "Email confirmation for subscription 25WqY2AZfmlykwqKhQagxmI9gtd", content.Subject, "correct subject for the email")
 		require.Equal(t, newClubSupporterSubscriptionHtml, content.Html, "correct content for the email html")
 		require.Equal(t, newClubSupporterSubscriptionText, content.Text, "correct content for the email text")
+	}
+
+	time.Sleep(time.Second * 3)
+
+	timestampFrom = time.Now()
+
+	_, err = client.NewCreatorLead(context.Background(), &carrier.NewCreatorLeadRequest{
+		Email:     "test@test.com",
+		Username:  "test",
+		Portfolio: "https://test.com",
+		Details:   "some details",
+	})
+
+	require.NoError(t, err, "no error for sending new creator lead email")
+
+	content = waitForEmailAndGetResponse(t, os.Getenv("STAFF_ADDRESS"), timestampFrom)
+
+	if generateEmailFileFixturesRequest() {
+		generateEmailFileFixture("new_creator_lead_test.html", content.Html)
+		generateEmailFileFixture("new_creator_lead_test.txt", content.Text)
+	} else {
+		require.Equal(t, "New creator lead", content.Subject, "correct subject for the email")
+		require.Equal(t, newCreatorLeadHtml, content.Html, "correct content for the email html")
+		require.Equal(t, newCreatorLeadText, content.Text, "correct content for the email text")
 	}
 }

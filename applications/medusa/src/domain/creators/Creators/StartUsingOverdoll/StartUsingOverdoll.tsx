@@ -1,11 +1,19 @@
 import Button from '@//:modules/form/Button/Button'
 import { Icon } from '@//:modules/content/PageLayout'
-import { PremiumStar } from '@//:assets/icons'
+import { CheckMark, PremiumStar } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import React from 'react'
 import { keyframes } from '@chakra-ui/react'
 
-const StartUsingOverdoll = ({ onClick }) => {
+interface Props {
+  onClick: () => void
+  isFinalized: boolean
+}
+
+const StartUsingOverdoll = ({
+  onClick,
+  isFinalized
+}: Props): JSX.Element => {
   const topBubbles = keyframes`
   0%{
     background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;
@@ -41,11 +49,15 @@ const StartUsingOverdoll = ({ onClick }) => {
   return (
     <Button
       onClick={onClick}
-      colorScheme='orange'
-      size='lg'
-      leftIcon={<Icon icon={PremiumStar} w={5} h={5} fill='orange.900' />}
+      colorScheme={isFinalized ? 'green' : 'orange'}
+      disabled={isFinalized}
+      size={['md', 'lg', 'lg']}
+      _disabled={{ opacity: 1 }}
+      leftIcon={isFinalized
+        ? <Icon icon={CheckMark} w={5} h={5} fill='green.900' />
+        : <Icon icon={PremiumStar} w={5} h={5} fill='orange.900' />}
       _before={{
-        display: 'block',
+        display: isFinalized ? 'none' : 'block',
         animation: `${topBubbles} ease-in-out 5s forwards infinite`,
         transition: 'all ease-in-out 0.5s',
         top: '-75%',
@@ -67,7 +79,7 @@ const StartUsingOverdoll = ({ onClick }) => {
         backgroundSize: '10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%'
       }}
       _after={{
-        display: 'block',
+        display: isFinalized ? 'none' : 'block',
         animation: `${bottomBubbles} ease-in-out 5s forwards infinite`,
         bottom: '-75%',
         transition: 'all ease-in-out 0.5s',
@@ -88,7 +100,7 @@ const StartUsingOverdoll = ({ onClick }) => {
       }}
     >
       <Trans>
-        Start using overdoll
+        {isFinalized ? 'Request submitted!' : 'Start using overdoll'}
       </Trans>
     </Button>
   )

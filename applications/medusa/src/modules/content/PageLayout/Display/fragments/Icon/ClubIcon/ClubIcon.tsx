@@ -5,6 +5,7 @@ import { IconSizes } from '../../../../../HookedComponents/Media/fragments/Media
 import IconSizer from '../../../../../HookedComponents/Media/fragments/IconMedia/IconSizer/IconSizer'
 import RandomIcon from '../../../components/RandomIcon/RandomIcon'
 import { IconMedia } from '../../../../../HookedComponents/Media'
+import { FlexProps } from '@chakra-ui/react'
 
 const Fragment = graphql`
   fragment ClubIconFragment on Club {
@@ -16,7 +17,7 @@ const Fragment = graphql`
   }
 `
 
-interface Props {
+interface Props extends FlexProps {
   clubQuery: ClubIconFragment$key
   size?: IconSizes
 }
@@ -24,7 +25,8 @@ interface Props {
 export default function ClubIcon (props: Props): JSX.Element {
   const {
     clubQuery,
-    size = 'sm'
+    size = 'sm',
+    ...rest
   } = props
 
   const data = useFragment(Fragment, clubQuery)
@@ -38,6 +40,6 @@ export default function ClubIcon (props: Props): JSX.Element {
   }
 
   return (
-    <IconMedia size={size} mediaQuery={data.thumbnailMedia} />
+    <IconMedia sizerProps={{ ...rest }} size={size} mediaQuery={data.thumbnailMedia} />
   )
 }

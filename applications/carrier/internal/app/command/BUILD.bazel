@@ -18,6 +18,7 @@ go_library(
         "confirm_account_email.go",
         "moderator_post_in_queue.go",
         "new_club_supporter_subscription.go",
+        "new_creator_lead.go",
         "new_login_token.go",
         "post_failed_processing.go",
         "services.go",

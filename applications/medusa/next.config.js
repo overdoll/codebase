@@ -210,7 +210,7 @@ const moduleExports = withBundleAnalyzer({
       },
       {
         source: '/clubs/invite-only',
-        destination: '/artists',
+        destination: '/creators',
         permanent: true
       },
       // this causes an error where it says it redirected you too many times so we should just leave it
@@ -229,6 +229,11 @@ const moduleExports = withBundleAnalyzer({
       {
         source: '/roll',
         destination: '/roulette?utm_campaign=game_roulette&utm_source=roll_redirect',
+        permanent: true
+      },
+      {
+        source: '/artists',
+        destination: '/creators',
         permanent: true
       },
       {

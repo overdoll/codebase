@@ -58,7 +58,7 @@ export default function DesktopDropdownMenuButtons (): JSX.Element {
       </Can>
       <Can not I='create' a='Club'>
         <DesktopHorizontalNavigationDropdownMenuButton
-          href='/artists'
+          href='/creators'
           icon={ContentBrushPen}
           label={
             <Trans>

@@ -28,6 +28,7 @@ type Commands struct {
 	ModeratorPostInQueue                      command.ModeratorPostInQueueHandler
 	PostFailedProcessing                      command.PostFailedProcessingHandler
 	AccountNewRegistration                    command.AccountNewRegistrationHandler
+	NewCreatorLead                            command.NewCreatorLeadHandler
 }
 
 type Queries struct{}

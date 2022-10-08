@@ -12,7 +12,7 @@ export default function PlatformShareDirectButton (): JSX.Element {
   const router = useRouter()
 
   const [, resolved] = resolveHref(router, {
-    pathname: '/artists'
+    pathname: '/creators'
   }, true)
 
   const [, onCopy] = useCopyToClipboardWrapper({ text: `https://overdoll.com${resolved}` })

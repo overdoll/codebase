@@ -40,8 +40,8 @@ const GeneralCatalogs = [
     include: ['src/domain/profile/']
   },
   {
-    path: 'src/domain/artists/__locale__/{locale}/index',
-    include: ['src/domain/artists/']
+    path: 'src/domain/creators/__locale__/{locale}/index',
+    include: ['src/domain/creators/']
   },
   {
     path: 'src/domain/browse/__locale__/{locale}/index',

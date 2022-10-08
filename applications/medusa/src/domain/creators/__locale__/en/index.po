@@ -14,73 +14,241 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/artists/Artists/Artists.tsx:197
-msgid "...or, you can just browse our content!"
+#~ msgid "...or, you can just browse our content!"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:356
+msgid "<0>overdoll</0> focuses exclusively on pornography that is drawn or animated. You may only post pornography that does<1><2> not</2></1> feature real human beings."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:314
+msgid "<0>overdoll</0> is a content distribution platform designed for creators who draw or animate/render digital pornography."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:327
+msgid "<0>overdoll</0> is free of charge to content creators. Content creators may post as much as they want, without restrictions."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:340
+msgid "<0>overdoll</0> is used by both creators and fans. Fans use <1>overdoll</1> to browse adult content, and may find new creators directly through the discovery and search features. Creators use<2> overdoll</2> to feature their adult content and may collect subscriptions for premium content."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:370
+msgid "<0>overdoll</0> offers content creators the ability to paywall some or all posts on their club pages in order to make money.<1> overdoll</1> also offers extra platform features to your fans, if they subscribe."
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:96
-msgid "Add categories and characters to your post to make it easy to find across the platform"
+#~ msgid "Add categories and characters to your post to make it easy to find across the platform"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:143
+msgid "Anything else we should know?"
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:82
+msgid "At the moment, overdoll is <0>invite-only</0>. Please fill out the form below and we'll reach out to you as soon as possible!"
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:202
-msgid "Browse Content"
-msgstr ""
+#~ msgid "Browse Content"
+#~ msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:111
-msgid "Discover and Browse"
+#~ msgid "Discover and Browse"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:153
+msgid "Enter anything else you'd like to tell us."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:294
+msgid "Frequently Asked Questions"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:205
+msgid "Get paid."
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:91
-msgid "High quality videos, drawings, renders - anything, as long as it's digitally produced adult content"
+#~ msgid "High quality videos, drawings, renders - anything, as long as it's digitally produced adult content"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:75
+msgid "Hold on!"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:135
+msgid "Home"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:365
+msgid "How can I make money on overdoll?"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:322
+msgid "How much does overdoll cost?"
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:148
-msgid "Let your fans become paid supporters to get access to the content"
+#~ msgid "Let your fans become paid supporters to get access to the content"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:135
+msgid "Link a website that has some of your work, such as Twitter."
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:125
+msgid "Link to your portfolio"
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:143
-msgid "Mark content in your posts as exclusive"
-msgstr ""
+#~ msgid "Mark content in your posts as exclusive"
+#~ msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:137
-msgid "Monetize Exclusive Content"
-msgstr ""
+#~ msgid "Monetize Exclusive Content"
+#~ msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:184
-msgid "Not an artist? Let your favorite artist know about us!"
-msgstr ""
+#~ msgid "Not an artist? Let your favorite artist know about us!"
+#~ msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:175
-msgid "Open Form Link"
+#~ msgid "Open Form Link"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:71
+msgid "Please enter a portfolio url"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:72
+msgid "Please enter a valid url"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:64
+msgid "Please enter an username"
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:159
-msgid "Ready to start posting your content? Contact us!"
+#~ msgid "Ready to start posting your content? Contact us!"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:386
+msgid "Ready to try overdoll, free of charge?"
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:122
-msgid "Share your unique link, giving your fans the best mobile content experience"
+#~ msgid "Share your unique link, giving your fans the best mobile content experience"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:167
+msgid "Submit"
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:56
+msgid "Thank you for your submission! We'll be in touch."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:236
+msgid "The best browsing experience."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:158
+msgid "The next platform for 18+ creators."
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:62
+msgid "There was an error sending your information."
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:99
+msgid "This can be your username or any alias you go by."
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:85
-msgid "Upload and Categorize"
-msgstr ""
+#~ msgid "Upload and Categorize"
+#~ msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:117
-msgid "Use search and tags to easily find your content"
+#~ msgid "Use search and tags to easily find your content"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:221
+msgid "Visible to the entire universe."
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:167
-msgid "We can also reach out to you - just send us your details!"
+#~ msgid "We can also reach out to you - just send us your details!"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:210
+msgid "We exclusively partner with adult payment processors. Stop waiting for the day they shut down your PayPal account."
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:117
+msgid "We prefer to contact you by email, if possible."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:309
+msgid "What is overdoll?"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:351
+msgid "What type of content is allowed on overdoll?"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:335
+msgid "Who uses overdoll?"
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:107
+msgid "Your Email"
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:89
+msgid "Your Name"
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:226
+msgid "Your brand is always visible on our platform. We don't force you to hide your content just because it contains nudity."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:267
+msgid "Your favourite adult content creators are making money on overdoll."
+msgstr ""
+
+#: src/domain/creators/Creators/Creators.tsx:241
+msgid "Your images are served up to 4k by 4k and videos up to 1080p@60fps. We are optimized for all devices - mobile & desktop."
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:130
+msgid "https://twitter.com/overdoll_com"
 msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:64
-msgid "overdoll"
-msgstr ""
+#~ msgid "overdoll"
+#~ msgstr ""
 
 #: src/domain/artists/Artists/Artists.tsx:38
 #~ msgid "overdoll is invite-only"
 #~ msgstr ""
 
+#: src/domain/creators/Creators/Creators.tsx:168
+msgid "overdoll is the first platform to offer a full end-to-end ecosystem for adult content creators."
+msgstr ""
+
 #: src/domain/artists/Artists/Artists.tsx:70
-msgid "overdoll is the first true digital content platform, built for the adult content artist"
+#~ msgid "overdoll is the first true digital content platform, built for the adult content artist"
+#~ msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:112
+msgid "starcraft_pro_2010@hotmail.com"
+msgstr ""
+
+#: src/domain/creators/Creators/LeadsFormModal/LeadsForm/LeadsForm.tsx:94
+msgid "xXx_NoScope360_xXx"
+msgstr ""
+
+#: src/domain/creators/Creators/StartUsingOverdoll/StartUsingOverdoll.tsx:102
+msgid "{0}"
 msgstr ""

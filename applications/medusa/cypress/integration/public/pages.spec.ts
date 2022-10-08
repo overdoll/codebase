@@ -20,8 +20,8 @@ describe('Pages', () => {
   })
 
   it('go to the artists page as not logged in', () => {
-    cy.visit('/artists')
-    cy.findAllByText(/overdoll is the first true/iu)
+    cy.visit('/creators')
+    cy.findAllByText(/The next platform for 18+ creators/iu)
   })
 
   // TODO add tests for joining club from discover page as logged in, not logged in

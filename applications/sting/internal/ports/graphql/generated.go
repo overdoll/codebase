@@ -469,6 +469,7 @@ type ComplexityRoot struct {
 		JoinClub                         func(childComplexity int, input types.JoinClubInput) int
 		LeaveClub                        func(childComplexity int, input types.LeaveClubInput) int
 		LikePost                         func(childComplexity int, input types.LikePostInput) int
+		NewCreatorLead                   func(childComplexity int, input types.NewCreatorLeadInput) int
 		ObservePosts                     func(childComplexity int, input types.ObservePostsInput) int
 		PromoteClubSlugAliasToDefault    func(childComplexity int, input types.PromoteClubSlugAliasToDefaultInput) int
 		RemoveCategoryAlternativeTitle   func(childComplexity int, input types.RemoveCategoryAlternativeTitleInput) int
@@ -506,6 +507,10 @@ type ComplexityRoot struct {
 		UpdateTopicDescription           func(childComplexity int, input types.UpdateTopicDescriptionInput) int
 		UpdateTopicTitle                 func(childComplexity int, input types.UpdateTopicTitleInput) int
 		UpdateTopicWeight                func(childComplexity int, input types.UpdateTopicWeightInput) int
+	}
+
+	NewCreatorLeadPayload struct {
+		Validation func(childComplexity int) int
 	}
 
 	ObservePostsPayload struct {
@@ -962,6 +967,7 @@ type MutationResolver interface {
 	UpdateCurationProfileDateOfBirth(ctx context.Context, input types.UpdateCurationProfileDateOfBirthInput) (*types.UpdateCurationProfileDateOfBirthPayload, error)
 	CreateGameSession(ctx context.Context, input types.CreateGameSessionInput) (*types.CreateGameSessionPayload, error)
 	SpinRoulette(ctx context.Context, input types.SpinRouletteInput) (*types.SpinRoulettePayload, error)
+	NewCreatorLead(ctx context.Context, input types.NewCreatorLeadInput) (*types.NewCreatorLeadPayload, error)
 	LikePost(ctx context.Context, input types.LikePostInput) (*types.LikePostPayload, error)
 	UndoLikePost(ctx context.Context, input types.UndoLikePostInput) (*types.UndoLikePostPayload, error)
 	CreatePost(ctx context.Context, input types.CreatePostInput) (*types.CreatePostPayload, error)
@@ -2878,6 +2884,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.LikePost(childComplexity, args["input"].(types.LikePostInput)), true
 
+	case "Mutation.newCreatorLead":
+		if e.complexity.Mutation.NewCreatorLead == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_newCreatorLead_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.NewCreatorLead(childComplexity, args["input"].(types.NewCreatorLeadInput)), true
+
 	case "Mutation.observePosts":
 		if e.complexity.Mutation.ObservePosts == nil {
 			break
@@ -3321,6 +3339,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateTopicWeight(childComplexity, args["input"].(types.UpdateTopicWeightInput)), true
+
+	case "NewCreatorLeadPayload.validation":
+		if e.complexity.NewCreatorLeadPayload.Validation == nil {
+			break
+		}
+
+		return e.complexity.NewCreatorLeadPayload.Validation(childComplexity), true
 
 	case "ObservePostsPayload.posts":
 		if e.complexity.ObservePostsPayload.Posts == nil {
@@ -4661,6 +4686,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputJoinClubInput,
 		ec.unmarshalInputLeaveClubInput,
 		ec.unmarshalInputLikePostInput,
+		ec.unmarshalInputNewCreatorLeadInput,
 		ec.unmarshalInputObservePostsInput,
 		ec.unmarshalInputPromoteClubSlugAliasToDefaultInput,
 		ec.unmarshalInputRemoveCategoryAlternativeTitleInput,
@@ -6556,6 +6582,40 @@ extend type Query {
     """Search game session status by reference."""
     reference: String!
   ): GameSessionStatus
+}
+`, BuiltIn: false},
+	{Name: "../../../schema/leads/schema.graphql", Input: `"""Validation for a new creator lead"""
+enum NewCreatorLeadValidation {
+  """Creator already submitted a lead."""
+  ALREADY_SUBMITTED
+}
+
+"""A new creator lead input."""
+input NewCreatorLeadInput {
+  """The username of the creator."""
+  username: String!
+
+  """The email of the creator."""
+  email: String!
+
+  """A link to the creator's portfolio."""
+  portfolio: String!
+
+  """Any additional details from the creator."""
+  details: String!
+}
+
+"""A new creator lead input."""
+type NewCreatorLeadPayload {
+  """Any validation errors that may occur."""
+  validation: NewCreatorLeadValidation
+}
+
+extend type Mutation {
+  """
+  Create a new creator lead.
+  """
+  newCreatorLead(input: NewCreatorLeadInput!): NewCreatorLeadPayload
 }
 `, BuiltIn: false},
 	{Name: "../../../schema/like/schema.graphql", Input: `type PostLike implements Node @key(fields: "id") {
@@ -9552,6 +9612,21 @@ func (ec *executionContext) field_Mutation_likePost_args(ctx context.Context, ra
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNLikePostInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐLikePostInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_newCreatorLead_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.NewCreatorLeadInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNewCreatorLeadInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -24703,6 +24778,62 @@ func (ec *executionContext) fieldContext_Mutation_spinRoulette(ctx context.Conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_newCreatorLead(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_newCreatorLead(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().NewCreatorLead(rctx, fc.Args["input"].(types.NewCreatorLeadInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.NewCreatorLeadPayload)
+	fc.Result = res
+	return ec.marshalONewCreatorLeadPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_newCreatorLead(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "validation":
+				return ec.fieldContext_NewCreatorLeadPayload_validation(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type NewCreatorLeadPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_newCreatorLead_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_likePost(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_likePost(ctx, field)
 	if err != nil {
@@ -25991,6 +26122,47 @@ func (ec *executionContext) fieldContext_Mutation_updateTopicBanner(ctx context.
 	if fc.Args, err = ec.field_Mutation_updateTopicBanner_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _NewCreatorLeadPayload_validation(ctx context.Context, field graphql.CollectedField, obj *types.NewCreatorLeadPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_NewCreatorLeadPayload_validation(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Validation, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.NewCreatorLeadValidation)
+	fc.Result = res
+	return ec.marshalONewCreatorLeadValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadValidation(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_NewCreatorLeadPayload_validation(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "NewCreatorLeadPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type NewCreatorLeadValidation does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -38365,6 +38537,53 @@ func (ec *executionContext) unmarshalInputLikePostInput(ctx context.Context, obj
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputNewCreatorLeadInput(ctx context.Context, obj interface{}) (types.NewCreatorLeadInput, error) {
+	var it types.NewCreatorLeadInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "username":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("username"))
+			it.Username, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "email":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("email"))
+			it.Email, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "portfolio":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("portfolio"))
+			it.Portfolio, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "details":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("details"))
+			it.Details, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputObservePostsInput(ctx context.Context, obj interface{}) (types.ObservePostsInput, error) {
 	var it types.ObservePostsInput
 	asMap := map[string]interface{}{}
@@ -43151,6 +43370,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_spinRoulette(ctx, field)
 			})
 
+		case "newCreatorLead":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_newCreatorLead(ctx, field)
+			})
+
 		case "likePost":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -43288,6 +43513,31 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateTopicBanner(ctx, field)
 			})
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var newCreatorLeadPayloadImplementors = []string{"NewCreatorLeadPayload"}
+
+func (ec *executionContext) _NewCreatorLeadPayload(ctx context.Context, sel ast.SelectionSet, obj *types.NewCreatorLeadPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, newCreatorLeadPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("NewCreatorLeadPayload")
+		case "validation":
+
+			out.Values[i] = ec._NewCreatorLeadPayload_validation(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -47622,6 +47872,11 @@ func (ec *executionContext) marshalNMediaDeviceType2overdollᚋlibrariesᚋgraph
 	return v
 }
 
+func (ec *executionContext) unmarshalNNewCreatorLeadInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadInput(ctx context.Context, v interface{}) (types.NewCreatorLeadInput, error) {
+	res, err := ec.unmarshalInputNewCreatorLeadInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNObservePostsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐObservePostsInput(ctx context.Context, v interface{}) (types.ObservePostsInput, error) {
 	res, err := ec.unmarshalInputObservePostsInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -49325,6 +49580,29 @@ func (ec *executionContext) marshalOMediaProgress2ᚖoverdollᚋlibrariesᚋgrap
 		return graphql.Null
 	}
 	return ec._MediaProgress(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalONewCreatorLeadPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadPayload(ctx context.Context, sel ast.SelectionSet, v *types.NewCreatorLeadPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._NewCreatorLeadPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalONewCreatorLeadValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadValidation(ctx context.Context, v interface{}) (*types.NewCreatorLeadValidation, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(types.NewCreatorLeadValidation)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalONewCreatorLeadValidation2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐNewCreatorLeadValidation(ctx context.Context, sel ast.SelectionSet, v *types.NewCreatorLeadValidation) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOObservePostsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐObservePostsPayload(ctx context.Context, sel ast.SelectionSet, v *types.ObservePostsPayload) graphql.Marshaler {

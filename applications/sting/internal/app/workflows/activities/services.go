@@ -20,4 +20,5 @@ type CarrierService interface {
 	ClubSupporterNoPosts(ctx context.Context, clubId string) error
 	ClubSuspended(ctx context.Context, clubId string, endTime time.Time) error
 	PostFailedProcessing(ctx context.Context, postId string) error
+	NewCreatorLead(ctx context.Context, username, email, portfolio, details string) error
 }

@@ -12,7 +12,7 @@ export default function PlatformShareDiscordButton (): JSX.Element {
   const router = useRouter()
 
   const [, resolved] = resolveHref(router, {
-    pathname: '/artists'
+    pathname: '/creators'
   }, true)
 
   const [, onCopy] = useCopyToClipboardWrapper({

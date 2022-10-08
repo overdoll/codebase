@@ -37,6 +37,7 @@ go_library(
         "migrate_characters_resources.go",
         "migrate_posts_resources.go",
         "migrate_series_resources.go",
+        "new_creator_lead.go",
         "observe_posts.go",
         "promote_club_slug_alias_to_default.go",
         "publish_post.go",
