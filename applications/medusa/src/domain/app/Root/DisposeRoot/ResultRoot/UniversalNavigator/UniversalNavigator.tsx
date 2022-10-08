@@ -6,7 +6,7 @@ import { useRouter } from 'next/router'
 export default function UniversalNavigator (): JSX.Element | null {
   const router = useRouter()
 
-  if (router.pathname === '/artists') {
+  if (router.pathname === '/creators') {
     return null
   }
 
