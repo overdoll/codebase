@@ -32,6 +32,15 @@ service Carrier {
   rpc PostFailedProcessing(PostFailedProcessingRequest) returns (google.protobuf.Empty) {}
 
   rpc AccountNewRegistration(AccountNewRegistrationRequest) returns (google.protobuf.Empty) {}
+
+  rpc NewCreatorLead(NewCreatorLeadRequest) returns (google.protobuf.Empty) {}
+}
+
+message NewCreatorLeadRequest {
+  string email = 1;
+  string username = 2;
+  string portfolio = 3;
+  string details = 4;
 }
 
 message ClubSuspendedRequest {

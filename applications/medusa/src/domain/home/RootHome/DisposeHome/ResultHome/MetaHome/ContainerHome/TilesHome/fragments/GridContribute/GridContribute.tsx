@@ -54,7 +54,7 @@ export default function GridContribute (): JSX.Element {
         <StaticTile
           color='green.300'
           icon={ContentBrushPen}
-          href='/artists'
+          href='/creators'
           header={(
             <Trans>
               Post Content

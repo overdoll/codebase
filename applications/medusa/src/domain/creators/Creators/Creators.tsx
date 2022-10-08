@@ -4,7 +4,6 @@ import { Accordion, Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/r
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import SiteLinkLogo from '../../app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 import React, { useMemo, useState } from 'react'
-import Image from 'next/future/image'
 import Head from 'next/head'
 import LeadsFormModal from './LeadsFormModal/LeadsFormModal'
 import StartUsingOverdoll from './StartUsingOverdoll/StartUsingOverdoll'
@@ -100,8 +99,15 @@ const Creators: PageProps<{}> = () => {
     shouldUnregister: false
   })
 
+  const onStartUsingOverdoll = (): void => {
+    if (!isFinalized) {
+      onOpen()
+    }
+  }
+
   const onFinalize = (): void => {
     setFinalized(true)
+    onClose()
   }
 
   return (
@@ -133,10 +139,10 @@ const Creators: PageProps<{}> = () => {
             </LinkButton>
           </Box>
         </Flex>
-        <Flex padding='75px 45px' mb={10}>
+        <Flex padding={['75px 25px', '75px 45px', '75px 45px']} mb={10}>
           <Box
             margin='0 auto'
-            padding='75px 0'
+            padding={['0px', '75px 0', '75px 0']}
             position='relative'
             textAlign='center'
             width='100%'
@@ -146,7 +152,7 @@ const Creators: PageProps<{}> = () => {
             <Heading
               textShadow='-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
               as='h1'
-              fontSize='6xl'
+              fontSize={['2xl', '4xl', '5xl', '6xl']}
               color='white'
               lineHeight='1.1'
             >
@@ -157,7 +163,7 @@ const Creators: PageProps<{}> = () => {
             <Text
               mt={8}
               textShadow='-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000'
-              fontSize='xl'
+              fontSize={['md', 'md', 'lg', 'xl']}
               color='white'
             >
               <Trans>
@@ -165,7 +171,7 @@ const Creators: PageProps<{}> = () => {
               </Trans>
             </Text>
             <Box mt={10} />
-            <StartUsingOverdoll onClick={onOpen} />
+            <StartUsingOverdoll isFinalized={isFinalized} onClick={onStartUsingOverdoll} />
           </Box>
           <Flex
             left={0}
@@ -173,16 +179,16 @@ const Creators: PageProps<{}> = () => {
             bottom={0}
             position='absolute'
             right={0}
-            height={['500px', '690px', '733px']}
+            height={['520px', '690px', '690px', '733px']}
           >
-            <Image
-              style={{
-                objectFit: 'cover',
-                width: '100%',
-                height: '100%'
-              }}
-              src='/desktop-large.jpg'
-            />
+            {/* <Image */}
+            {/*   style={{ */}
+            {/*     objectFit: 'cover', */}
+            {/*     width: '100%', */}
+            {/*     height: '100%' */}
+            {/*   }} */}
+            {/*   src='/desktop-large.jpg' */}
+            {/* /> */}
             <Box
               top={0}
               left={0}
@@ -196,24 +202,50 @@ const Creators: PageProps<{}> = () => {
           </Flex>
         </Flex>
         <FactItem
-          header='Always get paid.'
-          text='We partner with adult payment processors who offer decades of experience in the adult industry. Stop
-              waiting for the day they shut down your PayPal account.'
+          header={(
+            <Trans>
+              Get paid.
+            </Trans>
+          )}
+          text={(
+            <Trans>
+              We exclusively partner with adult payment processors. Stop
+              waiting for the day they shut down your PayPal account.
+            </Trans>
+          )}
         >
-          some content
+          <Box />
         </FactItem>
         <FactItem
           reverse
-          header='Visible to the entire universe.'
-          text="Your brand is always visible on our platform, never hidden from the world. We don't force you to hide all of your content just because it contains nudity."
+          header={(
+            <Trans>
+              Visible to the entire universe.
+            </Trans>
+          )}
+          text={(
+            <Trans>
+              Your brand is always visible on our platform. We don't force you to hide your content just because it
+              contains nudity.
+            </Trans>
+          )}
         >
-          some content
+          <Box />
         </FactItem>
         <FactItem
-          header='The best browsing experience.'
-          text='We know you want to display your content in the best quality possible. Your images are served up to 4k by 4k and videos up to 1080p@60fps. We are optimized for all devices - mobile & desktop.'
+          header={(
+            <Trans>
+              The best browsing experience.
+            </Trans>
+          )}
+          text={(
+            <Trans>
+              Your images are served up to 4k by 4k and videos up to 1080p@60fps. We are optimized for all devices -
+              mobile & desktop.
+            </Trans>
+          )}
         >
-          some content
+          <Box />
         </FactItem>
       </Flex>
       <Flex
@@ -227,7 +259,7 @@ const Creators: PageProps<{}> = () => {
       >
         <Heading
           as='h1'
-          fontSize='4xl'
+          fontSize={['2xl', '3xl', '4xl']}
           color='white'
           lineHeight='1.1'
           mb={10}
@@ -246,20 +278,32 @@ const Creators: PageProps<{}> = () => {
         alignItems='center'
         justifyContent='center'
       >
-        <Flex alignItems='center' justifyContent='center' margin='0 auto' maxWidth='1100px' paddingBottom='60px'>
+        <Flex
+          alignItems='center'
+          justifyContent='center'
+          margin='0 auto'
+          maxWidth='1100px'
+          paddingBottom='60px'
+          textAlign='center'
+        >
           <Heading
             as='h1'
-            fontSize='5xl'
+            fontSize={['3xl', '4xl', '5xl']}
             color='white'
             lineHeight='1.1'
-
           >
             <Trans>
               Frequently Asked Questions
             </Trans>
           </Heading>
         </Flex>
-        <Flex alignItems='center' justifyContent='center' margin='auto' width='70%' maxWidth='1100px'>
+        <Flex
+          alignItems='center'
+          justifyContent='center'
+          margin='auto'
+          width={['100%', '100%', '70%']}
+          maxWidth='1100px'
+        >
           <Accordion allowToggle width='100%'>
             <QuestionAnswerItem
               question={(
@@ -270,7 +314,7 @@ const Creators: PageProps<{}> = () => {
               answer={(
                 <Trans>
                   <HighlightInline colorScheme='pink'>overdoll</HighlightInline> is a content distribution platform
-                  designed for artists who draw or animate/render digital pornography.
+                  designed for creators who draw or animate/render digital pornography.
                 </Trans>
               )}
             />
@@ -312,7 +356,8 @@ const Creators: PageProps<{}> = () => {
               answer={(
                 <Trans>
                   <HighlightInline colorScheme='pink'>overdoll</HighlightInline> focuses exclusively on pornography that
-                  is drawn or animated. You may only post pornography that does not feature real human beings.
+                  is drawn or animated. You may only post pornography that does
+                  <strong><HighlightInline colorScheme='red'> not</HighlightInline></strong> feature real human beings.
                 </Trans>
               )}
             />
@@ -337,13 +382,14 @@ const Creators: PageProps<{}> = () => {
           mt={10}
           fontSize='xl'
           color='white'
+          align='center'
         >
           <Trans>
             Ready to try overdoll, free of charge?
           </Trans>
         </Text>
         <Box mt={4}>
-          <StartUsingOverdoll onClick={onOpen} />
+          <StartUsingOverdoll isFinalized={isFinalized} onClick={onStartUsingOverdoll} />
         </Box>
       </Flex>
     </>

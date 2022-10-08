@@ -1,7 +1,6 @@
 import { graphql, useMutation } from 'react-relay/hooks'
-import { UnSuspendClubFormMutation } from '@//:artifacts/UnSuspendClubFormMutation.graphql'
 import { t, Trans } from '@lingui/macro'
-import { ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Stack, Text } from '@chakra-ui/react'
+import { ModalBody, ModalCloseButton, ModalFooter, ModalHeader, Stack, Text, useToast } from '@chakra-ui/react'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import {
   Form,
@@ -17,14 +16,12 @@ import {
 } from '@//:modules/content/HookedComponents/Form'
 import React from 'react'
 import { useLingui } from '@lingui/react'
+import { LeadsFormMutation } from '@//:artifacts/LeadsFormMutation.graphql'
 
 const Mutation = graphql`
-  mutation LeadsFormMutation ($input: NewC!) {
-    updateClubName(input: $input) {
-      club {
-        id
-        name
-      }
+  mutation LeadsFormMutation ($input: NewCreatorLeadInput!) {
+    newCreatorLead(input: $input) {
+      validation
     }
   }
 `
@@ -34,32 +31,33 @@ const LeadsForm = ({
   onFinalize
 }) => {
   const { i18n } = useLingui()
-  const [commit, IsInFlight] = useMutation<UnSuspendClubFormMutation>(Mutation)
+  const [commit, IsInFlight] = useMutation<LeadsFormMutation>(Mutation)
+  const notify = useToast()
 
   const onSubmit = (formValues): void => {
     commit({
       variables: {
         input: {
-          clubId: data.id
+          username: formValues.username,
+          email: formValues.email,
+          portfolio: formValues.portfolio,
+          details: formValues.details
         }
       },
       onCompleted () {
+        onFinalize()
         notify({
           status: 'success',
-          title: t`Your club has been un-suspended`
+          title: t`Thank you for your submission! We'll be in touch.`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error un-suspending your club`
+          title: t`There was an error sending your information.`
         })
       }
     })
-  }
-
-  if (isFinalized) {
-
   }
 
   return (

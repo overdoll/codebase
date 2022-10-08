@@ -81,6 +81,8 @@ go_test(
         "file_fixtures/account_new_registration_test.txt",
         "file_fixtures/new_login_token_code_test.html",
         "file_fixtures/new_login_token_code_test.txt",
+        "file_fixtures/new_creator_lead_test.html",
+        "file_fixtures/new_creator_lead_test.txt",
     ],
     deps = [
         ":service",

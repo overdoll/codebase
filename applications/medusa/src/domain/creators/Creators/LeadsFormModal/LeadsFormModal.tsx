@@ -1,18 +1,6 @@
 import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react'
 import React from 'react'
-import { graphql } from 'react-relay/hooks'
 import LeadsForm from './LeadsForm/LeadsForm'
-
-const Mutation = graphql`
-  mutation LeadsFormMutation ($input: NewC!) {
-    updateClubName(input: $input) {
-      club {
-        id
-        name
-      }
-    }
-  }
-`
 
 const LeadsFormModal = ({
   isOpen,

@@ -744,7 +744,7 @@ type NewCreatorLeadInput struct {
 	// The email of the creator.
 	Email string `json:"email"`
 	// A link to the creator's portfolio.
-	Link string `json:"link"`
+	Portfolio string `json:"portfolio"`
 	// Any additional details from the creator.
 	Details string `json:"details"`
 }

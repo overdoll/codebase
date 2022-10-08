@@ -1,5 +1,4 @@
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
 import React from 'react'
 
 const FactItem = ({
@@ -9,7 +8,12 @@ const FactItem = ({
   reverse = false
 }) => {
   const target = (
-    <Flex boxSizing='border-box' flex='0 1 auto' height='100%' width='48%'>
+    <Flex
+      boxSizing='border-box'
+      flex='0 1 auto'
+      height='100%'
+      width={['100%', '100%', '42%']}
+    >
       <Box margin='-10% -5% -5% 0'>
         {children}
       </Box>
@@ -23,33 +27,31 @@ const FactItem = ({
         justifyContent='center'
         margin='0 auto'
         maxWidth='1100px'
+        flexDirection={['column', 'column', 'row']}
       >
         {reverse && target}
         <Flex
           flexDirection='column'
           flex='0 1 auto'
           height='100%'
-          padding='0 3rem 0 0'
-          width='52%'
+          padding={['0', '0', '0 3rem 0 0']}
+          width={['100%', '100%', '52%']}
+          textAlign={['center', 'center', 'left']}
         >
           <Heading
             as='h1'
-            fontSize='4xl'
+            fontSize={['2xl', '3xl', '4xl']}
             color='white'
             lineHeight='1.1'
           >
-            <Trans>
-              {header}
-            </Trans>
+            {header}
           </Heading>
           <Text
             mt={3}
-            fontSize='xl'
+            fontSize={['md', 'lg', 'xl']}
             color='white'
           >
-            <Trans>
-              {text}
-            </Trans>
+            {text}
           </Text>
         </Flex>
         {!reverse && target}

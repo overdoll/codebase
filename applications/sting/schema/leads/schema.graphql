@@ -13,7 +13,7 @@ input NewCreatorLeadInput {
   email: String!
 
   """A link to the creator's portfolio."""
-  link: String!
+  portfolio: String!
 
   """Any additional details from the creator."""
   details: String!

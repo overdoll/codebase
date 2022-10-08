@@ -104,6 +104,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			UnArchivePost:         command.NewUnArchivePostHandler(postRepo, eventRepo),
 			GenerateClubBanner:    command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 			IndexPost:             command.NewIndexPostHandler(postRepo),
+			NewCreatorLead:        command.NewNewCreatorLeadHandler(carrier),
 
 			GenerateSitemap: command.NewGenerateSitemapHandler(eventRepo),
 

@@ -9,6 +9,7 @@ go_library(
         "club.go",
         "curation_profile.go",
         "games.go",
+        "leads.go",
         "post.go",
         "post_like.go",
         "resolvers.go",

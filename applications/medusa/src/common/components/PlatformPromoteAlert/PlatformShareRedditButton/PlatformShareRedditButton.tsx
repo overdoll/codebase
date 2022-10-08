@@ -9,7 +9,7 @@ export default function PlatformShareRedditButton (): JSX.Element {
 
   const onOpen = useRedditShare({
     url: {
-      pathname: '/artists'
+      pathname: '/creators'
     },
     title: 'overdoll is a new platform built for Rule34, NSFW, Hentai, Furry artists',
     trackingEventId: 'KYLM9WBY'

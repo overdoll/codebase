@@ -17,6 +17,22 @@ func NewCarrierGrpc(client carrier.CarrierClient) CarrierGrpc {
 	return CarrierGrpc{client: client}
 }
 
+func (s CarrierGrpc) NewCreatorLead(ctx context.Context, username, email, portfolio, details string) error {
+
+	_, err := s.client.NewCreatorLead(ctx, &carrier.NewCreatorLeadRequest{
+		Email:     email,
+		Username:  username,
+		Portfolio: portfolio,
+		Details:   details,
+	})
+
+	if err != nil {
+		return errors.Wrap(err, "carrier - failed to send new creator lead")
+	}
+
+	return nil
+}
+
 func (s CarrierGrpc) ClubSupporterRequiredPostReminder(ctx context.Context, clubId string, time time.Duration) error {
 
 	_, err := s.client.ClubSupporterRequiredPostReminder(ctx, &carrier.ClubSupporterRequiredPostReminderRequest{

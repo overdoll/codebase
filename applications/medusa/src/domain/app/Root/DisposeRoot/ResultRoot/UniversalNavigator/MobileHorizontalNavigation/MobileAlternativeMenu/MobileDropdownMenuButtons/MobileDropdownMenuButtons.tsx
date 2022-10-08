@@ -58,7 +58,7 @@ export default function MobileDropdownMenuButtons (): JSX.Element {
       </Can>
       <Can not I='create' a='Club'>
         <MobileHorizontalNavigationDropdownMenuButton
-          href='/artists'
+          href='/creators'
           icon={ContentBrushPen}
           label={
             <Trans>

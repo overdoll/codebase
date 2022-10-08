@@ -20,6 +20,22 @@ func NewGrpcServer(application *app.Application) *Server {
 	}
 }
 
+func (s Server) NewCreatorLead(ctx context.Context, request *carrier.NewCreatorLeadRequest) (*emptypb.Empty, error) {
+
+	if err := s.app.Commands.NewCreatorLead.Handle(ctx,
+		command.NewCreatorLead{
+			Username:  request.Username,
+			Email:     request.Email,
+			Portfolio: request.Portfolio,
+			Details:   request.Details,
+		},
+	); err != nil {
+		return nil, err
+	}
+
+	return &empty.Empty{}, nil
+}
+
 func (s Server) AccountNewRegistration(ctx context.Context, request *carrier.AccountNewRegistrationRequest) (*emptypb.Empty, error) {
 
 	if err := s.app.Commands.AccountNewRegistration.Handle(ctx,

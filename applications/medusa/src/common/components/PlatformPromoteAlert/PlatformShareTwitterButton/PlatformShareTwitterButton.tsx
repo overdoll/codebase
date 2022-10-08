@@ -9,7 +9,7 @@ export default function PlatformShareTwitterButton (): JSX.Element {
 
   const onOpen = useTwitterShare({
     url: {
-      pathname: '/artists'
+      pathname: '/creators'
     },
     hashtags: ['R34', 'Rule34', 'hentai', 'furry', 'NSFW', '3D'],
     text: 'overdoll is a platform built for the adult content artist (you!) to create a new experience for your fans when sharing your content!',

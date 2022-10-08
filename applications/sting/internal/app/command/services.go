@@ -17,3 +17,7 @@ type LoaderService interface {
 	ConvertResourcesToMedia(ctx context.Context, sourceId string, legacyMedia []*media.Media) ([]*media.Media, error)
 	ReprocessMedia(ctx context.Context, legacyMedia []*media.Media) error
 }
+
+type CarrierService interface {
+	NewCreatorLead(ctx context.Context, username, email, portfolio, details string) error
+}

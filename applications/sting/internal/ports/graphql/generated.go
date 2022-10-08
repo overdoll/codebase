@@ -6599,7 +6599,7 @@ input NewCreatorLeadInput {
   email: String!
 
   """A link to the creator's portfolio."""
-  link: String!
+  portfolio: String!
 
   """Any additional details from the creator."""
   details: String!
@@ -38562,11 +38562,11 @@ func (ec *executionContext) unmarshalInputNewCreatorLeadInput(ctx context.Contex
 			if err != nil {
 				return it, err
 			}
-		case "link":
+		case "portfolio":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("link"))
-			it.Link, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("portfolio"))
+			it.Portfolio, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
