@@ -9,6 +9,7 @@ import { useToast } from '@//:modules/content/ThemeComponents'
 import EmptyJoinForm from './EmptyJoinForm/EmptyJoinForm'
 import posthog from 'posthog-js'
 import { AuthenticationTokenMethod } from '@//:artifacts/RootStartJoinFragment.graphql'
+import { useEffect, useState } from 'react'
 
 const Mutation = graphql`
   mutation EmptyJoinMutation($input: GrantAuthenticationTokenInput!) {
@@ -32,13 +33,19 @@ export default function EmptyJoin (): JSX.Element {
 
   const [cookies, setCookie] = useCookies<string>(['token'])
 
+  const [canFlag, setCanFlag] = useState(false)
+
   const onSubmit = ({ email }): void => {
     const getMethod = (): string => {
-      if (posthog.getFeatureFlag('join-six-digit-code') === 'control') {
+      if (!canFlag) {
         return 'MAGIC_LINK'
       }
 
-      if (posthog.getFeatureFlag('join-six-digit-code') === 'code') {
+      if (posthog?.getFeatureFlag('join-six-digit-code') === 'control') {
+        return 'MAGIC_LINK'
+      }
+
+      if (posthog?.getFeatureFlag('join-six-digit-code') === 'code') {
         return 'CODE'
       }
 
@@ -97,6 +104,12 @@ export default function EmptyJoin (): JSX.Element {
       }
     })
   }
+
+  useEffect(() => {
+    posthog.onFeatureFlags(() => {
+      setCanFlag(true)
+    })
+  }, [])
 
   // Ask user to authenticate
   return (

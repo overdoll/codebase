@@ -149,11 +149,11 @@ export function useJoin (redirect?: string | UrlObject, from?: string): () => vo
     return onRedirectJoin
   }
 
-  if (posthog.getFeatureFlag('join-modal') === 'control') {
+  if (posthog?.getFeatureFlag('join-modal') === 'control') {
     return onRedirectJoin
   }
 
-  if (posthog.getFeatureFlag('join-modal') === 'test_modal') {
+  if (posthog?.getFeatureFlag('join-modal') === 'test_modal') {
     return onOpenJoin
   }
 
