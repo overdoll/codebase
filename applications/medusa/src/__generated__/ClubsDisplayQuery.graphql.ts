@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ac075a2f677d96096dc5e018452fb70e>>
- * @relayHash 1887dde034fbc2f7836b9f0cc0cee924
+ * @generated SignedSource<<9ccf7f18a7bd3b0933a41d1568c8b8b3>>
+ * @relayHash 73fa36fd2e7c724790935678b63d43c1
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1887dde034fbc2f7836b9f0cc0cee924
+// @relayRequestID 73fa36fd2e7c724790935678b63d43c1
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,14 +20,7 @@ export type ClubsDisplayQuery$data = {
       readonly node: {
         readonly id: string;
         readonly name: string;
-        readonly thumbnailMedia: {
-          readonly colorPalettes?: ReadonlyArray<{
-            readonly blue: number;
-            readonly green: number;
-            readonly red: number;
-          }>;
-        } | null;
-        readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"FancyClubIcon">;
       };
     }>;
   };
@@ -64,39 +57,7 @@ v2 = {
   "name": "name",
   "storageKey": null
 },
-v3 = {
-  "alias": null,
-  "args": null,
-  "concreteType": "ColorPalette",
-  "kind": "LinkedField",
-  "name": "colorPalettes",
-  "plural": true,
-  "selections": [
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "red",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "green",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "blue",
-      "storageKey": null
-    }
-  ],
-  "storageKey": null
-},
-v4 = [
+v3 = [
   {
     "alias": null,
     "args": null,
@@ -119,8 +80,39 @@ v4 = [
     "storageKey": null
   }
 ],
-v5 = [
-  (v3/*: any*/),
+v4 = [
+  {
+    "alias": null,
+    "args": null,
+    "concreteType": "ColorPalette",
+    "kind": "LinkedField",
+    "name": "colorPalettes",
+    "plural": true,
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "red",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "green",
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "kind": "ScalarField",
+        "name": "blue",
+        "storageKey": null
+      }
+    ],
+    "storageKey": null
+  },
   {
     "alias": null,
     "args": null,
@@ -136,7 +128,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "icon",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v3/*: any*/),
         "storageKey": null
       },
       {
@@ -146,7 +138,7 @@ v5 = [
         "kind": "LinkedField",
         "name": "mini",
         "plural": false,
-        "selections": (v4/*: any*/),
+        "selections": (v3/*: any*/),
         "storageKey": null
       }
     ],
@@ -190,26 +182,7 @@ return {
                   {
                     "args": null,
                     "kind": "FragmentSpread",
-                    "name": "ClubIconFragment"
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": null,
-                    "kind": "LinkedField",
-                    "name": "thumbnailMedia",
-                    "plural": false,
-                    "selections": [
-                      {
-                        "kind": "InlineFragment",
-                        "selections": [
-                          (v3/*: any*/)
-                        ],
-                        "type": "ImageMedia",
-                        "abstractKey": null
-                      }
-                    ],
-                    "storageKey": null
+                    "name": "FancyClubIcon"
                   }
                 ],
                 "storageKey": null
@@ -277,7 +250,7 @@ return {
                       },
                       {
                         "kind": "InlineFragment",
-                        "selections": (v5/*: any*/),
+                        "selections": (v4/*: any*/),
                         "type": "ImageMedia",
                         "abstractKey": null
                       },
@@ -291,7 +264,7 @@ return {
                             "kind": "LinkedField",
                             "name": "cover",
                             "plural": false,
-                            "selections": (v5/*: any*/),
+                            "selections": (v4/*: any*/),
                             "storageKey": null
                           },
                           (v1/*: any*/)
@@ -309,6 +282,13 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "slug",
+                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -322,7 +302,7 @@ return {
     ]
   },
   "params": {
-    "id": "1887dde034fbc2f7836b9f0cc0cee924",
+    "id": "73fa36fd2e7c724790935678b63d43c1",
     "metadata": {},
     "name": "ClubsDisplayQuery",
     "operationKind": "query",
@@ -331,6 +311,6 @@ return {
 };
 })();
 
-(node as any).hash = "2bf79afd19475ff216497c998cea2e43";
+(node as any).hash = "5f5d3dbb8e40427036a3bc406fe6ef06";
 
 export default node;

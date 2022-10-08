@@ -2,6 +2,7 @@ import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Box, Flex } from '@chakra-ui/react'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import { ClubsDisplayQuery } from '@//:artifacts/ClubsDisplayQuery.graphql'
+import FancyClubIcon from './FancyClubIcon/FancyClubIcon'
 
 const Query = graphql`
   query ClubsDisplayQuery {
@@ -10,16 +11,7 @@ const Query = graphql`
         node {
           id
           name
-          ...ClubIconFragment
-          thumbnailMedia {
-            ... on ImageMedia {
-              colorPalettes {
-                red
-                green
-                blue
-              }
-            }
-          }
+          ...FancyClubIcon
         }
       }
     }
@@ -36,8 +28,9 @@ export default function ClubsDisplay (): JSX.Element {
     >
       {data.clubs.edges.map((item) => (
         <Box key={item.node.id} alignSelf='center' ml={3} mr={3} justifySelf='center'>
-          <ClubIcon size='xl' clubQuery={item.node} />
-        </Box>))}
+          <FancyClubIcon data={item.node} />
+        </Box>
+      ))}
     </Flex>
   )
 }

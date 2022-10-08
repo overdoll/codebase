@@ -737,6 +737,24 @@ type LikePostPayload struct {
 	PostLike *PostLike `json:"postLike"`
 }
 
+// A new creator lead input.
+type NewCreatorLeadInput struct {
+	// The username of the creator.
+	Username string `json:"username"`
+	// The email of the creator.
+	Email string `json:"email"`
+	// A link to the creator's portfolio.
+	Link string `json:"link"`
+	// Any additional details from the creator.
+	Details string `json:"details"`
+}
+
+// A new creator lead input.
+type NewCreatorLeadPayload struct {
+	// Any validation errors that may occur.
+	Validation *NewCreatorLeadValidation `json:"validation"`
+}
+
 // Track posts observations.
 type ObservePostsInput struct {
 	// The post ids.
@@ -2086,6 +2104,47 @@ func (e *GameType) UnmarshalGQL(v interface{}) error {
 }
 
 func (e GameType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+// Validation for a new creator lead
+type NewCreatorLeadValidation string
+
+const (
+	// Creator already submitted a lead.
+	NewCreatorLeadValidationAlreadySubmitted NewCreatorLeadValidation = "ALREADY_SUBMITTED"
+)
+
+var AllNewCreatorLeadValidation = []NewCreatorLeadValidation{
+	NewCreatorLeadValidationAlreadySubmitted,
+}
+
+func (e NewCreatorLeadValidation) IsValid() bool {
+	switch e {
+	case NewCreatorLeadValidationAlreadySubmitted:
+		return true
+	}
+	return false
+}
+
+func (e NewCreatorLeadValidation) String() string {
+	return string(e)
+}
+
+func (e *NewCreatorLeadValidation) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = NewCreatorLeadValidation(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid NewCreatorLeadValidation", str)
+	}
+	return nil
+}
+
+func (e NewCreatorLeadValidation) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

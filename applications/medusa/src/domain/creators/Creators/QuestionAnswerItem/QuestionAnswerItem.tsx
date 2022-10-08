@@ -1,5 +1,4 @@
 import { AccordionButton, AccordionItem, AccordionPanel, Box, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
 import { Icon } from '@//:modules/content/PageLayout'
 import { AddPlus, SubtractMinus } from '@//:assets/icons'
 import React from 'react'

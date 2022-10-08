@@ -4045,6 +4045,9 @@ type Mutation {
   """Lock an account for a specific duration."""
   lockAccount(input: LockAccountInput!): LockAccountPayload
 
+  """Create a new creator lead."""
+  newCreatorLead(input: NewCreatorLeadInput!): NewCreatorLeadPayload
+
   """
   Track posts observations - this should be tracked whenever a post is "viewed"
   on the site - either through the list or viewing the post individually.
@@ -4335,6 +4338,33 @@ type Mutation {
   Will verify the authentication token. Requires the secret (sent in an email)
   """
   verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
+}
+
+"""A new creator lead input."""
+input NewCreatorLeadInput {
+  """Any additional details from the creator."""
+  details: String!
+
+  """The email of the creator."""
+  email: String!
+
+  """A link to the creator's portfolio."""
+  link: String!
+
+  """The username of the creator."""
+  username: String!
+}
+
+"""A new creator lead input."""
+type NewCreatorLeadPayload {
+  """Any validation errors that may occur."""
+  validation: NewCreatorLeadValidation
+}
+
+"""Validation for a new creator lead"""
+enum NewCreatorLeadValidation {
+  """Creator already submitted a lead."""
+  ALREADY_SUBMITTED
 }
 
 interface Node {

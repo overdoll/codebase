@@ -1,0 +1,33 @@
+"""Validation for a new creator lead"""
+enum NewCreatorLeadValidation {
+  """Creator already submitted a lead."""
+  ALREADY_SUBMITTED
+}
+
+"""A new creator lead input."""
+input NewCreatorLeadInput {
+  """The username of the creator."""
+  username: String!
+
+  """The email of the creator."""
+  email: String!
+
+  """A link to the creator's portfolio."""
+  link: String!
+
+  """Any additional details from the creator."""
+  details: String!
+}
+
+"""A new creator lead input."""
+type NewCreatorLeadPayload {
+  """Any validation errors that may occur."""
+  validation: NewCreatorLeadValidation
+}
+
+extend type Mutation {
+  """
+  Create a new creator lead.
+  """
+  newCreatorLead(input: NewCreatorLeadInput!): NewCreatorLeadPayload
+}

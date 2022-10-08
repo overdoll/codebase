@@ -1,24 +1,108 @@
 import { PageProps } from '@//:types/app'
-import { Trans } from '@lingui/macro'
+import { t, Trans } from '@lingui/macro'
 import { Accordion, Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import SiteLinkLogo from '../../app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
-import React from 'react'
+import React, { useMemo, useState } from 'react'
 import Image from 'next/future/image'
 import Head from 'next/head'
-import LeadsForm from './LeadsForm/LeadsForm'
+import LeadsFormModal from './LeadsFormModal/LeadsFormModal'
 import StartUsingOverdoll from './StartUsingOverdoll/StartUsingOverdoll'
 import FactItem from './FactItem/FactItem'
 import QuestionAnswerItem from './QuestionAnswerItem/QuestionAnswerItem'
 import RootClubsDisplay from './RootClubsDisplay/RootClubsDisplay'
 import HighlightInline from '@//:modules/content/ContentHints/HighlightInline/HighlightInline'
+import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
+import { useLingui } from '@lingui/react'
+import Joi from 'joi'
+import Email from '@//:modules/validation/Email'
+import { useForm } from 'react-hook-form'
+import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
+import { CreatorsQuery } from '@//:artifacts/CreatorsQuery.graphql'
+
+const Query = graphql`
+  query CreatorsQuery {
+    viewer {
+      username
+      emails(first: 10) {
+        edges {
+          node {
+            email
+            status
+          }
+        }
+      }
+    }
+  }
+`
+
+interface FormValues {
+  email: string
+  portfolio: string
+  username: string
+  details: string
+}
 
 const Creators: PageProps<{}> = () => {
+  const data = useLazyLoadQuery<CreatorsQuery>(Query, {})
+
+  const [isFinalized, setFinalized] = useState(false)
+
   const {
     isOpen,
     onOpen,
     onClose
   } = useDisclosure()
+
+  const { i18n } = useLingui()
+
+  const schema = Joi.object({
+    email: Email(),
+    username: Joi
+      .string()
+      .required()
+      .messages({
+        'string.empty': i18n._(t`Please enter an username`)
+      }),
+    portfolio: Joi
+      .string()
+      .required()
+      .uri()
+      .messages({
+        'string.empty': i18n._(t`Please enter a portfolio url`),
+        'string.uri': i18n._(t`Please enter a valid url`)
+      }),
+    details: Joi
+      .string()
+      .allow('')
+  })
+
+  const targetEmail = useMemo(() => {
+    if (data?.viewer != null) {
+      for (const item of data.viewer.emails.edges) {
+        if (item.node.status === 'PRIMARY') {
+          return item.node.email
+        }
+      }
+    }
+
+    return ''
+  }, [data.viewer])
+
+  const methods = useForm<FormValues>({
+    resolver: joiResolver(
+      schema
+    ),
+    defaultValues: {
+      username: data?.viewer?.username,
+      email: targetEmail
+    },
+    shouldUnregister: false
+  })
+
+  const onFinalize = (): void => {
+    setFinalized(true)
+  }
 
   return (
     <>
@@ -27,7 +111,13 @@ const Creators: PageProps<{}> = () => {
           overdoll - For 18+ Creators
         </title>
       </Head>
-      <LeadsForm isOpen={isOpen} onClose={onClose} />
+      <LeadsFormModal
+        methods={methods}
+        isOpen={isOpen}
+        onClose={onClose}
+        onFinalize={onFinalize}
+        isFinalized={isFinalized}
+      />
       <Flex flexDirection='column' backgroundColor='#000000'>
         <Flex zIndex={10} p={5} w='100%' maxWidth='1200px' alignSelf='center'>
           <SiteLinkLogo />
@@ -43,7 +133,7 @@ const Creators: PageProps<{}> = () => {
             </LinkButton>
           </Box>
         </Flex>
-        <Flex padding='45px 45px 0px 45px'>
+        <Flex padding='75px 45px' mb={10}>
           <Box
             margin='0 auto'
             padding='75px 0'
@@ -71,7 +161,7 @@ const Creators: PageProps<{}> = () => {
               color='white'
             >
               <Trans>
-                The first platform to offer a full end-to-end ecosystem for adult content creators.
+                overdoll is the first platform to offer a full end-to-end ecosystem for adult content creators.
               </Trans>
             </Text>
             <Box mt={10} />
@@ -105,11 +195,8 @@ const Creators: PageProps<{}> = () => {
             />
           </Flex>
         </Flex>
-        <Flex zIndex={10} mb={16} pb={4}>
-          <RootClubsDisplay />
-        </Flex>
         <FactItem
-          header='Never miss rent again.'
+          header='Always get paid.'
           text='We partner with adult payment processors who offer decades of experience in the adult industry. Stop
               waiting for the day they shut down your PayPal account.'
         >
@@ -128,6 +215,29 @@ const Creators: PageProps<{}> = () => {
         >
           some content
         </FactItem>
+      </Flex>
+      <Flex
+        padding='45px 45px'
+        backgroundColor='#000000'
+        borderBottom='2px solid #222'
+        alignItems='center'
+        justifyContent='center'
+        flexDirection='column'
+        textAlign='center'
+      >
+        <Heading
+          as='h1'
+          fontSize='4xl'
+          color='white'
+          lineHeight='1.1'
+          mb={10}
+          maxWidth='750px'
+        >
+          <Trans>
+            Your favourite adult content creators are making money on overdoll.
+          </Trans>
+        </Heading>
+        <RootClubsDisplay />
       </Flex>
       <Flex
         padding='70px 45px'
@@ -160,8 +270,7 @@ const Creators: PageProps<{}> = () => {
               answer={(
                 <Trans>
                   <HighlightInline colorScheme='pink'>overdoll</HighlightInline> is a content distribution platform
-                  designed for artists who
-                  draw pornography and animators who render or animate 3D pornography, or animate porn.
+                  designed for artists who draw or animate/render digital pornography.
                 </Trans>
               )}
             />
@@ -186,9 +295,9 @@ const Creators: PageProps<{}> = () => {
               )}
               answer={(
                 <Trans>
-                  <HighlightInline colorScheme='pink'>overdoll</HighlightInline> is used by both artists and fans. Fans
+                  <HighlightInline colorScheme='pink'>overdoll</HighlightInline> is used by both creators and fans. Fans
                   use <HighlightInline colorScheme='pink'>overdoll</HighlightInline> to browse adult content, and may
-                  find new artists directly through the discovery and search features. Artists use
+                  find new creators directly through the discovery and search features. Creators use
                   <HighlightInline colorScheme='pink'> overdoll</HighlightInline> to feature
                   their adult content and may collect subscriptions for premium content.
                 </Trans>
