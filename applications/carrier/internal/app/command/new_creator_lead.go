@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"os"
 	"overdoll/applications/carrier/internal/domain/mailing"
 )
 
@@ -36,7 +37,7 @@ func (h NewCreatorLeadHandler) Handle(ctx context.Context, cmd NewCreatorLead) e
 		return err
 	}
 
-	recipient, err := mailing.NewRecipient("overdoll team", "nikita@overdoll.com")
+	recipient, err := mailing.NewRecipient("overdoll team", os.Getenv("STAFF_ADDRESS"))
 
 	if err != nil {
 		return err
