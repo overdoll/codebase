@@ -1,8 +1,8 @@
 import { graphql } from 'react-relay'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import { useFragment } from 'react-relay/hooks'
-import { Link } from '@chakra-ui/react'
 import { FancyClubIcon$key } from '@//:artifacts/FancyClubIcon.graphql'
+import { Link } from '@//:modules/routing'
 
 const Fragment = graphql`
   fragment FancyClubIcon on Club  {
@@ -42,7 +42,8 @@ const FancyClubIcon = ({ data }: Props): JSX.Element => {
       <ClubIcon
         _hover={{
           boxShadow: `0 0 5px ${colorCode}, 0 0 15px ${colorCode}, 0 0 30px ${colorCode}, 0 0 60px ${colorCode}`,
-          transition: '0.5s'
+          transition: '0.5s',
+          cursor: 'pointer'
         }}
         size='xl'
         clubQuery={clubData}
