@@ -2,6 +2,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollRandomFragment$key } from '@//:artifacts/ScrollRandomFragment.graphql'
 import { ResultRandomQuery } from '@//:artifacts/ResultRandomQuery.graphql'
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import HeaderRandom from '../HeaderRandom/HeaderRandom'
 
 interface Props {
   rootQuery: ScrollRandomFragment$key
@@ -42,19 +43,23 @@ export default function ScrollRandom (props: Props): JSX.Element {
   )
 
   return (
-    <VerticalPaginationScroller
-      postConnectionQuery={data.postsFeed}
-      hasNext={hasNext}
-      loadNext={loadNext}
-      isLoadingNext={isLoadingNext}
-    >
-      {({
-        index
-      }) => (
-        <PreviewPost
-          postQuery={data?.postsFeed?.edges?.[index]?.node}
-        />
-      )}
-    </VerticalPaginationScroller>
+    <>
+      <VerticalPaginationScroller
+        limit={20}
+        postConnectionQuery={data.postsFeed}
+        hasNext={hasNext}
+        loadNext={loadNext}
+        isLoadingNext={isLoadingNext}
+      >
+        {({
+          index
+        }) => (
+          <PreviewPost
+            postQuery={data?.postsFeed?.edges?.[index]?.node}
+          />
+        )}
+      </VerticalPaginationScroller>
+      <HeaderRandom />
+    </>
   )
 }

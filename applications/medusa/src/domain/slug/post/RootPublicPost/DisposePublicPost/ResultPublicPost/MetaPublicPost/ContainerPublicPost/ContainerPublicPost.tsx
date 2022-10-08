@@ -6,7 +6,7 @@ import BannerPublicPost from './BannerPublicPost/BannerPublicPost'
 import DescriptionPublicPost from './DescriptionPublicPost/DescriptionPublicPost'
 import { BannerContainer, CinematicContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import CinematicPublicPost from './CinematicPublicPost/CinematicPublicPost'
-import { Center, Spinner, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 import { Trans } from '@lingui/macro'
 import { MagicWand } from '@//:assets/icons'
@@ -49,27 +49,31 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  const [canFlag, setCanFlag] = useState(false)
+  const [flag, setFlag] = useState(false)
 
   const memoSuggestedPosts = useMemo(() => {
-    if (!canFlag) {
+    if (!flag) {
       return (
-        <Center>
-          <Spinner />
-        </Center>
+        <PrepareSuggestedPosts postQuery={postData} />
       )
     }
 
-    if (posthog.getFeatureFlag('post-suggested') === 'grid') {
+    if (posthog?.getFeatureFlag('join-modal') === 'control') {
+      return (
+        <PrepareSuggestedPosts postQuery={postData} />
+      )
+    }
+
+    if (posthog?.getFeatureFlag('join-modal') === 'grid') {
       return <PrepareGridSuggestedPosts postQuery={postData} />
     }
 
     return <PrepareSuggestedPosts postQuery={postData} />
-  }, [canFlag, postData.reference])
+  }, [flag, postData.reference])
 
   useEffect(() => {
-    posthog.onFeatureFlags(() => {
-      setCanFlag(true)
+    posthog?.onFeatureFlags(() => {
+      setFlag(true)
     })
   }, [])
 

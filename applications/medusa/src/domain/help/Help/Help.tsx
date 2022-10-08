@@ -184,6 +184,17 @@ const Help: PageProps<{}> = () => {
                   )}
                 />
               </PagePanelWrap>
+              <PagePanelWrap href='/feedback'>
+                <PagePanelIcon icon={PremiumStar} colorScheme='purple' />
+                <PagePanelText
+                  title={
+                    <Trans>Give Feedback</Trans>
+                  }
+                  description={(
+                    <Trans>Tell us what you really think</Trans>
+                  )}
+                />
+              </PagePanelWrap>
             </ListSpacer>
           </Box>
           <Box>

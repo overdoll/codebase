@@ -34,14 +34,14 @@ export default function RandomizeButton (): JSX.Element {
           w='100%'
           position='sticky'
           zIndex='sidebar'
-          top={{
+          bottom={{
             base: -1,
             md: -2
           }}
-          pt={isSticky
+          pb={isSticky
             ? {
-                base: 2,
-                md: 66
+                base: 66,
+                md: 2
               }
             : {}}
           ref={ref}
@@ -56,7 +56,7 @@ export default function RandomizeButton (): JSX.Element {
                 size='lg'
               >
                 <Trans>
-                  Randomize!
+                  Get more posts
                 </Trans>
               </Button>
               )
