@@ -5,7 +5,7 @@ import FancyClubIcon from './FancyClubIcon/FancyClubIcon'
 
 const Query = graphql`
   query ClubsDisplayQuery {
-    clubs (first: 10, canSupport: true) {
+    clubs (first: 10, canSupport: true, terminated: false, suspended: false) {
       edges {
         node {
           id
