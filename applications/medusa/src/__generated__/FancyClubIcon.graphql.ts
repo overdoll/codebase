@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6bdd1519cfbf404617f7d32eff35d4bc>>
+ * @generated SignedSource<<ca88b9cf579a79c245edd9888a764e63>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -57,36 +57,41 @@ const node: ReaderFragment = {
           "kind": "InlineFragment",
           "selections": [
             {
-              "alias": null,
-              "args": null,
-              "concreteType": "ColorPalette",
-              "kind": "LinkedField",
-              "name": "colorPalettes",
-              "plural": true,
-              "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "red",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "green",
-                  "storageKey": null
-                },
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "blue",
-                  "storageKey": null
-                }
-              ],
-              "storageKey": null
+              "kind": "RequiredField",
+              "field": {
+                "alias": null,
+                "args": null,
+                "concreteType": "ColorPalette",
+                "kind": "LinkedField",
+                "name": "colorPalettes",
+                "plural": true,
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "red",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "green",
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "kind": "ScalarField",
+                    "name": "blue",
+                    "storageKey": null
+                  }
+                ],
+                "storageKey": null
+              },
+              "action": "THROW",
+              "path": "thumbnailMedia.colorPalettes"
             }
           ],
           "type": "ImageMedia",
@@ -100,6 +105,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "86afbe770b59a26edf0e2de9ca373219";
+(node as any).hash = "7118927490ddeed5708e89b07ece2659";
 
 export default node;

@@ -3,10 +3,15 @@ import { Icon } from '@//:modules/content/PageLayout'
 import { AddPlus, SubtractMinus } from '@//:assets/icons'
 import React from 'react'
 
+interface Props {
+  question: React.ReactNode
+  answer: React.ReactNode
+}
+
 const QuestionAnswerItem = ({
   question,
   answer
-}) => {
+}: Props): JSX.Element => {
   return (
     <AccordionItem mb={2}>
       {({ isExpanded }) => (

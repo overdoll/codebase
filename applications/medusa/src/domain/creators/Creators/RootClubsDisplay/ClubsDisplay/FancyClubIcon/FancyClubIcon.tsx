@@ -2,6 +2,7 @@ import { graphql } from 'react-relay'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import { useFragment } from 'react-relay/hooks'
 import { Link } from '@chakra-ui/react'
+import { FancyClubIcon$key } from '@//:artifacts/FancyClubIcon.graphql'
 
 const Fragment = graphql`
   fragment FancyClubIcon on Club  {
@@ -9,7 +10,7 @@ const Fragment = graphql`
     slug
     thumbnailMedia {
       ... on ImageMedia {
-        colorPalettes {
+        colorPalettes @required(action: THROW) {
           red
           green
           blue
@@ -19,18 +20,22 @@ const Fragment = graphql`
   }
 `
 
-const FancyClubIcon = ({ data }) => {
+interface Props {
+  data: FancyClubIcon$key
+}
+
+const FancyClubIcon = ({ data }: Props): JSX.Element => {
   const clubData = useFragment(Fragment, data)
 
-  const colorPalette = clubData.thumbnailMedia != null
-    ? clubData.thumbnailMedia.colorPalettes[0]
+  const colorPalette = (clubData.thumbnailMedia?.colorPalettes != null && clubData.thumbnailMedia.colorPalettes.length > 0)
+    ? clubData.thumbnailMedia?.colorPalettes[0]
     : {
         red: 0,
         green: 0,
         blue: 0
       }
 
-  const colorCode = `rgb(${colorPalette.red as string}, ${colorPalette.green as string}, ${colorPalette.blue as string})`
+  const colorCode = `rgb(${colorPalette.red as unknown as string}, ${colorPalette.green as unknown as string}, ${colorPalette.blue as unknown as string})`
 
   return (
     <Link href={`/${clubData.slug}`}>

@@ -1,6 +1,5 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { Box, Flex } from '@chakra-ui/react'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import { ClubsDisplayQuery } from '@//:artifacts/ClubsDisplayQuery.graphql'
 import FancyClubIcon from './FancyClubIcon/FancyClubIcon'
 

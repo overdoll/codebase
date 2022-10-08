@@ -122,7 +122,6 @@ const Creators: PageProps<{}> = () => {
         isOpen={isOpen}
         onClose={onClose}
         onFinalize={onFinalize}
-        isFinalized={isFinalized}
       />
       <Flex flexDirection='column' backgroundColor='#000000'>
         <Flex zIndex={10} p={5} w='100%' maxWidth='1200px' alignSelf='center'>

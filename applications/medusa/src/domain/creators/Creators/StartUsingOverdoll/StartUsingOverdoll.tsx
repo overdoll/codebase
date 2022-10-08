@@ -5,10 +5,15 @@ import { Trans } from '@lingui/macro'
 import React from 'react'
 import { keyframes } from '@chakra-ui/react'
 
+interface Props {
+  onClick: () => void
+  isFinalized: boolean
+}
+
 const StartUsingOverdoll = ({
   onClick,
   isFinalized
-}) => {
+}: Props): JSX.Element => {
   const topBubbles = keyframes`
   0%{
     background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%, 70% 90%;

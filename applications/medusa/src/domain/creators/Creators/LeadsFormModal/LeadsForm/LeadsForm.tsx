@@ -25,11 +25,16 @@ const Mutation = graphql`
     }
   }
 `
+
+interface Props {
+  onFinalize: () => void
+  methods: any
+}
+
 const LeadsForm = ({
   methods,
-  isFinalized,
   onFinalize
-}) => {
+}: Props): JSX.Element => {
   const { i18n } = useLingui()
   const [commit, IsInFlight] = useMutation<LeadsFormMutation>(Mutation)
   const notify = useToast()

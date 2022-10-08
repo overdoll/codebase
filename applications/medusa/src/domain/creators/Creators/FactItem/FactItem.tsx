@@ -1,12 +1,19 @@
 import { Box, Flex, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
 
+interface Props {
+  header: React.ReactNode
+  text: React.ReactNode
+  children: React.ReactNode
+  reverse?: boolean
+}
+
 const FactItem = ({
   header,
   text,
   children,
   reverse = false
-}) => {
+}: Props): JSX.Element => {
   const target = (
     <Flex
       boxSizing='border-box'

@@ -2,13 +2,19 @@ import { Modal, ModalContent, ModalOverlay } from '@chakra-ui/react'
 import React from 'react'
 import LeadsForm from './LeadsForm/LeadsForm'
 
+interface Props {
+  isOpen: boolean
+  onClose: () => void
+  onFinalize: () => void
+  methods: any
+}
+
 const LeadsFormModal = ({
   isOpen,
   onClose,
-  isFinalized,
   onFinalize,
   methods
-}): JSX.Element => {
+}: Props): JSX.Element => {
   return (
     <Modal
       preserveScrollBarGap
@@ -21,7 +27,7 @@ const LeadsFormModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <LeadsForm methods={methods} isFinalized={isFinalized} onFinalize={onFinalize} />
+        <LeadsForm methods={methods} onFinalize={onFinalize} />
       </ModalContent>
     </Modal>
   )
