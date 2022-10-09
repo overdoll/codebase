@@ -4,7 +4,6 @@ import { Accordion, Box, Flex, Heading, Text, useDisclosure } from '@chakra-ui/r
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 import SiteLinkLogo from '../../app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
 import React, { useMemo, useState } from 'react'
-import Head from 'next/head'
 import LeadsFormModal from './LeadsFormModal/LeadsFormModal'
 import StartUsingOverdoll from './StartUsingOverdoll/StartUsingOverdoll'
 import FactItem from './FactItem/FactItem'
@@ -18,6 +17,9 @@ import Email from '@//:modules/validation/Email'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
 import { CreatorsQuery } from '@//:artifacts/CreatorsQuery.graphql'
+import Image from 'next/future/image'
+import VideoAction from './VideoAction/VideoAction'
+import CreatorsRichObject from '@//:common/rich-objects/artists/ArtistsRichObject/CreatorsRichObject'
 
 const Query = graphql`
   query CreatorsQuery {
@@ -112,11 +114,7 @@ const Creators: PageProps<{}> = () => {
 
   return (
     <>
-      <Head>
-        <title>
-          overdoll - For 18+ Creators
-        </title>
-      </Head>
+      <CreatorsRichObject />
       <LeadsFormModal
         methods={methods}
         isOpen={isOpen}
@@ -180,21 +178,37 @@ const Creators: PageProps<{}> = () => {
             right={0}
             height={['520px', '690px', '690px', '733px']}
           >
-            {/* <Image */}
-            {/*   style={{ */}
-            {/*     objectFit: 'cover', */}
-            {/*     width: '100%', */}
-            {/*     height: '100%' */}
-            {/*   }} */}
-            {/*   src='/desktop-large.jpg' */}
-            {/* /> */}
+            <Flex
+              as='picture'
+              h='100%'
+              w='100%'
+              objectFit='cover'
+            >
+              <source
+                media='(min-width: 760px)'
+                srcSet='https://static.dollycdn.net/creators/banners/desktop.jpg'
+              />
+              <source
+                media='(min-width: 330px)'
+                srcSet='https://static.dollycdn.net/creators/banners/large.jpg'
+              />
+              <Image
+                src='https://static.dollycdn.net/creators/banners/medium.jpg'
+                unoptimized
+                style={{
+                  objectFit: 'cover',
+                  width: '100%',
+                  height: '100%'
+                }}
+              />
+            </Flex>
             <Box
               top={0}
               left={0}
               bottom={0}
               right={0}
               position='absolute'
-              backgroundColor='rgba(0,0,0,0.7)'
+              backgroundColor='rgba(0,0,0,0.5)'
               backgroundImage='linear-gradient(0deg,rgba(0,0,0,.8) 0,transparent 60%,rgba(0,0,0,.8))'
               borderBottom='2px solid #222'
             />
@@ -213,7 +227,7 @@ const Creators: PageProps<{}> = () => {
             </Trans>
           )}
         >
-          <Box />
+          <VideoAction width='200px' url='https://static.dollycdn.net/creators/clips/paid.mp4' />
         </FactItem>
         <FactItem
           reverse
@@ -229,7 +243,7 @@ const Creators: PageProps<{}> = () => {
             </Trans>
           )}
         >
-          <Box />
+          <VideoAction width='200px' url='https://static.dollycdn.net/creators/clips/visible.mp4' />
         </FactItem>
         <FactItem
           header={(
@@ -244,7 +258,7 @@ const Creators: PageProps<{}> = () => {
             </Trans>
           )}
         >
-          <Box />
+          <VideoAction width='400px' url='https://static.dollycdn.net/creators/clips/browse.mp4' />
         </FactItem>
       </Flex>
       <Flex

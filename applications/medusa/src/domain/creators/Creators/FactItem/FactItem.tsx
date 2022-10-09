@@ -1,4 +1,4 @@
-import { Box, Flex, Heading, Text } from '@chakra-ui/react'
+import { Flex, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
 
 interface Props {
@@ -21,9 +21,9 @@ const FactItem = ({
       height='100%'
       width={['100%', '100%', '42%']}
     >
-      <Box margin='-10% -5% -5% 0'>
+      <Flex margin='auto' justifyContent='center'>
         {children}
-      </Box>
+      </Flex>
     </Flex>
   )
 
@@ -40,7 +40,8 @@ const FactItem = ({
         <Flex
           flexDirection='column'
           flex='0 1 auto'
-          height='100%'
+          marginTop='auto'
+          marginBottom='auto'
           padding={['0', '0', '0 3rem 0 0']}
           width={['100%', '100%', '52%']}
           textAlign={['center', 'center', 'left']}
