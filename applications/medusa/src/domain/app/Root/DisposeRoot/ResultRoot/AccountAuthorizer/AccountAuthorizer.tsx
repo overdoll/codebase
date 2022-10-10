@@ -31,7 +31,7 @@ const AccountAuthorizerGQL = graphql`
 
 export default function AccountAuthorizer ({
   queryRef,
-  children
+  children,
 }: Props): JSX.Element {
   const router = useRouter()
 
@@ -41,12 +41,12 @@ export default function AccountAuthorizer ({
     (
       data != null
         ? {
-            isModerator: data.isModerator,
-            isStaff: data.isStaff,
-            isLocked: data.lock != null || data.deleting != null,
-            isArtist: data.isArtist,
-            isWorker: data.isWorker
-          }
+          isModerator: data.isModerator,
+          isStaff: data.isStaff,
+          isLocked: data.lock != null || data.deleting != null,
+          isArtist: data.isArtist,
+          isWorker: data.isWorker,
+        }
         : null
     )), [data])
 
@@ -55,7 +55,7 @@ export default function AccountAuthorizer ({
     if (data != null) {
       Sentry.setUser({
         username: data.username,
-        id: data.reference
+        id: data.reference,
       })
     }
   }, [])
@@ -95,7 +95,7 @@ export default function AccountAuthorizer ({
               isArtist: data?.isArtist,
               isModerator: data?.isModerator,
               isWorker: data?.isWorker,
-              username: data?.username
+              username: data?.username,
             })
 
             // don't capture data from staff or workers
@@ -103,7 +103,7 @@ export default function AccountAuthorizer ({
               posthog_instance.opt_out_capturing()
             }
           }
-        }
+        },
       })
     }
 
@@ -113,7 +113,7 @@ export default function AccountAuthorizer ({
       if (trackingCode !== '') {
         posthog?.capture('$pageview', {
           next_pathname: router.pathname,
-          next_query: router.query
+          next_query: router.query,
         })
       }
     }
