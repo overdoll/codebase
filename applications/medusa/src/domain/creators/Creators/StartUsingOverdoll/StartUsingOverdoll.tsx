@@ -66,7 +66,6 @@ const StartUsingOverdoll = ({
         width: '110%',
         height: '100%',
         zIndex: -1000,
-        animationDelay: '3s',
         backgroundRepeat: 'no-repeat',
         backgroundImage: 'radial-gradient(circle, var(--od-colors-orange-300) 20%, transparent 20%),' +
           'radial-gradient(circle, transparent 20%, var(--od-colors-orange-300) 20%, transparent 30%),' +
@@ -90,7 +89,6 @@ const StartUsingOverdoll = ({
         height: '100%',
         zIndex: -1000,
         backgroundRepeat: 'no-repeat',
-        animationDelay: '3s',
         backgroundSize: '15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 10% 10%, 20% 20%',
         backgroundImage: 'radial-gradient(circle, var(--od-colors-orange-300) 20%, transparent 20%),' +
           'radial-gradient(circle, var(--od-colors-orange-300) 20%, transparent 20%),' +
