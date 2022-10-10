@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c2c9e624cfb762d44ddcb15d9cadb7d4>>
- * @relayHash 3657214fe172cbcc01bb1f38cb6823f2
+ * @generated SignedSource<<e5fa58c4e0cc4c3fa66b6f560b09ce11>>
+ * @relayHash 69bbbc53ada9d974268ffe0b5a1fd773
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3657214fe172cbcc01bb1f38cb6823f2
+// @relayRequestID 69bbbc53ada9d974268ffe0b5a1fd773
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -372,6 +372,13 @@ return {
                             "kind": "ScalarField",
                             "name": "slug",
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "canSupport",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -544,7 +551,21 @@ return {
                             "alias": null,
                             "args": null,
                             "kind": "ScalarField",
+                            "name": "viewerCanViewSupporterOnlyContent",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
                             "name": "isSupporterOnly",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "supporterOnlyVideoMediaDuration",
                             "storageKey": null
                           }
                         ],
@@ -615,7 +636,7 @@ return {
     ]
   },
   "params": {
-    "id": "3657214fe172cbcc01bb1f38cb6823f2",
+    "id": "69bbbc53ada9d974268ffe0b5a1fd773",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<426000cc6c502c1990d71341108426b4>>
- * @relayHash f41167b70f81e7cd0e8597a144f37033
+ * @generated SignedSource<<6357f9404408881fa0f23ec29a38dd4f>>
+ * @relayHash 6b5e0075c5b7a7249a9119d9db391e33
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f41167b70f81e7cd0e8597a144f37033
+// @relayRequestID 6b5e0075c5b7a7249a9119d9db391e33
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -519,7 +519,58 @@ return {
                         "alias": null,
                         "args": null,
                         "kind": "ScalarField",
+                        "name": "viewerCanViewSupporterOnlyContent",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
                         "name": "isSupporterOnly",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "supporterOnlyVideoMediaDuration",
+                        "storageKey": null
+                      }
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "Club",
+                    "kind": "LinkedField",
+                    "name": "club",
+                    "plural": false,
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "slug",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "canSupport",
+                        "storageKey": null
+                      },
+                      (v2/*: any*/),
+                      (v17/*: any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "concreteType": null,
+                        "kind": "LinkedField",
+                        "name": "thumbnailMedia",
+                        "plural": false,
+                        "selections": (v19/*: any*/),
                         "storageKey": null
                       }
                     ],
@@ -554,36 +605,6 @@ return {
                       }
                     ],
                     "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "Club",
-                    "kind": "LinkedField",
-                    "name": "club",
-                    "plural": false,
-                    "selections": [
-                      (v2/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "slug",
-                        "storageKey": null
-                      },
-                      (v17/*: any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "concreteType": null,
-                        "kind": "LinkedField",
-                        "name": "thumbnailMedia",
-                        "plural": false,
-                        "selections": (v19/*: any*/),
-                        "storageKey": null
-                      }
-                    ],
-                    "storageKey": null
                   }
                 ],
                 "storageKey": null
@@ -597,7 +618,7 @@ return {
     ]
   },
   "params": {
-    "id": "f41167b70f81e7cd0e8597a144f37033",
+    "id": "6b5e0075c5b7a7249a9119d9db391e33",
     "metadata": {},
     "name": "SpinRouletteMutation",
     "operationKind": "mutation",

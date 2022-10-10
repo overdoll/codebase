@@ -1,4 +1,4 @@
-import { createContext, ReactNode, Suspense, useContext, useEffect, useState } from 'react'
+import { createContext, ReactNode, Suspense, useContext } from 'react'
 import {
   Box,
   Flex,
@@ -13,7 +13,6 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import { useRouter } from 'next/router'
 import encodeJoinRedirect from '@//:modules/support/encodeJoinRedirect'
 import { UrlObject } from 'url'
-import posthog from 'posthog-js'
 import { SkeletonStack } from '@//:modules/content/Placeholder'
 import { useCookies } from 'react-cookie'
 import { useSearch } from '@//:modules/content/HookedComponents/Search'
@@ -123,39 +122,38 @@ export function useJoinContext (): JoinModalContextProps {
 }
 
 export function useJoin (redirect?: string | UrlObject, from?: string): () => void {
-  const { onOpen } = useJoinContext()
-  const [canFlag, setCanFlag] = useState(false)
+  // const { onOpen } = useJoinContext()
+  // const [canFlag, setCanFlag] = useState(false)
 
   const gotoRedirect = redirect != null ? encodeJoinRedirect(redirect, from) : '/join'
 
   const router = useRouter()
+  //
+  // const onOpenJoin = (): void => {
+  //   posthog?.capture('open-join-modal', { from: from })
+  //   onOpen()
+  // }
 
-  const onOpenJoin = (): void => {
-    posthog?.capture('open-join-modal', { from: from })
-    onOpen()
-  }
+  //
+  // useEffect(() => {
+  //   posthog.onFeatureFlags(() => {
+  //     setCanFlag(true)
+  //   })
+  // }, [])
+  //
+  // if (!canFlag) {
+  //   return onRedirectJoin
+  // }
+  //
+  // if (posthog?.getFeatureFlag('join-modal') === 'control') {
+  //   return onRedirectJoin
+  // }
+  //
+  // if (posthog?.getFeatureFlag('join-modal') === 'test_modal') {
+  //   return onOpenJoin
+  // }
 
-  const onRedirectJoin = (): void => {
+  return (): void => {
     void router.push(gotoRedirect)
   }
-
-  useEffect(() => {
-    posthog.onFeatureFlags(() => {
-      setCanFlag(true)
-    })
-  }, [])
-
-  if (!canFlag) {
-    return onRedirectJoin
-  }
-
-  if (posthog?.getFeatureFlag('join-modal') === 'control') {
-    return onRedirectJoin
-  }
-
-  if (posthog?.getFeatureFlag('join-modal') === 'test_modal') {
-    return onOpenJoin
-  }
-
-  return onRedirectJoin
 }
