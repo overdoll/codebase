@@ -10,7 +10,6 @@ import NoScript from './NoScript/NoScript'
 import RootRichObject from '@//:common/rich-objects/default/RootRichObject/RootRichObject'
 import dynamic from 'next/dynamic'
 import { ViewCounterProvider } from './ViewCounter/ViewCounter'
-import { JoinModalProvider } from './JoinModal/JoinModal'
 
 const DynamicRouteProgressBar = dynamic(
   async () => {

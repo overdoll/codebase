@@ -13,7 +13,6 @@ import { MagicWand } from '@//:assets/icons'
 import HomeRedirectPrompt from '@//:common/components/HomeRedirectPrompt/HomeRedirectPrompt'
 import PrepareGridSuggestedPosts from './PrepareGridSuggestedPosts/PrepareGridSuggestedPosts'
 import PrepareSuggestedPosts from './PrepareSuggestedPosts/PrepareSuggestedPosts'
-import posthog from 'posthog-js'
 import useFeatureFlag from '@//:modules/hooks/useFeatureFlag'
 
 interface Props {

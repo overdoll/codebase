@@ -41,7 +41,7 @@ const Mutation = graphql`
 
 export default function CurationCategoryNextButton ({
   query,
-  nextStep,
+  nextStep
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -49,7 +49,7 @@ export default function CurationCategoryNextButton ({
 
   const {
     state,
-    dispatch,
+    dispatch
   } = useSequenceContext()
 
   const notify = useToast()
@@ -63,7 +63,7 @@ export default function CurationCategoryNextButton ({
     updateCategory({
       variables: {
         categoryIds: Object.keys(state.category),
-        skipped: false,
+        skipped: false
       },
       onCompleted () {
         posthog?.capture('update-curation-category')
@@ -71,9 +71,9 @@ export default function CurationCategoryNextButton ({
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error saving the categories`,
+          title: t`There was an error saving the categories`
         })
-      },
+      }
     })
   }
 
@@ -81,25 +81,25 @@ export default function CurationCategoryNextButton ({
     updateCategory({
       variables: {
         categoryIds: [],
-        skipped: true,
+        skipped: true
       },
       onCompleted () {
         dispatch({
           type: 'category',
           value: {},
-          transform: 'SET',
+          transform: 'SET'
         })
         notify({
           status: 'info',
-          title: t`Category preference was skipped`,
+          title: t`Category preference was skipped`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error skipping the categories`,
+          title: t`There was an error skipping the categories`
         })
-      },
+      }
     })
   }
 
