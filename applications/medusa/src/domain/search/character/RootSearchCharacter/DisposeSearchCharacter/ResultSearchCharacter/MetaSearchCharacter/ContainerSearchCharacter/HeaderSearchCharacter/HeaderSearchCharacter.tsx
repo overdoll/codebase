@@ -44,14 +44,11 @@ export default function HeaderSearchCharacter (props: Props): JSX.Element {
         totalLikes={characterData.totalLikes}
       />
       <SearchCharacterRecommendations query={characterData} />
-      <HStack justify='space-between' spacing={2}>
-        <HStack spacing={1}>
-          <SearchCharacterCopyLinkButton query={characterData} />
-          <SearchCharacterShareDiscordButton query={characterData} />
-          <SearchCharacterShareRedditButton query={characterData} />
-          <SearchCharacterShareTwitterButton query={characterData} />
-        </HStack>
-        <SearchButton />
+      <HStack spacing={1}>
+        <SearchCharacterCopyLinkButton query={characterData} />
+        <SearchCharacterShareDiscordButton query={characterData} />
+        <SearchCharacterShareRedditButton query={characterData} />
+        <SearchCharacterShareTwitterButton query={characterData} />
       </HStack>
     </Stack>
   )

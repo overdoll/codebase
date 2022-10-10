@@ -45,6 +45,27 @@ const variantSolid: SystemStyleFunction = (props) => {
     }
   }
 
+  if (c === 'white') {
+    const bg = 'white'
+
+    return {
+      bg,
+      color: mode('gray.200', 'gray.900')(props),
+      _hover: {
+        opacity: 0.8,
+        _disabled: {
+          bg,
+          color: mode('gray.200', 'gray.100')(props)
+        }
+      },
+      _active: {
+        opacity: 1,
+        bg: mode('gray.300', 'white')(props),
+        boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize('white', 0.7)(theme)) as string}`
+      }
+    }
+  }
+
   const {
     bg = `${c}.500`,
     color = 'white'
