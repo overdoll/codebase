@@ -5,6 +5,7 @@ import { GALLERY_PROPS, SLIDE_PROPS } from '../../../constants'
 import { OnSwiperInitType } from '../../../types'
 import CinematicSlide from '../../../components/CinematicSlide/CinematicSlide'
 import RouletteMedia from '../../../../Media/fragments/RouletteMedia/RouletteMedia'
+import SupporterSlide from '../SupporterSlide/SupporterSlide'
 
 interface Props {
   postQuery: RouletteGalleryFragment$key
@@ -19,7 +20,9 @@ const PostFragment = graphql`
       media {
         ...RouletteMediaFragment
       }
+      ...SupporterSlideFragment
     }
+    ...SupporterSlidePostFragment
   }
 `
 
@@ -51,12 +54,18 @@ export default function RouletteGallery (props: Props): JSX.Element {
         >
           {({ isActive }) => (
             <CinematicSlide>
-              <RouletteMedia
-                mediaQuery={content.media}
-                observerProps={{
-                  isActive
-                }}
-              />
+              <SupporterSlide
+                postContentQuery={content}
+                postQuery={postData}
+                isActive={isActive}
+              >
+                <RouletteMedia
+                  mediaQuery={content.media}
+                  observerProps={{
+                    isActive
+                  }}
+                />
+              </SupporterSlide>
             </CinematicSlide>
           )}
         </SwiperSlide>)}

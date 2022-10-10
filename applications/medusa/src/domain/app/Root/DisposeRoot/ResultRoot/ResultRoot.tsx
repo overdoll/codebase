@@ -38,7 +38,6 @@ const Query = graphql`
       id
       ...AccountAuthorizerFragment
       ...NavigationPopupFragment
-      ...JoinModalProviderFragment
     }
   }
 `
@@ -61,14 +60,12 @@ export default function ResultRoot (props: Props): JSX.Element {
   return (
     <>
       <AccountAuthorizer queryRef={data.viewer}>
-        <JoinModalProvider query={data.viewer}>
-          <ViewCounterProvider>
-            <UniversalNavigator />
-            <PageContents>
-              {children}
-            </PageContents>
-          </ViewCounterProvider>
-        </JoinModalProvider>
+        <ViewCounterProvider>
+          <UniversalNavigator />
+          <PageContents>
+            {children}
+          </PageContents>
+        </ViewCounterProvider>
       </AccountAuthorizer>
       <NoScript />
       <DynamicRouteProgressBar />

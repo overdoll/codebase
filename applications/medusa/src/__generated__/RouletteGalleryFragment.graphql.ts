@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<4aa37681ee3420ac85ece3e078da704a>>
+ * @generated SignedSource<<5032fd979ca7a0cecc1532c2c3d2be6b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,8 +16,10 @@ export type RouletteGalleryFragment$data = {
     readonly media: {
       readonly " $fragmentSpreads": FragmentRefs<"RouletteMediaFragment">;
     };
+    readonly " $fragmentSpreads": FragmentRefs<"SupporterSlideFragment">;
   }>;
   readonly id: string;
+  readonly " $fragmentSpreads": FragmentRefs<"SupporterSlidePostFragment">;
   readonly " $fragmentType": "RouletteGalleryFragment";
 };
 export type RouletteGalleryFragment$key = {
@@ -64,9 +66,19 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "SupporterSlideFragment"
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "SupporterSlidePostFragment"
     }
   ],
   "type": "Post",
@@ -74,6 +86,6 @@ return {
 };
 })();
 
-(node as any).hash = "5b829a7595c94d5519afdb2223b87401";
+(node as any).hash = "ad35762ad0e20889758a17d56fde1e4c";
 
 export default node;
