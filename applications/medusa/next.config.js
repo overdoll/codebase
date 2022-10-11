@@ -261,7 +261,8 @@ const moduleExports = withBundleAnalyzer({
     images: {
       unoptimized: true,
       allowFutureImage: true
-    }
+    },
+    scrollRestoration: true
   },
   serverRuntimeConfig: {
     projectRoot: __dirname
