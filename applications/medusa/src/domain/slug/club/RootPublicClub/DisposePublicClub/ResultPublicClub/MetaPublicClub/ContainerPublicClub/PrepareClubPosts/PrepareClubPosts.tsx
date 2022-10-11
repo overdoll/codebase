@@ -6,7 +6,6 @@ import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/compone
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
 import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
 import LazyClubPosts from './LazyClubPosts/LazyClubPosts'
-import getSeedFromCookie from '@//:modules/content/HookedComponents/Post/support/getSeedFromCookie'
 
 interface Props {
   clubQuery: PrepareClubPostsFragment$key
@@ -14,7 +13,6 @@ interface Props {
 
 export interface PreparePrepareClubPostsLazyProps {
   slug: string
-  seed: string | null
 }
 
 const Fragment = graphql`
@@ -37,8 +35,7 @@ export default function PrepareClubPosts (props: Props): JSX.Element {
     loadQuery
   } = useLazyArguments<PreparePrepareClubPostsLazyProps>({
     defaultValue: {
-      slug: data.slug,
-      ...getSeedFromCookie()
+      slug: data.slug
     }
   })
 

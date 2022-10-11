@@ -25,6 +25,7 @@ const ClubFragment = graphql`
 const ViewerFragment = graphql`
   fragment ContainerPublicClubPostsViewerFragment on Account {
     ...BannerPublicClubPostsViewerFragment
+    ...ScrollPublicClubPostsAccountFragment
   }
 `
 
@@ -45,7 +46,7 @@ export default function ContainerPublicClubPosts (props: Props): JSX.Element {
       <ContentContainer>
         <Stack spacing={16}>
           <HeaderPublicClubPosts clubQuery={clubData} />
-          <ScrollPublicClubPosts clubQuery={clubData} />
+          <ScrollPublicClubPosts accountQuery={viewerData} clubQuery={clubData} />
         </Stack>
       </ContentContainer>
     </>

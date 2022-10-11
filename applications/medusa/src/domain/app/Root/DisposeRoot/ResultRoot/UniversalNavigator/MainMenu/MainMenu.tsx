@@ -5,7 +5,7 @@ import Can from '@//:modules/authorization/Can'
 import { t } from '@lingui/macro'
 import MainMenuButtonCreatePost from './MainMenuButtonCreatePost/MainMenuButtonCreatePost'
 import { useLingui } from '@lingui/react'
-import MainMenuButtonClubs from './MainMenuButtonClubs/MainMenuButtonClubs'
+import MainMenuButtonFeed from './MainMenuButtonFeed/MainMenuButtonFeed'
 
 export default function MainMenu (): JSX.Element {
   const { i18n } = useLingui()
@@ -19,7 +19,7 @@ export default function MainMenu (): JSX.Element {
         icon={BirdHouse}
         label={i18n._(t`Home`)}
       />
-      <MainMenuButtonClubs />
+      <MainMenuButtonFeed />
       <Can not I='create' a='Club'>
         <HorizontalNavigationButton
           colorScheme='primary'

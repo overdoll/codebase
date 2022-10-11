@@ -1,5 +1,4 @@
-import { Box, Flex, Modal, ModalBody, ModalContent, ModalOverlay } from '@chakra-ui/react'
-import CloseButton from '../../../../ThemeComponents/CloseButton/CloseButton'
+import { Modal, ModalBody, ModalContent, ModalOverlay } from '@chakra-ui/react'
 
 interface Props {
   isOpen: boolean
@@ -24,12 +23,7 @@ export default function SupporterFeatureModal (props: Props): JSX.Element {
       <ModalOverlay />
       <ModalContent>
         <ModalBody p={4}>
-          <Box position='relative'>
-            <Flex h={16} align='center' position='absolute' top={0} right={0}>
-              <CloseButton borderRadius='lg' variant='solid' onClick={onClose} size='md' />
-            </Flex>
-            <>unlock supporter feature</>
-          </Box>
+          <>unlock supporter feature</>
         </ModalBody>
       </ModalContent>
     </Modal>

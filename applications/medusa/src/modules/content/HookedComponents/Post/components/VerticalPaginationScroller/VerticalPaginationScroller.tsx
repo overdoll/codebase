@@ -2,7 +2,6 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { Box } from '@chakra-ui/react'
 import type { VerticalPaginationScrollerFragment$key } from '@//:artifacts/VerticalPaginationScrollerFragment.graphql'
-import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import runIfFunction from '../../../../../support/runIfFunction'
 import { MaybeRenderProp } from '@//:types/components'
@@ -12,6 +11,7 @@ import EmptyPaginationScroller from './EmptyPaginationScroller/EmptyPaginationSc
 import MemoKey from './MemoKey/MemoKey'
 import JoinRedirectPrompt from '@//:common/components/JoinRedirectPrompt/JoinRedirectPrompt'
 import usePaginationScroller from './usePaginationScroller'
+import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
 
 interface ChildrenCallable {
   index: number
@@ -57,11 +57,11 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     isLoadingNext
   })
 
-  const canLoadNext = limit == null || (data.edges.length <= limit)
-
-  if (data?.edges.length < 1) {
+  if (data == null || data?.edges.length < 1) {
     return <EmptyPaginationScroller />
   }
+
+  const canLoadNext = limit == null || (data.edges.length <= limit)
 
   // we use a memo here because loading more posts re-renders the whole tree
   // since additional dom nodes are added
@@ -70,8 +70,8 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     <Box>
       {data?.edges.map((item, index) => (
         <Fragment key={item.node.id}>
-          {(canLoadNext && hasNext && !isPending && !isLoadingNext && !hasError && data.edges.length - 2 === index) &&
-            <LoadMoreObserver onObserve={onLoadNext} />}
+          {(canLoadNext && hasNext && !hasError && data.edges.length - 2 === index) &&
+            <LoadMoreObserver isLoadingNext={isPending || isLoadingNext} onObserve={onLoadNext} />}
           {(index % 10 === 0 && index !== 0) && (
             <JoinRedirectPrompt mb={16} seed={item.node.id} />
           )}

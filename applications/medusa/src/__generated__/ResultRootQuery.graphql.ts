@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<59bf3e2ba457977ff8f1fb5e51be36e6>>
- * @relayHash f619ae51d54490078c43cf042aeb0688
+ * @generated SignedSource<<0d120efd73a976cea9a0d01526304ce5>>
+ * @relayHash 388273d75f0c635c42c0978c7d52286a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f619ae51d54490078c43cf042aeb0688
+// @relayRequestID 388273d75f0c635c42c0978c7d52286a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -17,7 +17,7 @@ export type ResultRootQuery$variables = {};
 export type ResultRootQuery$data = {
   readonly viewer: {
     readonly id: string;
-    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment" | "NavigationPopupFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"AccountAuthorizerFragment">;
   } | null;
 };
 export type ResultRootQuery = {
@@ -33,15 +33,14 @@ var v0 = {
   "name": "id",
   "storageKey": null
 },
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
-v2 = [
-  (v1/*: any*/)
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -63,11 +62,6 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "AccountAuthorizerFragment"
-          },
-          {
-            "args": null,
-            "kind": "FragmentSpread",
-            "name": "NavigationPopupFragment"
           }
         ],
         "storageKey": null
@@ -112,7 +106,7 @@ return {
             "kind": "LinkedField",
             "name": "lock",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v1/*: any*/),
             "storageKey": null
           },
           {
@@ -122,7 +116,7 @@ return {
             "kind": "LinkedField",
             "name": "deleting",
             "plural": false,
-            "selections": (v2/*: any*/),
+            "selections": (v1/*: any*/),
             "storageKey": null
           },
           {
@@ -153,14 +147,20 @@ return {
             "name": "isWorker",
             "storageKey": null
           },
-          (v1/*: any*/)
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "f619ae51d54490078c43cf042aeb0688",
+    "id": "388273d75f0c635c42c0978c7d52286a",
     "metadata": {},
     "name": "ResultRootQuery",
     "operationKind": "query",
@@ -169,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "7550a3d0b6b61d8348fb7a7b99a7226b";
+(node as any).hash = "c073b0166fa634b72732cdb01ab783eb";
 
 export default node;

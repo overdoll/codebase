@@ -1,5 +1,5 @@
 import { PageProps } from '@//:types/app'
-import { MobileContainer, PageContainer } from '@//:modules/content/PageLayout'
+import { ContentContainer, PageContainer } from '@//:modules/content/PageLayout'
 import { Suspense } from 'react'
 import { PreloadedQuery, useQueryLoader } from 'react-relay/hooks'
 import QueryErrorBoundary from '../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
@@ -27,13 +27,13 @@ const RootDiscoverClubs: PageProps<Props> = (props: Props) => {
       <RootDiscoverClubsRichObject />
       <RootStructuredData />
       <PageContainer>
-        <MobileContainer>
+        <ContentContainer>
           <QueryErrorBoundary loadQuery={() => loadQuery({})}>
             <Suspense fallback={<></>}>
               <DiscoverClubs query={queryRef as PreloadedQuery<DiscoverClubsQueryType>} />
             </Suspense>
           </QueryErrorBoundary>
-        </MobileContainer>
+        </ContentContainer>
       </PageContainer>
     </>
   )

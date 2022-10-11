@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f085f4a60055a73989f45cb979eb4364>>
+ * @generated SignedSource<<816c1c43b0ce0114906aeb823a085e93>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -68,7 +68,7 @@ return {
         "path": (v0/*: any*/)
       },
       "fragmentPathInResult": [],
-      "operation": require('./BrowsePostsPreviewPaginationQuery.graphql')
+      "operation": require('./ScrollHomePostsPaginationQuery.graphql')
     }
   },
   "name": "ScrollHomePostsFragment",
@@ -84,7 +84,7 @@ return {
       ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__BrowsePostsPreview_postsFeed_connection",
+      "name": "__ScrollHomePosts_postsFeed_connection",
       "plural": false,
       "selections": [
         {
@@ -169,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "9aeb87a9732a59e8333b9d7d7949794a";
+(node as any).hash = "d436522660b939725047c1d8b4c20923";
 
 export default node;

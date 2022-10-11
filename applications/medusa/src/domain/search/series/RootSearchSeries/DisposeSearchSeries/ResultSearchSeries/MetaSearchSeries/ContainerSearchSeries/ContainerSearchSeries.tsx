@@ -1,12 +1,15 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerSearchSeriesFragment$key } from '@//:artifacts/ContainerSearchSeriesFragment.graphql'
+import { ContainerSearchSeriesAccountFragment$key } from '@//:artifacts/ContainerSearchSeriesAccountFragment.graphql'
 import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchSeries from './HeaderSearchSeries/HeaderSearchSeries'
 import ScrollSearchSeries from './ScrollSearchSeries/ScrollSearchSeries'
 
 interface Props {
   seriesQuery: ContainerSearchSeriesFragment$key
+  accountQuery: ContainerSearchSeriesAccountFragment$key | null
+
 }
 
 const SeriesFragment = graphql`
@@ -16,12 +19,20 @@ const SeriesFragment = graphql`
   }
 `
 
+const AccountFragment = graphql`
+  fragment ContainerSearchSeriesAccountFragment on Account {
+    ...ScrollSearchSeriesAccountFragment
+  }
+`
+
 export default function ContainerSearchSeries (props: Props): JSX.Element {
   const {
-    seriesQuery
+    seriesQuery,
+    accountQuery
   } = props
 
   const seriesData = useFragment(SeriesFragment, seriesQuery)
+  const accountData = useFragment(AccountFragment, accountQuery)
 
   return (
     <>
@@ -29,7 +40,7 @@ export default function ContainerSearchSeries (props: Props): JSX.Element {
         <HeaderSearchSeries seriesQuery={seriesData} />
       </MobileContainer>
       <ContentContainer pt={8}>
-        <ScrollSearchSeries seriesQuery={seriesData} />
+        <ScrollSearchSeries accountQuery={accountData} seriesQuery={seriesData} />
       </ContentContainer>
     </>
   )

@@ -23,10 +23,6 @@ export const middleware: Middleware = async (request, event) => {
     return NextResponse.redirect(new URL('/join', request.url))
   }
 
-  if (request.nextUrl.pathname.startsWith('/home')) {
-    return NextResponse.redirect(new URL('/', request.url))
-  }
-
   if (request.nextUrl.pathname.startsWith('/moderation')) {
     if (ability.can('moderate', 'Post')) return NextResponse.next()
 
@@ -49,7 +45,7 @@ export const middleware: Middleware = async (request, event) => {
     return NextResponse.redirect(new URL('/join', request.url))
   }
 
-  if (request.nextUrl.pathname.startsWith('/clubs/feed')) {
+  if (request.nextUrl.pathname.startsWith('/likes')) {
     if (ability.can('configure', 'Account')) return NextResponse.next()
 
     return NextResponse.redirect(new URL('/join', request.url))
@@ -80,6 +76,6 @@ export const config = {
     '/moderation/:path*',
     '/settings/:path*',
     '/staff/:path*',
-    '/home'
+    '/likes'
   ]
 }

@@ -1,11 +1,16 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollRandomFragment$key } from '@//:artifacts/ScrollRandomFragment.graphql'
+import { ScrollRandomViewerFragment$key } from '@//:artifacts/ScrollRandomViewerFragment.graphql'
 import { ResultRandomQuery } from '@//:artifacts/ResultRandomQuery.graphql'
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
-import HeaderRandom from '../HeaderRandom/HeaderRandom'
+import { Stack } from '@chakra-ui/react'
+import PostsFilters from '@//:modules/content/HookedComponents/Filters/fragments/PostsFilters/PostsFilters'
+import { useFragment } from 'react-relay/hooks'
+import RandomizeButton from '../RandomizeButton/RandomizeButton'
 
 interface Props {
   rootQuery: ScrollRandomFragment$key
+  accountQuery: ScrollRandomViewerFragment$key | null
 }
 
 const RootFragment = graphql`
@@ -15,8 +20,8 @@ const RootFragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "RandomPostsPaginationQuery" ) {
-    postsFeed (first: $first, after: $after, seed: $seed)
-    @connection (key: "RandomPosts_postsFeed") {
+    posts (first: $first, after: $after, seed: $seed, state: PUBLISHED, sortBy: ALGORITHM)
+    @connection (key: "RandomPosts_posts") {
       edges {
         node {
           ...PreviewPostFragment
@@ -27,39 +32,52 @@ const RootFragment = graphql`
   }
 `
 
+const ViewerFragment = graphql`
+  fragment ScrollRandomViewerFragment on Account {
+    ...PostsFiltersFragment
+  }
+`
+
 export default function ScrollRandom (props: Props): JSX.Element {
   const {
-    rootQuery
+    rootQuery,
+    accountQuery
   } = props
 
   const {
     data,
     loadNext,
     hasNext,
-    isLoadingNext
+    isLoadingNext,
+    refetch
   } = usePaginationFragment<ResultRandomQuery, any>(
     RootFragment,
     rootQuery
   )
 
+  const accountData = useFragment(ViewerFragment, accountQuery)
+
   return (
     <>
-      <VerticalPaginationScroller
-        limit={20}
-        postConnectionQuery={data.postsFeed}
-        hasNext={hasNext}
-        loadNext={loadNext}
-        isLoadingNext={isLoadingNext}
-      >
-        {({
-          index
-        }) => (
-          <PreviewPost
-            postQuery={data?.postsFeed?.edges?.[index]?.node}
-          />
-        )}
-      </VerticalPaginationScroller>
-      <HeaderRandom />
+      <Stack spacing={2}>
+        <PostsFilters loadQuery={refetch} accountQuery={accountData} />
+        <VerticalPaginationScroller
+          limit={20}
+          postConnectionQuery={data.posts}
+          hasNext={hasNext}
+          loadNext={loadNext}
+          isLoadingNext={isLoadingNext}
+        >
+          {({
+            index
+          }) => (
+            <PreviewPost
+              postQuery={data?.posts?.edges?.[index]?.node}
+            />
+          )}
+        </VerticalPaginationScroller>
+      </Stack>
+      <RandomizeButton />
     </>
   )
 }

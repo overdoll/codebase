@@ -1,10 +1,17 @@
 import type { ResultPublicClubPostsQuery } from '@//:artifacts/ResultPublicClubPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import type { ScrollPublicClubPostsFragment$key } from '@//:artifacts/ScrollPublicClubPostsFragment.graphql'
+import type {
+  ScrollPublicClubPostsAccountFragment$key
+} from '@//:artifacts/ScrollPublicClubPostsAccountFragment.graphql'
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { Stack } from '@chakra-ui/react'
+import PostsFilters from '@//:modules/content/HookedComponents/Filters/fragments/PostsFilters/PostsFilters'
+import { useFragment } from 'react-relay/hooks'
 
 interface Props {
   clubQuery: ScrollPublicClubPostsFragment$key
+  accountQuery: ScrollPublicClubPostsAccountFragment$key | null
 }
 
 const ClubFragment = graphql`
@@ -35,35 +42,48 @@ const ClubFragment = graphql`
   }
 `
 
+const AccountFragment = graphql`
+  fragment ScrollPublicClubPostsAccountFragment on Account {
+    ...PostsFiltersFragment
+  }
+`
+
 export default function ScrollPublicClubPosts (props: Props): JSX.Element {
   const {
-    clubQuery
+    clubQuery,
+    accountQuery
   } = props
 
   const {
     data,
     loadNext,
     hasNext,
-    isLoadingNext
+    isLoadingNext,
+    refetch
   } = usePaginationFragment<ResultPublicClubPostsQuery, any>(
     ClubFragment,
     clubQuery
   )
 
+  const accountData = useFragment(AccountFragment, accountQuery)
+
   return (
-    <VerticalPaginationScroller
-      postConnectionQuery={data.posts}
-      hasNext={hasNext}
-      loadNext={loadNext}
-      isLoadingNext={isLoadingNext}
-    >
-      {({
-        index
-      }) => (
-        <PreviewPost
-          postQuery={data?.posts?.edges?.[index]?.node}
-        />
-      )}
-    </VerticalPaginationScroller>
+    <Stack spacing={2}>
+      <PostsFilters loadQuery={refetch} accountQuery={accountData} />
+      <VerticalPaginationScroller
+        postConnectionQuery={data.posts}
+        hasNext={hasNext}
+        loadNext={loadNext}
+        isLoadingNext={isLoadingNext}
+      >
+        {({
+          index
+        }) => (
+          <PreviewPost
+            postQuery={data?.posts?.edges?.[index]?.node}
+          />
+        )}
+      </VerticalPaginationScroller>
+    </Stack>
   )
 }

@@ -45,10 +45,6 @@ const GeneralCatalogs = [
   },
   {
     path: 'src/domain/browse/__locale__/{locale}/index',
-    include: ['src/domain/browse/']
-  },
-  {
-    path: 'src/domain/browse/__locale__/{locale}/index',
     include: ['src/domain/random/']
   },
   {
@@ -56,16 +52,16 @@ const GeneralCatalogs = [
     include: ['src/domain/roulette/']
   },
   {
-    path: 'src/domain/new/__locale__/{locale}/index',
-    include: ['src/domain/new/']
-  },
-  {
-    path: 'src/domain/top/__locale__/{locale}/index',
-    include: ['src/domain/top/']
-  },
-  {
     path: 'src/domain/feedback/__locale__/{locale}/index',
     include: ['src/domain/feedback/']
+  },
+  {
+    path: 'src/domain/feed/__locale__/{locale}/index',
+    include: ['src/domain/feed/']
+  },
+  {
+    path: 'src/domain/likes/__locale__/{locale}/index',
+    include: ['src/domain/likes/']
   }
 ]
 
@@ -209,20 +205,12 @@ const ClubCatalog = [
 
 const ClubsCatalog = [
   {
-    path: 'src/domain/clubs/feed/__locale__/{locale}/index',
-    include: ['src/domain/clubs/feed/']
-  },
-  {
     path: 'src/domain/clubs/discover/__locale__/{locale}/index',
     include: ['src/domain/clubs/discover/']
   },
   {
     path: 'src/domain/clubs/create-club/__locale__/{locale}/index',
     include: ['src/domain/clubs/create-club/']
-  },
-  {
-    path: 'src/domain/clubs/liked-posts/__locale__/{locale}/index',
-    include: ['src/domain/clubs/liked-posts/']
   },
   {
     path: 'src/domain/slug/club/__locale__/{locale}/index',

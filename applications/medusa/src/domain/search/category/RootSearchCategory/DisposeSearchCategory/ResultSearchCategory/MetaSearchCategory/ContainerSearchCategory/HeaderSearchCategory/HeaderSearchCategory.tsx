@@ -48,7 +48,6 @@ export default function HeaderSearchCategory (props: Props): JSX.Element {
           <SearchCategoryShareRedditButton query={categoryData} />
           <SearchCategoryShareTwitterButton query={categoryData} />
         </HStack>
-        <SearchButton />
       </HStack>
     </Stack>
   )

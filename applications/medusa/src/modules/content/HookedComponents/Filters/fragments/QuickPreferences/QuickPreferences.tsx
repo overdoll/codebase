@@ -4,6 +4,7 @@ import { useDisclosure } from '@chakra-ui/react'
 import FilterButton from '../../components/FilterButton/FilterButton'
 import { Trans } from '@lingui/macro'
 import dynamic from 'next/dynamic'
+import { MagicBall } from '@//:assets/icons'
 
 const LazyModal = dynamic(
   async () => {
@@ -38,8 +39,9 @@ export default function QuickPreferences (props: Props): JSX.Element {
       <FilterButton
         onClickEnabled={onOpen}
         onClickLocked={onOpen}
-        isLocked={data == null}
+        isLocked={false}
         isActive={false}
+        icon={MagicBall}
         hasBadge={data == null}
         title={<Trans>Preferences</Trans>}
       />

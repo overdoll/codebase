@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ButtonsPublicClub/ButtonsPublicClub.tsx:52
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ButtonsPublicClub/ButtonsPublicClub.tsx:56
 msgid "All Posts"
 msgstr ""
 
@@ -156,6 +156,10 @@ msgstr ""
 #~ msgid "Members"
 #~ msgstr ""
 
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ButtonsPublicClub/ButtonsPublicClub.tsx:41
+msgid "New from {0}"
+msgstr ""
+
 #: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubWrappers/ClubSupportWrapper/SupportClubTransactionProcess/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:146
 msgid "Next"
 msgstr ""
@@ -209,6 +213,10 @@ msgstr ""
 #: src/domain/slug/root/RootPublicClub/PublicClub/PostsHorizontalPreview/PostsHorizontalPreview.tsx:74
 #~ msgid "See all"
 #~ msgstr ""
+
+#: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/PrepareClubPosts/LazyClubPosts/ScrollClubPosts/ScrollClubPosts.tsx:78
+msgid "See all posts"
+msgstr ""
 
 #: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubJoinBanner/ClubJoinBanner.tsx:57
 msgid "See their newly posted content in your feed"

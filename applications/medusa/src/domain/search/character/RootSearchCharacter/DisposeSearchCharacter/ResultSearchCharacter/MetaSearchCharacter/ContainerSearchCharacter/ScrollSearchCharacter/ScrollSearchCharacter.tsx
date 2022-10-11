@@ -11,7 +11,6 @@ import PostsFilters from '@//:modules/content/HookedComponents/Filters/fragments
 interface Props {
   characterQuery: ScrollSearchCharacterFragment$key
   accountQuery: ScrollSearchCharacterAccountFragment$key | null
-
 }
 
 const Fragment = graphql`

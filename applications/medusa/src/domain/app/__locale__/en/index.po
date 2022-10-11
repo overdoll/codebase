@@ -187,8 +187,8 @@ msgid "Details"
 msgstr ""
 
 #: src/common/components/Layouts/ClubsLayout/ClubsLayoutButtons/ClubsLayoutButtons.tsx:45
-msgid "Discover Clubs"
-msgstr ""
+#~ msgid "Discover Clubs"
+#~ msgstr ""
 
 #: src/modules/content/Interactables/FileUpload/GenericFilePicker/GenericFilePicker.tsx:33
 #~ msgid "Drag and drop or tap to upload"
@@ -279,8 +279,12 @@ msgid "Join overdoll to hide this"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:94
-msgid "Join overdoll to save this post and let {0} know you like their post"
+msgid "Join overdoll to let {0} know you like their post"
 msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:94
+#~ msgid "Join overdoll to save this post and let {0} know you like their post"
+#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:85
 msgid "Join this club"
@@ -310,6 +314,10 @@ msgstr ""
 #: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:93
 #~ msgid "Like"
 #~ msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:89
+msgid "Like this post"
+msgstr ""
 
 #: src/modules/content/ContentSelection/LoadMore/LoadMore.tsx:41
 #: src/modules/content/HookedComponents/Post/components/VerticalPaginationScroller/VerticalPaginationFooter/LoadMoreButton/LoadMoreButton.tsx:29
@@ -372,7 +380,11 @@ msgid "Moderation"
 msgstr ""
 
 #: src/common/components/Layouts/ClubsLayout/ClubsLayoutButtons/ClubsLayoutButtons.tsx:33
-msgid "My Feed"
+#~ msgid "My Feed"
+#~ msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:68
+msgid "New"
 msgstr ""
 
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderNextButton/FlowBuilderNextButton.tsx:29
@@ -590,6 +602,7 @@ msgid "Posts Queue"
 msgstr ""
 
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:48
+#: src/modules/content/HookedComponents/Filters/fragments/QuickPreferences/QuickPreferences.tsx:46
 msgid "Preferences"
 msgstr ""
 
@@ -657,16 +670,16 @@ msgid "Save"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:89
-msgid "Save this post to your bookmarks"
-msgstr ""
+#~ msgid "Save this post to your bookmarks"
+#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:55
 msgid "Saved"
 msgstr ""
 
 #: src/common/components/Layouts/ClubsLayout/ClubsLayoutButtons/ClubsLayoutButtons.tsx:56
-msgid "Saved Posts"
-msgstr ""
+#~ msgid "Saved Posts"
+#~ msgstr ""
 
 #: src/common/components/PageHeader/PageHeader.tsx:10
 #~ msgid "Search"
@@ -961,12 +974,20 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:62
+msgid "Top"
+msgstr ""
+
 #: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:52
 msgid "Transaction Metrics"
 msgstr ""
 
 #: src/common/components/ClubTransactionMetrics/ClubTransactionMetrics.tsx:57
 msgid "Transaction metrics help you maintain a good refund and chargeback ratio to keep your club in good standing."
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:56
+msgid "Trending"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/ImageError/ImageError.tsx:45

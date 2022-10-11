@@ -51,7 +51,6 @@ export default function HeaderSearchSeries (props: Props): JSX.Element {
           <SearchSeriesShareRedditButton query={seriesData} />
           <SearchSeriesShareTwitterButton query={seriesData} />
         </HStack>
-        <SearchButton />
       </HStack>
     </Stack>
   )

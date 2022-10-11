@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<470a715ec3b77263552c10879a7b9d1e>>
+ * @generated SignedSource<<659c7b59a9f53781aa3cf2e9005e630f>>
  * @relayHash 8fbe57e0fbc9538f951fe420fa50b281
  * @lightSyntaxTransform
  * @nogrep
@@ -558,7 +558,7 @@ return {
           "seed"
         ],
         "handle": "connection",
-        "key": "BrowsePostsPreview_postsFeed",
+        "key": "ScrollHomePosts_postsFeed",
         "kind": "LinkedHandle",
         "name": "postsFeed"
       }

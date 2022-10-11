@@ -23,7 +23,6 @@ export default function DesktopAlternativeMenu (): JSX.Element {
           ml={1}
           borderRadius='lg'
           colorScheme='primary'
-          leftIcon={<Icon icon={LoginKeys} w={4} h={4} fill='primary.900' />}
           onClick={onJoin}
         >
           <Trans>

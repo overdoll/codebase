@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<785cb7b0529ea1baccafda8dc3508b23>>
+ * @generated SignedSource<<9e65de8259201bc88eb07dfbe1826bc8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,11 +15,13 @@ export type ScrollClubPostsFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
+        readonly id: string;
         readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
       };
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
   };
+  readonly slug: string;
   readonly " $fragmentSpreads": FragmentRefs<"ClubEmptyPostsFragment">;
   readonly " $fragmentType": "ScrollClubPostsFragment";
 };
@@ -31,7 +33,14 @@ export type ScrollClubPostsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "posts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -89,7 +98,7 @@ return {
         {
           "kind": "Literal",
           "name": "sortBy",
-          "value": "ALGORITHM"
+          "value": "NEW"
         }
       ],
       "concreteType": "PostConnection",
@@ -113,6 +122,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
+                (v1/*: any*/),
                 {
                   "args": null,
                   "kind": "FragmentSpread",
@@ -172,23 +182,24 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ClubEmptyPostsFragment"
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "236da99985d66dfb15bc33a0a2f58eac";
+(node as any).hash = "96effe63d213ae850ac5da825172a7ed";
 
 export default node;

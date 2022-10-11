@@ -5,6 +5,10 @@ import { ContainerRandomViewerFragment$key } from '@//:artifacts/ContainerRandom
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import BannerRandom from './BannerRandom/BannerRandom'
 import ScrollRandom from './ScrollRandom/ScrollRandom'
+import { Stack } from '@chakra-ui/react'
+import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
+import { RandomizeDice } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   rootQuery: ContainerRandomFragment$key
@@ -19,6 +23,7 @@ const RootFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment ContainerRandomViewerFragment on Account {
+    ...ScrollRandomViewerFragment
     ...BannerRandomViewerFragment
   }
 `
@@ -38,7 +43,10 @@ export default function ContainerRandom (props: Props): JSX.Element {
         <BannerRandom viewerQuery={viewerData} />
       </BannerContainer>
       <ContentContainer>
-        <ScrollRandom rootQuery={rootData} />
+        <Stack spacing={4}>
+          <PageHeader icon={RandomizeDice} title={<Trans>Random posts</Trans>} />
+          <ScrollRandom accountQuery={viewerData} rootQuery={rootData} />
+        </Stack>
       </ContentContainer>
     </>
   )

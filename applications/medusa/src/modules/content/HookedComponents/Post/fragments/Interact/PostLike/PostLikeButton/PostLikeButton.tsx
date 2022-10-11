@@ -1,6 +1,6 @@
 import { graphql, useFragment } from 'react-relay'
 import { PostLikeButtonFragment$key } from '@//:artifacts/PostLikeButtonFragment.graphql'
-import { BookmarkFull } from '@//:assets/icons/interface'
+import { HeartFull, HeartOutline } from '@//:assets/icons/interface'
 import Can from '../../../../../../../authorization/Can'
 import { t } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
@@ -50,9 +50,9 @@ export default function PostLikeButton ({
                   isDisabled={allowed === false}
                   onClick={likePost}
                   isLoading={isLikingPost}
-                  icon={BookmarkFull}
+                  icon={HeartFull}
                 >
-                  {i18n._(t`Saved`)}
+                  {i18n._(t`Liked`)}
                 </MediumGenericButton>
               )
             }
@@ -61,9 +61,9 @@ export default function PostLikeButton ({
                 isDisabled={allowed === false}
                 onClick={likePost}
                 isLoading={isLikingPost}
-                icon={BookmarkFull}
+                icon={HeartOutline}
               >
-                {i18n._(t`Save`)}
+                {i18n._(t`Like`)}
               </MediumGenericButton>
             )
           }}

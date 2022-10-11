@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<23aa92adcd21501367a351e18ae0b985>>
- * @relayHash 243595293a8d3a44b57c9f7a88020300
+ * @generated SignedSource<<2593bb96a5d86ef5e2f3ba63c595c13c>>
+ * @relayHash dc17cd9877bc0de88210592cd71cee05
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 243595293a8d3a44b57c9f7a88020300
+// @relayRequestID dc17cd9877bc0de88210592cd71cee05
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -22,6 +22,9 @@ export type ResultSearchCategoryQuery$variables = {
 export type ResultSearchCategoryQuery$data = {
   readonly category: {
     readonly " $fragmentSpreads": FragmentRefs<"MetaSearchCategoryFragment">;
+  } | null;
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"MetaSearchCategoryAccountFragment">;
   } | null;
 };
 export type ResultSearchCategoryQuery = {
@@ -264,6 +267,22 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "MetaSearchCategoryFragment"
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MetaSearchCategoryAccountFragment"
           }
         ],
         "storageKey": null
@@ -730,11 +749,31 @@ return {
           (v11/*: any*/)
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
+          },
+          (v5/*: any*/),
+          (v11/*: any*/)
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "243595293a8d3a44b57c9f7a88020300",
+    "id": "dc17cd9877bc0de88210592cd71cee05",
     "metadata": {},
     "name": "ResultSearchCategoryQuery",
     "operationKind": "query",
@@ -743,7 +782,7 @@ return {
 };
 })();
 
-(node as any).hash = "af96402fd89f33f25b107aacfd47e44f";
+(node as any).hash = "22c8e5405a4e4fc71f24c987a7586227";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

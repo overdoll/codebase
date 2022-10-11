@@ -48,8 +48,10 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
       <ContentContainer>
         <Stack spacing={4}>
           <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
-          <ButtonsPublicClub clubQuery={clubData} />
-          <PrepareClubPosts clubQuery={clubData} />
+          <Stack spacing={2}>
+            <ButtonsPublicClub clubQuery={clubData} />
+            <PrepareClubPosts clubQuery={clubData} />
+          </Stack>
         </Stack>
       </ContentContainer>
     </>

@@ -18,6 +18,9 @@ const Query = graphql`
     character(clubSlug: $clubSlug, slug: $characterSlug) {
       ...MetaPublicClubCharacterFragment
     }
+    viewer {
+      ...MetaPublicClubCharacterAccountFragment
+    }
   }
 `
 
@@ -34,6 +37,6 @@ export default function ResultPublicClubCharacter (props: Props): JSX.Element {
   }
 
   return (
-    <MetaPublicClubCharacter characterQuery={queryData.character} />
+    <MetaPublicClubCharacter accountQuery={queryData.viewer} characterQuery={queryData.character} />
   )
 }

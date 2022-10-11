@@ -1,31 +1,16 @@
 msgid ""
 msgstr ""
-"POT-Creation-Date: 2022-08-22 20:17-0400\n"
+"POT-Creation-Date: 2022-10-10 19:41-0400\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
-"Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: \n"
-"Last-Translator: \n"
-"Language-Team: \n"
-"Plural-Forms: \n"
-
-#: src/domain/browse/RootBrowse/Browse/Browse.tsx:70
-#~ msgid "Browse Posts"
-#~ msgstr ""
-
-#: src/domain/random/RootRandom/Random/Random.tsx:73
-#~ msgid "Random Posts"
-#~ msgstr ""
 
 #: src/domain/random/RootRandom/DisposeRandom/ResultRandom/MetaRandom/ContainerRandom/HeaderRandom/RandomizeButton/RandomizeButton.tsx:58
+msgid "Get more posts"
+msgstr ""
+
 #: src/domain/random/RootRandom/DisposeRandom/ResultRandom/MetaRandom/ContainerRandom/HeaderRandom/RandomizeButton/RandomizeButton.tsx:70
 msgid "Randomize!"
 msgstr ""
-
-#: src/domain/browse/RootBrowse/DisposeBrowse/ResultBrowse/MetaBrowse/ContainerBrowse/HeaderBrowse/HeaderBrowse.tsx:7
-#~ msgid "Trending content"
-#~ msgstr ""

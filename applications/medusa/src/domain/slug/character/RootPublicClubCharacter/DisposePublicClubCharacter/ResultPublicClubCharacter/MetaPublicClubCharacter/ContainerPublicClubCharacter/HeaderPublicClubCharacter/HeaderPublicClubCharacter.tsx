@@ -57,7 +57,6 @@ export default function HeaderPublicClubCharacter (props: Props): JSX.Element {
           <SearchCustomCharacterShareRedditButton query={characterData} />
           <SearchCustomCharacterShareTwitterButton query={characterData} />
         </HStack>
-        <SearchButton />
       </HStack>
     </Stack>
   )

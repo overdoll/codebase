@@ -6,31 +6,35 @@ import { Box, ButtonProps } from '@chakra-ui/react'
 import { IconType } from '@//:types/components'
 
 interface Props extends ButtonProps {
-  icon?: IconType
+  icon: IconType
   label: ReactNode
   exact?: boolean
   children?: ReactNode
   isActive?: boolean
   href?: string | UrlObject
+  hasBadge?: boolean
 }
 
-const HorizontalNavigationButton = forwardRef<any, Props>(({
-  icon,
-  label,
-  onClick,
-  children,
-  exact = false,
-  colorScheme = 'gray',
-  isActive = false,
-  as,
-  href
-}: Props, forwardRef): JSX.Element => {
+const HorizontalNavigationButton = forwardRef<any, Props>((props: Props, forwardRef): JSX.Element => {
+  const {
+    icon,
+    label,
+    onClick,
+    children,
+    exact = false,
+    colorScheme = 'gray',
+    isActive = false,
+    href,
+    hasBadge = false
+  } = props
+
   const ButtonProps = {
     icon,
     label,
     onClick,
     colorScheme,
-    ref: forwardRef
+    ref: forwardRef,
+    hasBadge
   }
 
   if (href == null) {
@@ -63,7 +67,6 @@ const HorizontalNavigationButton = forwardRef<any, Props>(({
               {children}
             </HorizontalNavigationButtonBody>
           </Box>
-
         )
       }}
     </NavLink>

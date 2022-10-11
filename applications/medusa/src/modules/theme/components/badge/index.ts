@@ -13,8 +13,10 @@ const variantSolid: SystemStyleFunction = (props) => {
     colorScheme: c
   } = props
   return {
-    bg: mode(`${c}.500`, `${c}.500`)(props),
-    color: mode('white', `${c}.100`)(props)
+    textTransform: 'none',
+    fontWeight: 'semibold',
+    bg: mode(`${c}.500`, 'gray.00')(props),
+    color: mode('white', `${c}.400`)(props)
   }
 }
 

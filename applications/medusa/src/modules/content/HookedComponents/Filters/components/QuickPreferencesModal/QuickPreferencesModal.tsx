@@ -1,7 +1,14 @@
-import { Box, Flex, Modal, ModalBody, ModalContent, ModalOverlay } from '@chakra-ui/react'
-import CloseButton from '../../../../ThemeComponents/CloseButton/CloseButton'
+import { Box, Heading, Modal, ModalBody, ModalContent, ModalOverlay, Stack, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { QuickPreferencesModalFragment$key } from '@//:artifacts/QuickPreferencesModalFragment.graphql'
+import { SkeletonStack } from '../../../../Placeholder'
+import QuickUpdateAudiencePreference from './QuickUpdateAudiencePreference/QuickUpdateAudiencePreference'
+import { Suspense } from 'react'
+import { Icon } from '../../../../PageLayout'
+import { MagicBall } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
+import Button from '../../../../../form/Button/Button'
+import { useJoin } from '@//:domain/app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
 
 interface Props {
   isOpen: boolean
@@ -24,6 +31,8 @@ export default function QuickPreferencesModal (props: Props): JSX.Element {
 
   const data = useFragment(Fragment, query)
 
+  const onJoin = useJoin(undefined, 'quick_preferences_modal')
+
   return (
     <Modal
       isOpen={isOpen}
@@ -36,12 +45,39 @@ export default function QuickPreferencesModal (props: Props): JSX.Element {
       <ModalOverlay />
       <ModalContent>
         <ModalBody p={4}>
-          <Box position='relative'>
-            <Flex h={16} align='center' position='absolute' top={0} right={0}>
-              <CloseButton borderRadius='lg' variant='solid' onClick={onClose} size='md' />
-            </Flex>
-            {data == null ? (<>join to update preferences</>) : (<>update preferences</>)}
-          </Box>
+          {data == null
+            ? (
+              <Stack justify='center' align='center' spacing={6}>
+                <Icon icon={MagicBall} w={12} h={12} fill='primary.400' />
+                <Box>
+                  <Heading color='gray.00' fontSize='lg'>
+                    <Trans>
+                      Filter out content
+                    </Trans>
+                  </Heading>
+                  <Text fontSize='md' color='gray.100'>
+                    <Trans>
+                      Join overdoll to filter out content you don't want to see
+                    </Trans>
+                  </Text>
+                </Box>
+                <Button
+                  w='100%'
+                  size='lg'
+                  colorScheme='primary'
+                  onClick={onJoin}
+                >
+                  <Trans>
+                    Join
+                  </Trans>
+                </Button>
+              </Stack>
+              )
+            : (
+              <Suspense fallback={<SkeletonStack />}>
+                <QuickUpdateAudiencePreference onClose={onClose} />
+              </Suspense>
+              )}
         </ModalBody>
       </ModalContent>
     </Modal>

@@ -17,9 +17,9 @@ const RootFragment = graphql`
     after: {type: String}
     seed: {type: String}
   )
-  @refetchable(queryName: "BrowsePostsPreviewPaginationQuery" ) {
+  @refetchable(queryName: "ScrollHomePostsPaginationQuery" ) {
     postsFeed (first: $first, after: $after, seed: $seed)
-    @connection (key: "BrowsePostsPreview_postsFeed") {
+    @connection (key: "ScrollHomePosts_postsFeed") {
       edges {
         node {
           id

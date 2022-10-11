@@ -3,7 +3,7 @@ import { PostsSupporterFiltersFragment$key } from '@//:artifacts/PostsSupporterF
 import { HStack, useDisclosure } from '@chakra-ui/react'
 import FilterButton from '../../components/FilterButton/FilterButton'
 import { Trans } from '@lingui/macro'
-import { HotContent } from '@//:assets/icons'
+import { FreshLeaf, HotContent, RisingGraph } from '@//:assets/icons'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -60,13 +60,13 @@ export default function PostsSupporterFilters (props: Props): JSX.Element {
       sortBy: 'TOP',
       isLocked: filterLocked,
       title: <Trans>Top</Trans>,
-      icon: HotContent
+      icon: RisingGraph
     },
     {
       sortBy: 'NEW',
       isLocked: filterLocked,
       title: <Trans>New</Trans>,
-      icon: HotContent
+      icon: FreshLeaf
     }
   ]
 

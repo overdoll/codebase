@@ -4,9 +4,8 @@ import { useLazyLoadQuery } from 'react-relay/hooks'
 import { LazyHomePostsQuery } from '@//:artifacts/LazyHomePostsQuery.graphql'
 import { LazyArgumentsProps } from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
 import ScrollHomePosts from './ScrollHomePosts/ScrollHomePosts'
-import { PrepareHomePostsLazyProps } from '../PrepareHomePosts'
 
-interface Props extends LazyArgumentsProps<PrepareHomePostsLazyProps> {
+interface Props extends LazyArgumentsProps<{}> {
 
 }
 

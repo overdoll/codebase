@@ -45,7 +45,6 @@ export default function HeaderPublicClubPosts (props: Props): JSX.Element {
           <ClubFooterShareRedditButton query={clubData} />
           <ClubFooterShareTwitterButton query={clubData} />
         </HStack>
-        <SearchButton />
       </HStack>
     </Stack>
   )

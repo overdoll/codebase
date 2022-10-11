@@ -44,10 +44,18 @@ export default function FilterButton (props: Props): JSX.Element {
       flexShrink={0}
       leftIcon={icon != null
         ? <Icon
-            icon={isLocked ? ActionUnlock : icon}
+            icon={icon}
             fill={isActive ? 'gray.00' : 'gray.900'}
             w={4}
             h={4}
+          />
+        : undefined}
+      rightIcon={isLocked
+        ? <Icon
+            icon={ActionUnlock}
+            fill='gray.900'
+            w={3}
+            h={3}
           />
         : undefined}
       size='sm'
@@ -61,7 +69,7 @@ export default function FilterButton (props: Props): JSX.Element {
           top={-0.5}
           right={-0.5}
           borderRadius='full'
-          bg='teal.300'
+          bg='primary.400'
           position='absolute'
         />
       )}

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<443647f60ee06975b8333e34522f3dcb>>
- * @relayHash 8c3cbbf4e580629f59764daae5956898
+ * @generated SignedSource<<00fc565c0140a82aa9b681b0a7041d22>>
+ * @relayHash b61428d1a8c51418811efbd993902bfb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8c3cbbf4e580629f59764daae5956898
+// @relayRequestID b61428d1a8c51418811efbd993902bfb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,6 +23,9 @@ export type ResultPublicClubCharacterQuery$variables = {
 export type ResultPublicClubCharacterQuery$data = {
   readonly character: {
     readonly " $fragmentSpreads": FragmentRefs<"MetaPublicClubCharacterFragment">;
+  } | null;
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"MetaPublicClubCharacterAccountFragment">;
   } | null;
 };
 export type ResultPublicClubCharacterQuery = {
@@ -321,6 +324,22 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "MetaPublicClubCharacterFragment"
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MetaPublicClubCharacterAccountFragment"
           }
         ],
         "storageKey": null
@@ -754,11 +773,31 @@ return {
           (v7/*: any*/)
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
+          },
+          (v8/*: any*/),
+          (v7/*: any*/)
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "8c3cbbf4e580629f59764daae5956898",
+    "id": "b61428d1a8c51418811efbd993902bfb",
     "metadata": {},
     "name": "ResultPublicClubCharacterQuery",
     "operationKind": "query",
@@ -767,7 +806,7 @@ return {
 };
 })();
 
-(node as any).hash = "a66ea69d0fb5a3debd9e027a462959f7";
+(node as any).hash = "ccb1d76a015efc747521fb748d587600";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

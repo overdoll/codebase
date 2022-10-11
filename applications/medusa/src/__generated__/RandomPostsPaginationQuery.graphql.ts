@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f6d2ff9b4e432169c2457b5775a671e4>>
- * @relayHash 272051cf901897ce788e4779eba433d2
+ * @generated SignedSource<<27daae54b1ceb5a944629d06adc165ed>>
+ * @relayHash 3e5e6ccad82b9744c85dc025da654c93
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 272051cf901897ce788e4779eba433d2
+// @relayRequestID 3e5e6ccad82b9744c85dc025da654c93
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -61,6 +61,16 @@ v3 = [
     "kind": "Variable",
     "name": "seed",
     "variableName": "seed"
+  },
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "ALGORITHM"
+  },
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "PUBLISHED"
   }
 ],
 v4 = {
@@ -242,7 +252,7 @@ return {
         "args": (v3/*: any*/),
         "concreteType": "PostConnection",
         "kind": "LinkedField",
-        "name": "postsFeed",
+        "name": "posts",
         "plural": false,
         "selections": [
           {
@@ -574,17 +584,19 @@ return {
         "alias": null,
         "args": (v3/*: any*/),
         "filters": [
-          "seed"
+          "seed",
+          "state",
+          "sortBy"
         ],
         "handle": "connection",
-        "key": "RandomPosts_postsFeed",
+        "key": "RandomPosts_posts",
         "kind": "LinkedHandle",
-        "name": "postsFeed"
+        "name": "posts"
       }
     ]
   },
   "params": {
-    "id": "272051cf901897ce788e4779eba433d2",
+    "id": "3e5e6ccad82b9744c85dc025da654c93",
     "metadata": {},
     "name": "RandomPostsPaginationQuery",
     "operationKind": "query",
@@ -593,6 +605,6 @@ return {
 };
 })();
 
-(node as any).hash = "96e07ab6a57cfd06d7675594f35473eb";
+(node as any).hash = "bbbb05a002f36b4427125719dbb2a262";
 
 export default node;

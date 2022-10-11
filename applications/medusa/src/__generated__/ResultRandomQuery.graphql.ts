@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<13f92e555a7ffef7e5947f2cbec77273>>
- * @relayHash 8e1360c510b8760a02e483ec202e3062
+ * @generated SignedSource<<c394cae436b6adc25226e50be548c22a>>
+ * @relayHash 6d95aa92572e454eee3fdb87d28b81cf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8e1360c510b8760a02e483ec202e3062
+// @relayRequestID 6d95aa92572e454eee3fdb87d28b81cf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -45,6 +45,16 @@ v1 = [
     "kind": "Variable",
     "name": "seed",
     "variableName": "seed"
+  },
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "ALGORITHM"
+  },
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "PUBLISHED"
   }
 ],
 v2 = {
@@ -239,7 +249,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "PostConnection",
         "kind": "LinkedField",
-        "name": "postsFeed",
+        "name": "posts",
         "plural": false,
         "selections": [
           {
@@ -571,12 +581,14 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "seed"
+          "seed",
+          "state",
+          "sortBy"
         ],
         "handle": "connection",
-        "key": "RandomPosts_postsFeed",
+        "key": "RandomPosts_posts",
         "kind": "LinkedHandle",
-        "name": "postsFeed"
+        "name": "posts"
       },
       {
         "alias": null,
@@ -586,6 +598,14 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
+          },
+          (v3/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -631,7 +651,7 @@ return {
     ]
   },
   "params": {
-    "id": "8e1360c510b8760a02e483ec202e3062",
+    "id": "6d95aa92572e454eee3fdb87d28b81cf",
     "metadata": {},
     "name": "ResultRandomQuery",
     "operationKind": "query",
