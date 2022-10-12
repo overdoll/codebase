@@ -43,7 +43,7 @@ export default function DesktopDropdownMenuButtons (): JSX.Element {
         </Suspense>
         <DesktopHorizontalNavigationDropdownMenuButton
           href='/likes'
-          icon={LikedPosts}
+          icon={HeartFull}
           label={
             <Trans>
               Liked Posts

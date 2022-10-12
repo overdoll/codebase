@@ -37,7 +37,6 @@ export default function HeaderPublicClub (props: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      <HomeRedirectPrompt />
       <JoinBannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       <SupportLinksPublicClub clubQuery={clubData} viewerQuery={viewerData} />
     </Stack>

@@ -2,13 +2,27 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerRandomFragment$key } from '@//:artifacts/ContainerRandomFragment.graphql'
 import { ContainerRandomViewerFragment$key } from '@//:artifacts/ContainerRandomViewerFragment.graphql'
-import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
-import BannerRandom from './BannerRandom/BannerRandom'
+import { ContentContainer } from '@//:modules/content/PageLayout'
 import ScrollRandom from './ScrollRandom/ScrollRandom'
 import { Stack } from '@chakra-ui/react'
 import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 import { RandomizeDice } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
+import dynamic from 'next/dynamic'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { ssr: false }
+)
 
 interface Props {
   rootQuery: ContainerRandomFragment$key
@@ -24,7 +38,6 @@ const RootFragment = graphql`
 const ViewerFragment = graphql`
   fragment ContainerRandomViewerFragment on Account {
     ...ScrollRandomViewerFragment
-    ...BannerRandomViewerFragment
   }
 `
 
@@ -38,16 +51,17 @@ export default function ContainerRandom (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <>
-      <BannerContainer pt={2}>
-        <BannerRandom viewerQuery={viewerData} />
-      </BannerContainer>
-      <ContentContainer>
-        <Stack spacing={4}>
-          <PageHeader icon={RandomizeDice} title={<Trans>Random posts</Trans>} />
-          <ScrollRandom accountQuery={viewerData} rootQuery={rootData} />
-        </Stack>
-      </ContentContainer>
-    </>
+    <ContentContainer pt={2}>
+      {viewerData == null && (
+        <>
+          <LazyModal />
+          <LazyBanner />
+        </>
+      )}
+      <Stack spacing={4}>
+        <PageHeader icon={RandomizeDice} title={<Trans>Random posts</Trans>} />
+        <ScrollRandom accountQuery={viewerData} rootQuery={rootData} />
+      </Stack>
+    </ContentContainer>
   )
 }

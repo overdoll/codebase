@@ -45,6 +45,7 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileHeader/CurationProfileHeader.tsx:39
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:20
 msgid "Back"
 msgstr ""
@@ -104,13 +105,18 @@ msgstr ""
 msgid "Chargebacks (suspension at >{0}%)"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/AudiencePreference/AudiencePreference.tsx:54
+msgid "Choose what you want to see"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Search/components/SearchInput/SearchInput.tsx:42
 msgid "Clear Search"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostNavigation/PostsSearch/components/PostSearchButton/GeneralSearch/SearchChoices/SaveGeneralSearchButton/SaveGeneralSearchButton.tsx:77
-#~ msgid "Close"
-#~ msgstr ""
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:111
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileClubsButton/CurationProfileClubsButton.tsx:48
+msgid "Close"
+msgstr ""
 
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:71
 msgid "Club Locked"
@@ -169,6 +175,14 @@ msgstr ""
 msgid "Create a Post"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileClubsButton/CurationProfileClubsButton.tsx:32
+msgid "Curation profile completed"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/DateOfBirthPreference/DateOfBirthPreference.tsx:57
+msgid "Day"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostDeleteButton/PostDeleteButton.tsx:88
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostDeleteButton/PostDeleteButton.tsx:129
 msgid "Delete Post"
@@ -190,6 +204,10 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/AudiencePreference/AudiencePreferenceSelector/AudiencePreferenceSelector.tsx:83
+msgid "Don't show me"
+msgstr ""
+
 #: src/modules/content/Interactables/FileUpload/GenericFilePicker/GenericFilePicker.tsx:33
 #~ msgid "Drag and drop or tap to upload"
 #~ msgstr ""
@@ -208,6 +226,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/WeightInput/WeightNumberInput/WeightNumberInput.tsx:64
 msgid "Enter a weight 0-9999. Higher will show up first."
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/PrepareCurationProfile.tsx:83
+msgid "Enter your birthday"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/ImageError/ImageError.tsx:40
@@ -238,6 +260,10 @@ msgstr ""
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:54
+msgid "Filter out content"
+msgstr ""
+
 #: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:34
 msgid "Fresh"
 msgstr ""
@@ -263,11 +289,20 @@ msgstr ""
 msgid "I promise to be better and to follow the community guidelines more closely"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/AudiencePreference/AudiencePreferenceSelector/AudiencePreferenceSelector.tsx:70
+msgid "I want to see"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton.tsx:64
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:63
-#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:102
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:106
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:101
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:70
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:105
 msgid "Join"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:59
+msgid "Join overdoll to filter out content you don't want to see"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:90
@@ -285,6 +320,10 @@ msgstr ""
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:94
 #~ msgid "Join overdoll to save this post and let {0} know you like their post"
 #~ msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/PrepareCurationProfile.tsx:94
+msgid "Join some clubs"
+msgstr ""
 
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:85
 msgid "Join this club"
@@ -310,13 +349,16 @@ msgstr ""
 msgid "Let your favorite artists know about us! Use any one of the share buttons below."
 msgstr ""
 
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:57
-#: src/modules/content/Posts/components/PostInteraction/PostFooterButtons/PostLikeButton/PostLikeButton.tsx:93
-#~ msgid "Like"
-#~ msgstr ""
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:66
+msgid "Like"
+msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:89
 msgid "Like this post"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:55
+msgid "Liked"
 msgstr ""
 
 #: src/modules/content/ContentSelection/LoadMore/LoadMore.tsx:41
@@ -377,6 +419,10 @@ msgstr ""
 #: src/common/components/Layouts/ModerationLayout/ModerationLayout.tsx:20
 #: src/common/components/Layouts/SettingsLayout/SettingsLayout.tsx:81
 msgid "Moderation"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/DateOfBirthPreference/DateOfBirthPreference.tsx:45
+msgid "Month"
 msgstr ""
 
 #: src/common/components/Layouts/ClubsLayout/ClubsLayoutButtons/ClubsLayoutButtons.tsx:33
@@ -663,7 +709,7 @@ msgstr ""
 msgid "Revenue"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:66
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:117
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:67
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
 msgid "Save"
@@ -674,8 +720,8 @@ msgstr ""
 #~ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:55
-msgid "Saved"
-msgstr ""
+#~ msgid "Saved"
+#~ msgstr ""
 
 #: src/common/components/Layouts/ClubsLayout/ClubsLayoutButtons/ClubsLayoutButtons.tsx:56
 #~ msgid "Saved Posts"
@@ -893,6 +939,15 @@ msgstr ""
 msgid "There was an error deleting the post"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:95
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileAudienceButton/CurationProfileAudienceButton.tsx:77
+msgid "There was an error saving the audiences"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileDateOfBirthButton/CurationProfileDateOfBirthButton.tsx:53
+msgid "There was an error saving the date of birth"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton.tsx:135
 msgid "There was an error submitting the report"
 msgstr ""
@@ -1051,6 +1106,10 @@ msgstr ""
 msgid "View Full Post"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/DiscoverClubsList/DiscoverClubsList.tsx:64
+msgid "View More Clubs"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostViewButton/PostViewButton.tsx:37
 msgid "View Post"
 msgstr ""
@@ -1076,8 +1135,24 @@ msgstr ""
 msgid "We couldn't find any posts"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/fragments/DateOfBirthPreference/DateOfBirthPreference.tsx:79
+msgid "We won't share this information with anyone"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:88
+msgid "We'll remember your choices for the next time"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/AudiencePreference/AudiencePreferenceSelector/AudiencePreferenceSelector.tsx:61
+msgid "We'll show you everything"
+msgstr ""
+
 #: src/common/components/HomeRedirectPrompt/HomeRedirectPrompt.tsx:26
 msgid "We've got a home page with a rule34 roulette game and much more!"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/DateOfBirthPreference/DateOfBirthPreference.tsx:69
+msgid "Year"
 msgstr ""
 
 #: src/common/components/BooleanHeader/BooleanHeader.tsx:16

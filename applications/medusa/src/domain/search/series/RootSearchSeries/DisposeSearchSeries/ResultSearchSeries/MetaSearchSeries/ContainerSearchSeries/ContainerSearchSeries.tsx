@@ -5,11 +5,25 @@ import { ContainerSearchSeriesAccountFragment$key } from '@//:artifacts/Containe
 import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchSeries from './HeaderSearchSeries/HeaderSearchSeries'
 import ScrollSearchSeries from './ScrollSearchSeries/ScrollSearchSeries'
+import dynamic from 'next/dynamic'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { ssr: false }
+)
 
 interface Props {
   seriesQuery: ContainerSearchSeriesFragment$key
   accountQuery: ContainerSearchSeriesAccountFragment$key | null
-
 }
 
 const SeriesFragment = graphql`
@@ -36,6 +50,12 @@ export default function ContainerSearchSeries (props: Props): JSX.Element {
 
   return (
     <>
+      {accountData == null && (
+        <>
+          <LazyBanner />
+          <LazyModal />
+        </>
+      )}
       <MobileContainer pt={2}>
         <HeaderSearchSeries seriesQuery={seriesData} />
       </MobileContainer>

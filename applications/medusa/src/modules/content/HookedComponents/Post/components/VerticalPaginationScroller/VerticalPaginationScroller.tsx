@@ -9,7 +9,6 @@ import VerticalPaginationFooter from './VerticalPaginationFooter/VerticalPaginat
 import { Fragment } from 'react'
 import EmptyPaginationScroller from './EmptyPaginationScroller/EmptyPaginationScroller'
 import MemoKey from './MemoKey/MemoKey'
-import JoinRedirectPrompt from '@//:common/components/JoinRedirectPrompt/JoinRedirectPrompt'
 import usePaginationScroller from './usePaginationScroller'
 import LoadMoreObserver from './LoadMoreObserver/LoadMoreObserver'
 
@@ -72,9 +71,6 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
         <Fragment key={item.node.id}>
           {(canLoadNext && hasNext && !hasError && data.edges.length - 2 === index) &&
             <LoadMoreObserver isLoadingNext={isPending || isLoadingNext} onObserve={onLoadNext} />}
-          {(index % 10 === 0 && index !== 0) && (
-            <JoinRedirectPrompt mb={16} seed={item.node.id} />
-          )}
           <MemoKey memoKey={item.node.id}>
             <Box mb={16}>
               {runIfFunction(children, {

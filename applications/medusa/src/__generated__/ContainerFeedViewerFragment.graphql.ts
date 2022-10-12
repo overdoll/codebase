@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96d07a41636245592717414385d03560>>
+ * @generated SignedSource<<43f5927a4e17e80ebf71e33308c1c4ad>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,12 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ContainerFeedViewerFragment$data = {
+  readonly clubMembershipsCount: number;
+  readonly curationProfile: {
+    readonly audience: {
+      readonly completed: boolean;
+    };
+  };
   readonly " $fragmentSpreads": FragmentRefs<"HeaderFeedViewerFragment" | "ScrollPostsFeedFragment">;
   readonly " $fragmentType": "ContainerFeedViewerFragment";
 };
@@ -26,6 +32,42 @@ const node: ReaderFragment = {
   "name": "ContainerFeedViewerFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "clubMembershipsCount",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CurationProfile",
+      "kind": "LinkedField",
+      "name": "curationProfile",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "AudienceCurationProfile",
+          "kind": "LinkedField",
+          "name": "audience",
+          "plural": false,
+          "selections": [
+            {
+              "alias": null,
+              "args": null,
+              "kind": "ScalarField",
+              "name": "completed",
+              "storageKey": null
+            }
+          ],
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "HeaderFeedViewerFragment"
@@ -40,6 +82,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "b129d793d489d1b2fbcca91fe1123be0";
+(node as any).hash = "14670498d903d9fb926bfe66ca1a7bc9";
 
 export default node;

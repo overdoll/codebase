@@ -73,7 +73,7 @@ export default function AudiencePreferenceSelector (props: Props): JSX.Element {
               </Heading>
               <Wrap>
                 {(Object.values(values)).map((item) => (
-                  <Tag key={item.id} color='green.300' borderRadius='full' size='md'>
+                  <Tag key={item.title} color='green.300' borderRadius='full' size='md'>
                     <TagLabel>{item.title}</TagLabel>
                   </Tag>))}
               </Wrap>

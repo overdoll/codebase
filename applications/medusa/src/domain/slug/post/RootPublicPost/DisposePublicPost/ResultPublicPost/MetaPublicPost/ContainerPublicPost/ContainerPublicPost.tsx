@@ -10,10 +10,24 @@ import { Stack } from '@chakra-ui/react'
 import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 import { Trans } from '@lingui/macro'
 import { MagicWand } from '@//:assets/icons'
-import HomeRedirectPrompt from '@//:common/components/HomeRedirectPrompt/HomeRedirectPrompt'
 import PrepareGridSuggestedPosts from './PrepareGridSuggestedPosts/PrepareGridSuggestedPosts'
 import PrepareSuggestedPosts from './PrepareSuggestedPosts/PrepareSuggestedPosts'
 import useFeatureFlag from '@//:modules/hooks/useFeatureFlag'
+import dynamic from 'next/dynamic'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { ssr: false }
+)
 
 interface Props {
   postQuery: ContainerPublicPostFragment$key
@@ -73,6 +87,12 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
 
   return (
     <>
+      {viewerData == null && (
+        <>
+          <LazyBanner />
+          <LazyModal />
+        </>
+      )}
       <BannerContainer>
         <BannerPublicPost postQuery={postData} viewerQuery={viewerData} />
       </BannerContainer>
@@ -83,7 +103,6 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
         <Stack spacing={16}>
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
           <Stack spacing={4}>
-            <HomeRedirectPrompt />
             <PageHeader icon={MagicWand} title={<Trans>Similar content</Trans>} />
             {memoSuggestedPosts}
           </Stack>

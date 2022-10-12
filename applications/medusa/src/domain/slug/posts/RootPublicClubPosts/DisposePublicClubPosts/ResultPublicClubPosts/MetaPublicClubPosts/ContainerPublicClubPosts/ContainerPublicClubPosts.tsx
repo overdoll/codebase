@@ -9,6 +9,21 @@ import HeaderPublicClubPosts from './HeaderPublicClubPosts/HeaderPublicClubPosts
 import ScrollPublicClubPosts from './ScrollPublicClubPosts/ScrollPublicClubPosts'
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import { Stack } from '@chakra-ui/react'
+import dynamic from 'next/dynamic'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { ssr: false }
+)
 
 interface Props {
   clubQuery: ContainerPublicClubPostsFragment$key
@@ -40,6 +55,12 @@ export default function ContainerPublicClubPosts (props: Props): JSX.Element {
 
   return (
     <>
+      {viewerData == null && (
+        <>
+          <LazyBanner />
+          <LazyModal />
+        </>
+      )}
       <BannerContainer pt={2}>
         <BannerPublicClubPosts viewerQuery={viewerData} />
       </BannerContainer>

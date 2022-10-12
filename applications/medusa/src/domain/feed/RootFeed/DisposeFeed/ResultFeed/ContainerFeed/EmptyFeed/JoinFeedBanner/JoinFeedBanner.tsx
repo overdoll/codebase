@@ -7,7 +7,7 @@ export default function JoinFeedBanner (): JSX.Element {
 
   return (
     <BannerPrompt
-      bannerText={<Trans>Join to get a daily personalized content feed</Trans>}
+      bannerText={<Trans>Join to unlock a daily personalized content feed</Trans>}
       buttonText={<Trans>Join</Trans>}
       onClick={onJoin}
       colorScheme='primary'

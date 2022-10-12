@@ -41,7 +41,7 @@ export default function RandomizeButton (): JSX.Element {
           pb={isSticky
             ? {
                 base: 66,
-                md: 2
+                md: 14
               }
             : {}}
           ref={ref}

@@ -8,6 +8,8 @@ import { Stack } from '@chakra-ui/react'
 import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 import { HeartFull } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
+import PreviewUnlockShadow
+  from '@//:modules/content/HookedComponents/Filters/components/PreviewUnlockShadow/PreviewUnlockShadow'
 
 interface Props {
   viewerQuery: ContainerLikesViewerFragment$key
@@ -29,8 +31,9 @@ export default function ContainerLikes (props: Props): JSX.Element {
   return (
     <ContentContainer pt={2}>
       <LockedLikesBanner />
-      <Stack spacing={4}>
+      <Stack minH={1000} spacing={4} position='relative'>
         <PageHeader icon={HeartFull} title={<Trans>Your liked posts</Trans>} />
+        <PreviewUnlockShadow />
         <ScrollPostsLikes accountQuery={viewerData} />
       </Stack>
     </ContentContainer>

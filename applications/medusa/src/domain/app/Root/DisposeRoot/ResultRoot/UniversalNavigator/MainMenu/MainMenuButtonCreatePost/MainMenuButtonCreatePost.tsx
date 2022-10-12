@@ -1,7 +1,6 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import { t } from '@lingui/macro'
-import { ContentBrushPen } from '@//:assets/icons/navigation'
-import { AddPlus } from '@//:assets/icons/interface'
+import { ContentBrushPen, LargePlus } from '@//:assets/icons/navigation'
 import { MainMenuButtonCreatePostQuery } from '@//:artifacts/MainMenuButtonCreatePostQuery.graphql'
 import HorizontalNavigationButton
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationButton/HorizontalNavigationButton'
@@ -39,7 +38,7 @@ export default function MainMenuButtonCreatePost (): JSX.Element {
           exact
           colorScheme='primary'
           href='/clubs/create-club'
-          icon={AddPlus}
+          icon={LargePlus}
           label={i18n._(t`Create a Club`)}
         />
       )

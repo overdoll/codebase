@@ -4,10 +4,24 @@ import { ContainerSearchCategoryFragment$key } from '@//:artifacts/ContainerSear
 import {
   ContainerSearchCategoryAccountFragment$key
 } from '@//:artifacts/ContainerSearchCategoryAccountFragment.graphql'
-
 import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchCategory from './HeaderSearchCategory/HeaderSearchCategory'
 import ScrollSearchCategory from './ScrollSearchCategory/ScrollSearchCategory'
+import dynamic from 'next/dynamic'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { ssr: false }
+)
 
 interface Props {
   categoryQuery: ContainerSearchCategoryFragment$key
@@ -39,6 +53,12 @@ export default function ContainerSearchCategory (props: Props): JSX.Element {
 
   return (
     <>
+      {accountData == null && (
+        <>
+          <LazyBanner />
+          <LazyModal />
+        </>
+      )}
       <MobileContainer pt={2}>
         <HeaderSearchCategory categoryQuery={categoryData} />
       </MobileContainer>

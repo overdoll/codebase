@@ -229,6 +229,11 @@ const moduleExports = withBundleAnalyzer({
         permanent: true
       },
       {
+        source: '/clubs/discover',
+        destination: '/discover',
+        permanent: true
+      },
+      {
         source: '/browse',
         destination: '/random',
         permanent: true

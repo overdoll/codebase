@@ -29,8 +29,8 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
 import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 import identifyAccount from '@//:modules/external/identifyAccount'
-import captureRegistration from '@//:modules/external/captureRegistration'
 import { StringParam, useQueryParam } from 'use-query-params'
+import posthog from 'posthog-js'
 
 interface RegisterValues {
   username: string
@@ -159,7 +159,9 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
               }
             : null
         })
-        captureRegistration({ from: from })
+        posthog?.capture(
+          'registered'
+        )
       },
       onError () {
         notify({

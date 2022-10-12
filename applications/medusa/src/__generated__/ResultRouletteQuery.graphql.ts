@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<e5fa58c4e0cc4c3fa66b6f560b09ce11>>
- * @relayHash 69bbbc53ada9d974268ffe0b5a1fd773
+ * @generated SignedSource<<f87d047b10c845bd8254d204be27c1e7>>
+ * @relayHash f7c658158894468c87bd2736c5952305
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 69bbbc53ada9d974268ffe0b5a1fd773
+// @relayRequestID f7c658158894468c87bd2736c5952305
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -19,6 +19,9 @@ export type ResultRouletteQuery$variables = {
 export type ResultRouletteQuery$data = {
   readonly gameSessionStatus: {
     readonly " $fragmentSpreads": FragmentRefs<"MetaRouletteFragment">;
+  } | null;
+  readonly viewer: {
+    readonly __typename: "Account";
   } | null;
 };
 export type ResultRouletteQuery = {
@@ -253,6 +256,18 @@ return {
             "kind": "FragmentSpread",
             "name": "MetaRouletteFragment"
           }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
@@ -632,11 +647,24 @@ return {
           }
         ],
         "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v2/*: any*/),
+          (v3/*: any*/)
+        ],
+        "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "69bbbc53ada9d974268ffe0b5a1fd773",
+    "id": "f7c658158894468c87bd2736c5952305",
     "metadata": {},
     "name": "ResultRouletteQuery",
     "operationKind": "query",
@@ -645,7 +673,7 @@ return {
 };
 })();
 
-(node as any).hash = "23030e8051420f8c3e3f2b6cd8a073c1";
+(node as any).hash = "1b3698120efcb69ccdc3a15076f941c3";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

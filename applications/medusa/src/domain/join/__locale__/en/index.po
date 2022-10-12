@@ -78,7 +78,7 @@ msgstr ""
 #~ msgid "Creating adult digital content"
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:233
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:235
 msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand both our <1>Terms of Service</1>  and  <2>Privacy Policy</2>, which also stipulate you must be at least 18 years of age to register."
 msgstr ""
 
@@ -94,7 +94,7 @@ msgstr ""
 msgid "Enter 6-digit code"
 msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:213
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:215
 #: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationTokenForm/RegisterAuthenticationTokenForm.tsx:53
 msgid "Enter a username"
 msgstr ""
@@ -204,7 +204,7 @@ msgstr ""
 #~ msgid "Post free and/or exclusive content"
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:226
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:228
 #: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationTokenForm/RegisterAuthenticationTokenForm.tsx:65
 msgid "Register"
 msgstr ""
@@ -269,7 +269,7 @@ msgstr ""
 msgid "There was an error with joining"
 msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:167
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:169
 msgid "There was an issue with registration"
 msgstr ""
 
@@ -301,7 +301,7 @@ msgstr ""
 msgid "Welcome to overdoll!"
 msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:201
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:203
 msgid "What should we call you?"
 msgstr ""
 

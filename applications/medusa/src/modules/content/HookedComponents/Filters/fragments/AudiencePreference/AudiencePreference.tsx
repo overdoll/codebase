@@ -22,7 +22,7 @@ interface ChoiceProps {
 
 interface Props {
   audienceState: AudiencePreferenceProp['audience']
-  dispatch: UseSequenceReturn<AudiencePreferenceProp>['dispatch']
+  dispatch: UseSequenceReturn<any>['dispatch']
 }
 
 export default function AudiencePreference (props: Props): JSX.Element {

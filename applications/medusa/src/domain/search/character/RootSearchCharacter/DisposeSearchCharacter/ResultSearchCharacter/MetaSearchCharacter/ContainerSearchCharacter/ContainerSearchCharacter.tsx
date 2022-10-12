@@ -7,6 +7,14 @@ import {
 import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchCharacter from './HeaderSearchCharacter/HeaderSearchCharacter'
 import ScrollSearchCharacter from './ScrollSearchCharacter/ScrollSearchCharacter'
+import dynamic from 'next/dynamic'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
 
 interface Props {
   characterQuery: ContainerSearchCharacterFragment$key
@@ -37,6 +45,9 @@ export default function ContainerSearchCharacter (props: Props): JSX.Element {
 
   return (
     <>
+      {accountData == null && (
+        <LazyBanner />
+      )}
       <MobileContainer pt={2}>
         <HeaderSearchCharacter characterQuery={characterData} />
       </MobileContainer>

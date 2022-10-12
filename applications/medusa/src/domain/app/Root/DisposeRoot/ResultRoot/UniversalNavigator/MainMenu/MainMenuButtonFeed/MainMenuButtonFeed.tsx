@@ -29,7 +29,7 @@ export default function MainMenuButtonFeed (): JSX.Element {
     <HorizontalNavigationButton
       exact
       colorScheme='primary'
-      hasBadge={data.viewer == null || data.viewer.clubMembershipsCount < 1 || !data.viewer.curationProfile.audience.completed}
+      hasBadge={data?.viewer == null || data.viewer?.clubMembershipsCount < 1 || !data.viewer?.curationProfile?.audience?.completed}
       href='/feed'
       icon={FeedMenu}
       label={i18n._(t`Your Feed`)}

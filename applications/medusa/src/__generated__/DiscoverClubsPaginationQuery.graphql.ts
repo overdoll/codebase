@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<244281e884c7ef5ec300bcc289e96db2>>
- * @relayHash 38ccb6eb94a25984ad878a164116894f
+ * @generated SignedSource<<795d96267368f94746bb849ceed47a86>>
+ * @relayHash 2634ed9863883caf692512c48e1fec99
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 38ccb6eb94a25984ad878a164116894f
+// @relayRequestID 2634ed9863883caf692512c48e1fec99
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,7 +33,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 17,
+    "defaultValue": 11,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -415,7 +415,7 @@ return {
     ]
   },
   "params": {
-    "id": "38ccb6eb94a25984ad878a164116894f",
+    "id": "2634ed9863883caf692512c48e1fec99",
     "metadata": {},
     "name": "DiscoverClubsPaginationQuery",
     "operationKind": "query",
@@ -424,6 +424,6 @@ return {
 };
 })();
 
-(node as any).hash = "b48290ae9c7a51517fb792c194faf188";
+(node as any).hash = "d20ab4ae13ca0b006ae26d34718ceb6e";
 
 export default node;

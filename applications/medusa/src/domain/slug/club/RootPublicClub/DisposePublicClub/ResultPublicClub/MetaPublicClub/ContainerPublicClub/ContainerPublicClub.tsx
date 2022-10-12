@@ -8,6 +8,14 @@ import HeaderPublicClub from './HeaderPublicClub/HeaderPublicClub'
 import ButtonsPublicClub from './ButtonsPublicClub/ButtonsPublicClub'
 import { Stack } from '@chakra-ui/react'
 import PrepareClubPosts from './PrepareClubPosts/PrepareClubPosts'
+import dynamic from 'next/dynamic'
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { ssr: false }
+)
 
 interface Props {
   clubQuery: ContainerPublicClubFragment$key
@@ -42,6 +50,9 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
 
   return (
     <>
+      {viewerData == null && (
+        <LazyModal />
+      )}
       <BannerContainer pt={2}>
         <BannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </BannerContainer>
