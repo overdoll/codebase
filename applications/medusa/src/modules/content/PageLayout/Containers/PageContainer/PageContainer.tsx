@@ -7,6 +7,7 @@ interface Props extends CenterProps {
 
 export default function PageContainer ({
   children,
+  bg,
   ...rest
 }: Props): JSX.Element {
   return (
@@ -15,11 +16,13 @@ export default function PageContainer ({
         base: 16,
         md: 6
       }}
+      bg={bg}
       {...rest}
     >
       <Box
         w='100%'
         h='100%'
+        bg={bg}
       >
         {children}
       </Box>

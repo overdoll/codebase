@@ -155,7 +155,7 @@ msgstr ""
 #~ msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:125
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:25
 msgid "Join overdoll."
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "There was an error submitting the code"
 msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:102
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/support/useEmptyJoinForm.tsx:111
 msgid "There was an error with joining"
 msgstr ""
 

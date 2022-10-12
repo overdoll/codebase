@@ -14,19 +14,27 @@ msgstr ""
 "Plural-Forms: \n"
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/CompleteFeedBanner/CompleteFeedBanner.tsx:16
-msgid "Finish setting up your curation profile so we can tailor your feed"
-msgstr ""
+#~ msgid "Finish setting up your curation profile so we can tailor your feed"
+#~ msgstr ""
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/EmptyFeed/JoinFeedBanner/JoinFeedBanner.tsx:11
 msgid "Join"
 msgstr ""
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/EmptyFeed/JoinFeedBanner/JoinFeedBanner.tsx:10
-msgid "Join to get a daily personalized content feed"
+#~ msgid "Join to get a daily personalized content feed"
+#~ msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/EmptyFeed/JoinFeedBanner/JoinFeedBanner.tsx:10
+msgid "Join to unlock a daily personalized content feed"
 msgstr ""
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/CompleteFeedBanner/CompleteFeedBanner.tsx:17
 msgid "Set Up"
+msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/CompleteFeedBanner/CompleteFeedBanner.tsx:16
+msgid "Set up your curation profile so we can tailor your feed"
 msgstr ""
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/HeaderFeed.tsx:29

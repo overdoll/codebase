@@ -13,6 +13,14 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/likes/RootLikes/DisposeLikes/ResultLikes/ContainerLikes/ContainerLikes.tsx:33
+#: src/domain/likes/RootLikes/DisposeLikes/ResultLikes/ContainerLikes/LockedLikesBanner/LockedLikesBanner.tsx:12
+msgid "Become a club supporter to see your liked posts"
+msgstr ""
+
+#: src/domain/likes/RootLikes/DisposeLikes/ResultLikes/ContainerLikes/LockedLikesBanner/LockedLikesBanner.tsx:11
+msgid "Support"
+msgstr ""
+
+#: src/domain/likes/RootLikes/DisposeLikes/ResultLikes/ContainerLikes/ContainerLikes.tsx:52
 msgid "Your liked posts"
 msgstr ""

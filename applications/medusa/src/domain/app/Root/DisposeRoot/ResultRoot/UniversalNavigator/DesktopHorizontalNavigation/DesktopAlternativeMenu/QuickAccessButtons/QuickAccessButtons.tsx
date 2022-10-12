@@ -5,8 +5,10 @@ import HorizontalNavigationButton
 import { QuickAccessButtonsQuery } from '@//:artifacts/QuickAccessButtonsQuery.graphql'
 import { Trans } from '@lingui/macro'
 import { useLazyLoadQuery } from 'react-relay/hooks'
-import { FeedMenu, HeartFull } from '@//:assets/icons'
+import { FeedMenu } from '@//:assets/icons'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
+import React from 'react'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 const Query = graphql`
   query QuickAccessButtonsQuery {
@@ -57,18 +59,15 @@ export default function QuickAccessButtons (): JSX.Element {
   }
 
   return (
-    <Box>
-      <HorizontalNavigationButton
-        icon={HeartFull}
-        href={{
-          pathname: '/likes'
-        }}
-        label={
-          <Trans>
-            Liked Posts
-          </Trans>
-        }
-      />
-    </Box>
+    <LinkButton
+      ml={1}
+      borderRadius='lg'
+      colorScheme='orange'
+      href='/supporter'
+    >
+      <Trans>
+        Become Supporter
+      </Trans>
+    </LinkButton>
   )
 }

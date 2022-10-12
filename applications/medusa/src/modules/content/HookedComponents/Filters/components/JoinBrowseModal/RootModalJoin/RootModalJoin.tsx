@@ -81,6 +81,18 @@ export default function RootModalJoin (): JSX.Element {
         onSubmit={({ email }) => onSubmit(email)}
         isLoading={isInFlight}
       />
+      <Stack spacing={1}>
+        <Heading fontSize='lg' color='gray.200'>
+          <Trans>
+            Personal content feed
+          </Trans>
+        </Heading>
+        <Heading fontSize='sm' color='gray.300'>
+          <Trans>
+            Get a daily personal content feed when you join
+          </Trans>
+        </Heading>
+      </Stack>
     </Stack>
   )
 }

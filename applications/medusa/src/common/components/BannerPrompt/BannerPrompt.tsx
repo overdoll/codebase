@@ -32,7 +32,7 @@ export default function BannerPrompt (props: Props): JSX.Element {
         zIndex='docked'
         w='100%'
         justify='center'
-        bg={colorScheme === 'orange' ? 'orange.300' : `${colorScheme}.400`}
+        bg={`${colorScheme}.400`}
         position='fixed'
       >
         <HStack w='100%' maxW='container.lg' justify='space-between' spacing={2}>

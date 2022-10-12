@@ -13,13 +13,12 @@ export default function CompleteFeedBanner (): JSX.Element {
   return (
     <>
       <BannerPrompt
-        bannerText={<Trans>Finish setting up your curation profile so we can tailor your feed</Trans>}
+        bannerText={<Trans>Set up your curation profile so we can tailor your feed</Trans>}
         buttonText={<Trans>Set Up</Trans>}
         onClick={onOpen}
         colorScheme='primary'
       />
       <CurationProfileModal isOpen={isOpen} onClose={onClose} />
     </>
-
   )
 }

@@ -14,8 +14,7 @@ export default function ContentContainer ({
       w='100%'
       maxW='container.lg'
       px={{
-        lg: 4,
-        md: 2,
+        md: 0,
         base: 1
       }}
       {...rest}

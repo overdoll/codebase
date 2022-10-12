@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/modules/content/HookedComponents/Filters/components/SupporterPlatformFeatureSummary/SupporterPlatformFeatureSummary.tsx:28
+msgid "Access your liked posts"
+msgstr ""
+
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:71
 msgid "Account Locked"
 msgstr ""
@@ -45,14 +49,19 @@ msgstr ""
 msgid "BCP 47 Locale Code"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileHeader/CurationProfileHeader.tsx:39
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileHeader/CurationProfileHeader.tsx:43
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderPreviousButton/FlowBuilderPreviousButton.tsx:20
 msgid "Back"
 msgstr ""
 
-#: src/modules/content/Posts/components/PostData/PostSupporterContent/PostSupporterContentLocked/PostSupporterContentLocked.tsx:64
-#~ msgid "Become a Supporter"
-#~ msgstr ""
+#: src/modules/content/HookedComponents/Filters/components/SupporterFeatureModal/SupporterFeatureModal.tsx:67
+#: src/modules/content/HookedComponents/Filters/components/SupporterUnlockShadow/SupporterUnlockShadow.tsx:27
+msgid "Become a Supporter"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/SupporterFeatureModal/SupporterFeatureModal.tsx:55
+msgid "Become a supporter of any club and unlock these platform features"
+msgstr ""
 
 #: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:26
 msgid "Best"
@@ -74,7 +83,7 @@ msgstr ""
 msgid "Cannot drop while uploading"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:82
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:92
 msgid "Categories"
 msgstr ""
 
@@ -97,7 +106,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/common/components/Layouts/ClubLayout/ClubLayout.tsx:124
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:62
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:72
 msgid "Characters"
 msgstr ""
 
@@ -138,6 +147,10 @@ msgstr ""
 #: src/common/components/ClubInformationBanner/TerminatedClubBanner/TerminatedClubBanner.tsx:37
 #~ msgid "Club was terminated by {0}. Goodbye."
 #~ msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:133
+msgid "Clubs"
+msgstr ""
 
 #: src/common/components/Contact/ContactButton.tsx:16
 msgid "Contact Us"
@@ -204,6 +217,10 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:158
+msgid "Discover all clubs"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Filters/fragments/AudiencePreference/AudiencePreferenceSelector/AudiencePreferenceSelector.tsx:83
 msgid "Don't show me"
 msgstr ""
@@ -260,12 +277,16 @@ msgstr ""
 msgid "Exclusive Supporter Content Unlocked"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:54
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:69
 msgid "Filter out content"
 msgstr ""
 
 #: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:34
 msgid "Fresh"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/JoinBrowseModal/RootModalJoin/RootModalJoin.tsx:91
+msgid "Get a daily personal content feed when you join"
 msgstr ""
 
 #: src/modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter.tsx:13
@@ -296,13 +317,22 @@ msgstr ""
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton.tsx:64
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:63
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:101
-#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:70
+#: src/modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner.tsx:42
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:85
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:105
 msgid "Join"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:59
+#: src/modules/content/HookedComponents/Filters/components/JoinBrowseModal/RootModalJoin/RootModalJoin.tsx:75
+msgid "Join overdoll for the full 18+ art experience."
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:74
 msgid "Join overdoll to filter out content you don't want to see"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner.tsx:43
+msgid "Join overdoll to get the full experience"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:90
@@ -559,6 +589,10 @@ msgstr ""
 msgid "Payouts"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/components/JoinBrowseModal/RootModalJoin/RootModalJoin.tsx:86
+msgid "Personal content feed"
+msgstr ""
+
 #: src/common/components/Layouts/StaffLayout/StaffLayout.tsx:21
 msgid "Platform Staff"
 msgstr ""
@@ -759,6 +793,10 @@ msgstr ""
 #~ msgid "See Full Size"
 #~ msgstr ""
 
+#: src/modules/content/HookedComponents/Filters/components/SupporterPlatformFeatureSummary/SupporterPlatformFeatureSummary.tsx:12
+msgid "See your chosen artist's exclusive content"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Form/FormInput/Inputs/RuleInput/SelectRuleButton/SelectRuleButton.tsx:76
 msgid "Select Rule"
 msgstr ""
@@ -787,7 +825,7 @@ msgstr ""
 msgid "Select a topic"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:102
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:112
 msgid "Series"
 msgstr ""
 
@@ -833,6 +871,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/components/LazyPostsErrorBoundary/PostsErrorFallback/PostsErrorFallback.tsx:34
 msgid "Sorry, we couldn't load any posts"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/SupporterPlatformFeatureSummary/SupporterPlatformFeatureSummary.tsx:20
+msgid "Sort posts by Top and New"
 msgstr ""
 
 #: src/common/components/MenuButtons/ClubStaffButton/ClubStaffButton.tsx:26
@@ -1067,6 +1109,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Gallery/SupporterSlide/SupporterLocked/SupporterLocked.tsx:75
 msgid "Unlock Supporter Content"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/SupporterFeatureModal/SupporterFeatureModal.tsx:50
+msgid "Unlock this feature"
 msgstr ""
 
 #: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:87

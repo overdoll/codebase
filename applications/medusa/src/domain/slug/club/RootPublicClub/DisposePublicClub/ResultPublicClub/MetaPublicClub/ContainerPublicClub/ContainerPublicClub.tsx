@@ -17,6 +17,13 @@ const LazyModal = dynamic(
   { ssr: false }
 )
 
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { ssr: false }
+)
+
 interface Props {
   clubQuery: ContainerPublicClubFragment$key
   viewerQuery: ContainerPublicClubViewerFragment$key | null
@@ -51,7 +58,10 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
   return (
     <>
       {viewerData == null && (
-        <LazyModal />
+        <>
+          <LazyModal />
+          <LazyBanner />
+        </>
       )}
       <BannerContainer pt={2}>
         <BannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
