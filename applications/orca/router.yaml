@@ -5,7 +5,7 @@ csrf:
   unsafe_disabled: true
 
 sandbox:
-  enabled: true
+  enabled: "${env.APP_DEBUG}"
 
 homepage:
   enabled: false
@@ -13,7 +13,7 @@ homepage:
 supergraph:
   listen: 0.0.0.0:8000
   path: /api/graphql
-  introspection: true
+  introspection: "${env.APP_DEBUG}"
 
 health-check:
   listen: 0.0.0.0:8000

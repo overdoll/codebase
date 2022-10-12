@@ -16,12 +16,19 @@ import (
 	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
 	"overdoll/libraries/sentry_support"
+	"overdoll/libraries/support"
 )
 
 // Custom middleware that will ensure our security cookie + header is present
 // Essentially, this is CSRF protection
 func secureRequest() gin.HandlerFunc {
 	return func(c *gin.Context) {
+
+		if c.Request.Method == "GET" {
+			if len(c.Request.URL.Query()) == 0 && support.IsDebug() {
+				return
+			}
+		}
 
 		ck, err := c.Request.Cookie("od.security")
 

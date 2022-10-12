@@ -92,9 +92,9 @@ impl Plugin for PersistedQueries {
                     }
                 }
             } else {
-                if option_env!("APP_DEBUG").is_none()
-                    || option_env!("APP_DEBUG").unwrap() == "false"
-                {
+                let is_debug = env::var("APP_DEBUG");
+                let is_err = is_debug.is_err();
+                if (!is_err && is_debug.unwrap() == "false") || is_err {
                     res = Some(
                         supergraph::Response::error_builder()
                             .error(
