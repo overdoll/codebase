@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26132abc9266d7e76a091c822c8f84e4>>
+ * @generated SignedSource<<bb0a756d720991d8351ead34b2d63c9b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type HeaderSearchCategoryFragment$data = {
   readonly title: string;
-  readonly totalLikes: number;
-  readonly totalPosts: number;
-  readonly " $fragmentSpreads": FragmentRefs<"SearchCategoryCopyLinkButtonFragment" | "SearchCategoryShareDiscordButtonFragment" | "SearchCategoryShareRedditButtonFragment" | "SearchCategoryShareTwitterButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"CategoryBannerFragment" | "SearchCategoryCopyLinkButtonFragment" | "SearchCategoryShareDiscordButtonFragment" | "SearchCategoryShareRedditButtonFragment" | "SearchCategoryShareTwitterButtonFragment">;
   readonly " $fragmentType": "HeaderSearchCategoryFragment";
 };
 export type HeaderSearchCategoryFragment$key = {
@@ -32,22 +30,13 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "totalPosts",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "totalLikes",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
       "name": "title",
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "CategoryBannerFragment"
     },
     {
       "args": null,
@@ -74,6 +63,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ba8543913a6b2e8d6b237f53342790f2";
+(node as any).hash = "82fc9b713bd8b9f01fc312210c06e4ec";
 
 export default node;

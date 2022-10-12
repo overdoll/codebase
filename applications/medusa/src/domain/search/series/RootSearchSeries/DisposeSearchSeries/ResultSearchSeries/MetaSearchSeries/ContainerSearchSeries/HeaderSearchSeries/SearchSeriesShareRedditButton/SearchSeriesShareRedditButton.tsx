@@ -38,11 +38,10 @@ export default function SearchSeriesShareRedditButton ({ query }: Props): JSX.El
   return (
     <SmallGenericButton
       colorScheme='red'
-      isIcon
       onClick={onOpen}
       icon={SocialReddit}
     >
-      {i18n._(t`Share on Reddit`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

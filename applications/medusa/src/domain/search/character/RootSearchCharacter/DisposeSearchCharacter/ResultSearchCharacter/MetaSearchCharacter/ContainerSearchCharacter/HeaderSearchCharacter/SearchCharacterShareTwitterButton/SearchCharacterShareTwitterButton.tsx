@@ -55,11 +55,10 @@ export default function SearchCharacterShareTwitterButton ({ query }: Props): JS
   return (
     <SmallGenericButton
       colorScheme='twitter'
-      isIcon
       onClick={onOpen}
       icon={SocialTwitter}
     >
-      {i18n._(t`Share on Twitter`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

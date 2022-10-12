@@ -4,10 +4,11 @@ import { ContainerSearchCategoryFragment$key } from '@//:artifacts/ContainerSear
 import {
   ContainerSearchCategoryAccountFragment$key
 } from '@//:artifacts/ContainerSearchCategoryAccountFragment.graphql'
-import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
+import { ContentContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchCategory from './HeaderSearchCategory/HeaderSearchCategory'
 import ScrollSearchCategory from './ScrollSearchCategory/ScrollSearchCategory'
 import dynamic from 'next/dynamic'
+import { Stack } from '@chakra-ui/react'
 
 const LazyBanner = dynamic(
   async () => {
@@ -59,11 +60,11 @@ export default function ContainerSearchCategory (props: Props): JSX.Element {
           <LazyModal />
         </>
       )}
-      <MobileContainer pt={2}>
-        <HeaderSearchCategory categoryQuery={categoryData} />
-      </MobileContainer>
-      <ContentContainer pt={8}>
-        <ScrollSearchCategory accountQuery={accountData} categoryQuery={categoryData} />
+      <ContentContainer pt={2}>
+        <Stack spacing={8}>
+          <HeaderSearchCategory categoryQuery={categoryData} />
+          <ScrollSearchCategory accountQuery={accountData} categoryQuery={categoryData} />
+        </Stack>
       </ContentContainer>
     </>
   )

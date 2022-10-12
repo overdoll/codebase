@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<159a22e36b08fbfecbcdb9e6d468f8d9>>
+ * @generated SignedSource<<f13cfd471ecf96cc2db43b05b6ae9f47>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,9 +15,7 @@ export type HeaderPublicClubCharacterFragment$data = {
     readonly " $fragmentSpreads": FragmentRefs<"ClubCharacterRecommendationsFragment">;
   };
   readonly name: string;
-  readonly totalLikes: number;
-  readonly totalPosts: number;
-  readonly " $fragmentSpreads": FragmentRefs<"SearchCustomCharacterCopyLinkButtonFragment" | "SearchCustomCharacterShareDiscordButtonFragment" | "SearchCustomCharacterShareRedditButtonFragment" | "SearchCustomCharacterShareTwitterButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterBannerFragment" | "SearchCustomCharacterCopyLinkButtonFragment" | "SearchCustomCharacterShareDiscordButtonFragment" | "SearchCustomCharacterShareRedditButtonFragment" | "SearchCustomCharacterShareTwitterButtonFragment">;
   readonly " $fragmentType": "HeaderPublicClubCharacterFragment";
 };
 export type HeaderPublicClubCharacterFragment$key = {
@@ -60,18 +58,9 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "totalLikes",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "totalPosts",
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "CharacterBannerFragment"
     },
     {
       "args": null,
@@ -98,6 +87,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "668457c384b129d50c711a0a335e5da2";
+(node as any).hash = "15ddc4c875ccf8040c2c33fdf29e3ee0";
 
 export default node;

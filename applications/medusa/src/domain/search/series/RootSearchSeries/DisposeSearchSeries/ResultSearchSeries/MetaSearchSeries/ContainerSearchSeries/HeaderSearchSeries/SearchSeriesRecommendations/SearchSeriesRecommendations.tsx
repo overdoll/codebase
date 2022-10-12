@@ -10,7 +10,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment SearchSeriesRecommendationsFragment on Series {
-    characters(first: 3) {
+    characters(first: 5) {
       edges {
         node {
           id

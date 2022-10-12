@@ -25,6 +25,10 @@ export default function CurationProfileHeader (props: Props): JSX.Element {
     previousStep
   } = useContext(FlowContext)
 
+  if (onClose == null) {
+    return <></>
+  }
+
   return (
     <Grid h={12} w='100%' templateColumns='1fr 1fr 1fr'>
       <GridItem>
@@ -51,11 +55,9 @@ export default function CurationProfileHeader (props: Props): JSX.Element {
         </Center>
       </GridItem>
       <GridItem>
-        {onClose != null && (
-          <Flex align='center' justify='flex-end'>
-            <CloseButton variant='solid' size='lg' onClick={onClose} />
-          </Flex>
-        )}
+        <Flex align='center' justify='flex-end'>
+          <CloseButton variant='solid' size='lg' onClick={onClose} />
+        </Flex>
       </GridItem>
     </Grid>
   )

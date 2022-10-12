@@ -4,6 +4,10 @@ import { graphql } from 'react-relay'
 import DiscoverClubsList
   from '@//:modules/content/HookedComponents/Filters/fragments/DiscoverClubsList/DiscoverClubsList'
 import dynamic from 'next/dynamic'
+import { Stack } from '@chakra-ui/react'
+import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
+import { ContentBrushPen } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: PreloadedQuery<DiscoverClubsQuery>
@@ -46,7 +50,10 @@ export default function DiscoverClubs (props: Props): JSX.Element {
           <LazyModal />
         </>
       )}
-      <DiscoverClubsList query={queryData} />
+      <Stack spacing={2}>
+        <PageHeader icon={ContentBrushPen} title={<Trans>Discover clubs</Trans>} />
+        <DiscoverClubsList query={queryData} />
+      </Stack>
     </>
   )
 }

@@ -4,10 +4,11 @@ import { ContainerPublicClubCharacterFragment$key } from '@//:artifacts/Containe
 import {
   ContainerPublicClubCharacterAccountFragment$key
 } from '@//:artifacts/ContainerPublicClubCharacterAccountFragment.graphql'
-import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
+import { ContentContainer } from '@//:modules/content/PageLayout'
 import HeaderPublicClubCharacter from './HeaderPublicClubCharacter/HeaderPublicClubCharacter'
 import ScrollPublicClubCharacter from './ScrollPublicClubCharacter/ScrollPublicClubCharacter'
 import dynamic from 'next/dynamic'
+import { Stack } from '@chakra-ui/react'
 
 const LazyBanner = dynamic(
   async () => {
@@ -59,11 +60,11 @@ export default function ContainerPublicClubCharacter (props: Props): JSX.Element
           <LazyModal />
         </>
       )}
-      <MobileContainer pt={2}>
-        <HeaderPublicClubCharacter characterQuery={characterData} />
-      </MobileContainer>
-      <ContentContainer pt={8}>
-        <ScrollPublicClubCharacter accountQuery={accountData} characterQuery={characterData} />
+      <ContentContainer pt={2}>
+        <Stack spacing={8}>
+          <HeaderPublicClubCharacter characterQuery={characterData} />
+          <ScrollPublicClubCharacter accountQuery={accountData} characterQuery={characterData} />
+        </Stack>
       </ContentContainer>
     </>
   )

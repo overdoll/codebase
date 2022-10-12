@@ -4,10 +4,11 @@ import { ContainerSearchCharacterFragment$key } from '@//:artifacts/ContainerSea
 import {
   ContainerSearchCharacterAccountFragment$key
 } from '@//:artifacts/ContainerSearchCharacterAccountFragment.graphql'
-import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
+import { ContentContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchCharacter from './HeaderSearchCharacter/HeaderSearchCharacter'
 import ScrollSearchCharacter from './ScrollSearchCharacter/ScrollSearchCharacter'
 import dynamic from 'next/dynamic'
+import { Stack } from '@chakra-ui/react'
 
 const LazyBanner = dynamic(
   async () => {
@@ -48,11 +49,11 @@ export default function ContainerSearchCharacter (props: Props): JSX.Element {
       {accountData == null && (
         <LazyBanner />
       )}
-      <MobileContainer pt={2}>
-        <HeaderSearchCharacter characterQuery={characterData} />
-      </MobileContainer>
-      <ContentContainer pt={8}>
-        <ScrollSearchCharacter accountQuery={accountData} characterQuery={characterData} />
+      <ContentContainer pt={2}>
+        <Stack spacing={8}>
+          <HeaderSearchCharacter characterQuery={characterData} />
+          <ScrollSearchCharacter accountQuery={accountData} characterQuery={characterData} />
+        </Stack>
       </ContentContainer>
     </>
   )
