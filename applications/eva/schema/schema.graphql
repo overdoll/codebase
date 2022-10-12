@@ -1,0 +1,25 @@
+extend type Post implements Node @key(fields: "id") { id: ID! @external }
+extend type Series implements Node @key(fields: "id") { id: ID! @external }
+extend type Topic implements Node @key(fields: "id") { id: ID! @external }
+extend type AccountTransaction implements Node @key(fields: "id") { id: ID! @external }
+extend type Audience implements Node @key(fields: "id") { id: ID! @external }
+extend type CancellationReason implements Node @key(fields: "id") { id: ID! @external }
+extend type Category implements Node @key(fields: "id") { id: ID! @external }
+extend type Character implements Node @key(fields: "id") { id: ID! @external }
+extend type Club implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubInfractionHistory implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubMember implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubPayment implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubPayout implements Node @key(fields: "id") { id: ID! @external }
+extend type DepositRequest implements Node @key(fields: "id") { id: ID! @external }
+extend type PostAuditLog implements Node @key(fields: "id") { id: ID! @external }
+extend type PostLike implements Node @key(fields: "id") { id: ID! @external }
+extend type PostReport implements Node @key(fields: "id") { id: ID! @external }
+extend type Rule implements Node @key(fields: "id") { id: ID! @external }
+
+extend type Query {
+  """
+  Fetch a node by the ID
+  """
+  node(id: ID!): Node
+}

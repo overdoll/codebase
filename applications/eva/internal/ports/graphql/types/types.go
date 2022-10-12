@@ -145,6 +145,13 @@ type AccountSessionEdge struct {
 	Node   *AccountSession `json:"node"`
 }
 
+type AccountTransaction struct {
+	ID relay.ID `json:"id"`
+}
+
+func (AccountTransaction) IsEntity() {}
+func (AccountTransaction) IsNode()   {}
+
 // Add an email to the account
 type AddAccountEmailInput struct {
 	// The email that should be added to this account
@@ -195,6 +202,13 @@ type AssignAccountStaffRolePayload struct {
 	Account *Account `json:"account"`
 }
 
+type Audience struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Audience) IsEntity() {}
+func (Audience) IsNode()   {}
+
 // Authentication token. Used for logging in.
 type AuthenticationToken struct {
 	// Unique ID of the token
@@ -238,6 +252,62 @@ type CancelAccountDeletionPayload struct {
 	// Account that was cancelled for deletion.
 	Account *Account `json:"account"`
 }
+
+type CancellationReason struct {
+	ID relay.ID `json:"id"`
+}
+
+func (CancellationReason) IsEntity() {}
+func (CancellationReason) IsNode()   {}
+
+type Category struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Category) IsEntity() {}
+func (Category) IsNode()   {}
+
+type Character struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Character) IsEntity() {}
+func (Character) IsNode()   {}
+
+type Club struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Club) IsEntity() {}
+func (Club) IsNode()   {}
+
+type ClubInfractionHistory struct {
+	ID relay.ID `json:"id"`
+}
+
+func (ClubInfractionHistory) IsEntity() {}
+func (ClubInfractionHistory) IsNode()   {}
+
+type ClubMember struct {
+	ID relay.ID `json:"id"`
+}
+
+func (ClubMember) IsEntity() {}
+func (ClubMember) IsNode()   {}
+
+type ClubPayment struct {
+	ID relay.ID `json:"id"`
+}
+
+func (ClubPayment) IsEntity() {}
+func (ClubPayment) IsNode()   {}
+
+type ClubPayout struct {
+	ID relay.ID `json:"id"`
+}
+
+func (ClubPayout) IsEntity() {}
+func (ClubPayout) IsNode()   {}
 
 // Input for confirming the account email
 type ConfirmAccountEmailInput struct {
@@ -298,6 +368,13 @@ type DeleteAccountPayload struct {
 	// Account that was deleted
 	Account *Account `json:"account"`
 }
+
+type DepositRequest struct {
+	ID relay.ID `json:"id"`
+}
+
+func (DepositRequest) IsEntity() {}
+func (DepositRequest) IsNode()   {}
 
 // Payload for disabling account multi factor
 type DisableAccountMultiFactorPayload struct {
@@ -445,6 +522,34 @@ type MultiFactorTotp struct {
 	ImageSrc string `json:"imageSrc"`
 }
 
+type Post struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Post) IsEntity() {}
+func (Post) IsNode()   {}
+
+type PostAuditLog struct {
+	ID relay.ID `json:"id"`
+}
+
+func (PostAuditLog) IsEntity() {}
+func (PostAuditLog) IsNode()   {}
+
+type PostLike struct {
+	ID relay.ID `json:"id"`
+}
+
+func (PostLike) IsEntity() {}
+func (PostLike) IsNode()   {}
+
+type PostReport struct {
+	ID relay.ID `json:"id"`
+}
+
+func (PostReport) IsEntity() {}
+func (PostReport) IsNode()   {}
+
 // Payload for revoking the current viewer
 type RevokeAccountAccessPayload struct {
 	// The account that was revoked
@@ -512,6 +617,27 @@ type RevokeAuthenticationTokenPayload struct {
 	// The authentication token that was removed
 	RevokedAuthenticationTokenID relay.ID `json:"revokedAuthenticationTokenId"`
 }
+
+type Rule struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Rule) IsEntity() {}
+func (Rule) IsNode()   {}
+
+type Series struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Series) IsEntity() {}
+func (Series) IsNode()   {}
+
+type Topic struct {
+	ID relay.ID `json:"id"`
+}
+
+func (Topic) IsEntity() {}
+func (Topic) IsNode()   {}
 
 // Input for unlocking an account
 type UnlockAccountInput struct {

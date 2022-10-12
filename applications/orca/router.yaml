@@ -1,25 +1,35 @@
 cors:
-  allow_headers:
-    - Content-Type
-    - Authorization
-    - X-overdoll-Security
-
-  origins:
-    - https://overdoll.test
-    - https://overdoll.com
-    - https://studio.apollographql.com
-
-  allow_credentials: true
-
-  methods:
-    - GET
-    - POST
-    - OPTIONS
+  origins: [ ]
 
 csrf:
   unsafe_disabled: true
 
+sandbox:
+  enabled: true
+
+homepage:
+  enabled: false
+
+supergraph:
+  listen: 0.0.0.0:8000
+  path: /api/graphql
+  introspection: true
+
+health-check:
+  listen: 0.0.0.0:8000
+  enabled: true
+
+include_subgraph_errors:
+  all: "${env.APP_DEBUG}"
+
 plugins:
   overdoll.passport:
   overdoll.persisted_queries:
-  overdoll.relay:
+
+override_subgraph_url:
+  eva: "${env.EVA_SERVICE_URL:-http://eva:8000/api/graphql}"
+  hades: "${env.HADES_SERVICE_URL:-http://hades:8000/api/graphql}"
+  parley: "${env.PARLEY_SERVICE_URL:-http://parley:8000/api/graphql}"
+  ringer: "${env.RINGER_SERVICE_URL:-http://ringer:8000/api/graphql}"
+  sting: "${env.STING_SERVICE_URL:-http://sting:8000/api/graphql}"
+  loader: "${env.LOADER_SERVICE_URL:-http://loader:8000/api/graphql}"

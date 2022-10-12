@@ -103,12 +103,12 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 		proxy.ServeHTTP(w, r)
 	}))
 
-	proxy2 := &httputil.ReverseProxy{Director: proxyDirector}
-	proxy2.ErrorHandler = proxyErrorHandler
+	proxy3 := &httputil.ReverseProxy{Director: proxyDirector}
+	proxy3.ErrorHandler = proxyErrorHandler
 
-	// proxy OPTIONS to the server
-	rtr.OPTIONS("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
-		proxy2.ServeHTTP(w, r)
+	// proxy GET to the server
+	rtr.GET("/api/graphql", secureRequest(), gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
+		proxy3.ServeHTTP(w, r)
 	}))
 
 	return rtr

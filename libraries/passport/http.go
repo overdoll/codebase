@@ -2,6 +2,7 @@ package passport
 
 import (
 	"bytes"
+	"compress/gzip"
 	"context"
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/gjson"
@@ -10,6 +11,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"overdoll/libraries/errors"
 	"strconv"
 	"strings"
 )
@@ -123,8 +125,11 @@ func fromResponse(res *http.Response) (*Passport, error) {
 	var reader io.ReadCloser
 	switch res.Header.Get("Content-Encoding") {
 	case "gzip":
-		// dont read gzip responses
-		return nil, nil
+		var err error
+		reader, err = gzip.NewReader(res.Body)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to parse gzip body")
+		}
 	default:
 		reader = res.Body
 	}
@@ -136,9 +141,9 @@ func fromResponse(res *http.Response) (*Passport, error) {
 	value := gjson.Get(string(bd), bodyKey)
 
 	res.Body = ioutil.NopCloser(&buf)
+	res.Header.Set("Content-Encoding", "")
 
 	if value.Exists() {
-
 		pass, err := unserializeFromString(value.String())
 		if err != nil {
 			return nil, err
@@ -148,7 +153,6 @@ func fromResponse(res *http.Response) (*Passport, error) {
 		buff := bytes.NewBufferString(newBody)
 		res.Body = ioutil.NopCloser(buff)
 		res.Header.Set("Content-Length", strconv.Itoa(buff.Len()))
-
 		return pass, nil
 	}
 
