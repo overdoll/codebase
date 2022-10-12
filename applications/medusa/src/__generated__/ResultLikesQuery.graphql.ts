@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<5dc5d70ed90bb48e8c21f8ebdc15cf2d>>
- * @relayHash c089bc3a050af07d7a7320df992b2cf2
+ * @generated SignedSource<<5360ae34e6547dd37f52c72c1c2358fa>>
+ * @relayHash 1b8278ae6ac729d27ead3b0ced0fbffe
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID c089bc3a050af07d7a7320df992b2cf2
+// @relayRequestID 1b8278ae6ac729d27ead3b0ced0fbffe
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -222,6 +222,13 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": (v0/*: any*/),
@@ -564,13 +571,6 @@ return {
             "kind": "LinkedHandle",
             "name": "likedPosts"
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "hasClubSupporterSubscription",
-            "storageKey": null
-          },
           (v1/*: any*/)
         ],
         "storageKey": null
@@ -578,7 +578,7 @@ return {
     ]
   },
   "params": {
-    "id": "c089bc3a050af07d7a7320df992b2cf2",
+    "id": "1b8278ae6ac729d27ead3b0ced0fbffe",
     "metadata": {},
     "name": "ResultLikesQuery",
     "operationKind": "query",

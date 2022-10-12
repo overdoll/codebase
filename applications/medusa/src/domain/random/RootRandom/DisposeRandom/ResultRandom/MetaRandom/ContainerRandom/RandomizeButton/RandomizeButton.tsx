@@ -34,6 +34,7 @@ export default function RandomizeButton (): JSX.Element {
           w='100%'
           position='sticky'
           zIndex='sidebar'
+          pointerEvents='none'
           bottom={{
             base: -1,
             md: -2
@@ -54,6 +55,7 @@ export default function RandomizeButton (): JSX.Element {
                 {...BUTTON_PROPS}
                 w='100%'
                 size='lg'
+                pointerEvents='auto'
               >
                 <Trans>
                   Get more posts
@@ -70,6 +72,7 @@ export default function RandomizeButton (): JSX.Element {
                   aria-label={i18n._(t`Randomize!`)}
                   w={16}
                   h={16}
+                  pointerEvents='auto'
                 />
               </Flex>
               )}

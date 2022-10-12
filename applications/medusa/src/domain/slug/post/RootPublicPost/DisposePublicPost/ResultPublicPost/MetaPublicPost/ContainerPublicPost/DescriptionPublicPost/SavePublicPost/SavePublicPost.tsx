@@ -58,7 +58,7 @@ export default function SavePublicPost (props: Props): JSX.Element {
               color='whiteAlpha.300'
             >
               <Trans>
-                Save this post
+                Like this post
               </Trans>
             </Heading>
             <Heading

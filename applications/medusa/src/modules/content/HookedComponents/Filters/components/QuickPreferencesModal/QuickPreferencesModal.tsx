@@ -1,4 +1,14 @@
-import { Box, Heading, Modal, ModalBody, ModalContent, ModalOverlay, Stack, Text } from '@chakra-ui/react'
+import {
+  Box,
+  Heading,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Stack,
+  Text
+} from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { QuickPreferencesModalFragment$key } from '@//:artifacts/QuickPreferencesModalFragment.graphql'
 import { SkeletonStack } from '../../../../Placeholder'
@@ -9,6 +19,7 @@ import { MagicBall } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import Button from '../../../../../form/Button/Button'
 import { useJoin } from '@//:domain/app/Root/DisposeRoot/ResultRoot/JoinModal/JoinModal'
+import CloseButton from '../../../../ThemeComponents/CloseButton/CloseButton'
 
 interface Props {
   isOpen: boolean
@@ -44,6 +55,10 @@ export default function QuickPreferencesModal (props: Props): JSX.Element {
     >
       <ModalOverlay />
       <ModalContent>
+        <ModalCloseButton
+          size='lg'
+          as={CloseButton}
+        />
         <ModalBody p={4}>
           {data == null
             ? (

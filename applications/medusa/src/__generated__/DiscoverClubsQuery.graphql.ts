@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c7262f5e4d9b521ed4bd22513bc9b2c6>>
- * @relayHash 262698faa5722b0e1ec71a162b5dcfef
+ * @generated SignedSource<<bd27ad2b0bf37b7b2b7b6ade027d6959>>
+ * @relayHash 5f11477c469c56e12533dc0e90f57e61
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,12 +9,15 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 262698faa5722b0e1ec71a162b5dcfef
+// @relayRequestID 5f11477c469c56e12533dc0e90f57e61
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type DiscoverClubsQuery$variables = {};
 export type DiscoverClubsQuery$data = {
+  readonly viewer: {
+    readonly __typename: "Account";
+  } | null;
   readonly " $fragmentSpreads": FragmentRefs<"DiscoverClubsListFragment">;
 };
 export type DiscoverClubsQuery = {
@@ -23,13 +26,13 @@ export type DiscoverClubsQuery = {
 };
 
 const node: ConcreteRequest = (function(){
-var v0 = [
-  {
-    "kind": "Literal",
-    "name": "first",
-    "value": 11
-  }
-],
+var v0 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "__typename",
+  "storageKey": null
+},
 v1 = {
   "alias": null,
   "args": null,
@@ -37,13 +40,13 @@ v1 = {
   "name": "id",
   "storageKey": null
 },
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-},
+v2 = [
+  {
+    "kind": "Literal",
+    "name": "first",
+    "value": 11
+  }
+],
 v3 = {
   "kind": "TypeDiscriminator",
   "abstractKey": "__isMedia"
@@ -179,6 +182,18 @@ return {
     "name": "DiscoverClubsQuery",
     "selections": [
       {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/)
+        ],
+        "storageKey": null
+      },
+      {
         "args": null,
         "kind": "FragmentSpread",
         "name": "DiscoverClubsListFragment"
@@ -195,7 +210,34 @@ return {
     "selections": [
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          (v0/*: any*/),
+          (v1/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsLimit",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsCount",
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": (v2/*: any*/),
         "concreteType": "ClubConnection",
         "kind": "LinkedField",
         "name": "discoverClubs",
@@ -247,7 +289,7 @@ return {
                     "name": "thumbnailMedia",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v0/*: any*/),
                       (v3/*: any*/),
                       {
                         "kind": "InlineFragment",
@@ -285,7 +327,7 @@ return {
                     "name": "bannerMedia",
                     "plural": false,
                     "selections": [
-                      (v2/*: any*/),
+                      (v0/*: any*/),
                       (v3/*: any*/),
                       {
                         "kind": "InlineFragment",
@@ -315,7 +357,7 @@ return {
                     ],
                     "storageKey": null
                   },
-                  (v2/*: any*/)
+                  (v0/*: any*/)
                 ],
                 "storageKey": null
               },
@@ -359,43 +401,17 @@ return {
       },
       {
         "alias": null,
-        "args": (v0/*: any*/),
+        "args": (v2/*: any*/),
         "filters": null,
         "handle": "connection",
         "key": "DiscoverClubs_discoverClubs",
         "kind": "LinkedHandle",
         "name": "discoverClubs"
-      },
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "Account",
-        "kind": "LinkedField",
-        "name": "viewer",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "clubMembershipsLimit",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "clubMembershipsCount",
-            "storageKey": null
-          },
-          (v1/*: any*/)
-        ],
-        "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "262698faa5722b0e1ec71a162b5dcfef",
+    "id": "5f11477c469c56e12533dc0e90f57e61",
     "metadata": {},
     "name": "DiscoverClubsQuery",
     "operationKind": "query",
@@ -404,6 +420,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6026a6f2b29058d860fef91ab355db7";
+(node as any).hash = "d7126947022d7838b510567a747b997f";
 
 export default node;
