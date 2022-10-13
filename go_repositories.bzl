@@ -280,6 +280,13 @@ def go_repositories():
         sum = "h1:IXASOyjaykYpx5XjhL1nakJkaFPO9dy+o6EZeIn8xCw=",
         version = "v0.0.0-20210717145055-bd2f105d3ee0",
     )
+    go_repository(
+        name = "com_github_cenkalti_backoff_v4",
+        build_file_proto_mode = "disable",
+        importpath = "github.com/cenkalti/backoff/v4",
+        sum = "h1:cFAlzYUlVYDysBEH2T5hyJZMh3+5+WCBvSnK6Q8UtC4=",
+        version = "v4.1.3",
+    )
 
     go_repository(
         name = "com_github_census_instrumentation_opencensus_proto",

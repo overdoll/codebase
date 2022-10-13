@@ -1,5 +1,5 @@
 {
-  "checksum": "98c7e81bfd37393c9ab07d7977b55c355201427f841ae3e619a3a836d30d46b8",
+  "checksum": "f5939fa175e0f024766ab90199e259d183f4a8f7dd250630e2a23188c52bd65c",
   "crates": {
     "access-json 0.1.0": {
       "name": "access-json",
@@ -1084,14 +1084,14 @@
       },
       "license": "LicenseRef-ELv2"
     },
-    "apollo-router-scaffold 1.1.0": {
+    "apollo-router-scaffold 1.2.0": {
       "name": "apollo-router-scaffold",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "repository": {
         "Git": {
           "remote": "https://github.com/apollographql/router.git",
           "commitish": {
-            "Tag": "v1.1.0"
+            "Tag": "v1.2.0"
           },
           "strip_prefix": "apollo-router-scaffold"
         }
@@ -1145,7 +1145,7 @@
           "selects": {}
         },
         "edition": "2021",
-        "version": "1.1.0"
+        "version": "1.2.0"
       },
       "license": "LicenseRef-ELv2"
     },
@@ -25546,7 +25546,7 @@
               "target": "anyhow"
             },
             {
-              "id": "apollo-router-scaffold 1.1.0",
+              "id": "apollo-router-scaffold 1.2.0",
               "target": "apollo_router_scaffold"
             },
             {

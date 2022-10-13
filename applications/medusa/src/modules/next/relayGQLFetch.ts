@@ -1,19 +1,32 @@
 import gcm from '../utilities/gcm'
 
+const fetchToMethod = async (url, kind, data, headers): Promise<any> => {
+  if (kind === 'query') {
+    delete data.operationName
+    const params = Object.keys(data).map(function (key) {
+      return key + '=' + encodeURIComponent(JSON.stringify(data[key]))
+    }).join('&')
+
+    return await fetch(`${url as string}?${params}`, {
+      method: 'GET',
+      headers
+    })
+  }
+
+  return await fetch(url, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data)
+  })
+}
+
 export const clientFetch = (securityToken) => {
   return async (data, kind) => {
-    const response = await fetch(
-      '/api/graphql',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'X-overdoll-Security': securityToken
-        },
-        body: JSON.stringify(data)
-      }
-    )
+    const response = await fetchToMethod('/api/graphql', kind, data, {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-overdoll-Security': securityToken
+    })
 
     const result = await response.json()
 
@@ -46,41 +59,11 @@ export const clientFetch = (securityToken) => {
   }
 }
 
-const delay = async (ms): Promise<void> => await new Promise<void>((resolve) => setTimeout(() => resolve(), ms))
-
-const retryFetch = async (
-  url,
-  fetchOptions = {},
-  retries = 3,
-  retryDelay = 1000
-): Promise<Response> => {
-  return await new Promise((resolve, reject) => {
-    const wrapper = (n): any => {
-      fetch(url, fetchOptions)
-        .then((res) => resolve(res))
-        .catch(async (err) => {
-          if (n > 0) {
-            await delay(retryDelay)
-            wrapper(--n)
-          } else {
-            reject(err)
-          }
-        })
-    }
-
-    wrapper(retries)
-  })
-}
-
 // used for fetching inside of Next.js middleware
 // note that we have to manually assign security cookies in case they are not present
 export const serverMiddlewareFetch = (req) => {
   return async (data) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-      cookie: ''
-    }
+    const headers: any = { cookie: '' }
 
     req.headers.forEach((value, key) => {
       headers[key] = value
@@ -102,31 +85,23 @@ export const serverMiddlewareFetch = (req) => {
       if (headers.cookie === '') {
         headers.cookie = `od.security=${encrypted}`
       } else {
-        headers.cookie = `${headers.cookie}; od.security=${encrypted}`
+        headers.cookie = `${headers.cookie as string}; od.security=${encrypted}`
       }
     }
 
+    headers.accept = 'application/json'
+    headers['Content-Type'] = 'application/json'
     headers['X-overdoll-Security'] = token
 
-    const response = await fetch(
-      process.env.SERVER_GRAPHQL_ENDPOINT as string,
-      {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(data)
-      }
-    )
+    const response = await fetchToMethod(process.env.SERVER_GRAPHQL_ENDPOINT as string, 'query', data, headers)
 
-    return await response.json()
+    return response.json()
   }
 }
 
 export const serverFetch = (req, res) => {
   return async (data, kind) => {
-    const headers = {
-      'Content-Type': 'application/json',
-      Accept: 'application/json'
-    }
+    const headers: any = {}
 
     Object.entries(
       req.headers ?? {}
@@ -134,16 +109,10 @@ export const serverFetch = (req, res) => {
       headers[key] = value
     })
 
-    const response = await retryFetch(
-      process.env.SERVER_GRAPHQL_ENDPOINT as string,
-      {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(data)
-      },
-      5,
-      1200
-    )
+    headers.accept = 'application/json'
+    headers['Content-Type'] = 'application/json'
+
+    const response = await fetchToMethod(process.env.SERVER_GRAPHQL_ENDPOINT as string, kind, data, headers)
 
     const responseData = await response.json()
 

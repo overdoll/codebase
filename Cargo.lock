@@ -202,8 +202,8 @@ dependencies = [
 
 [[package]]
 name = "apollo-router-scaffold"
-version = "1.1.0"
-source = "git+https://github.com/apollographql/router.git?tag=v1.1.0#d184fdfdabcf086a540a674c98bbcc695c7e28d0"
+version = "1.2.0"
+source = "git+https://github.com/apollographql/router.git?tag=v1.2.0#afc9fee89e2fc3acb028e289c3cf58c18ee5d974"
 dependencies = [
  "anyhow",
  "cargo-scaffold",

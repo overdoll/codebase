@@ -2,8 +2,11 @@ package passport
 
 import (
 	"context"
+	"github.com/cenkalti/backoff/v4"
 	"github.com/gorilla/securecookie"
 	"net/http"
+	"overdoll/libraries/errors"
+	"time"
 )
 
 // passport doesn't care about the storage mechanism of how you store sessions or any other data
@@ -45,10 +48,50 @@ func NewHttpRoundTripper(r repository) http.RoundTripper {
 
 func (h *passportTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 
-	res, err := h.roundTrip(req)
+	if req.Method == "POST" {
+		res, err := h.roundTrip(req)
+		if err != nil {
+			return nil, err
+		}
+		return res, nil
+	}
+
+	var retryError = errors.New("retry error")
+
+	var res *http.Response
+	var err error
+	operation := func() error {
+
+		res, err = h.roundTrip(req)
+
+		if err != nil {
+			return nil
+		}
+
+		// if status code error is greater than 500, we do retries
+		if res.StatusCode > 500 {
+			return retryError
+		}
+
+		return nil
+	}
 
 	if err != nil {
 		return nil, err
+	}
+
+	err = backoff.Retry(operation, backoff.WithContext(&backoff.ExponentialBackOff{
+		InitialInterval:     backoff.DefaultInitialInterval,
+		RandomizationFactor: backoff.DefaultRandomizationFactor,
+		Multiplier:          backoff.DefaultMultiplier,
+		MaxInterval:         time.Second * 20,
+		MaxElapsedTime:      1 * time.Minute,
+		Stop:                backoff.Stop,
+		Clock:               backoff.SystemClock,
+	}, req.Context()))
+
+	if err != nil && err != retryError {
+		return nil, errors.Wrap(err, "failed to perform operation")
 	}
 
 	return res, nil

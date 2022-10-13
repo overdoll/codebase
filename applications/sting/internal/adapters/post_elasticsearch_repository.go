@@ -866,7 +866,8 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("series_ids", filter.SeriesIds()...))
 	}
 
-	if len(filter.AudienceIds()) > 0 {
+	// don't filter by audience if searching for club
+	if len(filter.AudienceIds()) > 0 && len(filter.ClubIds()) == 0 {
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...))
 	}
 

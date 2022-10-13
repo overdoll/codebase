@@ -23,9 +23,8 @@ import (
 // Essentially, this is CSRF protection
 func secureRequest() gin.HandlerFunc {
 	return func(c *gin.Context) {
-
 		if c.Request.Method == "GET" {
-			if len(c.Request.URL.Query()) == 0 && support.IsDebug() {
+			if len(c.Request.URL.RawQuery) == 0 && support.IsDebug() {
 				return
 			}
 		}
@@ -110,12 +109,9 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 		proxy.ServeHTTP(w, r)
 	}))
 
-	proxy3 := &httputil.ReverseProxy{Director: proxyDirector}
-	proxy3.ErrorHandler = proxyErrorHandler
-
 	// proxy GET to the server
 	rtr.GET("/api/graphql", secureRequest(), gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
-		proxy3.ServeHTTP(w, r)
+		proxy.ServeHTTP(w, r)
 	}))
 
 	return rtr
