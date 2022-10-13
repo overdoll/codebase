@@ -24,7 +24,7 @@ def wait_for_port(host, port, timeout=5.0, check_ready=True):
                     if host == 'orca':
                         url = '/health'
                     req = requests.get("http://" + host + ":" + str(port) + url)
-                    if req.text == "ok":
+                    if req.text == "ok" or req.text == "{\"status\":\"UP\"}":
                         break
                 else:
                     break
