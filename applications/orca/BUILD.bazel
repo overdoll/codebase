@@ -72,7 +72,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "sting/dev",
+    repository = "orca/dev",
     tag = "$(CONTAINER_TAG)",
 )
 
@@ -81,7 +81,7 @@ container_push(
     format = "Docker",
     image = ":image",
     registry = "$(CONTAINER_REGISTRY)",
-    repository = "sting",
+    repository = "orca",
     skip_unchanged_digest = True,
     tag = "$(CONTAINER_TAG)",
 )
