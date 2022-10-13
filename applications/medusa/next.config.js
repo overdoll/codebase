@@ -257,12 +257,12 @@ const moduleExports = withBundleAnalyzer({
     defaultLocale: 'en'
   },
   output: 'standalone',
+  images: {
+    unoptimized: true
+  },
   experimental: {
-    images: {
-      unoptimized: true,
-      allowFutureImage: true
-    },
-    scrollRestoration: true
+    scrollRestoration: true,
+    fallbackNodePolyfills: false
   },
   serverRuntimeConfig: {
     projectRoot: __dirname

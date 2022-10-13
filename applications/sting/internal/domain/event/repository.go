@@ -49,4 +49,7 @@ type Repository interface {
 	SendCompletedPixelatedResources(ctx context.Context, postId string, media *media.Media) error
 	SendPostCompletedProcessing(ctx context.Context, postId string, media *media.Media) error
 	TransferClubOwnership(ctx context.Context, requester *principal.Principal, club *club.Club, target *principal.Principal) error
+
+	CreateCuratedPostsFeed(ctx context.Context, accountId string) error
+	WaitForCuratedPostsFeed(ctx context.Context, accountId string) error
 }

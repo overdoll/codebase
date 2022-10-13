@@ -129,6 +129,9 @@ type Commands struct {
 }
 
 type Queries struct {
+	CuratedPostsFeedData  query.CuratedPostsFeedDataHandler
+	CuratedPostsFeedPosts query.CuratedPostsFeedPostsHandler
+
 	PrincipalById query.PrincipalByIdHandler
 
 	SearchPosts query.SearchPostsHandler

@@ -70,6 +70,8 @@ type ComplexityRoot struct {
 		Clubs                        func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.ClubsSort) int
 		ClubsCount                   func(childComplexity int) int
 		ClubsLimit                   func(childComplexity int) int
+		CuratedPostsFeedData         func(childComplexity int) int
+		CuratedPostsFeedPosts        func(childComplexity int, after *string, before *string, first *int, last *int) int
 		CurationProfile              func(childComplexity int) int
 		HasClubSupporterSubscription func(childComplexity int) int
 		HasNonTerminatedClubs        func(childComplexity int) int
@@ -332,6 +334,12 @@ type ComplexityRoot struct {
 	CreateTopicPayload struct {
 		Topic      func(childComplexity int) int
 		Validation func(childComplexity int) int
+	}
+
+	CuratedPostsFeedData struct {
+		GeneratedAt           func(childComplexity int) int
+		NextRegenerationTime  func(childComplexity int) int
+		ViewedSinceGeneration func(childComplexity int) int
 	}
 
 	CurationProfile struct {
@@ -878,6 +886,8 @@ type AccountResolver interface {
 	ClubMembershipsCount(ctx context.Context, obj *types.Account) (int, error)
 	ClubMemberships(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) (*types.ClubMemberConnection, error)
 	CurationProfile(ctx context.Context, obj *types.Account) (*types.CurationProfile, error)
+	CuratedPostsFeedData(ctx context.Context, obj *types.Account) (*types.CuratedPostsFeedData, error)
+	CuratedPostsFeedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	ClubMembersPostsFeed(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
 	LikedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
@@ -1119,6 +1129,25 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Account.ClubsLimit(childComplexity), true
+
+	case "Account.curatedPostsFeedData":
+		if e.complexity.Account.CuratedPostsFeedData == nil {
+			break
+		}
+
+		return e.complexity.Account.CuratedPostsFeedData(childComplexity), true
+
+	case "Account.curatedPostsFeedPosts":
+		if e.complexity.Account.CuratedPostsFeedPosts == nil {
+			break
+		}
+
+		args, err := ec.field_Account_curatedPostsFeedPosts_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Account.CuratedPostsFeedPosts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Account.curationProfile":
 		if e.complexity.Account.CurationProfile == nil {
@@ -2194,6 +2223,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CreateTopicPayload.Validation(childComplexity), true
+
+	case "CuratedPostsFeedData.generatedAt":
+		if e.complexity.CuratedPostsFeedData.GeneratedAt == nil {
+			break
+		}
+
+		return e.complexity.CuratedPostsFeedData.GeneratedAt(childComplexity), true
+
+	case "CuratedPostsFeedData.nextRegenerationTime":
+		if e.complexity.CuratedPostsFeedData.NextRegenerationTime == nil {
+			break
+		}
+
+		return e.complexity.CuratedPostsFeedData.NextRegenerationTime(childComplexity), true
+
+	case "CuratedPostsFeedData.viewedSinceGeneration":
+		if e.complexity.CuratedPostsFeedData.ViewedSinceGeneration == nil {
+			break
+		}
+
+		return e.complexity.CuratedPostsFeedData.ViewedSinceGeneration(childComplexity), true
 
 	case "CurationProfile.audience":
 		if e.complexity.CurationProfile.Audience == nil {
@@ -6462,6 +6512,57 @@ extend type Mutation {
   """
   updateCurationProfileDateOfBirth(input: UpdateCurationProfileDateOfBirthInput!): UpdateCurationProfileDateOfBirthPayload
 }
+
+
+type CuratedPostsFeedData {
+  """
+  When the curated posts feed was generated. Null if the posts feed has not been generated.
+
+  If the posts feed has not been generated, running the curatedPostsFeed query will generate the posts feed, and the query will only
+  return once it's done generating.
+  """
+  generatedAt: Time
+
+  """
+  When the posts feed will be generated next. Null if the posts feed was not yet viewed.
+  """
+  nextRegenerationTime: Time
+
+  """
+  Whether or not the posts feed was viewed since it was generated.
+  """
+  viewedSinceGeneration: Boolean!
+}
+
+extend type Account {
+  """
+  Curated posts feed data.
+
+  Will tell you when the posts feed is scheduled to be regenerated, and whether or not the curated posts feed was viewed.
+
+  Can be used to show a "notification" to the user as well.
+  """
+  curatedPostsFeedData: CuratedPostsFeedData!  @goField(forceResolver: true)
+
+  """
+  Curated posts feed.
+
+  When this is viewed, the curated posts feed will be scheduled to regenerate in a set amount of hours.
+  """
+  curatedPostsFeedPosts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @goField(forceResolver: true)
+}
 `, BuiltIn: false},
 	{Name: "../../../schema/games/schema.graphql", Input: `type GameSession {
   """An ID pointing to this game session."""
@@ -8375,6 +8476,48 @@ func (ec *executionContext) field_Account_clubs_args(ctx context.Context, rawArg
 		}
 	}
 	args["sortBy"] = arg6
+	return args, nil
+}
+
+func (ec *executionContext) field_Account_curatedPostsFeedPosts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
 	return args, nil
 }
 
@@ -11914,6 +12057,119 @@ func (ec *executionContext) fieldContext_Account_curationProfile(ctx context.Con
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CurationProfile", field.Name)
 		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Account_curatedPostsFeedData(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().CuratedPostsFeedData(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.CuratedPostsFeedData)
+	fc.Result = res
+	return ec.marshalNCuratedPostsFeedData2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCuratedPostsFeedData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Account_curatedPostsFeedData(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "generatedAt":
+				return ec.fieldContext_CuratedPostsFeedData_generatedAt(ctx, field)
+			case "nextRegenerationTime":
+				return ec.fieldContext_CuratedPostsFeedData_nextRegenerationTime(ctx, field)
+			case "viewedSinceGeneration":
+				return ec.fieldContext_CuratedPostsFeedData_viewedSinceGeneration(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CuratedPostsFeedData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Account_curatedPostsFeedPosts(ctx context.Context, field graphql.CollectedField, obj *types.Account) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Account().CuratedPostsFeedPosts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostConnection)
+	fc.Result = res
+	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Account_curatedPostsFeedPosts(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Account",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_PostConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_PostConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PostConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Account_curatedPostsFeedPosts_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
 	}
 	return fc, nil
 }
@@ -16265,6 +16521,10 @@ func (ec *executionContext) fieldContext_Club_owner(ctx context.Context, field g
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -17414,6 +17674,10 @@ func (ec *executionContext) fieldContext_ClubIssuedSuspensionLog_account(ctx con
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -17812,6 +18076,10 @@ func (ec *executionContext) fieldContext_ClubMember_account(ctx context.Context,
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -18219,6 +18487,10 @@ func (ec *executionContext) fieldContext_ClubRemovedSuspensionLog_account(ctx co
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -18571,6 +18843,10 @@ func (ec *executionContext) fieldContext_ClubTermination_account(ctx context.Con
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -19580,6 +19856,132 @@ func (ec *executionContext) fieldContext_CreateTopicPayload_validation(ctx conte
 	return fc, nil
 }
 
+func (ec *executionContext) _CuratedPostsFeedData_generatedAt(ctx context.Context, field graphql.CollectedField, obj *types.CuratedPostsFeedData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CuratedPostsFeedData_generatedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.GeneratedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CuratedPostsFeedData_generatedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CuratedPostsFeedData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CuratedPostsFeedData_nextRegenerationTime(ctx context.Context, field graphql.CollectedField, obj *types.CuratedPostsFeedData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CuratedPostsFeedData_nextRegenerationTime(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NextRegenerationTime, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CuratedPostsFeedData_nextRegenerationTime(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CuratedPostsFeedData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CuratedPostsFeedData_viewedSinceGeneration(ctx context.Context, field graphql.CollectedField, obj *types.CuratedPostsFeedData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CuratedPostsFeedData_viewedSinceGeneration(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ViewedSinceGeneration, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CuratedPostsFeedData_viewedSinceGeneration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CuratedPostsFeedData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _CurationProfile_id(ctx context.Context, field graphql.CollectedField, obj *types.CurationProfile) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CurationProfile_id(ctx, field)
 	if err != nil {
@@ -20463,6 +20865,10 @@ func (ec *executionContext) fieldContext_Entity_findAccountByID(ctx context.Cont
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -26650,6 +27056,10 @@ func (ec *executionContext) fieldContext_Post_contributor(ctx context.Context, f
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -28238,6 +28648,10 @@ func (ec *executionContext) fieldContext_PostLike_account(ctx context.Context, f
 				return ec.fieldContext_Account_clubMemberships(ctx, field)
 			case "curationProfile":
 				return ec.fieldContext_Account_curationProfile(ctx, field)
+			case "curatedPostsFeedData":
+				return ec.fieldContext_Account_curatedPostsFeedData(ctx, field)
+			case "curatedPostsFeedPosts":
+				return ec.fieldContext_Account_curatedPostsFeedPosts(ctx, field)
 			case "clubMembersPostsFeed":
 				return ec.fieldContext_Account_clubMembersPostsFeed(ctx, field)
 			case "posts":
@@ -40223,6 +40637,46 @@ func (ec *executionContext) _Account(ctx context.Context, sel ast.SelectionSet, 
 				return innerFunc(ctx)
 
 			})
+		case "curatedPostsFeedData":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_curatedPostsFeedData(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "curatedPostsFeedPosts":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Account_curatedPostsFeedPosts(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		case "clubMembersPostsFeed":
 			field := field
 
@@ -42193,6 +42647,42 @@ func (ec *executionContext) _CreateTopicPayload(ctx context.Context, sel ast.Sel
 
 			out.Values[i] = ec._CreateTopicPayload_validation(ctx, field, obj)
 
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var curatedPostsFeedDataImplementors = []string{"CuratedPostsFeedData"}
+
+func (ec *executionContext) _CuratedPostsFeedData(ctx context.Context, sel ast.SelectionSet, obj *types.CuratedPostsFeedData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, curatedPostsFeedDataImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CuratedPostsFeedData")
+		case "generatedAt":
+
+			out.Values[i] = ec._CuratedPostsFeedData_generatedAt(ctx, field, obj)
+
+		case "nextRegenerationTime":
+
+			out.Values[i] = ec._CuratedPostsFeedData_nextRegenerationTime(ctx, field, obj)
+
+		case "viewedSinceGeneration":
+
+			out.Values[i] = ec._CuratedPostsFeedData_viewedSinceGeneration(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -47654,6 +48144,20 @@ func (ec *executionContext) unmarshalNCreateSeriesInput2overdollᚋapplications�
 func (ec *executionContext) unmarshalNCreateTopicInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCreateTopicInput(ctx context.Context, v interface{}) (types.CreateTopicInput, error) {
 	res, err := ec.unmarshalInputCreateTopicInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCuratedPostsFeedData2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCuratedPostsFeedData(ctx context.Context, sel ast.SelectionSet, v types.CuratedPostsFeedData) graphql.Marshaler {
+	return ec._CuratedPostsFeedData(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCuratedPostsFeedData2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCuratedPostsFeedData(ctx context.Context, sel ast.SelectionSet, v *types.CuratedPostsFeedData) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CuratedPostsFeedData(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNCurationProfile2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCurationProfile(ctx context.Context, sel ast.SelectionSet, v types.CurationProfile) graphql.Marshaler {

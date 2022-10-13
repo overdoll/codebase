@@ -37,15 +37,15 @@ type curationProfile struct {
 	CategoryIdsSkipped bool       `db:"category_ids_skipped"`
 }
 
-type CurationProfileCassandraRepository struct {
+type CurationCassandraRepository struct {
 	session gocqlx.Session
 }
 
-func NewCurationProfileCassandraRepository(session gocqlx.Session) CurationProfileCassandraRepository {
-	return CurationProfileCassandraRepository{session: session}
+func NewCurationCassandraRepository(session gocqlx.Session) CurationCassandraRepository {
+	return CurationCassandraRepository{session: session}
 }
 
-func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Context, accountId string) (*curation.Profile, error) {
+func (r CurationCassandraRepository) getProfileByAccountId(ctx context.Context, accountId string) (*curation.Profile, error) {
 
 	var personalProfile curationProfile
 
@@ -83,7 +83,7 @@ func (r CurationProfileCassandraRepository) getProfileByAccountId(ctx context.Co
 	), nil
 }
 
-func (r CurationProfileCassandraRepository) GetProfileByAccountId(ctx context.Context, requester *principal.Principal, accountId string) (*curation.Profile, error) {
+func (r CurationCassandraRepository) GetProfileByAccountId(ctx context.Context, requester *principal.Principal, accountId string) (*curation.Profile, error) {
 
 	profile, err := r.getProfileByAccountId(ctx, accountId)
 
@@ -98,7 +98,7 @@ func (r CurationProfileCassandraRepository) GetProfileByAccountId(ctx context.Co
 	return profile, nil
 }
 
-func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error, columns []string) (*curation.Profile, error) {
+func (r CurationCassandraRepository) updateProfile(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error, columns []string) (*curation.Profile, error) {
 
 	profile, err := r.GetProfileByAccountId(ctx, requester, id)
 
@@ -133,19 +133,19 @@ func (r CurationProfileCassandraRepository) updateProfile(ctx context.Context, r
 	return profile, nil
 }
 
-func (r CurationProfileCassandraRepository) UpdateProfileDateOfBirth(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
+func (r CurationCassandraRepository) UpdateProfileDateOfBirth(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"date_of_birth", "date_of_birth_skipped"})
 }
 
-func (r CurationProfileCassandraRepository) UpdateProfileCategory(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
+func (r CurationCassandraRepository) UpdateProfileCategory(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"category_ids", "category_ids_skipped"})
 }
 
-func (r CurationProfileCassandraRepository) UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
+func (r CurationCassandraRepository) UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *curation.Profile) error) (*curation.Profile, error) {
 	return r.updateProfile(ctx, requester, id, updateFn, []string{"audience_ids", "audience_ids_skipped"})
 }
 
-func (r CurationProfileCassandraRepository) DeleteProfileOperator(ctx context.Context, accountId string) error {
+func (r CurationCassandraRepository) DeleteProfileOperator(ctx context.Context, accountId string) error {
 
 	if err := r.session.
 		Query(curationProfileTable.Delete()).

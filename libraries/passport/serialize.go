@@ -38,15 +38,10 @@ func unserializeFromString(raw string) (*Passport, error) {
 		return nil, nil
 	}
 
-	sDec, err := base64.RawURLEncoding.DecodeString(raw)
+	sDec, err := base64.StdEncoding.DecodeString(raw)
 
 	if err != nil {
-		// TODO: for backwards compatibility
-		sDec, err := base64.StdEncoding.DecodeString(raw)
-		if err != nil {
-			return nil, err
-		}
-		return unmarshalPassport(sDec)
+		return nil, err
 	}
 
 	return unmarshalPassport(sDec)
@@ -60,5 +55,5 @@ func serializeToString(p *Passport) (string, error) {
 		return "", err
 	}
 
-	return base64.RawURLEncoding.EncodeToString(msg), nil
+	return base64.StdEncoding.EncodeToString(msg), nil
 }
