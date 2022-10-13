@@ -1,7 +1,7 @@
 package passport
 
 import (
-	"encoding/hex"
+	"encoding/base64"
 	"github.com/golang/protobuf/proto"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
@@ -38,10 +38,15 @@ func unserializeFromString(raw string) (*Passport, error) {
 		return nil, nil
 	}
 
-	sDec, err := hex.DecodeString(raw)
+	sDec, err := base64.RawURLEncoding.DecodeString(raw)
 
 	if err != nil {
-		return nil, err
+		// TODO: for backwards compatibility
+		sDec, err := base64.StdEncoding.DecodeString(raw)
+		if err != nil {
+			return nil, err
+		}
+		return unmarshalPassport(sDec)
 	}
 
 	return unmarshalPassport(sDec)
@@ -55,5 +60,5 @@ func serializeToString(p *Passport) (string, error) {
 		return "", err
 	}
 
-	return hex.EncodeToString(msg), nil
+	return base64.RawURLEncoding.EncodeToString(msg), nil
 }

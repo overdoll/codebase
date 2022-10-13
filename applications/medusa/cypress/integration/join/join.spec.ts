@@ -5,7 +5,7 @@ import { clickOnButton, typeIntoPlaceholder } from '../../support/user_actions'
 Cypress.config('defaultCommandTimeout', 20000)
 
 describe('Join', () => {
-  it('check join on new random account', () => {
+  it.skip('check join on new random account', () => {
     /**
      * Register and check state
      */
@@ -35,7 +35,7 @@ describe('Join', () => {
     cy.get('a[href="/join"]').should('be.visible')
   })
 
-  it('check join on existing account', () => {
+  it.skip('check join on existing account', () => {
     const email = generateEmailFromExistingUsername('artist_verified')
 
     join(email)
@@ -43,7 +43,7 @@ describe('Join', () => {
     cy.url().should('include', '/')
   })
 
-  it('revoke token in lobby', () => {
+  it.skip('revoke token in lobby', () => {
     /**
      * Get to the lobby step
      */
@@ -70,7 +70,7 @@ describe('Join', () => {
     cy.findByText(/Check your email and click on/iu).should('be.visible')
   })
 
-  it('revoke token in multi factor', () => {
+  it.skip('revoke token in multi factor', () => {
     /**
      * Setup account
      */
@@ -90,7 +90,7 @@ describe('Join', () => {
     cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
   })
 
-  it('invalid token page', () => {
+  it.skip('invalid token page', () => {
     cy.visit('/verify-token')
     cy.findByText(/This link is either invalid or/iu).should('be.visible')
     clickOnButton('Back')

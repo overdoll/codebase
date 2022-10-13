@@ -73,7 +73,7 @@ func (i *ID) UnmarshalGQL(v interface{}) error {
 		return fmt.Errorf("ID must be a string")
 	}
 
-	sDec, err := base64.URLEncoding.DecodeString(id)
+	sDec, err := base64.StdEncoding.DecodeString(id)
 
 	if err != nil {
 		return errors.Wrap(err, "failed to unmarshal relay ID from graphql")
@@ -85,10 +85,10 @@ func (i *ID) UnmarshalGQL(v interface{}) error {
 }
 
 func MarshalRelayId(i ID) string {
-	return base64.URLEncoding.EncodeToString([]byte(i))
+	return base64.StdEncoding.EncodeToString([]byte(i))
 }
 
 // MarshalGQL implements the graphql.Marshaler interface
 func (i ID) MarshalGQL(w io.Writer) {
-	w.Write([]byte(strconv.Quote(base64.URLEncoding.EncodeToString([]byte(i)))))
+	w.Write([]byte(strconv.Quote(base64.StdEncoding.EncodeToString([]byte(i)))))
 }

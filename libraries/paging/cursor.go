@@ -32,7 +32,7 @@ func NewNode(cursorValue interface{}) *Node {
 		panic(err)
 	}
 
-	return &Node{cursor: base64.RawURLEncoding.EncodeToString(buf.Bytes())}
+	return &Node{cursor: base64.StdEncoding.EncodeToString(buf.Bytes())}
 }
 
 func (n *Node) Cursor() string {
@@ -106,7 +106,7 @@ func (c *Cursor) After() *gob.Decoder {
 }
 
 func decodeBuffer(input *string) (*gob.Decoder, error) {
-	decoded, err := base64.RawURLEncoding.DecodeString(*input)
+	decoded, err := base64.StdEncoding.DecodeString(*input)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to decode buffer")
 	}

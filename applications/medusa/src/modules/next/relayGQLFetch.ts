@@ -1,17 +1,17 @@
 import gcm from '../utilities/gcm'
 
 const fetchToMethod = async (url, kind, data, headers): Promise<any> => {
-  if (kind === 'query') {
-    delete data.operationName
-    const params = Object.keys(data).map(function (key) {
-      return key + '=' + encodeURIComponent(JSON.stringify(data[key]))
-    }).join('&')
-
-    return await fetch(`${url as string}?${params}`, {
-      method: 'GET',
-      headers
-    })
-  }
+  // if (kind === 'query') {
+  //   delete data.operationName
+  //   const params = Object.keys(data).map(function (key) {
+  //     return key + '=' + encodeURIComponent(JSON.stringify(data[key]))
+  //   }).join('&')
+  //
+  //   return await fetch(`${url as string}?${params}`, {
+  //     method: 'GET',
+  //     headers
+  //   })
+  // }
 
   return await fetch(url, {
     method: 'POST',
