@@ -26,7 +26,21 @@ export default function HeaderClubSupporter (props: Props): JSX.Element {
   return (
     <Box overflow='hidden' h='100%' position='relative' w='100%'>
       <Flex top={0} bottom={0} left={0} right={0} position='absolute'>
-        <StaticImageCover url='https://static.dollycdn.net/creators/banners/large.jpg' />
+        <StaticImageCover
+          variants={(
+            <>
+              <source
+                media='(min-width: 760px)'
+                srcSet='https://static.dollycdn.net/supporters/banners/1/large.jpg'
+              />
+              <source
+                media='(min-width: 330px)'
+                srcSet='https://static.dollycdn.net/supporters/banners/1/medium.jpg'
+              />
+            </>
+          )}
+          url='https://static.dollycdn.net/supporters/banners/1/small.jpg'
+        />
       </Flex>
       <Center bg='dimmers.700' minH={300} py={24} position='relative' w='100%'>
         <Stack spacing={8}>

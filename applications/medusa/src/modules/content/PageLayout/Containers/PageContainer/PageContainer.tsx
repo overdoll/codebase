@@ -3,13 +3,17 @@ import { ReactNode } from 'react'
 
 interface Props extends CenterProps {
   children: ReactNode
+  pattern?: ReactNode
 }
 
-export default function PageContainer ({
-  children,
-  bg,
-  ...rest
-}: Props): JSX.Element {
+export default function PageContainer (props: Props): JSX.Element {
+  const {
+    children,
+    bg,
+    pattern,
+    ...rest
+  } = props
+
   return (
     <Center
       pb={{
@@ -19,6 +23,7 @@ export default function PageContainer ({
       bg={bg}
       {...rest}
     >
+      {pattern}
       <Box
         w='100%'
         h='100%'

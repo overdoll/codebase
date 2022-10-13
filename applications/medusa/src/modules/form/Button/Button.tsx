@@ -34,7 +34,7 @@ const Button = forwardRef<Props, any>(({
   const isHydrated = useHydrate()
 
   // for type=submit (forms), we show a loading state
-  const fullDisable = isDisabled
+  const fullDisable = !isHydrated ?? isDisabled
   const fullLoading = type === 'submit' ? (!isHydrated || (isLoading ?? isPending)) : (isLoading ?? isPending)
 
   return (

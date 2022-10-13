@@ -35,7 +35,7 @@ export default function ClubFooterShareRedditButton ({ query }: Props): JSX.Elem
 
   return (
     <SmallGenericButton
-      colorScheme='red'
+      colorScheme='gray'
       onClick={onOpen}
       icon={SocialReddit}
     >

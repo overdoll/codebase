@@ -5,7 +5,7 @@ import HorizontalNavigationButton
 import { QuickAccessButtonsQuery } from '@//:artifacts/QuickAccessButtonsQuery.graphql'
 import { Trans } from '@lingui/macro'
 import { useLazyLoadQuery } from 'react-relay/hooks'
-import { FeedMenu } from '@//:assets/icons'
+import { FeedMenu, HeartFull } from '@//:assets/icons'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import React from 'react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
@@ -13,7 +13,6 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 const Query = graphql`
   query QuickAccessButtonsQuery {
     viewer {
-      username
       ...AccountIconFragment
       clubs(first: 1) @connection(key: "CreateClubListener_clubs") {
         edges {
@@ -24,6 +23,7 @@ const Query = graphql`
           }
         }
       }
+      hasClubSupporterSubscription
     }
   }
 `
@@ -55,6 +55,16 @@ export default function QuickAccessButtons (): JSX.Element {
           </Flex>
         </HorizontalNavigationButton>
       </Box>
+    )
+  }
+
+  if (data.viewer.hasClubSupporterSubscription) {
+    return (
+      <HorizontalNavigationButton
+        icon={HeartFull}
+        href='/likes'
+        label={<Trans>Likes</Trans>}
+      />
     )
   }
 

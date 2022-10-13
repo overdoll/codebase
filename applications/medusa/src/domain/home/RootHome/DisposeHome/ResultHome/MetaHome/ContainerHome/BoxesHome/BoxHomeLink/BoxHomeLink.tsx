@@ -6,6 +6,8 @@ import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 import {
   ImageMediaProps
 } from '@//:modules/content/HookedComponents/Media/components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
+import { Icon } from '@//:modules/content/PageLayout'
+import { IconType } from '@//:types/components'
 
 interface Props extends Pick<ImageMediaProps, 'url' | 'variants'> {
   href: string | UrlObject
@@ -13,6 +15,7 @@ interface Props extends Pick<ImageMediaProps, 'url' | 'variants'> {
   footer: ReactNode
   colorScheme?: string
   smaller?: boolean
+  icon: IconType
 }
 
 export default function BoxHomeLink (props: Props): JSX.Element {
@@ -23,12 +26,13 @@ export default function BoxHomeLink (props: Props): JSX.Element {
     colorScheme = 'primary',
     url,
     variants,
-    smaller = false
+    smaller = false,
+    icon
   } = props
 
-  const [shadow] = useToken(
+  const [shadow, light] = useToken(
     'colors',
-    [`${colorScheme}.600`]
+    [`${colorScheme}.600`, `${colorScheme}.400`]
   )
 
   return (
@@ -40,7 +44,7 @@ export default function BoxHomeLink (props: Props): JSX.Element {
         overflow='hidden'
         position='relative'
         borderWidth={4}
-        borderColor={`${colorScheme}.500`}
+        borderColor={`${colorScheme}.400`}
       >
         <Flex
           bg='#fff'
@@ -62,7 +66,7 @@ export default function BoxHomeLink (props: Props): JSX.Element {
           position='absolute'
         />
         <Box
-          bgGradient={`linear(to-b, transparent, transparent,  transparent, transparent, transparent, ${colorScheme}.500, ${colorScheme}.500)`}
+          bgGradient={`linear(to-b, transparent, transparent,  transparent, transparent, transparent, ${colorScheme}.400, ${colorScheme}.400)`}
           top={0}
           bottom={0}
           left={0}
@@ -70,6 +74,7 @@ export default function BoxHomeLink (props: Props): JSX.Element {
           position='absolute'
         />
         <Flex w='100%' pt='100%' position='relative'>
+
           <Box
             transform='rotate(-3deg) scale(1.8)'
             pt={8}
@@ -85,11 +90,12 @@ export default function BoxHomeLink (props: Props): JSX.Element {
             pt={8}
             pl={24}
             w='100%'
-            bg={`${colorScheme}.500`}
+            bg={`${colorScheme}.400`}
             position='absolute'
             top={0}
             h={79}
           />
+
           <Heading
             fontWeight='extrabold'
             textShadow={`5px 5px ${shadow as string}`}
@@ -108,11 +114,31 @@ export default function BoxHomeLink (props: Props): JSX.Element {
             pl={4}
             position='absolute'
             bottom={0}
-            fontSize='2xl'
+            fontSize={{
+              base: 'xl',
+              md: '2xl'
+            }}
             color='gray.00'
           >
             {footer}
           </Heading>
+          <Flex
+            w='100%'
+            top={0}
+            bottom={0}
+            align='center'
+            justify='center'
+            position='absolute'
+
+          >
+            <Icon
+              filter={`drop-shadow(${`5px 5px ${light as string}`})`}
+              icon={icon}
+              w={20}
+              h={20}
+              fill='white'
+            />
+          </Flex>
         </Flex>
       </Flex>
     </LinkTile>

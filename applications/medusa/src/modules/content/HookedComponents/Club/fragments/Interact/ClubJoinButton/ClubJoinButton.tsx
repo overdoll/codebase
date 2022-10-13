@@ -8,8 +8,9 @@ import { PlusCircle } from '@//:assets/icons'
 import { t } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
+import { ButtonProps } from '@chakra-ui/react'
 
-interface Props {
+interface Props extends ButtonProps {
   clubQuery: ClubJoinButtonFragment$key
   viewerQuery: ClubJoinButtonViewerFragment$key | null
 }
@@ -31,7 +32,8 @@ const ViewerFragment = graphql`
 export default function ClubJoinButton (props: Props): JSX.Element {
   const {
     clubQuery,
-    viewerQuery
+    viewerQuery,
+    ...rest
   } = props
 
   const clubData = useFragment(ClubFragment, clubQuery)
@@ -60,6 +62,7 @@ export default function ClubJoinButton (props: Props): JSX.Element {
               isDisabled={isJoiningClub || !canJoinClub || allowed === false}
               onClick={joinClub}
               icon={PlusCircle}
+              {...rest}
             >
               {i18n._(t`Join`)}
             </MediumGenericButton>

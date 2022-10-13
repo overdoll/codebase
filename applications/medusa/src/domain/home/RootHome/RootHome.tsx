@@ -4,6 +4,7 @@ import ResultHomeQuery from '@//:artifacts/ResultHomeQuery.graphql'
 import { PageProps } from '@//:types/app'
 import { PageContainer } from '@//:modules/content/PageLayout'
 import DisposeHome from './DisposeHome/DisposeHome'
+import PatternHome from './DisposeHome/ResultHome/MetaHome/ContainerHome/PatternHome/PatternHome'
 
 interface Props {
   queryRefs: {
@@ -20,7 +21,9 @@ const RootHome: PageProps<Props> = (props: Props): JSX.Element => {
   )
 
   return (
-    <PageContainer>
+    <PageContainer
+      pattern={<PatternHome />}
+    >
       <DisposeHome params={params} />
     </PageContainer>
   )

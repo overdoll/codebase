@@ -16,7 +16,21 @@ export default function FeaturesClubSupporter (): JSX.Element {
       <Box>
         <Box position='relative' mt={1}>
           <Flex top={0} bottom={0} left={0} right={0} position='absolute'>
-            <StaticImageCover url='https://static.dollycdn.net/creators/banners/large.jpg' />
+            <StaticImageCover
+              variants={(
+                <>
+                  <source
+                    media='(min-width: 760px)'
+                    srcSet='https://static.dollycdn.net/supporters/banners/2/large.jpg'
+                  />
+                  <source
+                    media='(min-width: 330px)'
+                    srcSet='https://static.dollycdn.net/supporters/banners/2/medium.jpg'
+                  />
+                </>
+              )}
+              url='https://static.dollycdn.net/supporters/banners/2/small.jpg'
+            />
           </Flex>
           <Box bg='orange.400' opacity={0.3} top={0} bottom={0} left={0} right={0} position='absolute' />
           <Box
@@ -73,7 +87,21 @@ export default function FeaturesClubSupporter (): JSX.Element {
         </Box>
         <Box mt={1} position='relative'>
           <Flex top={0} bottom={0} left={0} right={0} position='absolute'>
-            <StaticImageCover url='https://static.dollycdn.net/creators/banners/large.jpg' />
+            <StaticImageCover
+              variants={(
+                <>
+                  <source
+                    media='(min-width: 760px)'
+                    srcSet='https://static.dollycdn.net/supporters/banners/3/large.jpg'
+                  />
+                  <source
+                    media='(min-width: 330px)'
+                    srcSet='https://static.dollycdn.net/supporters/banners/3/medium.jpg'
+                  />
+                </>
+              )}
+              url='https://static.dollycdn.net/supporters/banners/3/small.jpg'
+            />
           </Flex>
           <Box bg='primary.400' opacity={0.3} top={0} bottom={0} left={0} right={0} position='absolute' />
           <Box
@@ -124,7 +152,21 @@ export default function FeaturesClubSupporter (): JSX.Element {
         </Box>
         <Box mt={1} position='relative'>
           <Flex top={0} bottom={0} left={0} right={0} position='absolute'>
-            <StaticImageCover url='https://static.dollycdn.net/creators/banners/large.jpg' />
+            <StaticImageCover
+              variants={(
+                <>
+                  <source
+                    media='(min-width: 760px)'
+                    srcSet='https://static.dollycdn.net/supporters/banners/1/large.jpg'
+                  />
+                  <source
+                    media='(min-width: 330px)'
+                    srcSet='https://static.dollycdn.net/supporters/banners/1/medium.jpg'
+                  />
+                </>
+              )}
+              url='https://static.dollycdn.net/supporters/banners/1/small.jpg'
+            />
           </Flex>
           <Stack bg='dimmers.700' p={12} position='relative'>
             <Button size='xl' colorScheme='orange' onClick={() => window.scrollTo(0, 0)}>

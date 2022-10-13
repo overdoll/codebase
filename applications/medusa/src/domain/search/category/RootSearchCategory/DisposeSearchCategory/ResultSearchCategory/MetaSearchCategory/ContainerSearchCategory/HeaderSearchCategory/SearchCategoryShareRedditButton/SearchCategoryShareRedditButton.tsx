@@ -26,7 +26,7 @@ export default function SearchCategoryShareRedditButton ({ query }: Props): JSX.
 
   const onOpen = useRedditShare({
     url: {
-      pathname: '/search/category/[slug]',
+      pathname: '/search/category/[categorySlug]',
       query: {
         slug: data.slug
       }

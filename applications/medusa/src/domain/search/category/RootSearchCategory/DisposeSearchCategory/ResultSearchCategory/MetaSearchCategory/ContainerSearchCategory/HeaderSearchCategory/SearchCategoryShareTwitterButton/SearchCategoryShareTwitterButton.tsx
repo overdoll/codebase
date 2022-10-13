@@ -32,7 +32,7 @@ export default function SearchCategoryShareTwitterButton ({ query }: Props): JSX
 
   const onOpen = useTwitterShare({
     url: {
-      pathname: '/search/category/[slug]',
+      pathname: '/search/category/[categorySlug]',
       query: {
         slug: data.slug
       }

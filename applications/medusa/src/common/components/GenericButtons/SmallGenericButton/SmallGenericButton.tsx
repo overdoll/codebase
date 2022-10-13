@@ -54,7 +54,7 @@ export default function SmallGenericButton ({
     children: children,
     borderRadius: 'base',
     colorScheme,
-    color: colorScheme != null ? 'gray.00' : undefined
+    color: colorScheme != null ? (colorScheme === 'gray' ? 'gray.100' : 'gray.00') : undefined
   }
 
   if (href != null) {

@@ -2,7 +2,9 @@ import { SupportPublicClubFragment$key } from '@//:artifacts/SupportPublicClubFr
 import { SupportPublicClubViewerFragment$key } from '@//:artifacts/SupportPublicClubViewerFragment.graphql'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
-import ClubSupportBanner from './ClubSupportBanner/ClubSupportBanner'
+import ClubSupportSelectMethod from './ClubSupportSelectMethod/ClubSupportSelectMethod'
+import ClubSupportTransactionProcess from './ClubSupportTransactionProcess/ClubSupportTransactionProcess'
+import ClubSupportPrompt from './ClubSupportPrompt/ClubSupportPrompt'
 
 interface Props {
   clubQuery: SupportPublicClubFragment$key
@@ -11,13 +13,17 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment SupportPublicClubFragment on Club {
-    ...ClubSupportBannerFragment
+    canSupport
+    viewerIsOwner
+    ...ClubSupportSelectMethodFragment
+    ...ClubSupportPromptFragment
   }
 `
 
 const ViewerFragment = graphql`
   fragment SupportPublicClubViewerFragment on Account {
-    ...ClubSupportBannerViewerFragment
+    ...ClubSupportSelectMethodViewerFragment
+    ...ClubSupportPromptViewerFragment
   }
 `
 
@@ -31,6 +37,12 @@ export default function SupportPublicClub (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <ClubSupportBanner clubQuery={clubData} viewerQuery={viewerData} />
+    <>
+      <ClubSupportPrompt clubQuery={clubData} viewerQuery={viewerData} />
+      <ClubSupportTransactionProcess />
+      {(viewerData != null && (clubData.canSupport && !clubData.viewerIsOwner)) && (
+        <ClubSupportSelectMethod clubQuery={clubData} viewerQuery={viewerData} />
+      )}
+    </>
   )
 }

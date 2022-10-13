@@ -42,7 +42,7 @@ export default function ClubFooterShareDiscordButton ({ query }: Props): JSX.Ele
 
   return (
     <SmallGenericButton
-      colorScheme='facebook'
+      colorScheme='gray'
       onClick={onCopy}
       icon={SocialDiscord}
     >

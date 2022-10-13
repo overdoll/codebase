@@ -28,9 +28,9 @@ export default function CategoryLinkTile (props: Props): JSX.Element {
     <LinkTile
       {...rest}
       href={{
-        pathname: '/search/category/[slug]',
+        pathname: '/search/category/[categorySlug]',
         query: {
-          slug: data.slug
+          categorySlug: data.slug
         }
       }}
       overflow='visible'

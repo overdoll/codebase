@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0bb6b69900e4b04cefcb08d3e951eb55>>
+ * @generated SignedSource<<fa8da3d023606449e78448b735c2e438>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SupportPublicClubFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"ClubSupportBannerFragment">;
+  readonly canSupport: boolean;
+  readonly viewerIsOwner: boolean;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubSupportPromptFragment" | "ClubSupportSelectMethodFragment">;
   readonly " $fragmentType": "SupportPublicClubFragment";
 };
 export type SupportPublicClubFragment$key = {
@@ -26,15 +28,34 @@ const node: ReaderFragment = {
   "name": "SupportPublicClubFragment",
   "selections": [
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "canSupport",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "viewerIsOwner",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "ClubSupportBannerFragment"
+      "name": "ClubSupportSelectMethodFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubSupportPromptFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "061429aa10e7eb89963677dec1432f90";
+(node as any).hash = "99dfe0f0091722b9927fc275643c628c";
 
 export default node;

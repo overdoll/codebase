@@ -6,7 +6,7 @@ import { SupporterLockedFragment$key } from '@//:artifacts/SupporterLockedFragme
 import { SupporterLockedContentFragment$key } from '@//:artifacts/SupporterLockedContentFragment.graphql'
 import {
   SUPPORT_BUTTON_PROPS
-} from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
+} from '@//:domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/SupportPublicClub/ClubSupportPrompt/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
 import LinkButton from '../../../../../../ThemeComponents/LinkButton/LinkButton'
 import { Icon } from '../../../../../../PageLayout'
 import { ControlPlayButton, MagicBall } from '@//:assets/icons'
