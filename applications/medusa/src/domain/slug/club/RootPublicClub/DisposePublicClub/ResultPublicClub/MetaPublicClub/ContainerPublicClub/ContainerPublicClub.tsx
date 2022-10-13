@@ -5,10 +5,10 @@ import { ContainerPublicClubViewerFragment$key } from '@//:artifacts/ContainerPu
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import BannerPublicClub from './BannerPublicClub/BannerPublicClub'
 import HeaderPublicClub from './HeaderPublicClub/HeaderPublicClub'
-import ButtonsPublicClub from './ButtonsPublicClub/ButtonsPublicClub'
 import { Stack } from '@chakra-ui/react'
 import PrepareClubPosts from './PrepareClubPosts/PrepareClubPosts'
 import dynamic from 'next/dynamic'
+import SupportPublicClub from './SupportPublicClub/SupportPublicClub'
 
 const LazyModal = dynamic(
   async () => {
@@ -31,11 +31,11 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment ContainerPublicClubFragment on Club {
-    id
+    name
     ...BannerPublicClubFragment
     ...HeaderPublicClubFragment
-    ...ButtonsPublicClubFragment
     ...PrepareClubPostsFragment
+    ...SupportPublicClubFragment
   }
 `
 
@@ -43,6 +43,7 @@ const ViewerFragment = graphql`
   fragment ContainerPublicClubViewerFragment on Account {
     ...BannerPublicClubViewerFragment
     ...HeaderPublicClubViewerFragment
+    ...SupportPublicClubViewerFragment
   }
 `
 
@@ -67,12 +68,10 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
         <BannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </BannerContainer>
       <ContentContainer>
-        <Stack spacing={4}>
+        <Stack spacing={6}>
           <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
-          <Stack spacing={2}>
-            <ButtonsPublicClub clubQuery={clubData} />
-            <PrepareClubPosts clubQuery={clubData} />
-          </Stack>
+          <SupportPublicClub clubQuery={clubData} viewerQuery={viewerData} />
+          <PrepareClubPosts clubQuery={clubData} />
         </Stack>
       </ContentContainer>
     </>

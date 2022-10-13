@@ -12,7 +12,7 @@ export default function PageContainer ({
 }: Props): JSX.Element {
   return (
     <Center
-      mb={{
+      pb={{
         base: 16,
         md: 6
       }}

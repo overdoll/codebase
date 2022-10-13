@@ -6,6 +6,10 @@ import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/compone
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
 import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
 import LazyClubPosts from './LazyClubPosts/LazyClubPosts'
+import { Stack } from '@chakra-ui/react'
+import { FreshLeaf } from '@//:assets/icons'
+import { Trans } from '@lingui/macro'
+import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 
 interface Props {
   clubQuery: PrepareClubPostsFragment$key
@@ -17,7 +21,7 @@ export interface PreparePrepareClubPostsLazyProps {
 
 const Fragment = graphql`
   fragment PrepareClubPostsFragment on Club {
-    id
+    name
     slug
   }
 `
@@ -39,11 +43,25 @@ export default function PrepareClubPosts (props: Props): JSX.Element {
     }
   })
 
-  return useMemo(() => (
+  const memo = useMemo(() => (
     <LazyPostsErrorBoundary loadQuery={loadQuery}>
       <SuspenseLazyPosts>
         <LazyClubPosts lazyArguments={lazyArguments} />
       </SuspenseLazyPosts>
     </LazyPostsErrorBoundary>
   ), [data.slug])
+
+  return (
+    <Stack spacing={4}>
+      <PageHeader
+        icon={FreshLeaf}
+        title={(
+          <Trans>
+            New from {data.name}
+          </Trans>
+        )}
+      />
+      {memo}
+    </Stack>
+  )
 }

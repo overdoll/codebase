@@ -67,7 +67,7 @@ export default function ScrollClubPosts (props: Props): JSX.Element {
       <Flex w='100%' justify='center'>
         <LinkButton
           size='lg'
-          colorScheme='primary'
+          colorScheme='gray'
           href={{
             pathname: '/[slug]/posts',
             query: {

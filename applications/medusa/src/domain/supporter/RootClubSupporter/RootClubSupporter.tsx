@@ -22,7 +22,7 @@ const RootClubSupporter: PageProps<Props> = (props: Props) => {
   )
 
   return (
-    <PageContainer>
+    <PageContainer bg='#000'>
       <DisposeClubSupporter params={params} />
     </PageContainer>
   )

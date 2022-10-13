@@ -60,11 +60,10 @@ export default function ClubSupportTile (props: Props): JSX.Element {
 
   return (
     <WrapItem cursor='pointer' onClick={onSupport}>
-      <Box h={230} w={170} pointerEvents='none' position='relative'>
+      <Box h={210} w={170} pointerEvents='none' position='relative'>
         <Box
-          opacity={0.3}
           borderRadius='lg'
-          bg='gray.800'
+          bg='dimmers.500'
           top={0}
           bottom={0}
           left={0}
@@ -72,8 +71,9 @@ export default function ClubSupportTile (props: Props): JSX.Element {
           position='absolute'
         />
         <Grid
-          px={2}
-          py={4}
+          px={4}
+          py={2}
+          w='100%'
           h='100%'
           gap={4}
           position='relative'
@@ -85,15 +85,14 @@ export default function ClubSupportTile (props: Props): JSX.Element {
                 {clubData.name}
               </Heading>
             </Flex>
-
           </GridItem>
           <GridItem>
             <Center w='100%'>
               <ClubIcon size='xl' clubQuery={clubData} />
             </Center>
           </GridItem>
-          <GridItem>
-            <Button w='100%' colorScheme='orange' size='md' borderRadius='lg'>
+          <GridItem overflow='hidden'>
+            <Button w='100%' colorScheme='white' size='md' borderRadius='lg'>
               <Trans>
                 Support Now
               </Trans>

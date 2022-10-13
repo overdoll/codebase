@@ -6,8 +6,9 @@ import type {
 } from '@//:artifacts/ScrollPublicClubPostsAccountFragment.graphql'
 import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 import { Stack } from '@chakra-ui/react'
-import PostsFilters from '@//:modules/content/HookedComponents/Filters/fragments/PostsFilters/PostsFilters'
 import { useFragment } from 'react-relay/hooks'
+import PostsSupporterFilters
+  from '@//:modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters'
 
 interface Props {
   clubQuery: ScrollPublicClubPostsFragment$key
@@ -44,7 +45,7 @@ const ClubFragment = graphql`
 
 const AccountFragment = graphql`
   fragment ScrollPublicClubPostsAccountFragment on Account {
-    ...PostsFiltersFragment
+    ...PostsSupporterFiltersFragment
   }
 `
 
@@ -69,7 +70,7 @@ export default function ScrollPublicClubPosts (props: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      <PostsFilters loadQuery={refetch} accountQuery={accountData} />
+      <PostsSupporterFilters loadQuery={refetch} query={accountData} />
       <VerticalPaginationScroller
         postConnectionQuery={data.posts}
         hasNext={hasNext}

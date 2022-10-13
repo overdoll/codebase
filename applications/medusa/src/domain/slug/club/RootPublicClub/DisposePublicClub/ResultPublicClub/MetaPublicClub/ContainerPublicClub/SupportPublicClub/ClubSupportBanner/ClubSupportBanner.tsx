@@ -1,12 +1,13 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ClubSupportBannerFragment$key } from '@//:artifacts/ClubSupportBannerFragment.graphql'
 import type { ClubSupportBannerViewerFragment$key } from '@//:artifacts/ClubSupportBannerViewerFragment.graphql'
-import ClubSupportConditionWrapper from '../../components/ClubWrappers/ClubSupportConditionWrapper/ClubSupportConditionWrapper'
+import ClubSupportConditionWrapper
+  from '../../HeaderPublicClub/components/ClubWrappers/ClubSupportConditionWrapper/ClubSupportConditionWrapper'
 import ClubSupporterSubscriptionPriceButton
-  from '../../components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
+  from '../../HeaderPublicClub/components/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton'
 import { ClubMembers } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
-import ClubIconBanner from '../../components/ClubIconBanner/ClubIconBanner'
+import ClubIconBanner from '../../HeaderPublicClub/components/ClubIconBanner/ClubIconBanner'
 import { forwardRef } from '@chakra-ui/react'
 
 interface Props {

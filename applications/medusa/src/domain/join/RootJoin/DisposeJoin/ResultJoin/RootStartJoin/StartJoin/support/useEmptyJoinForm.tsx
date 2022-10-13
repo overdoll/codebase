@@ -1,12 +1,10 @@
 import { graphql } from 'react-relay'
 import posthog from 'posthog-js'
-import { AuthenticationTokenMethod } from '@//:artifacts/RootStartJoinFragment.graphql'
 import { t } from '@lingui/macro'
 import { useMutation } from 'react-relay/hooks'
 import { useEmptyJoinFormMutation } from '@//:artifacts/useEmptyJoinFormMutation.graphql'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useCookies } from 'react-cookie'
-import { useEffect, useState } from 'react'
 
 interface Props {
   onSubmit?: () => void
@@ -41,30 +39,12 @@ export default function useEmptyJoinForm (props: Props): UseEmptyJoinFormReturn 
 
   const [cookies, setCookie] = useCookies<string>(['token'])
 
-  const [canFlag, setCanFlag] = useState(false)
-
   const onSubmit = (email): void => {
-    const getMethod = (): string => {
-      if (!canFlag) {
-        return 'MAGIC_LINK'
-      }
-
-      if (posthog?.getFeatureFlag('join-six-digit-code') === 'control') {
-        return 'MAGIC_LINK'
-      }
-
-      if (posthog?.getFeatureFlag('join-six-digit-code') === 'code') {
-        return 'CODE'
-      }
-
-      return 'MAGIC_LINK'
-    }
-
     commit({
       variables: {
         input: {
           email: email,
-          method: getMethod() as AuthenticationTokenMethod
+          method: 'CODE'
         }
       },
       updater: (store, payload) => {
@@ -113,12 +93,6 @@ export default function useEmptyJoinForm (props: Props): UseEmptyJoinFormReturn 
       }
     })
   }
-
-  useEffect(() => {
-    posthog.onFeatureFlags(() => {
-      setCanFlag(true)
-    })
-  }, [])
 
   return {
     onSubmit,

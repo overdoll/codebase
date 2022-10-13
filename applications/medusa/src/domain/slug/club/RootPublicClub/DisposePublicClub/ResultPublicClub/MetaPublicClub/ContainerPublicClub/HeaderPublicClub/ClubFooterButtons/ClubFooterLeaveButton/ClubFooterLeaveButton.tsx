@@ -3,7 +3,7 @@ import type { ClubFooterLeaveButtonFragment$key } from '@//:artifacts/ClubFooter
 import { t } from '@lingui/macro'
 import { SafetyExitDoorLeft } from '@//:assets/icons'
 import SmallGenericButton from '@//:common/components/GenericButtons/SmallGenericButton/SmallGenericButton'
-import ClubLeaveWrapper from '../../../components/ClubWrappers/ClubLeaveWrapper/ClubLeaveWrapper'
+import ClubLeaveWrapper from '../../components/ClubWrappers/ClubLeaveWrapper/ClubLeaveWrapper'
 import Can from '@//:modules/authorization/Can'
 import { useLingui } from '@lingui/react'
 

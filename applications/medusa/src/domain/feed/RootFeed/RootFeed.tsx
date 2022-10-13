@@ -5,6 +5,7 @@ import { PageProps } from '@//:types/app'
 import { PageContainer } from '@//:modules/content/PageLayout'
 import DisposeFeed from './DisposeFeed/DisposeFeed'
 import RootStructuredData from '@//:common/structured-data/RootStructuredData/RootStructuredData'
+import FeedRichObject from './FeedRichObject/FeedRichObject'
 
 interface Props {
   queryRefs: {
@@ -22,6 +23,7 @@ const RootFeed: PageProps<Props> = (props: Props): JSX.Element => {
 
   return (
     <PageContainer>
+      <FeedRichObject />
       <RootStructuredData />
       <DisposeFeed params={params} />
     </PageContainer>

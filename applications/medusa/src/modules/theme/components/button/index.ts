@@ -254,7 +254,10 @@ const variantLink: SystemStyleFunction = (props) => {
 }
 
 const variantPanel: SystemStyleFunction = (props) => {
-  const { colorScheme: c } = props
+  const {
+    colorScheme: c,
+    theme
+  } = props
 
   if (c === 'gray') {
     const bg = mode('gray.500', 'gray.800')(props)
@@ -271,7 +274,9 @@ const variantPanel: SystemStyleFunction = (props) => {
           bg
         }
       },
-      _active: { bg: mode('gray.300', 'gray.800')(props) }
+      _active: {
+        bg: mode('gray.300', 'gray.800')(props)
+      }
     }
   }
 
@@ -298,7 +303,8 @@ const variantPanel: SystemStyleFunction = (props) => {
         bg: background
       }
     },
-    _active: {
+    _focus: {
+      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(c === 'primary' ? `${c}.500` : `${c}.400`, 0.7)(theme)) as string}`,
       bg: background,
       color: mode(activeBg, `${c}.600`)(props)
     }

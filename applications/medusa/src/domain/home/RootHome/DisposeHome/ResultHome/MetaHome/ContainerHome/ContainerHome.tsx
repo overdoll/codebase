@@ -3,8 +3,8 @@ import { graphql } from 'react-relay'
 import { ContainerHomeViewerFragment$key } from '@//:artifacts/ContainerHomeViewerFragment.graphql'
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import BannerHome from './BannerHome/BannerHome'
-import TilesHome from './TilesHome/TilesHome'
 import SecretBox from './TilesHome/components/SecretBox/SecretBox'
+import BoxesHome from './BoxesHome/BoxesHome'
 
 interface Props {
   viewerQuery: ContainerHomeViewerFragment$key | null
@@ -13,6 +13,7 @@ interface Props {
 const ViewerFragment = graphql`
   fragment ContainerHomeViewerFragment on Account {
     ...BannerHomeViewerFragment
+    ...BoxesHomeFragment
   }
 `
 
@@ -29,7 +30,7 @@ export default function ContainerHome (props: Props): JSX.Element {
         <BannerHome viewerQuery={viewerData} />
       </BannerContainer>
       <ContentContainer>
-        <TilesHome />
+        <BoxesHome viewerQuery={viewerData} />
         <SecretBox />
       </ContentContainer>
     </>

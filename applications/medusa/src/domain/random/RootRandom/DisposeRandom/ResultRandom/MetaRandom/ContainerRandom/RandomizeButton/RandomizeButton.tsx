@@ -20,7 +20,7 @@ export default function RandomizeButton (): JSX.Element {
   }
 
   const BUTTON_PROPS = {
-    colorScheme: 'orange',
+    colorScheme: 'primary',
     variant: 'solid'
   }
 

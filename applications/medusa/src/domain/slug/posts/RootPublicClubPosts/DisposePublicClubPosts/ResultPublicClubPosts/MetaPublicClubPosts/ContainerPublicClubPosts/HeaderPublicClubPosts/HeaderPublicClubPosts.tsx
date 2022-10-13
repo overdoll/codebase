@@ -6,7 +6,7 @@ import type { HeaderPublicClubPostsFragment$key } from '@//:artifacts/HeaderPubl
 import ClubCharacterRecommendations
   from '../../../../../../../character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/ClubCharacterRecommendations/ClubCharacterRecommendations'
 import ClubFooterCopyLinkButton
-  from '../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/SupportLinksPublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton'
+  from '../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/ClubFooterButtons/ClubFooterCopyLinkButton/ClubFooterCopyLinkButton'
 import ClubFooterShareDiscordButton
   from '../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/HeaderPublicClub/JoinBannerPublicClub/ClubFooterShareDiscordButton/ClubFooterShareDiscordButton'
 import ClubFooterShareRedditButton

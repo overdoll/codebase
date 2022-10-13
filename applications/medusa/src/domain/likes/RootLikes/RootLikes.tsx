@@ -4,6 +4,7 @@ import ResultLikesQuery from '@//:artifacts/ResultLikesQuery.graphql'
 import { PageProps } from '@//:types/app'
 import { PageContainer } from '@//:modules/content/PageLayout'
 import DisposeLikes from './DisposeLikes/DisposeLikes'
+import LikesRichObject from './LikesRichObject/LikesRichObject'
 
 interface Props {
   queryRefs: {
@@ -21,6 +22,7 @@ const RootLikes: PageProps<Props> = (props: Props): JSX.Element => {
 
   return (
     <PageContainer>
+      <LikesRichObject />
       <DisposeLikes params={params} />
     </PageContainer>
   )

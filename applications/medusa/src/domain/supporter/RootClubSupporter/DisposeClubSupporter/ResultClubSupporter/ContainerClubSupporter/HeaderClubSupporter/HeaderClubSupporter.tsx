@@ -4,6 +4,7 @@ import { useFragment } from 'react-relay/hooks'
 import { Box, Center, Flex, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import ClubSupportLinks from './ClubSupportLinks/ClubSupportLinks'
+import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 
 interface Props {
   rootQuery: HeaderClubSupporterFragment$key
@@ -24,12 +25,23 @@ export default function HeaderClubSupporter (props: Props): JSX.Element {
 
   return (
     <Box overflow='hidden' h='100%' position='relative' w='100%'>
-      <Flex top={0} bottom={0} left={0} right={0} position='absolute' />
-      <Center bg='dimmers.200' minH={300} py={24} position='relative' w='100%'>
+      <Flex top={0} bottom={0} left={0} right={0} position='absolute'>
+        <StaticImageCover url='https://static.dollycdn.net/creators/banners/large.jpg' />
+      </Flex>
+      <Center bg='dimmers.700' minH={300} py={24} position='relative' w='100%'>
         <Stack spacing={8}>
-          <Heading textAlign='center' color='gray.00' fontSize='6xl'>
+          <Heading
+            textShadow='1px 1px 20px #000'
+            maxW={500}
+            textAlign='center'
+            color='gray.00'
+            fontSize={{
+              base: '5xl',
+              md: '7xl'
+            }}
+          >
             <Trans>
-              Become Supporter
+              BECOME A SUPPORTER
             </Trans>
           </Heading>
           <ClubSupportLinks rootQuery={rootData} />

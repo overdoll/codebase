@@ -21,8 +21,6 @@ export default function BannerHome (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <>
-      <AccountInformationBanner query={viewerData} />
-    </>
+    <AccountInformationBanner query={viewerData} />
   )
 }
