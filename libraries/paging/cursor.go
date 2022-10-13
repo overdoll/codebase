@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/gob"
-	"errors"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
+	"overdoll/libraries/errors"
 	"overdoll/libraries/errors/domainerror"
 	"sort"
 )
@@ -32,7 +32,7 @@ func NewNode(cursorValue interface{}) *Node {
 		panic(err)
 	}
 
-	return &Node{cursor: base64.StdEncoding.EncodeToString(buf.Bytes())}
+	return &Node{cursor: base64.RawURLEncoding.EncodeToString(buf.Bytes())}
 }
 
 func (n *Node) Cursor() string {
@@ -106,9 +106,9 @@ func (c *Cursor) After() *gob.Decoder {
 }
 
 func decodeBuffer(input *string) (*gob.Decoder, error) {
-	decoded, err := base64.StdEncoding.DecodeString(*input)
+	decoded, err := base64.RawURLEncoding.DecodeString(*input)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decode buffer")
 	}
 	return gob.NewDecoder(bytes.NewBuffer(decoded)), nil
 }

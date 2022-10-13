@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"overdoll/applications/sting/internal/adapters"
 	"overdoll/applications/sting/internal/app/workflows"
@@ -203,7 +202,7 @@ func TestCreateSeries_update_and_search(t *testing.T) {
 func TestCreateCharacter_update_series_and_search_character(t *testing.T) {
 
 	seriesId := "1pcKiQL7dgUW8CIN7uO1wqFaMql"
-	relaySeriesId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, seriesId))))
+	relaySeriesId := relay.ID(relay.MarshalRelayId(relay.NewID(types.Series{}, seriesId)))
 
 	accountId := uuid.New().String()
 	mockAccountStaff(t, accountId)

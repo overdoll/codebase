@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"overdoll/applications/hades/internal/app/workflows"
@@ -55,7 +54,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	ccbillNewSaleSuccessSeeder(t, accountId, ccbillSubscriptionId, ccbillTransactionId, uuid.New().String(), nil)
 
 	// since we know internally how these IDs are created, we create the ID here without having to grab it through an API call
-	savedPaymentMethodId := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId))))
+	savedPaymentMethodId := relay.ID(relay.MarshalRelayId(relay.NewID(types.AccountSavedPaymentMethod{}, accountId, ccbillSubscriptionId)))
 
 	mockAccountStaff(t, accountId)
 	mockAccountDigest(t, accountId, "")
@@ -114,7 +113,7 @@ func TestAccountClubSupporterSubscriptionActions(t *testing.T) {
 	err = gqlClient.Mutate(context.Background(), &cancel, map[string]interface{}{
 		"input": types.CancelAccountClubSupporterSubscriptionInput{
 			ClubSupporterSubscriptionID: accountClubSupporterSubscriptionId,
-			CancellationReasonID:        relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.CancellationReason{}, "1q7MJ5IyRTV0X4J27F3m5wGD5mj")))),
+			CancellationReasonID:        relay.ID(relay.MarshalRelayId(relay.NewID(types.CancellationReason{}, "1q7MJ5IyRTV0X4J27F3m5wGD5mj"))),
 		},
 	})
 

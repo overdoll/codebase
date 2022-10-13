@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"log"
 	"os"
@@ -606,15 +605,15 @@ func refreshPostESIndex(t *testing.T) {
 }
 
 func convertClubIdToRelayId(clubId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Club{}, clubId)))
 }
 
 func convertAccountIdToRelayId(accountId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Account{}, accountId)))
 }
 
 func convertPostIdToRelayId(postId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Post{}, postId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Post{}, postId)))
 }
 
 func getGrpcClient(t *testing.T) sting.StingClient {

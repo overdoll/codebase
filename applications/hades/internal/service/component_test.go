@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
@@ -42,15 +41,15 @@ func getGraphqlClientWithAuthenticatedAccount(t *testing.T, accountId string) *g
 }
 
 func convertAccountIdToRelayId(accountId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Account{}, accountId)))
 }
 
 func convertClubIdIdToRelayId(clubId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, clubId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Club{}, clubId)))
 }
 
 func convertClubMemberIdIdToRelayId(clubId, accountId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ClubMember{}, clubId, accountId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.ClubMember{}, clubId, accountId)))
 }
 
 func refreshSubscriptionsIndex(t *testing.T) {

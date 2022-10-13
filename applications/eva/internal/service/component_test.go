@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"go.temporal.io/sdk/testsuite"
 	"log"
@@ -207,7 +206,7 @@ func seedMfaAccount(t *testing.T) *account.Account {
 }
 
 func convertAccountIdToRelayId(accountId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Account{}, accountId)))
 }
 
 func getAuthTokenAndSecretFromEmail(t *testing.T, email string) (string, string) {

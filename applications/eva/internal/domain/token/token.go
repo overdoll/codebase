@@ -209,7 +209,7 @@ func (c *AuthenticationToken) Verified() bool {
 }
 
 // MakeVerified the original secret is required to verify the token
-func (c *AuthenticationToken) MakeVerified(secret string) error {
+func (c *AuthenticationToken) MakeVerified(pass *passport.Passport, secret string) error {
 
 	secret = strings.ToLower(secret)
 
@@ -219,6 +219,11 @@ func (c *AuthenticationToken) MakeVerified(secret string) error {
 
 	if strings.ToLower(c.secret) != strings.ToLower(secret) {
 		return ErrInvalidSecret
+	}
+
+	// if authenticating by code, can only verify using the same device
+	if c.method == Code && !c.SameDevice(pass) {
+		return ErrInvalidDevice
 	}
 
 	c.verified = true

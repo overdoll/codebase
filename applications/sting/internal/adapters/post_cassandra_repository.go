@@ -449,10 +449,6 @@ func (r PostsCassandraElasticsearchRepository) GetPostByIdOperator(ctx context.C
 	return r.unmarshalPost(ctx, *postPending)
 }
 
-func (r PostsCassandraElasticsearchRepository) addClubWeightsToESQuery(ctx context.Context, query *elastic.BoolQuery) error {
-	return addClubWeightsToESQuery(r.session, ctx, "club_id", query)
-}
-
 func addClubWeightsToESQuery(session gocqlx.Session, ctx context.Context, key string, query *elastic.BoolQuery) error {
 
 	var clubWeighted []*clubWeights
@@ -497,6 +493,116 @@ func addClubWeightsToESQuery(session gocqlx.Session, ctx context.Context, key st
 	}
 
 	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getRandomPostWeighted(ctx context.Context, requester *principal.Principal, limit int, posts []*post.Post) ([]*post.Post, error) {
+
+	if requester != nil && len(requester.ClubExtension().SupportedClubIds()) > 0 {
+		return posts, nil
+	}
+
+	if len(posts) == 0 {
+		return posts, nil
+	}
+
+	// if we have the max amount of posts
+	if limit == len(posts) && limit > 3 {
+		// keep 2nd last post and we re-insert it later
+		firstPost := posts[len(posts)-2]
+		secondPost := posts[len(posts)-3]
+		ThirdPost := posts[len(posts)-1]
+
+		// remove last 3 items from post
+		posts = posts[:len(posts)-3]
+
+		clubIds, err := r.getClubsWeighted(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		// if one of the posts already has the club id, exit
+		for _, clubId := range clubIds {
+			for _, pst := range posts {
+				if pst.ClubId() == clubId {
+					return posts, nil
+				}
+			}
+		}
+
+		builder := r.client.Search().
+			Index(PostReaderIndex)
+
+		query := elastic.NewBoolQuery()
+
+		var filterQueries []elastic.Query
+
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", clubIds...))
+		filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+		query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction()))
+		query.Filter(filterQueries...)
+
+		builder.Size(1)
+		builder.Query(query)
+
+		response, err := builder.Pretty(true).Do(ctx)
+
+		if err != nil {
+			return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts")
+		}
+
+		if len(response.Hits.Hits) == 0 {
+			posts = append(posts, firstPost)
+		}
+
+		for _, hit := range response.Hits.Hits {
+			createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+			if err != nil {
+				return nil, err
+			}
+			createdPost.Node = secondPost.Node
+			posts = append(posts, createdPost)
+		}
+
+		// add back 2nd last item into post array
+		posts = append(posts, secondPost)
+		posts = append(posts, ThirdPost)
+	}
+
+	return posts, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getClubsWeighted(ctx context.Context) ([]string, error) {
+
+	var clubIds []string
+
+	clubWeighted, err := getClubWeights(r.session, ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, club := range clubWeighted {
+		clubIds = append(clubIds, club.ClubId)
+	}
+
+	return clubIds, nil
+}
+
+func getClubWeights(session gocqlx.Session, ctx context.Context) ([]*clubWeights, error) {
+
+	var clubWeighted []*clubWeights
+
+	if err := qb.Select(clubWeightsTable.Name()).
+		Where(qb.Eq("bucket")).
+		Query(session).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.One).
+		BindStruct(&clubWeights{Bucket: 0}).
+		SelectRelease(&clubWeighted); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club weights")
+	}
+
+	return clubWeighted, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) getTerminatedClubIds(ctx context.Context) ([]string, error) {

@@ -554,7 +554,7 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.True(t, post.Post.Content[1].IsSupporterOnly, "cant view first content because its supporter only")
 	require.NotEmpty(t, post.Post.Content[1].SupporterOnlyVideoMediaHasAudio, "can view supporter only resource")
 
-	sDec, _ := base64.StdEncoding.DecodeString(post.Post.Content[1].Media.ImageMedia.Id.GetID())
+	sDec, _ := base64.URLEncoding.DecodeString(post.Post.Content[1].Media.ImageMedia.Id.GetID())
 	resourceId := relay.ID(sDec).GetID()
 
 	require.NotEmpty(t, resourceId, "should not be empty")

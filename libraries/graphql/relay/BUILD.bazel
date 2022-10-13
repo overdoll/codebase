@@ -9,4 +9,5 @@ go_library(
     ],
     importpath = "overdoll/libraries/graphql/relay",
     visibility = ["//visibility:public"],
+    deps = ["//libraries/errors"],
 )
