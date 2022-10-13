@@ -12,7 +12,7 @@ func (r *QueryResolver) Node(ctx context.Context, id relay.ID) (relay.Node, erro
 	case "Post":
 		return &types.Post{ID: id}, nil
 	case "Account":
-		return &types.Post{ID: id}, nil
+		return &types.Account{ID: id}, nil
 	case "Series":
 		return &types.Series{ID: id}, nil
 	case "Topic":
