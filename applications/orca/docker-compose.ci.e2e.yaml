@@ -3,7 +3,7 @@ services:
   orca:
     image: $CONTAINER_REGISTRY/orca/dev:$BUILDKITE_COMMIT
     entrypoint: ""
-    command: /bin/sh -c "/app/applications/orca/internal"
+    command: /bin/sh -c "/app/applications/orca/image_binary"
     env_file: ../../applications/orca/.env.ci
     ports:
       - 6760:8000
