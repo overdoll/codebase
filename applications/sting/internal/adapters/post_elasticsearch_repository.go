@@ -65,7 +65,7 @@ func (r PostsCassandraElasticsearchRepository) IndexPost(ctx context.Context, po
 	return nil
 }
 
-func (r *PostsCassandraElasticsearchRepository) unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Post, error) {
+func unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []interface{}) (*post.Post, error) {
 
 	var pst postDocument
 
@@ -245,7 +245,7 @@ func (r PostsCassandraElasticsearchRepository) ScanPosts(ctx context.Context, cl
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return err
@@ -502,7 +502,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 
 	for _, hit := range response.Docs {
 
-		result, err := r.unmarshalPostDocument(ctx, hit.Source, nil)
+		result, err := unmarshalPostDocument(ctx, hit.Source, nil)
 
 		if err != nil {
 			return nil, err
@@ -604,7 +604,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -666,7 +666,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 	if len(response.Hits.Hits) != 0 {
 		for _, hit := range response.Hits.Hits {
 
-			createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+			createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 			if err != nil {
 				return nil, err
@@ -757,7 +757,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -900,7 +900,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -1054,7 +1054,7 @@ func (r PostsCassandraElasticsearchRepository) GetFirstTopPostWithoutOccupiedMed
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err

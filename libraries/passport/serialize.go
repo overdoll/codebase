@@ -41,12 +41,7 @@ func unserializeFromString(raw string) (*Passport, error) {
 	sDec, err := base64.RawURLEncoding.DecodeString(raw)
 
 	if err != nil {
-		// TODO: for backwards compatibility
-		sDec, err := base64.StdEncoding.DecodeString(raw)
-		if err != nil {
-			return nil, err
-		}
-		return unmarshalPassport(sDec)
+		return nil, err
 	}
 
 	return unmarshalPassport(sDec)

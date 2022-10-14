@@ -216,6 +216,21 @@ func (r PostsCassandraElasticsearchRepository) ScanCharacters(ctx context.Contex
 	return nil
 }
 
+func (r PostsCassandraElasticsearchRepository) deleteIndexCharacter(ctx context.Context, category *post.Character) error {
+
+	_, err := r.client.
+		Delete().
+		Index(characterWriterIndex).
+		Id(category.ID()).
+		Do(ctx)
+
+	if err != nil {
+		return errors.Wrap(support.ParseElasticError(err), "failed to delete character index")
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetCharactersByIds(ctx context.Context, characterIds []string) ([]*post.Character, error) {
 
 	var characters []*post.Character
