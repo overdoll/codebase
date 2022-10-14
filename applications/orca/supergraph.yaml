@@ -1,3 +1,4 @@
+federation_version: 2
 subgraphs:
   eva:
     routing_url: http://eva:8000/api/graphql

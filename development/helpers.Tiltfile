@@ -90,10 +90,12 @@ def build_applications(applications, dependencies):
                 deps=bazel_sourcefile_deps(binary_target),
             )
 
+            cmd = "bazel run {image_target} -- --norun && "
+
             custom_build_with_restart(
                 ref=application["image_reference"],
                 command=(
-                        "bazel run {image_target} -- --norun && " +
+                        cmd +
                         "docker tag {bazel_image} $EXPECTED_REF"
                 ).format(image_target=image_target, bazel_image=bazel_image),
                 deps=[binary_target_local] + application["dependencies"],
@@ -106,10 +108,14 @@ def build_applications(applications, dependencies):
             k8s_resource(item, resource_deps=[item + "-compile"])
 
         elif (application["type"] == "node"):
+            cmd = "bazel run {image_target} -- --norun && "
+            if application["docker_sandbox"] == "true":
+               cmd = "bazel run --experimental_enable_docker_sandbox --experimental_docker_image=771779017151.dkr.ecr.us-east-1.amazonaws.com/ci@sha256:5403ce7233c8c6ab0057de063f35572ddf3e9eab313bfb72998aa1e9fd45bc63 --spawn_strategy=docker --strategy=Javac=docker --genrule_strategy=docker {image_target} -- --norun && "
+
             custom_build(
                 ref=application["image_reference"],
                 command=(
-                        "bazel run {image_target} -- --norun && " +
+                        cmd +
                         "docker tag {bazel_image} $EXPECTED_REF"
                 ).format(image_target=image_target, bazel_image=bazel_image),
                 deps=application["dependencies"],

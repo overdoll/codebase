@@ -199,6 +199,58 @@ func (r PostsCassandraElasticsearchRepository) GetCharacterIdsFromSlugs(ctx cont
 	return ids, nil
 }
 
+func (r PostsCassandraElasticsearchRepository) DeleteCharacter(ctx context.Context, character *post.Character) error {
+
+	var id string
+
+	if character.ClubId() != nil {
+		id = *character.ClubId()
+	}
+
+	if character.SeriesId() != nil {
+		id = *character.SeriesId()
+	}
+
+	pst, err := marshalCharacterToDatabase(character)
+
+	if err != nil {
+		return err
+	}
+
+	if err := r.deleteUniqueCharacterSlug(ctx, id, pst.Id, pst.Slug); err != nil {
+		return err
+	}
+
+	if err := r.session.
+		Query(characterTable.Delete()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(pst).
+		ExecRelease(); err != nil {
+		return errors.Wrap(err, "failed to delete character")
+	}
+
+	if err := r.deleteIndexCharacter(ctx, character); err != nil {
+		return err
+	}
+
+	if character.ClubId() != nil {
+		// delete character from club characters table
+		if err := r.session.
+			Query(clubCharactersTable.Delete()).
+			WithContext(ctx).
+			Idempotent(true).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(clubCharacters{CharacterId: pst.Id, ClubId: *pst.ClubId}).
+			ExecRelease(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (r PostsCassandraElasticsearchRepository) GetCharacterBySlug(ctx context.Context, slug string, seriesSlug, clubSlug *string) (*post.Character, error) {
 
 	var id string

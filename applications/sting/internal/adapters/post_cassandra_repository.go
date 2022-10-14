@@ -249,7 +249,7 @@ func (r PostsCassandraElasticsearchRepository) GetPostWithRandomSeed(ctx context
 
 	for _, hit := range response.Hits.Hits {
 
-		createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 
 		if err != nil {
 			return nil, err
@@ -529,6 +529,10 @@ func (r PostsCassandraElasticsearchRepository) getRandomPostWeighted(ctx context
 			}
 		}
 
+		if len(clubIds) == 0 {
+			return posts, nil
+		}
+
 		builder := r.client.Search().
 			Index(PostReaderIndex)
 
@@ -555,7 +559,7 @@ func (r PostsCassandraElasticsearchRepository) getRandomPostWeighted(ctx context
 		}
 
 		for _, hit := range response.Hits.Hits {
-			createdPost, err := r.unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+			createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
 			if err != nil {
 				return nil, err
 			}
@@ -811,8 +815,12 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostCategories(ctx context.
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostCategoriesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePost(ctx, id, updateFn, []string{"category_ids"})
-
 }
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostCharactersOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePost(ctx, id, updateFn, []string{"character_ids", "series_ids"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)

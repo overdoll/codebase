@@ -1,0 +1,48 @@
+enum ResourceProgressState {
+  """Resource is waiting to be processed."""
+  WAITING
+  """Resource has started processing."""
+  STARTED
+  """Resource is finalizing processing."""
+  FINALIZING
+}
+
+enum MediaProgressState {
+  """Media is waiting to be processed."""
+  WAITING
+  """Media has started processing."""
+  STARTED
+  """Media is finalizing processing."""
+  FINALIZING
+}
+
+type ResourceProgress @key(fields: "id") {
+  id: ID!
+
+  """The state at which this resource is at."""
+  state: ResourceProgressState!
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float!
+}
+
+type MediaProgress @key(fields: "id") {
+  id: ID!
+
+  """The state at which this media is at."""
+  state: MediaProgressState!
+
+  """The progress percent, in float. Will never be larger than 100."""
+  progress: Float!
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+interface Node {
+  id: ID!
+}

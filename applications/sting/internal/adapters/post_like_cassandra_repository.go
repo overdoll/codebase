@@ -299,7 +299,7 @@ func (r PostsCassandraElasticsearchRepository) AccountPostLikes(ctx context.Cont
 
 		for _, hit := range response.Docs {
 
-			result, err := r.unmarshalPostDocument(ctx, hit.Source, nil)
+			result, err := unmarshalPostDocument(ctx, hit.Source, nil)
 
 			if err != nil {
 				return nil, err

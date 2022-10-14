@@ -1,0 +1,963 @@
+enum PostAuditLogAction {
+  APPROVED
+  DENIED
+  REMOVED
+}
+
+"""
+Post audit log
+
+Audit log is created when a moderator takes an action against a pending post
+"""
+type PostAuditLog implements Node @key(fields: "id") {
+  """ID of the audit log"""
+  id: ID!
+
+  """The moderator that this log belongs to"""
+  moderator: Account!
+
+  """The status or the action that was taken against the pending post"""
+  action: PostAuditLogAction!
+
+  """If a post was removed or rejected, this is the rule that was cited."""
+  rule: Rule @goField(forceResolver: true)
+
+  """Additional notes by the moderator"""
+  notes: String
+
+  """The post linked to this audit log"""
+  post: Post!
+}
+
+"""Edge of the audit log"""
+type PostAuditLogEdge {
+  node: PostAuditLog!
+  cursor: String!
+}
+
+"""Connection of the audit log"""
+type PostAuditLogConnection {
+  edges: [PostAuditLogEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Post {
+  """Audit logs belonging to this pending post"""
+  auditLogs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostAuditLogConnection! @goField(forceResolver: true)
+
+  """
+  If this post was removed or rejected from the moderator queue, you can view the rule that was cited.
+  """
+  rule: Rule @goField(forceResolver: true)
+}
+
+extend type Account {
+  """
+  Post Audit Logs linked to this account
+
+  Viewable by either the currently logged-in account or staff+
+  """
+  postAuditLogs(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """From which date the audit logs should be shown."""
+    from: Time!
+
+    """The end date of the audit logs. Optional - if not specified, will search through all-time."""
+    to: Time
+  ): PostAuditLogConnection! @goField(forceResolver: true)
+}
+
+enum ClubInfractionHistorySource {
+  MANUAL
+  POST_MODERATION_REJECTION
+  POST_MANUAL_REMOVAL
+}
+
+"""Infraction history belonging to a club"""
+type ClubInfractionHistory implements Node @key(fields: "id") {
+  """ID of the infraction history"""
+  id: ID!
+
+  """The club belonging to this history object."""
+  club: Club!
+
+  """The account that issued this infraction."""
+  issuerAccount: Account!
+
+  """The rule cited for this infraction."""
+  rule: Rule! @goField(forceResolver: true)
+
+  """The source for this infraction."""
+  source: ClubInfractionHistorySource!
+
+  """When this infraction was issued."""
+  issuedAt: Time!
+
+  """When this infraction expires (no longer considered when issuing future infractions)."""
+  expiresAt: Time!
+}
+
+"""Edge of the infraction history"""
+type ClubInfractionHistoryEdge {
+  node: ClubInfractionHistory!
+  cursor: String!
+}
+
+"""Connection of the infraction history"""
+type ClubInfractionHistoryConnection {
+  edges: [ClubInfractionHistoryEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Club {
+  """
+  Infraction history for this club
+
+  Viewable by the currently authenticated account or staff+
+  """
+  infractionHistory(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): ClubInfractionHistoryConnection! @goField(forceResolver: true)
+}
+
+"""Issue a club infraction."""
+input IssueClubInfractionInput {
+  """The club to issue the infraction to."""
+  clubId: ID!
+
+  """The rule to cite."""
+  ruleId: ID!
+
+  """Pass a custom end time. If none is passed, will use sliding scale based on previous infractions."""
+  customEndTime: Time
+}
+
+"""Remove a club infraction."""
+input RemoveClubInfractionHistoryInput {
+  """The history item to remove."""
+  clubInfractionHistoryId: ID!
+}
+
+"""Issue a new club infraction payload."""
+type IssueClubInfractionPayload {
+  """The new club infraction history item."""
+  clubInfractionHistory: ClubInfractionHistory
+}
+
+"""Remove club infraction history."""
+type RemoveClubInfractionHistoryPayload {
+  """The removed infraction history Id."""
+  clubInfractionHistoryId: ID!
+}
+
+type Mutation {
+  """
+  Issue a club infraction.
+  """
+  issueClubInfraction(input: IssueClubInfractionInput!): IssueClubInfractionPayload
+
+  """
+  In case of a false infraction, you can remove it from the club's history.
+
+  Staff+ only.
+  """
+  removeClubInfractionHistory(input: RemoveClubInfractionHistoryInput!): RemoveClubInfractionHistoryPayload
+}
+
+"""Moderate the pending post input"""
+input RejectPostInput {
+  """Pending post to take action against"""
+  postId: ID!
+
+  """Required to enter a rule ID."""
+  ruleId: ID!
+
+  """Any extra notes for the moderator"""
+  notes: String
+}
+
+"""Moderate the pending post input"""
+input RemovePostInput {
+  """Pending post to take action against"""
+  postId: ID!
+
+  """Required to enter a rule ID."""
+  ruleId: ID!
+
+  """Any extra notes for the staff member"""
+  notes: String
+}
+
+"""Approve the pending post input"""
+input ApprovePostInput {
+  """Pending post to take action against"""
+  postId: ID!
+}
+
+"""Add moderator to posts queue."""
+input AddModeratorToPostQueueInput {
+  """The moderator account to take the action on"""
+  accountId: ID!
+}
+
+"""Remove moderator from posts queue."""
+input RemoveModeratorFromPostQueueInput {
+  """The moderator account to take the action on"""
+  accountId: ID!
+}
+
+"""Remove moderator from posts queue."""
+type AddModeratorToPostQueuePayload {
+  """The account that was updated"""
+  account: Account
+}
+
+"""Remove moderator from posts queue."""
+type RemoveModeratorFromPostQueuePayload {
+  """The account that was updated"""
+  account: Account
+}
+
+"""Reject the pending post payload"""
+type RejectPostPayload {
+  """The resulting post"""
+  post: Post
+}
+
+"""Approve the pending post payload"""
+type ApprovePostPayload {
+  """The resulting post"""
+  post: Post
+}
+
+"""Remove the pending post payload"""
+type RemovePostPayload {
+  """The resulting post"""
+  post: Post
+}
+
+extend type Mutation {
+  """
+  Reject a specific post
+
+  Moderator+ only
+  """
+  rejectPost(input: RejectPostInput!): RejectPostPayload
+
+  """
+  Remove a specific post, after a post has already been moderated
+
+  Staff+ only
+  """
+  removePost(input: RemovePostInput!): RemovePostPayload
+
+  """
+  Approve a specific post.
+
+  Moderator+ only
+  """
+  approvePost(input: ApprovePostInput!): ApprovePostPayload
+
+  """
+  Add moderator to posts queue
+
+  Moderator+ only
+  """
+  addModeratorToPostQueue(input: AddModeratorToPostQueueInput!): AddModeratorToPostQueuePayload
+
+  """
+  Remove moderator from posts queue
+
+  Moderator+ only
+  """
+  removeModeratorFromPostQueue(input: RemoveModeratorFromPostQueueInput!): RemoveModeratorFromPostQueuePayload
+}
+
+"""General moderator settings."""
+type ModeratorSettings {
+  """If this moderator is in queue."""
+  isInModeratorQueue: Boolean!
+
+  """The last time this moderator was selected for a post. Null if moderator not in queue"""
+  lastSelected: Time
+}
+
+type PostModerator {
+  """The ID to identify this post moderator item."""
+  id: ID!
+
+  """The post linked to this post moderator."""
+  post: Post!
+
+  """The moderator.."""
+  moderator: Account!
+
+  """When this post queue item was initially placed in the queue."""
+  placedAt: Time!
+
+  """When this post queue item will be reassigned."""
+  reassignmentAt: Time!
+}
+
+type PostModeratorEdge {
+  cursor: String!
+  node: PostModerator!
+}
+
+type PostModeratorConnection {
+  edges: [PostModeratorEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Account {
+  """
+  Moderator settings and status for this account
+
+  Viewable by the currently authenticated account or staff+
+  """
+  moderatorSettings: ModeratorSettings! @goField(forceResolver: true)
+
+  """Posts queue specific to this account (when moderator)"""
+  postModeratorQueue(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostModeratorConnection! @goField(forceResolver: true)
+}
+
+"""Post report"""
+type PostReport implements Node @key(fields: "id") {
+  """ID of the report"""
+  id: ID!
+
+  """The account that initiated this report"""
+  account: Account!
+
+  """The rule that was cited for this report."""
+  rule: Rule! @goField(forceResolver: true)
+
+  """The post linked to this report."""
+  post: Post!
+}
+
+"""Edge of the post report"""
+type PostReportEdge {
+  node: PostReport!
+  cursor: String!
+}
+
+"""Connection of the post report"""
+type PostReportConnection {
+  edges: [PostReportEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Query {
+  """All post reports."""
+  postReports(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """From which date the post reports should be shown."""
+    from: Time!
+
+    """The end date of the post reports. Optional - if not specified, will search through all-time."""
+    to: Time
+  ): PostReportConnection! @goField(forceResolver: true)
+}
+
+extend type Post {
+  """Whether or not the post was reported by the viewer."""
+  viewerReport: PostReport @goField(forceResolver: true)
+
+  """Reports belonging to a post"""
+  reports(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """From which date the post reports should be shown."""
+    from: Time!
+
+    """The end date of the post reports. Optional - if not specified, will search through all-time."""
+    to: Time
+  ): PostReportConnection! @goField(forceResolver: true)
+}
+
+"""Report the post input"""
+input ReportPostInput {
+  """The post to report"""
+  postId: ID!
+
+  """The rule to report this post for."""
+  ruleId: ID!
+}
+
+"""Report the post payload"""
+type ReportPostPayload {
+  """The post report that was generated"""
+  postReport: PostReport
+}
+
+extend type Mutation {
+  """
+  Report a specific post
+  """
+  reportPost(input: ReportPostInput!): ReportPostPayload
+}
+
+"""Rule."""
+type Rule implements Node @key(fields: "id") {
+  """ID of the rule."""
+  id: ID!
+
+  """Reference of the rule. Should be used for single lookups."""
+  reference: String!
+
+  """
+  The title for this rule.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  title(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this title."""
+  titleTranslations: [Translation!]!
+
+  """
+  The description for this rule.
+
+  Optionally pass a locale to display it in a specific language. English by default.
+  """
+  description(locale: BCP47): String! @goField(forceResolver: true)
+
+  """All translations for this description."""
+  descriptionTranslations: [Translation!]!
+
+  """If this rule is deprecated."""
+  deprecated: Boolean!
+
+  """If breaking this rule would cause an infraction - used for when posts are rejected or removed and this rule is applied."""
+  infraction: Boolean!
+}
+
+"""Edge of the rule"""
+type RuleEdge {
+  node: Rule!
+  cursor: String!
+}
+
+"""Connection of the rule"""
+type RuleConnection {
+  edges: [RuleEdge!]!
+  pageInfo: PageInfo!
+}
+
+type Query {
+  """
+  Get a single rule by reference.
+  """
+  rule(reference: String!): Rule
+
+  """
+  Get all rules for the site.
+  """
+  rules(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Whether or not to show deprecated rules."""
+    deprecated: Boolean! = false
+  ): RuleConnection! @goField(forceResolver: true)
+}
+
+"""Create a new rule input."""
+input CreateRuleInput {
+  """
+  The title.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """
+  The description.
+
+  Validation: Max 25 characters. Markdown allowed.
+  """
+  description: String!
+
+  """If breaking this rule would cause an infraction."""
+  infraction: Boolean!
+}
+
+"""Updated rule."""
+type CreateRulePayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update rule."""
+input UpdateRuleTitleInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """
+  The title to update.
+
+  Validation: Max 25 characters.
+  """
+  title: String!
+
+  """The localization for this title."""
+  locale: BCP47!
+}
+
+"""Updated rule."""
+type UpdateRuleTitlePayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update rule."""
+input UpdateRuleDescriptionInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """
+  The description to update.
+
+  Validation: Max 25 characters. Markdown allowed.
+  """
+  description: String!
+
+  """The localization for this description."""
+  locale: BCP47!
+}
+
+"""Updated rule."""
+type UpdateRuleDescriptionPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Update post report reason."""
+input UpdateRuleDeprecatedInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The deprecated status."""
+  deprecated: Boolean!
+}
+
+"""Update post report reason."""
+input UpdateRuleInfractionInput {
+  """The rule to update."""
+  ruleId: ID!
+
+  """The infraction status."""
+  infraction: Boolean!
+}
+
+"""Updated rule."""
+type UpdateRuleDeprecatedPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+"""Updated rule."""
+type UpdateRuleInfractionPayload {
+  """The updated rule."""
+  rule: Rule
+}
+
+extend type Mutation {
+  """
+  Create a new rule.
+  """
+  createRule(input: CreateRuleInput!): CreateRulePayload
+
+  """
+  Update a rule title.
+  """
+  updateRuleTitle(input: UpdateRuleTitleInput!): UpdateRuleTitlePayload
+
+  """
+  Update a rule description.
+  """
+  updateRuleDescription(input: UpdateRuleDescriptionInput!): UpdateRuleDescriptionPayload
+
+  """
+  Update a rule infraction.
+  """
+  updateRuleInfraction(input: UpdateRuleInfractionInput!): UpdateRuleInfractionPayload
+
+  """
+  Update a rule deprecation.
+  """
+  updateRuleDeprecated(input: UpdateRuleDeprecatedInput!): UpdateRuleDeprecatedPayload
+}
+
+extend type Account @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Post @key(fields: "id") {
+  id: ID! @external
+}
+
+extend type Club @key(fields: "id") {
+  id: ID! @external
+}
+
+scalar Time
+
+scalar Date
+
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI
+
+directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
+
+type Language {
+  """
+  BCP47 locale
+  """
+  locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
+}
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
+
+"""Identifies the type of resource"""
+enum ResourceType {
+  IMAGE
+  VIDEO
+}
+
+"""A type representing a url to the resource and the mimetype"""
+type ResourceUrl {
+  url: URI!
+  mimeType: String!
+}
+
+extend type ResourceProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+A resource represents an image or a video format that contains an ID to uniquely identify it,
+and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+
+We also identify the type of resource (image or video) to make it easy to distinguish them
+"""
+type Resource {
+  """An ID uniquely identifying this resource."""
+  id: ID!
+
+  """The type of resource - either an image or a video."""
+  type: ResourceType!
+
+  """Whether or not the resource is processed. Can be used for additional permission checks."""
+  processed: Boolean!
+
+  """URLs to access the resource."""
+  urls: [ResourceUrl!]!
+
+  """The width."""
+  width: Int!
+
+  """The height."""
+  height: Int!
+
+  """Duration, if video."""
+  videoDuration: Int!
+
+  """Video thumbnail, if video."""
+  videoThumbnail: ResourceUrl
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
+
+  """A hex-code color of the resource that can be used in-place while the resource is loading."""
+  preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
+
+  """
+  Whether or not this resource failed to process.
+
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+
+  """
+  failed: Boolean!
+}
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The width of the image."""
+  width: Int!
+
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+}
+
+"""
+All variants available for an image.
+"""
+type ImageMediaVariants {
+  """100x100 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+  """200x200 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+  """300x300 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+  """400x400 crop of an image. Suitable for small previews."""
+  avatar: ImageMediaAccess!
+  """720px width or height resize."""
+  small: ImageMediaAccess!
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+  """720px width or height resize."""
+  banner: ImageMediaAccess!
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
+}
+
+type ColorPalette {
+  percent: Float!
+  red: Int!
+  green: Int!
+  blue: Int!
+}
+
+extend type MediaProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
+type ImageMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+}
+
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The width."""
+  width: Int!
+  """The height."""
+  height: Int!
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
+}
+
+enum MediaDeviceType {
+  MOBILE
+  DESKTOP
+  UNIVERSAL
+}
+
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+}
+
+union Media = VideoMedia | ImageMedia | RawMedia
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+interface Node {
+  id: ID!
+}

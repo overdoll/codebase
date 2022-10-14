@@ -15,13 +15,61 @@ type AccountResolver struct {
 	App *app.Application
 }
 
+func (r AccountResolver) CuratedPostsFeedData(ctx context.Context, obj *types.Account) (*types.CuratedPostsFeedData, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	result, err := r.App.Queries.CuratedPostsFeedData.Handle(ctx, query.CuratedPostsFeedData{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.CuratedPostsFeedData{
+		GeneratedAt:                  result.GeneratedAt(),
+		NextRegenerationTime:         result.NextRegenerationTime(),
+		ViewedAt:                     result.ViewedAt(),
+		NextRegenerationTimeDuration: int(result.NextRegenerationTimeDuration().Milliseconds()),
+	}, nil
+}
+
+func (r AccountResolver) CuratedPostsFeedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.CuratedPostsFeedPosts.Handle(ctx, query.CuratedPostsFeedPosts{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+		Cursor:    cursor,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r AccountResolver) HasClubSupporterSubscription(ctx context.Context, obj *types.Account) (bool, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return false, err
 	}
 
-	result, err := r.App.Queries.HasClubSupporterSubscription.Handle(ctx, query.HasClubSupporterSubscription{
+	hasSubscription, err := r.App.Queries.HasClubSupporterSubscription.Handle(ctx, query.HasClubSupporterSubscription{
 		Principal: principal.FromContext(ctx),
 		AccountId: obj.ID.GetID(),
 	})
@@ -30,7 +78,7 @@ func (r AccountResolver) HasClubSupporterSubscription(ctx context.Context, obj *
 		return false, err
 	}
 
-	return result, nil
+	return hasSubscription, nil
 }
 
 func (r AccountResolver) LikedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {

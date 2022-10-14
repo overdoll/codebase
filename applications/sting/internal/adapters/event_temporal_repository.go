@@ -666,3 +666,28 @@ func (r EventTemporalRepository) UpdateTotalPostsForPostTags(ctx context.Context
 
 	return nil
 }
+
+func (r EventTemporalRepository) GenerateCuratedPostsFeed(ctx context.Context, accountId string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue: viper.GetString("temporal.queue"),
+		ID:        "sting.GenerateCuratedPostsFeed_" + accountId,
+	}
+
+	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCuratedPostsFeed, workflows.GenerateCuratedPostsFeedInput{
+		AccountId: accountId,
+	}); err != nil {
+		return errors.Wrap(err, "failed to execute GenerateCuratedPostsFeed workflow")
+	}
+
+	return nil
+}
+
+func (r EventTemporalRepository) WaitForCuratedPostsFeed(ctx context.Context, accountId string) error {
+	// wait for workflow to complete
+	if err := r.client.GetWorkflow(ctx, "sting.GenerateCuratedPostsFeed_"+accountId, "").Get(ctx, nil); err != nil {
+		return errors.Wrap(err, "failed to wait for curated posts feed")
+	}
+
+	return nil
+}

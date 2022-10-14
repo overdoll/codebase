@@ -45,6 +45,16 @@ type Account struct {
 	ClubMemberships *ClubMemberConnection `json:"clubMemberships"`
 	// The curation profile linked to this account.
 	CurationProfile *CurationProfile `json:"curationProfile"`
+	// Curated posts feed data.
+	//
+	// Will tell you when the posts feed is scheduled to be regenerated, and whether or not the curated posts feed was viewed.
+	//
+	// Can be used to show a "notification" to the user as well.
+	CuratedPostsFeedData *CuratedPostsFeedData `json:"curatedPostsFeedData"`
+	// Curated posts feed.
+	//
+	// When this is viewed, the curated posts feed will be scheduled to regenerate in a set amount of hours.
+	CuratedPostsFeedPosts *PostConnection `json:"curatedPostsFeedPosts"`
 	// Posts feed for the clubs that the account currently is a member of.
 	ClubMembersPostsFeed *PostConnection `json:"clubMembersPostsFeed"`
 	// Contributions specific to this account
@@ -598,6 +608,22 @@ type CreateTopicPayload struct {
 	Topic *Topic `json:"topic"`
 	// Validation for creating a new topic
 	Validation *CreateTopicValidation `json:"validation"`
+}
+
+type CuratedPostsFeedData struct {
+	// When the curated posts feed was generated. Null if the posts feed has not been generated.
+	//
+	// If the posts feed has not been generated, running the curatedPostsFeed query will generate the posts feed, and the query will only
+	// return once it's done generating.
+	GeneratedAt *time.Time `json:"generatedAt"`
+	// When the posts feed will be generated next. This will only update once the feed has started to generate a new one.
+	NextRegenerationTime *time.Time `json:"nextRegenerationTime"`
+	// When the curated posts feed is viewed, the duration in milliseconds it takes to generate a new one.
+	NextRegenerationTimeDuration int `json:"nextRegenerationTimeDuration"`
+	// Whether or not the posts feed was viewed since it was generated.
+	//
+	// Null if it was never viewed.
+	ViewedAt *time.Time `json:"viewedAt"`
 }
 
 type CurationProfile struct {

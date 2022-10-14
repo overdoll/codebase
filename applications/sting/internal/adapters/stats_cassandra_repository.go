@@ -10,6 +10,7 @@ import (
 	"overdoll/libraries/errors"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/support"
+	"sort"
 	"time"
 )
 
@@ -40,6 +41,11 @@ type accountPostObservations struct {
 	Bucket            int       `db:"bucket"`
 	ObservedAccountId string    `db:"observer_account_id"`
 	ObservedAt        time.Time `db:"observed_at"`
+}
+
+type accountPostObservationsBucket struct {
+	Bucket            int    `db:"bucket"`
+	ObservedAccountId string `db:"observer_account_id"`
 }
 
 type StatsCassandraRepository struct {
@@ -96,4 +102,53 @@ func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, reque
 	}
 
 	return finalPostIds, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getPostObservationBuckets(ctx context.Context, accountId string) ([]int, error) {
+
+	var accountPostObservations []accountPostObservationsBucket
+
+	if err := r.session.
+		Query(accountPostObservationsBucketsTable.Select()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountPostObservationsBucket{ObservedAccountId: accountId}).
+		SelectRelease(&accountPostObservations); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post observation buckets")
+	}
+
+	var buckets []int
+
+	for _, l := range accountPostObservations {
+		buckets = append(buckets, l.Bucket)
+	}
+
+	// sort by decreasing order
+	sort.Slice(buckets, func(i, j int) bool {
+		return buckets[i] > buckets[j]
+	})
+
+	return buckets, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) getObservedPostsForBucket(ctx context.Context, accountId string, bucket int) ([]string, error) {
+
+	var accountPostObservationsList []accountPostObservations
+
+	if err := r.session.
+		Query(accountPostObservationsTable.Select()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(accountPostObservations{ObservedAccountId: accountId, Bucket: bucket}).
+		SelectRelease(&accountPostObservationsList); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get post observations")
+	}
+
+	var postIds []string
+
+	for _, observation := range accountPostObservationsList {
+		postIds = append(postIds, observation.PostId)
+	}
+
+	return postIds, nil
 }

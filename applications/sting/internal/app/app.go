@@ -123,12 +123,16 @@ type Commands struct {
 	MigratePostsResources      command.MigratePostsResourcesHandler
 
 	RemoveCategory      command.RemoveCategoryHandler
+	RemoveCharacter     command.RemoveCharacterHandler
 	ReprocessPostsMedia command.ReprocessPostsMediaHandler
 
 	ObservePosts command.ObservePostsHandler
 }
 
 type Queries struct {
+	CuratedPostsFeedData  query.CuratedPostsFeedDataHandler
+	CuratedPostsFeedPosts query.CuratedPostsFeedPostsHandler
+
 	PrincipalById query.PrincipalByIdHandler
 
 	SearchPosts query.SearchPostsHandler

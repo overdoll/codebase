@@ -14,6 +14,7 @@ go_library(
         "generate_category_banner.go",
         "generate_character_banner.go",
         "generate_club_banner.go",
+        "generate_curated_posts_feed.go",
         "generate_series_banner.go",
         "generate_sitemap.go",
         "new_post_like.go",

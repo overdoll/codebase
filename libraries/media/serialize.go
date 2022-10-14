@@ -114,23 +114,7 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		return "", err
 	}
 
-	dayBucket := 7
-
-	if day >= 6 {
-		dayBucket = 14
-	}
-
-	if day >= 13 {
-		dayBucket = 21
-	}
-
-	if day >= 20 {
-		dayBucket = 28
-	}
-
-	if day >= 27 {
-		day = 1
-
+	if day > 15 {
 		if month == time.December {
 			month = time.January
 		} else {
@@ -138,7 +122,9 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		}
 	}
 
-	newTimestamp := time.Date(year, month, dayBucket, 0, 0, 0, 0, loc)
+	// make expiry at the end of the month
+	newTimestamp := time.Date(year, month, 1, 0, 0, 0, 0, loc)
+	newTimestamp = newTimestamp.AddDate(0, 1, -1)
 
 	var signedUrl string
 

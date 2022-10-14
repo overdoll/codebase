@@ -1,0 +1,984 @@
+"""
+A balance item.
+
+Represents balance on a specific club.
+"""
+type Balance {
+  """The amount on this balance."""
+  amount: Int!
+
+  """The currency the balance is in."""
+  currency: Currency!
+
+  """When the balance was last updated."""
+  updatedAt: Time
+}
+
+extend type Club {
+  """The current balance of this club."""
+  balance: Balance! @goField(forceResolver: true)
+
+  """The current balance of this club, representing the pending amount instead of the real amount."""
+  pendingBalance: Balance! @goField(forceResolver: true)
+}
+
+"""
+Details belonging to an account.
+"""
+type AccountDetails {
+  """An ID to uniquely identify this details instance."""
+  id: ID!
+
+  """The first name belonging to this account."""
+  firstName: String!
+
+  """The last name belonging to this account."""
+  lastName: String!
+
+  """The country this account belongs to."""
+  country: Country!
+}
+
+extend type Account {
+  """
+  Details belonging to this account.
+
+  If null, account details have not been filled out yet.
+
+  Account details are required to be filled out before setting a payout method.
+  """
+  details: AccountDetails @goField(forceResolver: true)
+}
+
+"""
+A country instance.
+"""
+type Country {
+  """An ID to uniquely identify this country."""
+  id: ID!
+
+  """The emoji representation of this country's flag."""
+  emoji: String!
+
+  """The full name of this country."""
+  name: String!
+
+  """The alpha3 code for this country."""
+  alpha3: String!
+}
+
+extend type Query {
+  """
+  Grab all available countries.
+  """
+  countries: [Country!]!
+}
+
+"""Update account details."""
+input UpdateAccountDetailsInput {
+  """The first name to set."""
+  firstName: String!
+
+  """The last name to set."""
+  lastName: String!
+
+  """The country ID to use."""
+  countryId: ID!
+}
+
+"""Payload for the new updated account details."""
+type UpdateAccountDetailsPayload {
+  """The updated account details."""
+  accountDetails: AccountDetails
+}
+
+extend type Mutation {
+  """
+  Update account details for the currently logged-in account.
+  """
+  updateAccountDetails(input: UpdateAccountDetailsInput!): UpdateAccountDetailsPayload
+}
+
+enum ClubPaymentSource {
+  CLUB_SUPPORTER_SUBSCRIPTION
+}
+
+"""The status of a payment."""
+enum ClubPaymentStatus {
+  """
+  A payment is pending until settled (reached "settlement date").
+  """
+  PENDING
+  """
+  A payment is ready to be picked up as part of a payout.
+
+  Note that a payment can be picked up by multiple payouts, it will only transition to the complete state once
+  the minimum threshold for the payout has been reached. If the payout threshold isn't reached, the payment will be picked up
+  by the next scheduled payout.
+  """
+  READY
+  """
+  A payment was successfully deposited as part of a payout and is no longer needed.
+  """
+  COMPLETE
+}
+
+"""
+A club payment item.
+
+Represents a payment that is going to be made to a club.
+"""
+type ClubPayment implements Node @key(fields: "id") {
+  """An ID to uniquely identify this club payment."""
+  id: ID!
+
+  """A reference, used to look up this payment."""
+  reference: String!
+
+  """The source of the payment."""
+  source: ClubPaymentSource!
+
+  """The status of the payment."""
+  status: ClubPaymentStatus!
+
+  """The currency this payment was made in."""
+  currency: Currency!
+
+  """
+  The base amount this payment was originally made in.
+  """
+  baseAmount: Int!
+
+  """
+  The amount taken off with a platform fee.
+  """
+  platformFeeAmount: Int!
+
+  """
+  The final amount that will actually be paid to a club.
+  """
+  finalAmount: Int!
+
+  """
+  If this payment is a deduction, usually the source being a refund, chargeback or a void.
+  """
+  isDeduction: Boolean!
+
+  """If this payment is in "pending" status, this will be the date when the payment becomes "ready"."""
+  settlementDate: Date!
+
+  """The account transaction linked to this payment."""
+  accountTransaction: AccountTransaction!
+
+  """The club this payment is made to."""
+  destinationClub: Club!
+
+  """The account that made this payment."""
+  sourceAccount: Account!
+
+  """When this payment was created."""
+  createdAt: Time!
+}
+
+"""Edge of the the club payment."""
+type ClubPaymentEdge {
+  node: ClubPayment!
+  cursor: String!
+}
+
+"""Connection of the club payment."""
+type ClubPaymentConnection {
+  edges: [ClubPaymentEdge!]!
+  pageInfo: PageInfo!
+}
+
+"""Platform fee for a specific club."""
+type ClubPlatformFee {
+  """An ID to uniquely identify this club platform fee."""
+  id: ID!
+
+  """The percent of the club platform fee."""
+  percent: Int!
+}
+
+extend type ClubPayout {
+  """All payments linked to this payout."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+extend type Club {
+  """This club's platform fee for each payment."""
+  platformFee: ClubPlatformFee! @goField(forceResolver: true)
+
+  """All payments made to this club."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Look up a single payment by reference."""
+  payment(reference: String!): ClubPayment
+
+  """All payments made on the platform."""
+  payments(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payment."""
+    status: [ClubPaymentStatus!]
+  ): ClubPaymentConnection! @goField(forceResolver: true)
+}
+
+"""Update the club's platform fee."""
+input UpdateClubPlatformFeeInput {
+  """The club to update."""
+  clubId: ID!
+
+  """The percent fee to take from every payment."""
+  percent: Int!
+}
+
+"""Payload for the new updated account details."""
+type UpdateClubPlatformFeePayload {
+  """The updated club platform fee."""
+  clubPlatformFee: ClubPlatformFee
+}
+
+extend type Mutation {
+  """
+  Update the club's platform fee.
+
+  Cannot be less than 20 or more than 30 percent.
+
+  Staff+ only.
+  """
+  updateClubPlatformFee(input: UpdateClubPlatformFeeInput!): UpdateClubPlatformFeePayload
+}
+
+enum PayoutMethod {
+  PAXUM
+}
+
+extend type Country {
+  """
+  Payout methods supported for this country.
+
+  If empty, this country does not support any sort of payout.
+  """
+  payoutMethods: [PayoutMethod!]!
+}
+
+interface IAccountPayoutMethod {
+  """
+  The ID linked to this payout method
+  """
+  id: ID!
+}
+
+type AccountPaxumPayoutMethod implements IAccountPayoutMethod {
+  """
+  The ID linked to this payout method.
+  """
+  id: ID!
+
+  """
+  The email linked to the paxum payout method.
+  """
+  email: String!
+}
+
+union AccountPayoutMethod = AccountPaxumPayoutMethod
+
+"""The status of the payout."""
+enum ClubPayoutStatus {
+  """
+  Payout is queued until the "deposit date". Payout is able to be cancelled while in this state.
+  """
+  QUEUED
+  """
+  The "deposit date" was reached. The payout can no longer be cancelled, and will start to perform the payout.
+  """
+  PROCESSING
+  """
+  The payout failed. A payout will try up to 3 times before this state is created.
+  """
+  FAILED
+  """
+  The payout was cancelled.
+  """
+  CANCELLED
+  """
+  The payout was successfully deposited in the target account.
+  """
+  DEPOSITED
+}
+
+type ClubPayoutEvent {
+  """An ID to uniquely identify this club payout event."""
+  id: ID!
+
+  """The error that occurred."""
+  error: String!
+
+  """When this event occurred."""
+  createdAt: Time!
+}
+
+"""
+A club payout item.
+
+Represents a payout that is going to be paid to a specific account.
+"""
+type ClubPayout implements Node @key(fields: "id") {
+  """An ID to uniquely identify this club payout."""
+  id: ID!
+
+  """A reference, used to look up this payout."""
+  reference: String!
+
+  """The status of the payout."""
+  status: ClubPayoutStatus!
+
+  """The currency this payout is in."""
+  currency: Currency!
+
+  """The amount this payout is created in."""
+  amount: Int!
+
+  """The amount that will be covered as the cover fee."""
+  coverFeeAmount: Int!
+
+  """The amount, with the cover fee."""
+  totalAmount: Int!
+
+  """If a payout failed, an event will be created here."""
+  events: [ClubPayoutEvent!]!
+
+  """The club linked to this payout."""
+  club: Club!
+
+  """The account that is going to be paid out with this payout."""
+  payoutAccount: Account!
+
+  """When the deposit will actually attempt to occur."""
+  depositDate: Time!
+
+  """When this payout was created."""
+  createdAt: Time!
+}
+
+"""Edge of the the club payout."""
+type ClubPayoutEdge {
+  node: ClubPayout!
+  cursor: String!
+}
+
+"""Connection of the club payout."""
+type ClubPayoutConnection {
+  edges: [ClubPayoutEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Account {
+  """The account payout method linked to this account."""
+  payoutMethod: AccountPayoutMethod @goField(forceResolver: true)
+}
+
+"""
+A deposit request.
+
+Basically, when payouts are scheduled at the beginning of the month,
+a deposit request is created to tell us how much money we need our payout methods to have in order
+to process all of the payouts
+"""
+type DepositRequest implements Node @key(fields: "id") {
+  """An ID to uniquely identify this deposit request."""
+  id: ID!
+
+  """A reference, used to look up this deposit request."""
+  reference: String!
+
+  """The type of payout method this deposit request is created for."""
+  payoutMethod: PayoutMethod!
+
+  """The currency this deposit is in."""
+  currency: Currency!
+
+  """The base amount of the deposit."""
+  baseAmount: Int!
+
+  """
+  To keep platform percentages accurate, we would always overpay when depositing payouts. The estimated fee
+  accounts for this and ensures we always deliver the exact $ amount that the artist sees in their balance.
+  """
+  estimatedFeeAmount: Int!
+
+  """
+  The total amount that needs to be deposited.
+  """
+  totalAmount: Int!
+
+  """The last date the deposit, meaning the last day until the deposit should be made, this is when all of the payouts would be scheduled."""
+  lastDateForDeposit: Time!
+
+  """When this deposit was created."""
+  createdAt: Time!
+
+  """All payouts linked to this deposit request."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection! @goField(forceResolver: true)
+}
+
+"""Edge of the the deposit request."""
+type DepositRequestEdge {
+  node: DepositRequest!
+  cursor: String!
+}
+
+"""Connection of the deposit request."""
+type DepositRequestConnection {
+  edges: [DepositRequestEdge!]!
+  pageInfo: PageInfo!
+}
+
+extend type Club {
+  """All payouts that are scheduled or created for this club."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection! @goField(forceResolver: true)
+}
+
+extend type Query {
+  """Look up a single payout by reference."""
+  payout(reference: String!): ClubPayout
+
+  """All payouts made on the platform."""
+  payouts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+
+    """Filter by the status of the payout."""
+    status: [ClubPayoutStatus!]
+  ): ClubPayoutConnection!
+
+  """Look up a single deposit request by reference."""
+  depositRequest(reference: String!): DepositRequest
+
+  """All deposit requests on the platform."""
+  depositRequests(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): DepositRequestConnection!
+}
+
+"""Update account's payout method."""
+input SetPaxumAccountPayoutMethodInput {
+  """The paxum email to use for payouts."""
+  email: String!
+}
+
+"""Payload for updating the payout method."""
+type SetPaxumAccountPayoutMethodPayload {
+  """The updated account payout method."""
+  accountPayoutMethod: AccountPayoutMethod
+}
+
+"""Update the payout date for a specific payout ID."""
+input UpdateClubPayoutDepositDateInput {
+  """The payout to update."""
+  payoutId: ID!
+
+  """The new payout date."""
+  newDate: Time!
+}
+
+"""Payload for updating the payout deposit date."""
+type UpdateClubPayoutDepositDatePayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Cancel a specific payout."""
+input CancelClubPayoutInput {
+  """The payout to cancel."""
+  payoutId: ID!
+}
+
+"""Payload for cancelling the payout."""
+type CancelClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Retry a specific payout."""
+input RetryClubPayoutInput {
+  """The payout to retry."""
+  payoutId: ID!
+}
+
+"""Payload for retrying the payout."""
+type RetryClubPayoutPayload {
+  """The updated club payout."""
+  clubPayout: ClubPayout
+}
+
+"""Delete a specific account payout method."""
+input DeleteAccountPayoutMethodInput {
+  """The payout method to delete."""
+  payoutMethodId: ID!
+}
+
+"""Payload for deleting the account payout method."""
+type DeleteAccountPayoutMethodPayload {
+  """The deleted account payout method."""
+  deletedAccountPayoutMethodId: ID!
+}
+
+"""Initiate a payout for a specific club."""
+input InitiateClubPayoutInput {
+  """The club to initiate the payout for."""
+  clubId: ID!
+
+  """Optionally set the deposit date."""
+  depositDate: Time
+}
+
+"""Initiate a payout for a specific club."""
+type InitiateClubPayoutPayload {
+  """The club that the payout was initiated for."""
+  club: Club!
+}
+
+extend type Mutation {
+  """
+  Set the currently logged-in account's payout method to use Paxum e-wallet.
+  """
+  setPaxumAccountPayoutMethod(input: SetPaxumAccountPayoutMethodInput!): SetPaxumAccountPayoutMethodPayload
+
+  """
+  Delete the current payout method linked to the logged-in account.
+
+  If no payout method is set, payouts won't happen.
+  """
+  deleteAccountPayoutMethod(input: DeleteAccountPayoutMethodInput!): DeleteAccountPayoutMethodPayload
+
+  """
+  Update a payout's deposit date.
+
+  Can be used to either make the payout happen earlier or schedule it for the future.
+
+  Setting the time to be before the current time will make the payout happen instantly.
+
+  Staff+ only.
+  """
+  updateClubPayoutDepositDate(input: UpdateClubPayoutDepositDateInput!): UpdateClubPayoutDepositDatePayload
+
+  """
+  Cancel a specific club payout.
+
+  Staff+ only.
+  """
+  cancelClubPayout(input: CancelClubPayoutInput!): CancelClubPayoutPayload
+
+  """
+  Retry a specific club payout if it's failed.
+
+  Staff+ only.
+  """
+  retryClubPayout(input: RetryClubPayoutInput!): RetryClubPayoutPayload
+
+  """
+  Initiate a club payout for the specific club.
+
+  Note that only 1 payout can be created at a time, so this call will fail if there is a payout either "in progress" or "queued".
+
+  Staff+ only.
+  """
+  initiateClubPayout(input: InitiateClubPayoutInput!): InitiateClubPayoutPayload
+}
+
+extend type Club @key(fields: "id")  {
+  id: ID! @external
+}
+
+extend type Account @key(fields: "id")  {
+  id: ID! @external
+}
+
+extend type AccountTransaction @key(fields: "id")  {
+  id: ID! @external
+}
+
+scalar Time
+
+scalar Date
+
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI
+
+directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
+
+type Language {
+  """
+  BCP47 locale
+  """
+  locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
+}
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
+
+"""Identifies the type of resource"""
+enum ResourceType {
+  IMAGE
+  VIDEO
+}
+
+"""A type representing a url to the resource and the mimetype"""
+type ResourceUrl {
+  url: URI!
+  mimeType: String!
+}
+
+extend type ResourceProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+A resource represents an image or a video format that contains an ID to uniquely identify it,
+and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+
+We also identify the type of resource (image or video) to make it easy to distinguish them
+"""
+type Resource {
+  """An ID uniquely identifying this resource."""
+  id: ID!
+
+  """The type of resource - either an image or a video."""
+  type: ResourceType!
+
+  """Whether or not the resource is processed. Can be used for additional permission checks."""
+  processed: Boolean!
+
+  """URLs to access the resource."""
+  urls: [ResourceUrl!]!
+
+  """The width."""
+  width: Int!
+
+  """The height."""
+  height: Int!
+
+  """Duration, if video."""
+  videoDuration: Int!
+
+  """Video thumbnail, if video."""
+  videoThumbnail: ResourceUrl
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
+
+  """A hex-code color of the resource that can be used in-place while the resource is loading."""
+  preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
+
+  """
+  Whether or not this resource failed to process.
+
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+
+  """
+  failed: Boolean!
+}
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The width of the image."""
+  width: Int!
+
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+}
+
+"""
+All variants available for an image.
+"""
+type ImageMediaVariants {
+  """100x100 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+  """200x200 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+  """300x300 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+  """400x400 crop of an image. Suitable for small previews."""
+  avatar: ImageMediaAccess!
+  """720px width or height resize."""
+  small: ImageMediaAccess!
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+  """720px width or height resize."""
+  banner: ImageMediaAccess!
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
+}
+
+type ColorPalette {
+  percent: Float!
+  red: Int!
+  green: Int!
+  blue: Int!
+}
+
+extend type MediaProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
+type ImageMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+}
+
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The width."""
+  width: Int!
+  """The height."""
+  height: Int!
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
+}
+
+enum MediaDeviceType {
+  MOBILE
+  DESKTOP
+  UNIVERSAL
+}
+
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+}
+
+union Media = VideoMedia | ImageMedia | RawMedia
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+interface Node {
+  id: ID!
+}
