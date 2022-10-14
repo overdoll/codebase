@@ -2,7 +2,6 @@ package activities
 
 import (
 	"context"
-	"fmt"
 )
 
 type GenerateCuratedPostsFeedInput struct {
@@ -29,8 +28,6 @@ func (h *Activities) GenerateCuratedPostsFeed(ctx context.Context, input Generat
 	if err := data.MakeGenerated(); err != nil {
 		return err
 	}
-
-	fmt.Println("generate")
 
 	if err := h.cur.UpdateCuratedPostsFeedDataOperator(ctx, data); err != nil {
 		return err
