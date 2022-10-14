@@ -36,7 +36,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
       height: 'inherit',
       objectFit: 'inherit'
     },
-    draggable: false
+    draggable: false,
+    alt: 'image'
   }
 
   const onError = (): void => {
