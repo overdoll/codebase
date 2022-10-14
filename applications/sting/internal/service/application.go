@@ -197,6 +197,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			ObservePosts: command.NewObservePostsHandler(postRepo, statsRepo),
 
 			RemoveCategory:      command.NewRemoveCategoryHandler(postRepo),
+			RemoveCharacter:     command.NewRemoveCharacterHandler(postRepo),
 			ReprocessPostsMedia: command.NewReprocessPostsMediaHandler(postRepo, loader),
 		},
 		Queries: app.Queries{

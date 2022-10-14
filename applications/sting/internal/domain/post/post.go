@@ -572,23 +572,12 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 	return removedMedia, nil
 }
 
-func (p *Post) UpdateCharactersRequest(requester *principal.Principal, characters []*Character) error {
-
-	if err := p.CanUpdate(requester); err != nil {
-		return err
-	}
-
+func (p *Post) UpdateCharacters(characters []*Character) error {
 	var characterIds []string
 	var seriesIds []string
 	visitedSeries := make(map[string]bool)
 
 	for _, c := range characters {
-
-		if c.clubId != nil {
-			if err := requester.CheckClubOwner(*c.clubId); err != nil {
-				return domainerror.NewValidation("cannot use club character if you are not owner of club")
-			}
-		}
 
 		characterIds = append(characterIds, c.id)
 
@@ -608,6 +597,24 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 	return nil
 }
 
+func (p *Post) UpdateCharactersRequest(requester *principal.Principal, characters []*Character) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	for _, c := range characters {
+		if c.clubId != nil {
+			if err := requester.CheckClubOwner(*c.clubId); err != nil {
+				return domainerror.NewValidation("cannot use club character if you are not owner of club")
+			}
+		}
+
+	}
+
+	return p.UpdateCharacters(characters)
+}
+
 func (p *Post) RemoveCategory(categoryId string) error {
 	var categoryIds []string
 
@@ -621,6 +628,11 @@ func (p *Post) RemoveCategory(categoryId string) error {
 
 	p.categoryIds = categoryIds
 	p.update()
+
+	return nil
+}
+
+func (p *Post) RemoveCharacter(character *Character) error {
 
 	return nil
 }

@@ -123,6 +123,7 @@ type Commands struct {
 	MigratePostsResources      command.MigratePostsResourcesHandler
 
 	RemoveCategory      command.RemoveCategoryHandler
+	RemoveCharacter     command.RemoveCharacterHandler
 	ReprocessPostsMedia command.ReprocessPostsMediaHandler
 
 	ObservePosts command.ObservePostsHandler

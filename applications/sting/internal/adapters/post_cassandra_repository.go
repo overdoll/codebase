@@ -815,8 +815,12 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostCategories(ctx context.
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostCategoriesOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePost(ctx, id, updateFn, []string{"category_ids"})
-
 }
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostCharactersOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePost(ctx, id, updateFn, []string{"character_ids", "series_ids"})
+}
+
 func (r PostsCassandraElasticsearchRepository) UpdatePostContentOperator(ctx context.Context, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 
 	currentPost, err := r.GetPostByIdOperator(ctx, id)

@@ -33,6 +33,7 @@ type Repository interface {
 	UpdatePostContent(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategories(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCategoriesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
+	UpdatePostCharactersOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
@@ -58,6 +59,7 @@ type Repository interface {
 	UpdateCharacterBannerOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterName(ctx context.Context, requester *principal.Principal, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterSlug(ctx context.Context, id, slug string, keepOld bool) error
+	DeleteCharacter(ctx context.Context, character *Character) error
 
 	UpdateCharacterTotalPostsOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
 	UpdateCharacterTotalLikesOperator(ctx context.Context, id string, updateFn func(character *Character) error) (*Character, error)
