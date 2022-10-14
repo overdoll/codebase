@@ -43,7 +43,7 @@ export default function SupporterFeatureModal (props: Props): JSX.Element {
           as={CloseButton}
         />
         <ModalBody p={4}>
-          <Stack justify='center' align='center' position='relative' spacing={6}>
+          <Stack pointerEvents='none' justify='center' align='center' position='relative' spacing={6}>
             <Icon icon={ActionUnlock} w={12} h={12} fill='orange.300' />
             <Box>
               <Heading color='gray.00' fontSize='lg'>
@@ -63,6 +63,7 @@ export default function SupporterFeatureModal (props: Props): JSX.Element {
               size='lg'
               colorScheme='orange'
               href='/supporter'
+              pointerEvents='auto'
             >
               <Trans>
                 Become a Supporter

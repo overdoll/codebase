@@ -36,11 +36,9 @@ interface Props {
 
 const PostFragment = graphql`
   fragment ContainerPublicPostFragment on Post {
-    reference
     ...BannerPublicPostFragment
     ...CinematicPublicPostFragment
     ...DescriptionPublicPostFragment
-    ...PrepareSuggestedPostsFragment
     ...PrepareGridSuggestedPostsFragment
   }
 `
@@ -63,28 +61,6 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
   const postData = useFragment(PostFragment, postQuery)
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
-  const flag = useFeatureFlag('post-grid')
-
-  const memoSuggestedPosts = useMemo(() => {
-    if (flag == null) {
-      return (
-        <PrepareSuggestedPosts postQuery={postData} />
-      )
-    }
-
-    if (flag === 'control') {
-      return (
-        <PrepareSuggestedPosts postQuery={postData} />
-      )
-    }
-
-    if (flag === 'grid') {
-      return <PrepareGridSuggestedPosts postQuery={postData} />
-    }
-
-    return <PrepareSuggestedPosts postQuery={postData} />
-  }, [flag, postData.reference])
-
   return (
     <>
       {viewerData == null && (
@@ -104,7 +80,7 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
           <Stack spacing={4}>
             <PageHeader icon={MagicWand} title={<Trans>Similar content</Trans>} />
-            {memoSuggestedPosts}
+            <PrepareGridSuggestedPosts postQuery={postData} />
           </Stack>
         </Stack>
       </ContentContainer>
