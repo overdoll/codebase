@@ -23,7 +23,8 @@ subgraphs:
     routing_url: http://loader:8000/api/graphql
     schema:
       subgraph_url: http://loader:8000/api/graphql
-  relay:
-    routing_url: http://some-fake-endpoint
-    schema:
-      file: ./relay.graphql
+      # TODO: when we can implement these relay operations inside of the rust router, do it
+#  relay:
+#    routing_url: http://some-fake-endpoint
+#    schema:
+#      file: ./relay.graphql

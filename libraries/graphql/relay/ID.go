@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"io"
+	"overdoll/libraries/errors"
 	"reflect"
 	"strconv"
 	"strings"
@@ -75,12 +76,16 @@ func (i *ID) UnmarshalGQL(v interface{}) error {
 	sDec, err := base64.StdEncoding.DecodeString(id)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to unmarshal relay ID from graphql")
 	}
 
 	*i = ID(sDec)
 
 	return nil
+}
+
+func MarshalRelayId(i ID) string {
+	return base64.StdEncoding.EncodeToString([]byte(i))
 }
 
 // MarshalGQL implements the graphql.Marshaler interface

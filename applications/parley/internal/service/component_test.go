@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/testsuite"
@@ -41,19 +40,19 @@ type TestRule struct {
 }
 
 func convertRuleIdToRelayId(ruleId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Rule{}, ruleId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Rule{}, ruleId)))
 }
 
 func convertClubIdToRelayId(ruleId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, ruleId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Club{}, ruleId)))
 }
 
 func convertPostIdToRelayId(postId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Post{}, postId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Post{}, postId)))
 }
 
 func convertAccountIdToRelayId(accountId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, accountId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Account{}, accountId)))
 }
 
 func createRule(t *testing.T, infraction bool) *rule.Rule {

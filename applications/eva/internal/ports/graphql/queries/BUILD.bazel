@@ -4,6 +4,7 @@ go_library(
     name = "queries",
     srcs = [
         "language.go",
+        "node.go",
         "resolvers.go",
     ],
     importpath = "overdoll/applications/eva/internal/ports/graphql/queries",
@@ -13,8 +14,10 @@ go_library(
         "//applications/eva/internal/app/query",
         "//applications/eva/internal/domain/token",
         "//applications/eva/internal/ports/graphql/types",
+        "//libraries/errors",
         "//libraries/errors/apperror",
         "//libraries/graphql",
+        "//libraries/graphql/relay",
         "//libraries/localization",
         "//libraries/passport",
     ],

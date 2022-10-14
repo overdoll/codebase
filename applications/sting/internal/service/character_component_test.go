@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/bxcodec/faker/v3"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
@@ -107,7 +106,7 @@ func TestCreateSeriesCharacter_update_and_search(t *testing.T) {
 
 	var createCharacter CreateCharacter
 
-	seriesIdRelay := relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Series{}, seriesId))))
+	seriesIdRelay := relay.ID(relay.MarshalRelayId(relay.NewID(types.Series{}, seriesId)))
 
 	err = client.Mutate(context.Background(), &createCharacter, map[string]interface{}{
 		"input": types.CreateCharacterInput{

@@ -563,10 +563,6 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, err
 	}
 
-	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
-		return nil, err
-	}
-
 	query.Must(elastic.NewFunctionScoreQuery().BoostMode("multiply").
 		// add a score func to randomly multiply
 		AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
@@ -615,6 +611,11 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		}
 
 		posts = append(posts, createdPost)
+	}
+
+	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts)
+	if err != nil {
+		return nil, err
 	}
 
 	return posts, nil
@@ -723,10 +724,6 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		query.Filter(filterQueries...)
 	}
 
-	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
-		return nil, err
-	}
-
 	if filter.Seed() != nil {
 
 		h := fnv.New32a()
@@ -748,15 +745,6 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 
 	}
 
-	// multiply by likes for this post
-	//query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(
-	//	elastic.
-	//		NewFieldValueFactorFunction().
-	//		Field("likes").
-	//		Factor(0).
-	//		Modifier("none"),
-	//))
-
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)
@@ -776,6 +764,11 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		}
 
 		posts = append(posts, createdPost)
+	}
+
+	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts)
+	if err != nil {
+		return nil, err
 	}
 
 	return posts, nil
@@ -833,10 +826,6 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", filter.State().String()))
 	}
 
-	if err := r.addClubWeightsToESQuery(ctx, query); err != nil {
-		return nil, err
-	}
-
 	if len(filter.SupporterOnlyStatus()) > 0 {
 		var supporterStatus []string
 		for _, status := range filter.SupporterOnlyStatus() {
@@ -866,7 +855,8 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("series_ids", filter.SeriesIds()...))
 	}
 
-	if len(filter.AudienceIds()) > 0 {
+	// don't filter by audience if searching for club
+	if len(filter.AudienceIds()) > 0 && len(filter.ClubIds()) == 0 {
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filter.AudienceIds()...))
 	}
 
@@ -917,6 +907,14 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 		}
 
 		posts = append(posts, createdPost)
+	}
+
+	// if not filtering by club ids, get a random post as part of our "algorithm"
+	if len(filter.ClubIds()) == 0 {
+		posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return posts, nil

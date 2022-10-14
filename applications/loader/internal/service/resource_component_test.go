@@ -3,7 +3,6 @@ package service_test
 import (
 	"bytes"
 	"context"
-	"encoding/base64"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 	"go.temporal.io/sdk/activity"
@@ -39,7 +38,7 @@ func queryMediaProgress(t *testing.T, itemId, resourceId string) types.MediaProg
 		"representations": []_Any{
 			{
 				"__typename": "MediaProgress",
-				"id":         base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.MediaProgress{}, itemId, resourceId))),
+				"id":         relay.MarshalRelayId(relay.NewID(types.MediaProgress{}, itemId, resourceId)),
 			},
 		},
 	})

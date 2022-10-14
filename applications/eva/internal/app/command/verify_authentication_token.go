@@ -26,7 +26,7 @@ func NewVerifyAuthenticationTokenHandler(cr token.Repository, ar account.Reposit
 func (h VerifyAuthenticationTokenHandler) Handle(ctx context.Context, cmd VerifyAuthenticationToken) error {
 
 	_, err := h.cr.UpdateAuthenticationToken(ctx, cmd.Passport, cmd.Token, cmd.Secret, func(c *token.AuthenticationToken) error {
-		return c.MakeVerified(cmd.Secret)
+		return c.MakeVerified(cmd.Passport, cmd.Secret)
 	})
 
 	if err != nil {

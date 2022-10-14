@@ -875,6 +875,7 @@ If a transaction is voided, it turns into a VOID transaction.
 type AccountTransaction implements Node
   @join__owner(graph: HADES)
   @join__type(graph: HADES, key: "id")
+  @join__type(graph: EVA, key: "id")
   @join__type(graph: RINGER, key: "id")
 {
   """
@@ -1139,6 +1140,7 @@ type AssignAccountStaffRolePayload {
 type Audience implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
@@ -1557,6 +1559,7 @@ type CancelClubPayoutPayload {
 type CancellationReason implements Node
   @join__owner(graph: HADES)
   @join__type(graph: HADES, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """If this reason is deprecated."""
   deprecated: Boolean! @join__field(graph: HADES)
@@ -1622,6 +1625,7 @@ enum CategoriesSort {
 type Category implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """Alternative titles for this category."""
   alternativeTitles: [Translation!]! @join__field(graph: STING)
@@ -1730,6 +1734,7 @@ type CategoryEdge {
 type Character implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
@@ -1836,6 +1841,7 @@ enum CharactersSort {
 type Club implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
   @join__type(graph: HADES, key: "id")
   @join__type(graph: PARLEY, key: "id")
   @join__type(graph: RINGER, key: "id")
@@ -2172,6 +2178,7 @@ type ClubEdge {
 type ClubInfractionHistory implements Node
   @join__owner(graph: PARLEY)
   @join__type(graph: PARLEY, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The club belonging to this history object."""
   club: Club! @join__field(graph: PARLEY)
@@ -2241,6 +2248,7 @@ type ClubLink {
 type ClubMember implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
   @join__type(graph: HADES, key: "id")
 {
   """The account that belongs to this membership."""
@@ -2295,6 +2303,7 @@ Represents a payment that is going to be made to a club.
 type ClubPayment implements Node
   @join__owner(graph: RINGER)
   @join__type(graph: RINGER, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The account transaction linked to this payment."""
   accountTransaction: AccountTransaction! @join__field(graph: RINGER)
@@ -2387,6 +2396,7 @@ Represents a payout that is going to be paid to a specific account.
 type ClubPayout implements Node
   @join__owner(graph: RINGER)
   @join__type(graph: RINGER, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The amount this payout is created in."""
   amount: Int! @join__field(graph: RINGER)
@@ -3079,6 +3089,7 @@ to process all of the payouts
 type DepositRequest implements Node
   @join__owner(graph: RINGER)
   @join__type(graph: RINGER, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The base amount of the deposit."""
   baseAmount: Int! @join__field(graph: RINGER)
@@ -4473,6 +4484,7 @@ enum PayoutMethod {
 type Post implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
   @join__type(graph: PARLEY, key: "id")
 {
   """Represents the audience that this post belongs to"""
@@ -4603,6 +4615,7 @@ Audit log is created when a moderator takes an action against a pending post
 type PostAuditLog implements Node
   @join__owner(graph: PARLEY)
   @join__type(graph: PARLEY, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The status or the action that was taken against the pending post"""
   action: PostAuditLogAction! @join__field(graph: PARLEY)
@@ -4691,6 +4704,7 @@ type PostEdge {
 type PostLike implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The account this like belongs to"""
   account: Account! @join__field(graph: STING)
@@ -4736,6 +4750,7 @@ type PostModeratorEdge {
 type PostReport implements Node
   @join__owner(graph: PARLEY)
   @join__type(graph: PARLEY, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """The account that initiated this report"""
   account: Account! @join__field(graph: PARLEY)
@@ -5117,7 +5132,7 @@ type Query {
   languages: [Language!]! @join__field(graph: EVA)
 
   """Fetch a node by the ID"""
-  node(id: ID!): Node @join__field(graph: RELAY)
+  node(id: ID!): Node @join__field(graph: EVA)
 
   """Look up a single payment by reference."""
   payment(reference: String!): ClubPayment @join__field(graph: RINGER)
@@ -5788,6 +5803,7 @@ type RouletteStatus {
 type Rule implements Node
   @join__owner(graph: PARLEY)
   @join__type(graph: PARLEY, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """If this rule is deprecated."""
   deprecated: Boolean! @join__field(graph: PARLEY)
@@ -5851,6 +5867,7 @@ type SearchEdge {
 type Series implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
@@ -6058,6 +6075,7 @@ scalar Time
 type Topic implements Node
   @join__owner(graph: STING)
   @join__type(graph: STING, key: "id")
+  @join__type(graph: EVA, key: "id")
 {
   """A URL pointing to the object's banner."""
   banner: Resource @join__field(graph: STING)
@@ -6906,7 +6924,6 @@ enum join__Graph {
   HADES @join__graph(name: "hades" url: "http://hades:8000/api/graphql")
   LOADER @join__graph(name: "loader" url: "http://loader:8000/api/graphql")
   PARLEY @join__graph(name: "parley" url: "http://parley:8000/api/graphql")
-  RELAY @join__graph(name: "relay" url: "http://some-fake-endpoint")
   RINGER @join__graph(name: "ringer" url: "http://ringer:8000/api/graphql")
   STING @join__graph(name: "sting" url: "http://sting:8000/api/graphql")
 }

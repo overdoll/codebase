@@ -1,19 +1,19 @@
 use std::env;
 use std::ops::ControlFlow;
+use std::sync::Arc;
 
 use apollo_router::layers::ServiceBuilderExt;
 use apollo_router::plugin::{Plugin, PluginInit};
 use apollo_router::services::supergraph;
 use apollo_router::{graphql, register_plugin};
 use http::StatusCode;
-use redis::aio::MultiplexedConnection;
-use redis::RedisResult;
+use redis::{Client, Commands, RedisResult};
 use tower::BoxError;
 use tower::ServiceBuilder;
 use tower::ServiceExt;
 
 struct PersistedQueries {
-    conn: Option<MultiplexedConnection>,
+    conn: Arc<r2d2::Pool<Client>>,
 }
 
 // This plugin is a skeleton for doing authentication that requires a remote call.
@@ -25,32 +25,31 @@ impl Plugin for PersistedQueries {
         // Create new connection to redis
         let redis_var = env::var("REDIS_HOST");
 
-        let client = redis::Client::open(format!(
+        let client = Client::open(format!(
             "redis://{}/2",
             redis_var.expect("error connecting to redis")
-        ))?;
+        ))
+        .unwrap();
 
-        let conn = client.get_multiplexed_tokio_connection().await.unwrap();
+        let pool = r2d2::Pool::builder().build(client).unwrap();
 
         Ok(Self {
-            conn: Option::from(conn),
+            conn: Arc::new(pool),
         })
     }
 
     fn supergraph_service(&self, service: supergraph::BoxService) -> supergraph::BoxService {
-        let conn: Option<MultiplexedConnection> = self.conn.clone();
-        let handler = move |req: supergraph::Request| async {
-            let new_conn: Option<MultiplexedConnection> = conn.clone();
-            let query_key = req.supergraph_request.body().extensions.get("queryId");
+        let cloned_conn = Arc::clone(&self.conn);
+        let handler = move |req: supergraph::Request| {
+            let query_key = &req.supergraph_request.body().extensions.get("queryId");
             let mut res = None;
             if !query_key.is_none() {
                 let query_key_redis = "query:".to_owned();
                 let new_query_key = query_key.unwrap().as_str().unwrap();
-
-                let result: RedisResult<Option<String>> = redis::cmd("GET")
-                    .arg(query_key_redis + new_query_key)
-                    .query_async(&mut new_conn.unwrap())
-                    .await;
+                let result: RedisResult<Option<String>> = cloned_conn
+                    .get()
+                    .unwrap()
+                    .get(query_key_redis + new_query_key);
 
                 if result.is_err() {
                     res = Some(
@@ -70,7 +69,6 @@ impl Plugin for PersistedQueries {
                     );
                 } else {
                     let resulted = result.unwrap().clone();
-
                     if resulted.is_none() {
                         res = Some(
                             supergraph::Response::error_builder()
@@ -89,11 +87,26 @@ impl Plugin for PersistedQueries {
                         );
                     } else {
                         req.context
-                            .upsert(&"relay_persisted_query".to_string(), |_passport: String| {
-                                return resulted.clone().expect("result is blank");
-                            })
+                            .insert(&"relay_persisted_query".to_string(), resulted.clone())
                             .expect("couldn't insert relay persisted query");
                     }
+                }
+            } else {
+                let is_debug = env::var("APP_DEBUG");
+                let is_err = is_debug.is_err();
+                if (!is_err && is_debug.unwrap() == "false") || is_err {
+                    res = Some(
+                        supergraph::Response::error_builder()
+                            .error(
+                                graphql::Error::builder()
+                                    .message(format!("only persisted queries are permitted"))
+                                    .build(),
+                            )
+                            .status_code(StatusCode::BAD_REQUEST)
+                            .context(req.context.clone())
+                            .build()
+                            .expect("response is valid"),
+                    );
                 }
             }
             {
@@ -106,7 +119,7 @@ impl Plugin for PersistedQueries {
         };
 
         return ServiceBuilder::new()
-            .checkpoint_async(handler)
+            .checkpoint(handler)
             .buffered()
             .map_request(move |mut req: supergraph::Request| {
                 if let Some(code) = req

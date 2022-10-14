@@ -20,8 +20,11 @@ def wait_for_port(host, port, timeout=5.0, check_ready=True):
         try:
             with socket.create_connection((host, port), timeout=3):
                 if check_ready:
-                    req = requests.get("http://" + host + ":" + str(port) + "/readyz")
-                    if req.text == "ok":
+                    url = "/readyz"
+                    if host == 'orca':
+                        url = '/health'
+                    req = requests.get("http://" + host + ":" + str(port) + url)
+                    if req.text == "ok" or req.text == "{\"status\":\"UP\"}":
                         break
                 else:
                     break

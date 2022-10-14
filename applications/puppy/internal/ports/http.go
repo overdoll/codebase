@@ -16,12 +16,18 @@ import (
 	"overdoll/libraries/passport"
 	"overdoll/libraries/router"
 	"overdoll/libraries/sentry_support"
+	"overdoll/libraries/support"
 )
 
 // Custom middleware that will ensure our security cookie + header is present
 // Essentially, this is CSRF protection
 func secureRequest() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if c.Request.Method == "GET" {
+			if len(c.Request.URL.RawQuery) == 0 && support.IsDebug() {
+				return
+			}
+		}
 
 		ck, err := c.Request.Cookie("od.security")
 
@@ -103,12 +109,9 @@ func NewHttpServer(ctx context.Context, app *app.Application) http.Handler {
 		proxy.ServeHTTP(w, r)
 	}))
 
-	proxy2 := &httputil.ReverseProxy{Director: proxyDirector}
-	proxy2.ErrorHandler = proxyErrorHandler
-
-	// proxy OPTIONS to the server
-	rtr.OPTIONS("/api/graphql", gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
-		proxy2.ServeHTTP(w, r)
+	// proxy GET to the server
+	rtr.GET("/api/graphql", secureRequest(), gin.WrapF(func(w http.ResponseWriter, r *http.Request) {
+		proxy.ServeHTTP(w, r)
 	}))
 
 	return rtr

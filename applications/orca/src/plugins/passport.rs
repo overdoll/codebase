@@ -17,7 +17,6 @@ impl Plugin for Passport {
 
     fn supergraph_service(&self, service: supergraph::BoxService) -> supergraph::BoxService {
         service
-            // .map_first_graphql_response()
             .map_request(|req: supergraph::Request| {
                 let passport_key = req.supergraph_request.body().extensions.get("passport");
                 if !passport_key.is_none() {
@@ -31,22 +30,22 @@ impl Plugin for Passport {
                 req
             })
             .map_response(|supergraph_response| {
-                // insert passport into the response
-                if let Some(code) = supergraph_response
+                let code = supergraph_response
                     .context
                     .get::<&String, String>(&"passport_response".to_string())
-                    .expect("couldn't access context")
-                {
-                    supergraph_response.map_stream(|mut graphql_response| {
-                        let newcode = code.clone();
-                        graphql_response
-                            .extensions
-                            .insert("passport", String::from(newcode).as_str().parse().unwrap());
-                        graphql_response
-                    });
-                }
+                    .unwrap();
 
-                supergraph_response
+                supergraph_response.map_stream(move |mut graphql_response| {
+                    let newcode = code.clone();
+                    if !newcode.is_none() {
+                        graphql_response.extensions.insert(
+                            "passport",
+                            String::from(newcode.unwrap()).as_str().parse().unwrap(),
+                        );
+                    }
+
+                    graphql_response
+                })
             })
             .boxed()
     }
@@ -72,7 +71,6 @@ impl Plugin for Passport {
             })
             .map_response(move |res| {
                 let passport_key = res.response.body().extensions.get("passport");
-
                 // check response of subgraphs and see if passport was in the extensions
                 // if it was, add to context
                 if !passport_key.is_none() {

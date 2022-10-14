@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"encoding/base64"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -69,19 +68,19 @@ func getWorkflowEnvironment() *testsuite.TestWorkflowEnvironment {
 }
 
 func convertCountryIdToRelayId(countryId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Country{}, countryId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Country{}, countryId)))
 }
 
 func convertClubIdToRelayId(ruleId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Club{}, ruleId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Club{}, ruleId)))
 }
 
 func convertPayoutIdToRelayId(ruleId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.ClubPayout{}, ruleId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.ClubPayout{}, ruleId)))
 }
 
 func convertAccountIdToRelayId(ruleId string) relay.ID {
-	return relay.ID(base64.StdEncoding.EncodeToString([]byte(relay.NewID(types.Account{}, ruleId))))
+	return relay.ID(relay.MarshalRelayId(relay.NewID(types.Account{}, ruleId)))
 }
 
 func seedPayments(t *testing.T, accountTransactionId, destinationClubId, sourceAccountId string, count int) {
