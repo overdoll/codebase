@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -88,8 +89,15 @@ func (r CurationCassandraRepository) UpdateCuratedPostsFeedPostsOperator(ctx con
 
 func (r CurationCassandraRepository) UpdateCuratedPostsFeedDataOperator(ctx context.Context, postsFeedData *curation.PostsFeedData) error {
 
+	fmt.Println(curatedPostsFeedData{
+		AccountId:            postsFeedData.AccountId(),
+		GeneratedAt:          postsFeedData.GeneratedAt(),
+		NextRegenerationTime: postsFeedData.NextRegenerationTime(),
+		ViewedAt:             postsFeedData.ViewedAt(),
+	})
+
 	if err := r.session.
-		Query(curationProfileTable.Update(
+		Query(curatedPostsFeedDataTable.Update(
 			"generated_at",
 			"next_regeneration_time",
 			"viewed_at",
@@ -216,4 +224,85 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 	}
 
 	return posts, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) GenerateCuratedPostIds(ctx context.Context, accountId string, audienceIds []string) ([]string, error) {
+
+	// first, grab all post IDs that this account has observed
+	buckets, err := r.getPostObservationBuckets(ctx, accountId)
+	if err != nil {
+		return nil, err
+	}
+
+	var collectedPostIds []string
+
+	for _, bucket := range buckets {
+		postIds, err := r.getObservedPostsForBucket(ctx, accountId, bucket)
+		if err != nil {
+			return nil, err
+		}
+		collectedPostIds = append(collectedPostIds, postIds...)
+	}
+
+	builder := r.client.Search().
+		Index(PostReaderIndex)
+
+	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
+
+	if err != nil {
+		return nil, err
+	}
+
+	query := elastic.NewBoolQuery()
+
+	var filterQueries []elastic.Query
+
+	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)),
+	)
+
+	// must not be a post the person already "observed"
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().
+		MustNot(elastic.NewTermsQueryFromStrings("id", collectedPostIds...)),
+	)
+
+	// TODO: add weights to clubs that you follow, but set a small priority
+	// TODO: use this to add posts that the club has posted that are new, with a maximum amount
+	// TODO: ensure the list always contains at least 1 premium post from one of our clubs, on the first page of the posts
+
+	if len(audienceIds) > 0 {
+		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", audienceIds...))
+	}
+
+	if filterQueries != nil {
+		query.Filter(filterQueries...)
+	}
+
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction()))
+
+	builder.Size(50)
+	builder.Query(query)
+
+	response, err := builder.Pretty(true).Do(ctx)
+
+	if err != nil {
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to get curated posts")
+	}
+
+	var finalPostIds []string
+
+	for _, hit := range response.Hits.Hits {
+
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, nil)
+
+		if err != nil {
+			return nil, err
+		}
+
+		finalPostIds = append(finalPostIds, createdPost.ID())
+	}
+
+	return finalPostIds, nil
 }

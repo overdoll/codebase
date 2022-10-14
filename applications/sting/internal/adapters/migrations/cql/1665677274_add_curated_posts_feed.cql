@@ -8,9 +8,9 @@ CREATE TABLE IF NOT EXISTS curated_posts_feed_posts
 
 CREATE TABLE IF NOT EXISTS curated_posts_feed_data
 (
-    account_id                  text,
-    generated_at                timestamp,
-    next_regeneration_time      timestamp,
-    was_viewed_since_generation boolean,
+    account_id             text,
+    generated_at           timestamp,
+    next_regeneration_time timestamp,
+    viewed_at              timestamp,
     primary key ( account_id )
 );

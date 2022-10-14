@@ -130,6 +130,36 @@ type Account implements Node
   """Maximum amount of clubs that you can create."""
   clubsLimit: Int! @join__field(graph: STING)
 
+  """
+  Curated posts feed data.
+  
+  Will tell you when the posts feed is scheduled to be regenerated, and whether or not the curated posts feed was viewed.
+  
+  Can be used to show a "notification" to the user as well.
+  """
+  curatedPostsFeedData: CuratedPostsFeedData! @join__field(graph: STING)
+
+  """
+  Curated posts feed.
+  
+  When this is viewed, the curated posts feed will be scheduled to regenerate in a set amount of hours.
+  """
+  curatedPostsFeedPosts(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection! @join__field(graph: STING)
+
   """The curation profile linked to this account."""
   curationProfile: CurationProfile! @join__field(graph: STING)
 
@@ -2978,6 +3008,33 @@ type CreateTopicPayload {
 """Validation for creating a new topic"""
 enum CreateTopicValidation {
   SLUG_TAKEN
+}
+
+type CuratedPostsFeedData {
+  """
+  When the curated posts feed was generated. Null if the posts feed has not been generated.
+  
+  If the posts feed has not been generated, running the curatedPostsFeed query will generate the posts feed, and the query will only
+  return once it's done generating.
+  """
+  generatedAt: Time
+
+  """
+  When the posts feed will be generated next. This will only update once the feed has started to generate a new one.
+  """
+  nextRegenerationTime: Time
+
+  """
+  When the curated posts feed is viewed, the duration in milliseconds it takes to generate a new one.
+  """
+  nextRegenerationTimeDuration: Int!
+
+  """
+  Whether or not the posts feed was viewed since it was generated.
+  
+  Null if it was never viewed.
+  """
+  viewedAt: Time
 }
 
 type CurationProfile {

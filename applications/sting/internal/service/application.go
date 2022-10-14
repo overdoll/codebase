@@ -203,7 +203,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 		Queries: app.Queries{
 
 			CuratedPostsFeedData:  query.NewCuratedPostsFeedDataHandler(curationRepo),
-			CuratedPostsFeedPosts: query.NewCuratedPostsFeedPostsHandler(curationRepo, eventRepo),
+			CuratedPostsFeedPosts: query.NewCuratedPostsFeedPostsHandler(curationRepo, postRepo, eventRepo),
 
 			DiscoverClubs: query.NewDiscoverClubsHandler(clubRepo),
 			Search:        query.NewSearchHandler(postRepo),

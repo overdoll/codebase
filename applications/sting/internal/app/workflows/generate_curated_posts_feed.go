@@ -29,7 +29,7 @@ func GenerateCuratedPostsFeed(ctx workflow.Context, input GenerateCuratedPostsFe
 
 	// if it has a next generation time, wait first, and then generate the posts feed
 	if payload.NextFeedGenerationTime != nil {
-		if err := workflow.Sleep(ctx, workflow.Now(ctx).Sub(*payload.NextFeedGenerationTime)); err != nil {
+		if err := workflow.Sleep(ctx, payload.NextFeedGenerationTime.Sub(workflow.Now(ctx))); err != nil {
 			return err
 		}
 	}

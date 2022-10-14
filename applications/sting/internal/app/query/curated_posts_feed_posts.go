@@ -37,7 +37,27 @@ func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedP
 
 	// create a job to generate the event
 	if (hasNotBeenViewed) || result.GeneratedAt() == nil {
+
+		// if new, generate and wait
+		if result.GeneratedAt() == nil {
+			if err := h.event.GenerateCuratedPostsFeed(ctx, result.AccountId()); err != nil {
+				return nil, err
+			}
+			if err := h.event.WaitForCuratedPostsFeed(ctx, result.AccountId()); err != nil {
+				return nil, err
+			}
+			result, err = h.pr.GetCuratedPostsFeedData(ctx, query.Principal, query.AccountId)
+			if err != nil {
+				return nil, err
+			}
+		}
+
 		if hasNotBeenViewed {
+
+			if err := result.WasViewed(query.Principal); err != nil {
+				return nil, err
+			}
+
 			// update with next generation time
 			if err := h.pr.UpdateCuratedPostsFeedData(ctx, query.Principal, result); err != nil {
 				return nil, err
@@ -45,15 +65,8 @@ func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedP
 		}
 
 		// generate curated posts feed
+		// if this is a first time generation, we need to send a workflow to do it again
 		if err := h.event.GenerateCuratedPostsFeed(ctx, result.AccountId()); err != nil {
-			return nil, err
-		}
-	}
-
-	// wait for event
-	if result.GeneratedAt() == nil {
-		// wait for curated posts feed to be generated, if not yet generated
-		if err := h.event.WaitForCuratedPostsFeed(ctx, result.AccountId()); err != nil {
 			return nil, err
 		}
 	}
