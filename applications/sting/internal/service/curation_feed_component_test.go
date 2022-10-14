@@ -61,7 +61,7 @@ func TestGetAccountCuratedPosts(t *testing.T) {
 		Return(nil)
 
 	application.TemporalClient.
-		On("GetWorkflow", mock.Anything, mock.Anything, mock.Anything).
+		On("GetWorkflow", mock.Anything, "sting.GenerateCuratedPostsFeed_"+testingAccountId, mock.Anything).
 		Run(func(args mock.Arguments) {
 			shouldGetWorkflow = true
 		}).
