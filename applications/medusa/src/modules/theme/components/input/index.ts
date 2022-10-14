@@ -205,12 +205,12 @@ const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
   }
 }
 
-const variantFlushed: PartsStyleFunction<typeof parts> = (props) => {
-  const { theme } = props
-  const {
-    focusBorderColor: fc,
-    errorBorderColor: ec
-  } = getDefaults(props)
+const variantFlushed: PartsStyleFunction<typeof parts> = () => {
+  // const { theme } = props
+  // const {
+  //   focusBorderColor: fc,
+  //   errorBorderColor: ec
+  // } = getDefaults(props)
 
   return {
     field: {

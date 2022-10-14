@@ -44,6 +44,10 @@ msgstr ""
 msgid "ArhoAngel's content archive"
 msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:265
+msgid "Become a club supporter and unlock access to exclusive content and platform features"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/TilesHome.tsx:33
 #~ msgid "Browse Category"
 #~ msgstr ""
@@ -54,6 +58,10 @@ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:63
 msgid "Discover clubs posting content"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:293
+msgid "FEEDBACK"
 msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:95
@@ -98,6 +106,10 @@ msgstr ""
 #~ msgid "I promise to be better and to follow the community guidelines more closely"
 #~ msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:211
+msgid "JOIN"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridSeriesCharactersCategories/GridSeriesCharactersCategories.tsx:101
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridTopNewPosts/GridTopNewPosts.tsx:126
 msgid "Japanese-style pornography"
@@ -117,6 +129,14 @@ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:46
 msgid "Join overdoll to curate your content and save posts"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:213
+msgid "Join overdoll to unlock the full experience with a personalized content feed"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:237
+msgid "LIKES"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:72
@@ -155,6 +175,14 @@ msgstr ""
 msgid "Post your adult content"
 msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:131
+msgid "RANDOM"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:180
+msgid "ROULETTE"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:24
 msgid "Randomize"
 msgstr ""
@@ -167,8 +195,20 @@ msgstr ""
 msgid "Randomly browse hentai, 3d, furry porn"
 msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:132
+msgid "Randomly browse rule34, hentai, furry and 3d porn"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/components/Tiles/RouletteTile/RouletteTile.tsx:55
 msgid "Rule34 Roulette"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:155
+msgid "SEARCH"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:263
+msgid "SUPPORT"
 msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:41
@@ -179,6 +219,7 @@ msgstr ""
 #~ msgid "Search Porn"
 #~ msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:156
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:46
 msgid "Search for any kind of porn"
 msgstr ""
@@ -189,6 +230,10 @@ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/PrepareHomePosts/LazyHomePosts/ScrollHomePosts/ScrollHomePosts.tsx:56
 msgid "See More Posts"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:239
+msgid "See all of your liked posts - a benefit of being a club supporter"
 msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridArchives/GridArchives.tsx:73
@@ -208,16 +253,20 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BannerHome/CurationProfileAlert/CurationProfileAlert.tsx:57
-msgid "Set up your curation profile so we can show you personalized content"
-msgstr ""
+#~ msgid "Set up your curation profile so we can show you personalized content"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BannerHome/CurationProfileAlert/CurationProfileAlert.tsx:69
-msgid "Setup"
-msgstr ""
+#~ msgid "Setup"
+#~ msgstr ""
 
 #: src/domain/home/RootHome/Home/Home.tsx:40
 #~ msgid "Show By Category"
 #~ msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:182
+msgid "Spin your way through porn videos and images and see how long you can last"
+msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/components/Tiles/RouletteTile/RouletteTile.tsx:61
 msgid "Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last"
@@ -225,6 +274,10 @@ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:117
 msgid "Tell us what you really think"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:294
+msgid "Tell us what you really think about overdoll so we can make it better"
 msgstr ""
 
 #: src/domain/home/RootHome/LockedAccount/LockedAccountModal/UnlockAccountForm/UnlockAccountForm.tsx:84

@@ -54,7 +54,11 @@ msgstr ""
 msgid "Back"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/components/SupporterFeatureModal/SupporterFeatureModal.tsx:67
+#: src/modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu.tsx:66
+msgid "Become Supporter"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/components/SupporterFeatureModal/SupporterFeatureModal.tsx:68
 #: src/modules/content/HookedComponents/Filters/components/SupporterUnlockShadow/SupporterUnlockShadow.tsx:27
 msgid "Become a Supporter"
 msgstr ""
@@ -314,7 +318,7 @@ msgstr ""
 msgid "I want to see"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton.tsx:64
+#: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton.tsx:67
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:63
 #: src/modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton.tsx:101
 #: src/modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner.tsx:42
@@ -459,7 +463,7 @@ msgstr ""
 #~ msgid "My Feed"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:68
+#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:70
 msgid "New"
 msgstr ""
 
@@ -983,6 +987,7 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:95
 #: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileAudienceButton/CurationProfileAudienceButton.tsx:77
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileAudienceButton/CurationProfileAudienceButton.tsx:96
 msgid "There was an error saving the audiences"
 msgstr ""
 
@@ -1071,7 +1076,7 @@ msgstr ""
 msgid "Today"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:62
+#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:64
 msgid "Top"
 msgstr ""
 
@@ -1083,7 +1088,7 @@ msgstr ""
 msgid "Transaction metrics help you maintain a good refund and chargeback ratio to keep your club in good standing."
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:56
+#: src/modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters.tsx:58
 msgid "Trending"
 msgstr ""
 

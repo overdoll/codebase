@@ -1,4 +1,4 @@
-import { HeartFull, HeartOutline, LoginKeys } from '@//:assets/icons'
+import { HeartFull, HeartOutline } from '@//:assets/icons'
 import {
   Box,
   ButtonProps,

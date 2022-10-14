@@ -313,7 +313,7 @@ msgstr ""
 msgid "Search for a category"
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:90
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:88
 msgid "Search for a character by name"
 msgstr ""
 
@@ -325,7 +325,7 @@ msgstr ""
 msgid "Select a topic to see the available categories you can add, or search for a category by name."
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:81
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:79
 msgid "Select one or more characters that appear in all of the content"
 msgstr ""
 
@@ -369,11 +369,11 @@ msgstr ""
 #~ msgid "Show Your Club Characters"
 #~ msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:99
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:91
 msgid "Show all characters"
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:99
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:91
 msgid "Show only original characters"
 msgstr ""
 
@@ -531,7 +531,7 @@ msgstr ""
 msgid "When uploading any kind of supporter content, it's recommended that the first slide in your post is not supporter content and contains either a censored image or a reduced video to encourage your fans to become supporters."
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:76
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:74
 msgid "Who is in your post?"
 msgstr ""
 

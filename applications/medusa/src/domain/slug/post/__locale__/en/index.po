@@ -52,7 +52,7 @@ msgstr ""
 #~ msgid "Save this post"
 #~ msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:106
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:82
 msgid "Similar content"
 msgstr ""
 

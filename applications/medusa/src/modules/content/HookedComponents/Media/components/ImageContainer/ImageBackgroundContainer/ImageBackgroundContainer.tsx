@@ -35,8 +35,8 @@ export default function ImageBackgroundContainer (props: Props): JSX.Element {
         <ImageMedia
           unoptimized={unoptimized}
           tiny={tiny}
-          width={width}
-          height={height}
+          width={width ?? 1000}
+          height={height ?? 1000}
           url={url}
           color={bgColor}
           variants={variants}

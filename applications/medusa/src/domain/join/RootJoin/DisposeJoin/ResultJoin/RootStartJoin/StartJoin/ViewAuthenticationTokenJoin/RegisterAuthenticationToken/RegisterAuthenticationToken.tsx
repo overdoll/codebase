@@ -29,7 +29,6 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
 import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 import identifyAccount from '@//:modules/external/identifyAccount'
-import { StringParam, useQueryParam } from 'use-query-params'
 import posthog from 'posthog-js'
 
 interface RegisterValues {
@@ -78,8 +77,6 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
   )
 
   const data = useFragment(Fragment, query)
-
-  const [from] = useQueryParam<string | null | undefined>('from', StringParam)
 
   const notify = useToast()
 

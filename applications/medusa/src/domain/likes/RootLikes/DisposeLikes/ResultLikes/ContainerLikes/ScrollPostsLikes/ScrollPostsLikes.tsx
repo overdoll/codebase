@@ -47,7 +47,7 @@ export default function ScrollPostsLikes (props: Props): JSX.Element {
 
   return (
     <VerticalPaginationScroller
-      limit={data.hasClubSupporterSubscription ? undefined : 4}
+      limit={data.hasClubSupporterSubscription === true ? undefined : 4}
       postConnectionQuery={data.likedPosts}
       hasNext={hasNext}
       loadNext={loadNext}

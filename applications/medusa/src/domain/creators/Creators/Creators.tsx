@@ -195,6 +195,8 @@ const Creators: PageProps<{}> = () => {
               <Image
                 src='https://static.dollycdn.net/creators/banners/medium.jpg'
                 unoptimized
+                width={1000}
+                height={1000}
                 style={{
                   objectFit: 'cover',
                   width: '100%',

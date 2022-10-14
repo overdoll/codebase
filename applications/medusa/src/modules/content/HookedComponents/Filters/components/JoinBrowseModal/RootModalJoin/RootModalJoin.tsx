@@ -26,12 +26,12 @@ export default function RootModalJoin (): JSX.Element {
 
   const {
     onSubmit,
-    isInFlight,
+    isInFlight
   } = useEmptyJoinForm({
     onSubmit: () => {
       onEmailComplete()
       setClosedJoinBannerStorage(true)
-    },
+    }
   })
 
   const routeChangeStart = (): void => {

@@ -1,13 +1,5 @@
 import { Trans } from '@lingui/macro'
-import {
-  CogDouble,
-  ContentBrushPen,
-  HeartFull,
-  LikedPosts,
-  LoginKeys,
-  SafetyExitDoorLeft,
-  SafetyFloat
-} from '@//:assets/icons'
+import { CogDouble, ContentBrushPen, HeartFull, LoginKeys, SafetyExitDoorLeft, SafetyFloat } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import React, { Suspense } from 'react'
 import SkeletonDropdownMenuButton

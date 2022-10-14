@@ -6,3 +6,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:81
+msgid "Additional exclusive content posted every month"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/HeaderClubSupporter/HeaderClubSupporter.tsx:57
+msgid "BECOME A SUPPORTER"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:73
+msgid "Exclusive access to all content posted by the club"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:51
+msgid "From the club"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:118
+msgid "From us"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:56
+msgid "Get <0>benefits</0> from the club you support"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:123
+msgid "Receive <0>platform-wide features</0>"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:146
+msgid "Save and see your liked posts"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:173
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/HeaderClubSupporter/ClubSupportLinks/ClubSupportTile/ClubSupportTile.tsx:96
+msgid "Support Now"
+msgstr ""
+
+#: src/domain/supporter/RootClubSupporter/DisposeClubSupporter/ResultClubSupporter/ContainerClubSupporter/FeaturesClubSupporter/FeaturesClubSupporter.tsx:138
+msgid "Unlock ability to sort posts by Top and New"
+msgstr ""

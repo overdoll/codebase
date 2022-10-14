@@ -13,6 +13,6 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:54
+#: src/domain/discover/RootDiscoverClubs/DiscoverClubs/DiscoverClubs.tsx:57
 msgid "Discover clubs"
 msgstr ""
