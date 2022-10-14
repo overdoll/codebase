@@ -126,14 +126,21 @@ type CuratedPostsFeedData {
   generatedAt: Time
 
   """
-  When the posts feed will be generated next. Null if the posts feed was not yet viewed.
+  When the posts feed will be generated next. This will only update once the feed has started to generate a new one.
   """
   nextRegenerationTime: Time
 
   """
-  Whether or not the posts feed was viewed since it was generated.
+  When the curated posts feed is viewed, the duration in milliseconds it takes to generate a new one.
   """
-  viewedSinceGeneration: Boolean!
+  nextRegenerationTimeDuration: Int!
+
+  """
+  Whether or not the posts feed was viewed since it was generated.
+
+  Null if it was never viewed.
+  """
+  viewedAt: Time
 }
 
 extend type Account {

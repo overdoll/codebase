@@ -31,9 +31,10 @@ func (r AccountResolver) CuratedPostsFeedData(ctx context.Context, obj *types.Ac
 	}
 
 	return &types.CuratedPostsFeedData{
-		GeneratedAt:           result.GeneratedAt(),
-		NextRegenerationTime:  result.NextRegenerationTime(),
-		ViewedSinceGeneration: result.WasViewedSinceGeneration(),
+		GeneratedAt:                  result.GeneratedAt(),
+		NextRegenerationTime:         result.NextRegenerationTime(),
+		ViewedAt:                     result.ViewedAt(),
+		NextRegenerationTimeDuration: int(result.NextRegenerationTimeDuration().Milliseconds()),
 	}, nil
 }
 

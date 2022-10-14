@@ -17,11 +17,12 @@ type CuratedPostsFeedPosts struct {
 
 type CuratedPostsFeedPostsHandler struct {
 	pr    curation.Repository
+	prr   post.Repository
 	event event.Repository
 }
 
-func NewCuratedPostsFeedPostsHandler(pr curation.Repository, event event.Repository) CuratedPostsFeedPostsHandler {
-	return CuratedPostsFeedPostsHandler{pr: pr, event: event}
+func NewCuratedPostsFeedPostsHandler(pr curation.Repository, prr post.Repository, event event.Repository) CuratedPostsFeedPostsHandler {
+	return CuratedPostsFeedPostsHandler{pr: pr, prr: prr, event: event}
 }
 
 func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedPostsFeedPosts) ([]*post.Post, error) {
@@ -32,7 +33,7 @@ func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedP
 		return nil, err
 	}
 
-	hasNotBeenViewed := result.NextRegenerationTime() == nil && !result.WasViewedSinceGeneration()
+	hasNotBeenViewed := result.NextRegenerationTime() == nil && result.ViewedAt() == nil
 
 	// create a job to generate the event
 	if (hasNotBeenViewed) || result.GeneratedAt() == nil {
@@ -57,7 +58,7 @@ func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedP
 		}
 	}
 
-	posts, err := h.pr.GetCuratedPosts(ctx, query.Principal, query.Cursor, query.AccountId)
+	posts, err := h.prr.GetCuratedPosts(ctx, query.Principal, query.Cursor, query.AccountId)
 
 	if err != nil {
 		return nil, err

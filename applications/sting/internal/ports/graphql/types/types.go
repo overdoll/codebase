@@ -616,10 +616,14 @@ type CuratedPostsFeedData struct {
 	// If the posts feed has not been generated, running the curatedPostsFeed query will generate the posts feed, and the query will only
 	// return once it's done generating.
 	GeneratedAt *time.Time `json:"generatedAt"`
-	// When the posts feed will be generated next. Null if the posts feed was not yet viewed.
+	// When the posts feed will be generated next. This will only update once the feed has started to generate a new one.
 	NextRegenerationTime *time.Time `json:"nextRegenerationTime"`
+	// When the curated posts feed is viewed, the duration in milliseconds it takes to generate a new one.
+	NextRegenerationTimeDuration int `json:"nextRegenerationTimeDuration"`
 	// Whether or not the posts feed was viewed since it was generated.
-	ViewedSinceGeneration bool `json:"viewedSinceGeneration"`
+	//
+	// Null if it was never viewed.
+	ViewedAt *time.Time `json:"viewedAt"`
 }
 
 type CurationProfile struct {

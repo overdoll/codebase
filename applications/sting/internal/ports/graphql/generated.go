@@ -337,9 +337,10 @@ type ComplexityRoot struct {
 	}
 
 	CuratedPostsFeedData struct {
-		GeneratedAt           func(childComplexity int) int
-		NextRegenerationTime  func(childComplexity int) int
-		ViewedSinceGeneration func(childComplexity int) int
+		GeneratedAt                  func(childComplexity int) int
+		NextRegenerationTime         func(childComplexity int) int
+		NextRegenerationTimeDuration func(childComplexity int) int
+		ViewedAt                     func(childComplexity int) int
 	}
 
 	CurationProfile struct {
@@ -2238,12 +2239,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.CuratedPostsFeedData.NextRegenerationTime(childComplexity), true
 
-	case "CuratedPostsFeedData.viewedSinceGeneration":
-		if e.complexity.CuratedPostsFeedData.ViewedSinceGeneration == nil {
+	case "CuratedPostsFeedData.nextRegenerationTimeDuration":
+		if e.complexity.CuratedPostsFeedData.NextRegenerationTimeDuration == nil {
 			break
 		}
 
-		return e.complexity.CuratedPostsFeedData.ViewedSinceGeneration(childComplexity), true
+		return e.complexity.CuratedPostsFeedData.NextRegenerationTimeDuration(childComplexity), true
+
+	case "CuratedPostsFeedData.viewedAt":
+		if e.complexity.CuratedPostsFeedData.ViewedAt == nil {
+			break
+		}
+
+		return e.complexity.CuratedPostsFeedData.ViewedAt(childComplexity), true
 
 	case "CurationProfile.audience":
 		if e.complexity.CurationProfile.Audience == nil {
@@ -6524,14 +6532,21 @@ type CuratedPostsFeedData {
   generatedAt: Time
 
   """
-  When the posts feed will be generated next. Null if the posts feed was not yet viewed.
+  When the posts feed will be generated next. This will only update once the feed has started to generate a new one.
   """
   nextRegenerationTime: Time
 
   """
-  Whether or not the posts feed was viewed since it was generated.
+  When the curated posts feed is viewed, the duration in milliseconds it takes to generate a new one.
   """
-  viewedSinceGeneration: Boolean!
+  nextRegenerationTimeDuration: Int!
+
+  """
+  Whether or not the posts feed was viewed since it was generated.
+
+  Null if it was never viewed.
+  """
+  viewedAt: Time
 }
 
 extend type Account {
@@ -6542,7 +6557,7 @@ extend type Account {
 
   Can be used to show a "notification" to the user as well.
   """
-  curatedPostsFeedData: CuratedPostsFeedData!  @goField(forceResolver: true)
+  curatedPostsFeedData: CuratedPostsFeedData! @goField(forceResolver: true)
 
   """
   Curated posts feed.
@@ -12104,8 +12119,10 @@ func (ec *executionContext) fieldContext_Account_curatedPostsFeedData(ctx contex
 				return ec.fieldContext_CuratedPostsFeedData_generatedAt(ctx, field)
 			case "nextRegenerationTime":
 				return ec.fieldContext_CuratedPostsFeedData_nextRegenerationTime(ctx, field)
-			case "viewedSinceGeneration":
-				return ec.fieldContext_CuratedPostsFeedData_viewedSinceGeneration(ctx, field)
+			case "nextRegenerationTimeDuration":
+				return ec.fieldContext_CuratedPostsFeedData_nextRegenerationTimeDuration(ctx, field)
+			case "viewedAt":
+				return ec.fieldContext_CuratedPostsFeedData_viewedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type CuratedPostsFeedData", field.Name)
 		},
@@ -19938,8 +19955,8 @@ func (ec *executionContext) fieldContext_CuratedPostsFeedData_nextRegenerationTi
 	return fc, nil
 }
 
-func (ec *executionContext) _CuratedPostsFeedData_viewedSinceGeneration(ctx context.Context, field graphql.CollectedField, obj *types.CuratedPostsFeedData) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_CuratedPostsFeedData_viewedSinceGeneration(ctx, field)
+func (ec *executionContext) _CuratedPostsFeedData_nextRegenerationTimeDuration(ctx context.Context, field graphql.CollectedField, obj *types.CuratedPostsFeedData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CuratedPostsFeedData_nextRegenerationTimeDuration(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -19952,7 +19969,7 @@ func (ec *executionContext) _CuratedPostsFeedData_viewedSinceGeneration(ctx cont
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ViewedSinceGeneration, nil
+		return obj.NextRegenerationTimeDuration, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -19964,19 +19981,60 @@ func (ec *executionContext) _CuratedPostsFeedData_viewedSinceGeneration(ctx cont
 		}
 		return graphql.Null
 	}
-	res := resTmp.(bool)
+	res := resTmp.(int)
 	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_CuratedPostsFeedData_viewedSinceGeneration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_CuratedPostsFeedData_nextRegenerationTimeDuration(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "CuratedPostsFeedData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CuratedPostsFeedData_viewedAt(ctx context.Context, field graphql.CollectedField, obj *types.CuratedPostsFeedData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CuratedPostsFeedData_viewedAt(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ViewedAt, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*time.Time)
+	fc.Result = res
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CuratedPostsFeedData_viewedAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CuratedPostsFeedData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Time does not have child fields")
 		},
 	}
 	return fc, nil
@@ -42676,13 +42734,17 @@ func (ec *executionContext) _CuratedPostsFeedData(ctx context.Context, sel ast.S
 
 			out.Values[i] = ec._CuratedPostsFeedData_nextRegenerationTime(ctx, field, obj)
 
-		case "viewedSinceGeneration":
+		case "nextRegenerationTimeDuration":
 
-			out.Values[i] = ec._CuratedPostsFeedData_viewedSinceGeneration(ctx, field, obj)
+			out.Values[i] = ec._CuratedPostsFeedData_nextRegenerationTimeDuration(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
+		case "viewedAt":
+
+			out.Values[i] = ec._CuratedPostsFeedData_viewedAt(ctx, field, obj)
+
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

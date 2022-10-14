@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
@@ -20,17 +21,17 @@ var curatedPostsFeedDataTable = table.New(table.Metadata{
 		"account_id",
 		"generated_at",
 		"next_regeneration_time",
-		"was_viewed_since_generation",
+		"viewed_at",
 	},
 	PartKey: []string{"account_id"},
 	SortKey: []string{},
 })
 
 type curatedPostsFeedData struct {
-	AccountId                string     `db:"account_id"`
-	GeneratedAt              *time.Time `db:"generated_at"`
-	NextRegenerationTime     *time.Time `db:"next_regeneration_time"`
-	WasViewedSinceGeneration bool       `db:"was_viewed_since_generation"`
+	AccountId            string     `db:"account_id"`
+	GeneratedAt          *time.Time `db:"generated_at"`
+	NextRegenerationTime *time.Time `db:"next_regeneration_time"`
+	ViewedAt             *time.Time `db:"viewed_at"`
 }
 
 var curatedPostsFeedPostsTable = table.New(table.Metadata{
@@ -57,22 +58,50 @@ func (r CurationCassandraRepository) GetCuratedPostsFeedData(ctx context.Context
 	return r.GetCuratedPostsFeedDataOperator(ctx, accountId)
 }
 
+func (r CurationCassandraRepository) UpdateCuratedPostsFeedPostsOperator(ctx context.Context, accountId string, postIds []string) error {
+
+	// first, delete old posts
+	if err := r.session.
+		Query(curatedPostsFeedPostsTable.DeleteBuilder().Where(qb.Eq("account_id")).ToCql()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(curatedPostsFeedPosts{AccountId: accountId}).
+		ExecRelease(); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to delete curated posts feed posts")
+	}
+
+	for _, postId := range postIds {
+		if err := r.session.
+			Query(curatedPostsFeedPostsTable.Insert()).
+			WithContext(ctx).
+			Idempotent(true).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(curatedPostsFeedPosts{AccountId: accountId, PostId: postId}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to insert curated post")
+		}
+	}
+
+	return nil
+}
+
 func (r CurationCassandraRepository) UpdateCuratedPostsFeedDataOperator(ctx context.Context, postsFeedData *curation.PostsFeedData) error {
 
 	if err := r.session.
 		Query(curationProfileTable.Update(
 			"generated_at",
 			"next_regeneration_time",
-			"was_viewed_since_generation",
+			"viewed_at",
 		)).
 		WithContext(ctx).
 		Idempotent(true).
 		Consistency(gocql.LocalQuorum).
 		BindStruct(&curatedPostsFeedData{
-			AccountId:                postsFeedData.AccountId(),
-			GeneratedAt:              postsFeedData.GeneratedAt(),
-			NextRegenerationTime:     postsFeedData.NextRegenerationTime(),
-			WasViewedSinceGeneration: postsFeedData.WasViewedSinceGeneration(),
+			AccountId:            postsFeedData.AccountId(),
+			GeneratedAt:          postsFeedData.GeneratedAt(),
+			NextRegenerationTime: postsFeedData.NextRegenerationTime(),
+			ViewedAt:             postsFeedData.ViewedAt(),
 		}).
 		ExecRelease(); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to update curated posts feed data")
@@ -94,7 +123,7 @@ func (r CurationCassandraRepository) GetCuratedPostsFeedDataOperator(ctx context
 		GetRelease(&curatedPostsFeed); err != nil {
 
 		if err == gocql.ErrNotFound {
-			return curation.UnmarshalPostsFeedData(accountId, nil, nil, false), nil
+			return curation.UnmarshalPostsFeedData(accountId, nil, nil, nil), nil
 		}
 
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get curated posts feed data by id")
@@ -104,7 +133,7 @@ func (r CurationCassandraRepository) GetCuratedPostsFeedDataOperator(ctx context
 		curatedPostsFeed.AccountId,
 		curatedPostsFeed.GeneratedAt,
 		curatedPostsFeed.NextRegenerationTime,
-		curatedPostsFeed.WasViewedSinceGeneration,
+		curatedPostsFeed.ViewedAt,
 	), nil
 }
 

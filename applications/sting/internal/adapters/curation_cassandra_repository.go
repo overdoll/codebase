@@ -83,6 +83,10 @@ func (r CurationCassandraRepository) getProfileByAccountId(ctx context.Context, 
 	), nil
 }
 
+func (r CurationCassandraRepository) GetProfileByAccountIdOperator(ctx context.Context, accountId string) (*curation.Profile, error) {
+	return r.getProfileByAccountId(ctx, accountId)
+}
+
 func (r CurationCassandraRepository) GetProfileByAccountId(ctx context.Context, requester *principal.Principal, accountId string) (*curation.Profile, error) {
 
 	profile, err := r.getProfileByAccountId(ctx, accountId)

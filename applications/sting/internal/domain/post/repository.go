@@ -157,5 +157,7 @@ type Repository interface {
 	GetAccountPostLikes(ctx context.Context, accountId string) ([]string, error)
 
 	GenerateSitemap(ctx context.Context) error
+
+	GenerateCuratedPostIds(ctx context.Context, accountId string, audienceIds []string) ([]string, error)
 	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Post, error)
 }

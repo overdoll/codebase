@@ -25,6 +25,8 @@ go_library(
         "club_supporter_members_count.go",
         "club_suspension_logs.go",
         "clubs_by_ids.go",
+        "curated_posts_feed_data.go",
+        "curated_posts_feed_posts.go",
         "curation_profile_by_account_id.go",
         "discover_clubs.go",
         "game_session_status.go",
@@ -57,6 +59,7 @@ go_library(
     deps = [
         "//applications/sting/internal/domain/club",
         "//applications/sting/internal/domain/curation",
+        "//applications/sting/internal/domain/event",
         "//applications/sting/internal/domain/games",
         "//applications/sting/internal/domain/post",
         "//applications/sting/proto:v1_go_proto",
