@@ -5,7 +5,7 @@ import { clickOnButton, typeIntoPlaceholder } from '../../support/user_actions'
 Cypress.config('defaultCommandTimeout', 20000)
 
 describe('Join', () => {
-  it.skip('check join on new random account', () => {
+  it('check join on new random account', () => {
     /**
      * Register and check state
      */
@@ -19,9 +19,8 @@ describe('Join', () => {
 
     typeIntoPlaceholder('Enter a username', username)
     clickOnButton(/Register/iu)
-    cy.url().should('include', '/')
     cy.findByText(/Welcome to overdoll!/iu).should('exist')
-    cy.get(`a[href='/profile/${username}']`).should('be.visible')
+    cy.url().should('include', '/feed')
 
     /**
      * Log out and check state
@@ -35,7 +34,7 @@ describe('Join', () => {
     cy.get('a[href="/join"]').should('be.visible')
   })
 
-  it.skip('check join on existing account', () => {
+  it('check join on existing account', () => {
     const email = generateEmailFromExistingUsername('artist_verified')
 
     join(email)
@@ -43,7 +42,7 @@ describe('Join', () => {
     cy.url().should('include', '/')
   })
 
-  it.skip('revoke token in lobby', () => {
+  it('revoke token in lobby', () => {
     /**
      * Get to the lobby step
      */
@@ -51,11 +50,11 @@ describe('Join', () => {
     cy.visit('/join')
     typeIntoPlaceholder(/Enter an email/iu, email)
     clickOnButton(/Next/iu)
-    cy.findByText(/Check your email and click on/iu).should('be.visible')
+    cy.findByText(/Check your email for a/iu).should('be.visible')
 
     // refresh should restore state
     cy.reload()
-    cy.findByText(/Check your email and click on/iu).should('be.visible')
+    cy.findByText(/Check your email for a/iu).should('be.visible')
 
     /**
      * Cancel join in lobby and check state
@@ -67,10 +66,10 @@ describe('Join', () => {
     clickOnButton(/Next/iu)
     typeIntoPlaceholder(/Enter an email/iu, email)
     clickOnButton(/Next/iu)
-    cy.findByText(/Check your email and click on/iu).should('be.visible')
+    cy.findByText(/Check your email for a/iu).should('be.visible')
   })
 
-  it.skip('revoke token in multi factor', () => {
+  it('revoke token in multi factor', () => {
     /**
      * Setup account
      */
@@ -90,10 +89,10 @@ describe('Join', () => {
     cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
   })
 
-  it.skip('invalid token page', () => {
-    cy.visit('/verify-token')
-    cy.findByText(/This link is either invalid or/iu).should('be.visible')
-    clickOnButton('Back')
-    cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
-  })
+  // it('invalid token page', () => {
+  //   cy.visit('/verify-token')
+  //   cy.findByText(/This link is either invalid or/iu).should('be.visible')
+  //   clickOnButton('Back')
+  //   cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
+  // })
 })

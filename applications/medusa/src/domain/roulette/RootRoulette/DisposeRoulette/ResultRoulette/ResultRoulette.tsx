@@ -3,12 +3,13 @@ import type { ResultRouletteQuery } from '@//:artifacts/ResultRouletteQuery.grap
 import { graphql } from 'react-relay'
 import MetaRoulette from './MetaRoulette/MetaRoulette'
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 interface Props {
@@ -36,9 +37,11 @@ export default function ResultRoulette (props: Props): JSX.Element {
 
   return (
     <>
-      {queryData.viewer == null && (
-        <LazyBanner />
-      )}
+      <Suspense fallback={<></>}>
+        {queryData.viewer == null && (
+          <LazyBanner />
+        )}
+      </Suspense>
       <MetaRoulette gameSessionStatusQuery={queryData?.gameSessionStatus} />
     </>
   )

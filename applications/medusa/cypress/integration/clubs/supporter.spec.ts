@@ -35,14 +35,14 @@ describe('Supporter', () => {
      */
     cy.visit(`/${newPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
-    cy.findByText(/Your contribution directly supports/iu).should('be.visible')
+    cy.findByText(/Become a supporter to help/iu).should('be.visible')
     // change currency
     cy.findByText('USD').should('not.be.disabled').parent().get('select').select('CAD')
     cy.findByText(/CA[$]/u).should('be.visible')
     cy.findByText('CAD').should('not.be.disabled').parent().get('select').select('USD')
 
     // check if agreement blocking works
-    clickOnButton(/Subscribe with CCBill/iu)
+    clickOnButton(/Enter payment information/iu)
     cy.findByText(/You must agree to the guidelines/iu).should('be.visible')
     clickOnToggle(/I have read and agree to the/iu, true)
     clickOnToggle(/Remember this payment method/iu, true)
@@ -55,7 +55,7 @@ describe('Supporter', () => {
         // @ts-expect-error
       }).as('windowOpen')
     })
-    clickOnButton(/Subscribe with CCBill/iu)
+    clickOnButton(/Enter payment information/iu)
     cy.findByText(/CCBill is a designated payment processor/iu).should('exist')
 
     // fill out billing details
@@ -125,16 +125,16 @@ describe('Supporter', () => {
     // check selections
     cy.findByText(/Enter a new payment method/iu).should('not.be.disabled').click({ force: true })
     clickOnButton('Next')
-    cy.findByRole('button', { name: /Subscribe with CCBill/iu }).should('not.be.disabled')
+    cy.findByRole('button', { name: /Enter payment information/iu }).should('not.be.disabled')
     cy.findByText(/I have read and agree to the/iu).should('be.visible').parent().get('label').click({ multiple: true })
     // stub the window so it doesn't appear
     cy.window().then((win) => {
       cy.stub(win, 'open').as('windowOpen')
     })
-    clickOnButton(/Subscribe with CCBill/iu)
+    clickOnButton(/Enter payment information/iu)
     cy.findByText(/Enter your payment details in the new window/iu).should('be.visible')
     clickOnButton(/Cancel/iu)
-    cy.findByText(/Your contribution directly supports/iu).should('be.visible')
+    cy.findByText(/Become a supporter to help/iu).should('be.visible')
 
     cy.get('button[aria-label="Close"]').click()
     cy.findByText(/Use a saved payment method/iu).should('not.be.disabled').click({ force: true })

@@ -6,6 +6,7 @@ import HorizontalNavigationButton from '../../HorizontalNavigationButton/Horizon
 import { Trans } from '@lingui/macro'
 import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
 import SiteLinkLogo from '@//:domain/app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
+import Can from '../../../../../authorization/Can'
 
 interface Props {
   children: ReactNode
@@ -55,16 +56,18 @@ const MobileHorizontalNavigationDropdownMenu = (props: Props): JSX.Element => {
             <Stack spacing={2}>
               <Flex align='center' w='100%' justify='space-between'>
                 <SiteLinkLogo />
-                <LinkButton
-                  borderRadius='md'
-                  colorScheme='orange'
-                  href='/supporter'
-                  onClick={onClose}
-                >
-                  <Trans>
-                    Become Supporter
-                  </Trans>
-                </LinkButton>
+                <Can not I='create' a='Club'>
+                  <LinkButton
+                    borderRadius='md'
+                    colorScheme='orange'
+                    href='/supporter'
+                    onClick={onClose}
+                  >
+                    <Trans>
+                      Become Supporter
+                    </Trans>
+                  </LinkButton>
+                </Can>
               </Flex>
               <Wrap justify='center' align='center'>
                 {children}

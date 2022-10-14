@@ -9,19 +9,20 @@ import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHe
 import { RandomizeDice } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 interface Props {
@@ -52,12 +53,14 @@ export default function ContainerRandom (props: Props): JSX.Element {
 
   return (
     <ContentContainer pt={2}>
-      {viewerData == null && (
-        <>
-          <LazyModal />
-          <LazyBanner />
-        </>
-      )}
+      <Suspense fallback={<></>}>
+        {viewerData == null && (
+          <>
+            <LazyModal />
+            <LazyBanner />
+          </>
+        )}
+      </Suspense>
       <Stack spacing={4}>
         <PageHeader icon={RandomizeDice} title={<Trans>Random posts</Trans>} />
         <ScrollRandom accountQuery={viewerData} rootQuery={rootData} />

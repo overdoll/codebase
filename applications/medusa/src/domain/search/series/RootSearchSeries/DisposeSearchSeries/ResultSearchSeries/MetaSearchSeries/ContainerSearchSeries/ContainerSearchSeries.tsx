@@ -7,19 +7,20 @@ import HeaderSearchSeries from './HeaderSearchSeries/HeaderSearchSeries'
 import ScrollSearchSeries from './ScrollSearchSeries/ScrollSearchSeries'
 import dynamic from 'next/dynamic'
 import { Stack } from '@chakra-ui/react'
+import { Suspense } from 'react'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 interface Props {
@@ -51,12 +52,14 @@ export default function ContainerSearchSeries (props: Props): JSX.Element {
 
   return (
     <>
-      {accountData == null && (
-        <>
-          <LazyBanner />
-          <LazyModal />
-        </>
-      )}
+      <Suspense fallback={<></>}>
+        {accountData == null && (
+          <>
+            <LazyBanner />
+            <LazyModal />
+          </>
+        )}
+      </Suspense>
       <ContentContainer pt={2}>
         <Stack spacing={8}>
           <HeaderSearchSeries seriesQuery={seriesData} />

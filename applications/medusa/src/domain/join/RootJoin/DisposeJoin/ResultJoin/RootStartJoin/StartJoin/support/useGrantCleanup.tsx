@@ -26,7 +26,7 @@ export default function useGrantCleanup (): UseGrantCleanupReturn {
 
   const successfulGrant: SuccessfulGrantType = (store, viewerPayload, revokedAuthenticationToken) => {
     setViewer(store, viewerPayload)
-    void router.push(redirect != null ? redirect : '/feed').then(() => {
+    void router.push(redirect != null ? redirect : '/').then(() => {
       removeCookie('token')
       invalidateAuthenticationToken(store, revokedAuthenticationToken)
     })

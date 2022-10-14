@@ -16,7 +16,9 @@ export default function MobileHorizontalNavigationCenter (props: Props): JSX.Ele
       w='100%'
     >
       <HStack
-        spacing={7}
+        px={2}
+        w='100%'
+        justify='space-between'
       >
         {children}
       </HStack>

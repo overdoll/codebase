@@ -8,6 +8,7 @@ import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHe
 import { HeartFull } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
 interface Props {
   viewerQuery: ContainerLikesViewerFragment$key
@@ -18,7 +19,7 @@ const LazyBanner = dynamic(
     return await import('./LockedLikesBanner/LockedLikesBanner')
   },
   {
-    ssr: false
+    suspense: true
   }
 )
 
@@ -27,7 +28,7 @@ const LazyShadow = dynamic(
     return await import('@//:modules/content/HookedComponents/Filters/components/SupporterUnlockShadow/SupporterUnlockShadow')
   },
   {
-    ssr: false
+    suspense: true
   }
 )
 
@@ -47,10 +48,16 @@ export default function ContainerLikes (props: Props): JSX.Element {
 
   return (
     <ContentContainer pt={2}>
-      {!viewerData.hasClubSupporterSubscription && (<LazyBanner />)}
       <Stack minH={900} spacing={4} position='relative'>
         <PageHeader icon={HeartFull} title={<Trans>Your liked posts</Trans>} />
-        {!viewerData.hasClubSupporterSubscription && (<LazyShadow />)}
+        <Suspense fallback={<></>}>
+          {!viewerData.hasClubSupporterSubscription && (
+            <>
+              <LazyShadow />
+              <LazyBanner />
+            </>
+          )}
+        </Suspense>
         <ScrollPostsLikes accountQuery={viewerData} />
       </Stack>
     </ContentContainer>

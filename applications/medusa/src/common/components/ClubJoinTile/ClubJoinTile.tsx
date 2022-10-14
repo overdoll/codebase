@@ -13,6 +13,9 @@ interface Props {
 const ClubFragment = graphql`
   fragment ClubJoinTileFragment on Club {
     slug
+    viewerMember {
+      __typename
+    }
     ...ClubJoinButtonFragment
     ...ClubTileOverlayFragment
   }
@@ -43,7 +46,9 @@ export default function ClubJoinTile (props: Props): JSX.Element {
         <ClubTileOverlay query={clubData} />
       </LinkTile>
       <Box p={2} right={0} top={0} position='absolute'>
-        <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
+        {clubData.viewerMember == null && (
+          <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
+        )}
       </Box>
     </Flex>
   )

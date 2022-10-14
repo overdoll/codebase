@@ -1,7 +1,7 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { ContainerPublicPostFragment$key } from '@//:artifacts/ContainerPublicPostFragment.graphql'
 import type { ContainerPublicPostViewerFragment$key } from '@//:artifacts/ContainerPublicPostViewerFragment.graphql'
-import React, { useMemo } from 'react'
+import React, { Suspense } from 'react'
 import BannerPublicPost from './BannerPublicPost/BannerPublicPost'
 import DescriptionPublicPost from './DescriptionPublicPost/DescriptionPublicPost'
 import { BannerContainer, CinematicContainer, ContentContainer } from '@//:modules/content/PageLayout'
@@ -11,22 +11,20 @@ import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHe
 import { Trans } from '@lingui/macro'
 import { MagicWand } from '@//:assets/icons'
 import PrepareGridSuggestedPosts from './PrepareGridSuggestedPosts/PrepareGridSuggestedPosts'
-import PrepareSuggestedPosts from './PrepareSuggestedPosts/PrepareSuggestedPosts'
-import useFeatureFlag from '@//:modules/hooks/useFeatureFlag'
 import dynamic from 'next/dynamic'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 interface Props {
@@ -63,12 +61,14 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
 
   return (
     <>
-      {viewerData == null && (
-        <>
-          <LazyBanner />
-          <LazyModal />
-        </>
-      )}
+      <Suspense fallback={<></>}>
+        {viewerData == null && (
+          <>
+            <LazyBanner />
+            <LazyModal />
+          </>
+        )}
+      </Suspense>
       <BannerContainer>
         <BannerPublicPost postQuery={postData} viewerQuery={viewerData} />
       </BannerContainer>

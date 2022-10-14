@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0eb836d1beb214805d64ba72c815413c>>
+ * @generated SignedSource<<f49d6886bba762342950606cb168dfa9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -45,6 +45,11 @@ return {
     {
       "kind": "RootArgument",
       "name": "seed"
+    },
+    {
+      "defaultValue": "ALGORITHM",
+      "kind": "LocalArgument",
+      "name": "sortBy"
     }
   ],
   "kind": "Fragment",
@@ -81,9 +86,9 @@ return {
           "variableName": "seed"
         },
         {
-          "kind": "Literal",
+          "kind": "Variable",
           "name": "sortBy",
-          "value": "ALGORITHM"
+          "variableName": "sortBy"
         },
         {
           "kind": "Literal",
@@ -176,6 +181,6 @@ return {
 };
 })();
 
-(node as any).hash = "bbbb05a002f36b4427125719dbb2a262";
+(node as any).hash = "9e7038ce5cf37c2205b872bf3089d824";
 
 export default node;

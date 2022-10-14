@@ -134,15 +134,13 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
           return
         }
         const viewerPayload = store.getRootField('createAccountWithAuthenticationToken').getLinkedRecord('account')
-
-        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
-        flash('new.account', '')
-
         notify({
           status: 'success',
           title: t`Welcome to overdoll!`,
           isClosable: true
         })
+        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
+        flash('new.account', '')
       },
       onCompleted (data) {
         const tokenAccount = data?.createAccountWithAuthenticationToken?.account

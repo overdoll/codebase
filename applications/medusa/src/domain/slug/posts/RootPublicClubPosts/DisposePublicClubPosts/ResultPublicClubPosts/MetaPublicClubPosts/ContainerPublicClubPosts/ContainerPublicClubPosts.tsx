@@ -10,19 +10,20 @@ import ScrollPublicClubPosts from './ScrollPublicClubPosts/ScrollPublicClubPosts
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import { Stack } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 interface Props {
@@ -55,12 +56,14 @@ export default function ContainerPublicClubPosts (props: Props): JSX.Element {
 
   return (
     <>
-      {viewerData == null && (
-        <>
-          <LazyBanner />
-          <LazyModal />
-        </>
-      )}
+      <Suspense fallback={<></>}>
+        {viewerData == null && (
+          <>
+            <LazyBanner />
+            <LazyModal />
+          </>
+        )}
+      </Suspense>
       <BannerContainer pt={2}>
         <BannerPublicClubPosts viewerQuery={viewerData} />
       </BannerContainer>

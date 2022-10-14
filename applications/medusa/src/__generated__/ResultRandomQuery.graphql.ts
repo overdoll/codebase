@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<64aa472c197260835e4edd8cb149dea6>>
- * @relayHash ab2b7c2d9060c4b322dfd3779c768ebc
+ * @generated SignedSource<<cb6640b81822a4bb90a72afb257e8259>>
+ * @relayHash 70346326e134998988244c5c8dba65f3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ab2b7c2d9060c4b322dfd3779c768ebc
+// @relayRequestID 70346326e134998988244c5c8dba65f3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -605,6 +605,13 @@ return {
             "name": "hasClubSupporterSubscription",
             "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isStaff",
+            "storageKey": null
+          },
           (v3/*: any*/),
           (v2/*: any*/)
         ],
@@ -613,7 +620,7 @@ return {
     ]
   },
   "params": {
-    "id": "ab2b7c2d9060c4b322dfd3779c768ebc",
+    "id": "70346326e134998988244c5c8dba65f3",
     "metadata": {},
     "name": "ResultRandomQuery",
     "operationKind": "query",

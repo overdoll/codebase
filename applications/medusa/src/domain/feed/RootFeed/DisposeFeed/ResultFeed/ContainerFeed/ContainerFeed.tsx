@@ -6,13 +6,14 @@ import ScrollPostsFeed from './ScrollPostsFeed/ScrollPostsFeed'
 import { Stack } from '@chakra-ui/react'
 import HeaderFeed from './HeaderFeed/HeaderFeed'
 import dynamic from 'next/dynamic'
+import { Suspense } from 'react'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('./CompleteFeedBanner/CompleteFeedBanner')
   },
   {
-    ssr: false
+    suspense: true
   }
 )
 
@@ -42,9 +43,11 @@ export default function ContainerFeed (props: Props): JSX.Element {
 
   return (
     <ContentContainer pt={2}>
-      {(viewerData.clubMembershipsCount < 1 && !viewerData.curationProfile.audience.completed) && (
-        <LazyBanner />
-      )}
+      <Suspense fallback={<></>}>
+        {(viewerData.clubMembershipsCount < 1 || !viewerData.curationProfile.audience.completed) && (
+          <LazyBanner />
+        )}
+      </Suspense>
       <Stack spacing={4}>
         <HeaderFeed viewerQuery={viewerData} />
         <ScrollPostsFeed accountQuery={viewerData} />

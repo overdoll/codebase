@@ -4,7 +4,7 @@ import type {
   CurationProfileAudienceButtonFragment$key
 } from '@//:artifacts/CurationProfileAudienceButtonFragment.graphql'
 import compareTwoArrays from '@//:modules/support/compareTwoArrays'
-import { FlowBuilderNextButton, FlowBuilderSaveButton } from '@//:modules/content/PageLayout'
+import { FlowBuilderNextButton, FlowBuilderSaveButton, FlowBuilderSkipButton } from '@//:modules/content/PageLayout'
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import posthog from 'posthog-js'
@@ -80,6 +80,34 @@ export default function CurationProfileAudienceButton (props: Props): JSX.Elemen
     })
   }
 
+  const onSkipAudience = (): void => {
+    updateAudience({
+      variables: {
+        audienceIds: [],
+        skipped: true
+      },
+      onCompleted () {
+        posthog?.capture('update-curation-audience')
+        nextStep()
+      },
+      onError () {
+        notify({
+          status: 'error',
+          title: t`There was an error saving the audiences`
+        })
+      }
+    })
+  }
+
+  if (Object.keys(state.audience).length < 1 && currentAudienceIds.length < 1) {
+    return (
+      <FlowBuilderSkipButton
+        isLoading={isUpdatingAudience}
+        onClick={onSkipAudience}
+      />
+    )
+  }
+
   if (saveCondition) {
     return (
       <FlowBuilderSaveButton
@@ -88,5 +116,6 @@ export default function CurationProfileAudienceButton (props: Props): JSX.Elemen
       />
     )
   }
+
   return <FlowBuilderNextButton />
 }

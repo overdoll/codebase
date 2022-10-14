@@ -6,6 +6,7 @@ import { Trans } from '@lingui/macro'
 import { FreshLeaf, HotContent, RisingGraph } from '@//:assets/icons'
 import { useState } from 'react'
 import dynamic from 'next/dynamic'
+import { RefetchFnDynamic } from 'react-relay/relay-hooks/useRefetchableFragmentNode'
 
 const LazyModal = dynamic(
   async () => {
@@ -16,13 +17,14 @@ const LazyModal = dynamic(
 export type PostsSupporterFiltersLoadQuery = (variables: Record<string, any>) => void
 
 interface Props {
-  loadQuery: PostsSupporterFiltersLoadQuery
+  loadQuery: PostsSupporterFiltersLoadQuery | RefetchFnDynamic<any, any>
   query: PostsSupporterFiltersFragment$key | null
 }
 
 const Fragment = graphql`
   fragment PostsSupporterFiltersFragment on Account {
     hasClubSupporterSubscription
+    isStaff
   }
 `
 
@@ -38,7 +40,7 @@ export default function PostsSupporterFilters (props: Props): JSX.Element {
 
   const onChangeFilter = (filter: string): void => {
     setActiveFilter(filter)
-    loadQuery({ sortBy: filter })
+    loadQuery({ sortBy: filter }, { fetchPolicy: 'network-only' })
   }
 
   const {
@@ -47,7 +49,7 @@ export default function PostsSupporterFilters (props: Props): JSX.Element {
     onClose
   } = useDisclosure()
 
-  const filterLocked = data?.hasClubSupporterSubscription !== true
+  const filterLocked = data?.hasClubSupporterSubscription !== true && data?.isStaff !== true
 
   const filterButtons = [
     {

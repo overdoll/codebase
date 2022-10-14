@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bb60cd1fc09c1a3b01e618b172db39b5>>
- * @relayHash edccebe648899dec3478fcebb434eb68
+ * @generated SignedSource<<290aaf4197d238069e4735e7e760a1f2>>
+ * @relayHash af3bd1034f4abc23d04461eecfcaaceb
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID edccebe648899dec3478fcebb434eb68
+// @relayRequestID af3bd1034f4abc23d04461eecfcaaceb
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -338,6 +338,19 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "ClubMember",
+                    "kind": "LinkedField",
+                    "name": "viewerMember",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v0/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "kind": "ScalarField",
                     "name": "viewerIsOwner",
                     "storageKey": null
@@ -479,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "edccebe648899dec3478fcebb434eb68",
+    "id": "af3bd1034f4abc23d04461eecfcaaceb",
     "metadata": {},
     "name": "CurationSettingsQuery",
     "operationKind": "query",

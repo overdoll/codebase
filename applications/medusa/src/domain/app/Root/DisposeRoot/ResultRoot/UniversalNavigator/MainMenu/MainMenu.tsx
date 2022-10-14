@@ -20,14 +20,12 @@ export default function MainMenu (): JSX.Element {
         label={i18n._(t`Home`)}
       />
       <MainMenuButtonFeed />
-      <Can not I='create' a='Club'>
-        <HorizontalNavigationButton
-          colorScheme='primary'
-          href='/search'
-          icon={SearchBar}
-          label={i18n._(t`Search`)}
-        />
-      </Can>
+      <HorizontalNavigationButton
+        colorScheme='primary'
+        href='/search'
+        icon={SearchBar}
+        label={i18n._(t`Search`)}
+      />
       <Can I='create' a='Post'>
         <MainMenuButtonCreatePost />
       </Can>

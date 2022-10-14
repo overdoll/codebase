@@ -9,12 +9,13 @@ import HeaderSearchCharacter from './HeaderSearchCharacter/HeaderSearchCharacter
 import ScrollSearchCharacter from './ScrollSearchCharacter/ScrollSearchCharacter'
 import dynamic from 'next/dynamic'
 import { Stack } from '@chakra-ui/react'
+import { Suspense } from 'react'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 interface Props {
@@ -46,9 +47,11 @@ export default function ContainerSearchCharacter (props: Props): JSX.Element {
 
   return (
     <>
-      {accountData == null && (
-        <LazyBanner />
-      )}
+      <Suspense fallback={<></>}>
+        {accountData == null && (
+          <LazyBanner />
+        )}
+      </Suspense>
       <ContentContainer pt={2}>
         <Stack spacing={8}>
           <HeaderSearchCharacter characterQuery={characterData} />

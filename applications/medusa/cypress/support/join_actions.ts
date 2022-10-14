@@ -19,18 +19,18 @@ export const join = (email: string): void => {
 
   typeIntoPlaceholder(/Enter an email/iu, email)
 
-  cy.findByRole('button', { name: /Next/iu })
+  cy.findByRole('button', { name: /Next/iu }).should('not.be.disabled')
     .click()
+
+  cy.findByText(/Check your email for a/iu).should('be.visible')
 
   cy.contains(email).then(() => {
     cy.displayLastEmail(startTimestamp, 'Join Email', email)
   })
 
-  // we dont want to "click" on the link or else the test will break, so we just visit it
-  cy.findByText('Authenticate').then(ln => {
-    const url = ln.prop('href')
-    cy.visit(url)
+  cy.get('.auth-code').invoke('text').then(text => {
+    cy.visit('/join')
+    typeIntoPlaceholder(/Enter 6-digit code/iu, text)
+    cy.findByText(/Check your email for a/iu).should('not.exist')
   })
-
-  cy.url().should('include', '/verify-token')
 }

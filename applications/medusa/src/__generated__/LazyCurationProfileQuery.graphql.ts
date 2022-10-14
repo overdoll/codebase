@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b87679b7e138e0c26d4c311146a673fe>>
- * @relayHash fe0d1bf92dbacf52e5570b6caa400294
+ * @generated SignedSource<<124dd8c9176adf8a825747ecee3ec1bf>>
+ * @relayHash 6dc1a40e1c0f960d0930124362b0fc5a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID fe0d1bf92dbacf52e5570b6caa400294
+// @relayRequestID 6dc1a40e1c0f960d0930124362b0fc5a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -333,6 +333,19 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "ClubMember",
+                    "kind": "LinkedField",
+                    "name": "viewerMember",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      (v0/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "kind": "ScalarField",
                     "name": "viewerIsOwner",
                     "storageKey": null
@@ -474,7 +487,7 @@ return {
     ]
   },
   "params": {
-    "id": "fe0d1bf92dbacf52e5570b6caa400294",
+    "id": "6dc1a40e1c0f960d0930124362b0fc5a",
     "metadata": {},
     "name": "LazyCurationProfileQuery",
     "operationKind": "query",

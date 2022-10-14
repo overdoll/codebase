@@ -18,9 +18,10 @@ const RootFragment = graphql`
   @argumentDefinitions(
     first: {type: Int, defaultValue: 5}
     after: {type: String}
+    sortBy: {type: PostsSort, defaultValue: ALGORITHM}
   )
   @refetchable(queryName: "RandomPostsPaginationQuery" ) {
-    posts (first: $first, after: $after, seed: $seed, state: PUBLISHED, sortBy: ALGORITHM)
+    posts (first: $first, after: $after, seed: $seed, state: PUBLISHED, sortBy: $sortBy)
     @connection (key: "RandomPosts_posts") {
       edges {
         node {

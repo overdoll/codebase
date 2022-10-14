@@ -16,8 +16,21 @@ type AccountResolver struct {
 }
 
 func (r AccountResolver) HasClubSupporterSubscription(ctx context.Context, obj *types.Account) (bool, error) {
-	//TODO implement me
-	panic("implement me")
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return false, err
+	}
+
+	result, err := r.App.Queries.HasClubSupporterSubscription.Handle(ctx, query.HasClubSupporterSubscription{
+		Principal: principal.FromContext(ctx),
+		AccountId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return false, err
+	}
+
+	return result, nil
 }
 
 func (r AccountResolver) LikedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {

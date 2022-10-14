@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ec56dc6991d866c6e2b05ed3c4be90f9>>
+ * @generated SignedSource<<dfacb5f26bb9e520419a6b8c0ab37650>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,6 +12,7 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostsSupporterFiltersFragment$data = {
   readonly hasClubSupporterSubscription: boolean;
+  readonly isStaff: boolean;
   readonly " $fragmentType": "PostsSupporterFiltersFragment";
 };
 export type PostsSupporterFiltersFragment$key = {
@@ -31,12 +32,19 @@ const node: ReaderFragment = {
       "kind": "ScalarField",
       "name": "hasClubSupporterSubscription",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "isStaff",
+      "storageKey": null
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
 
-(node as any).hash = "f5f4fd9f25705b7aef3abc787f92504b";
+(node as any).hash = "caced568803996a1f341ffba03564522";
 
 export default node;

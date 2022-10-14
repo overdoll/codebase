@@ -8,6 +8,7 @@ import { Stack } from '@chakra-ui/react'
 import PageHeader from '@//:modules/content/PageLayout/Display/components/PageHeader/PageHeader'
 import { ContentBrushPen } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
+import { Suspense } from 'react'
 
 interface Props {
   query: PreloadedQuery<DiscoverClubsQuery>
@@ -26,14 +27,14 @@ const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { ssr: false }
+  { suspense: true }
 )
 
 export default function DiscoverClubs (props: Props): JSX.Element {
@@ -44,12 +45,14 @@ export default function DiscoverClubs (props: Props): JSX.Element {
 
   return (
     <>
-      {queryData.viewer == null && (
-        <>
-          <LazyBanner />
-          <LazyModal />
-        </>
-      )}
+      <Suspense fallback={<></>}>
+        {queryData.viewer == null && (
+          <>
+            <LazyBanner />
+            <LazyModal />
+          </>
+        )}
+      </Suspense>
       <Stack spacing={2}>
         <PageHeader icon={ContentBrushPen} title={<Trans>Discover clubs</Trans>} />
         <DiscoverClubsList query={queryData} />

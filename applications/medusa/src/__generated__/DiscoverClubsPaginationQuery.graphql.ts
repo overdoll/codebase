@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<795d96267368f94746bb849ceed47a86>>
- * @relayHash 2634ed9863883caf692512c48e1fec99
+ * @generated SignedSource<<0832d3244a85ae3834ad841423fbb95b>>
+ * @relayHash 56672f4be3121ebc7def9bf8ad0eb9f4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2634ed9863883caf692512c48e1fec99
+// @relayRequestID 56672f4be3121ebc7def9bf8ad0eb9f4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -248,6 +248,19 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "ClubMember",
+                    "kind": "LinkedField",
+                    "name": "viewerMember",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "kind": "ScalarField",
                     "name": "viewerIsOwner",
                     "storageKey": null
@@ -415,7 +428,7 @@ return {
     ]
   },
   "params": {
-    "id": "2634ed9863883caf692512c48e1fec99",
+    "id": "56672f4be3121ebc7def9bf8ad0eb9f4",
     "metadata": {},
     "name": "DiscoverClubsPaginationQuery",
     "operationKind": "query",

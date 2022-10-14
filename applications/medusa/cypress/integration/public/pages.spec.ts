@@ -1,33 +1,12 @@
 describe('Pages', () => {
-  it('go to the home page', () => {
-    cy.visit('/')
-  })
-
-  it('go to browse page', () => {
-    cy.visit('/browse')
-  })
-
-  it('go to random page', () => {
-    cy.visit('/random')
-  })
-
-  it('go to new page', () => {
-    cy.visit('/new')
-  })
-
-  it('go to top page', () => {
-    cy.visit('/top')
-  })
-
-  it('go to the artists page as not logged in', () => {
+  it('go to the creators page as not logged in', () => {
     cy.visit('/creators')
     cy.findAllByText(/The next platform for/iu)
   })
 
-  // TODO add tests for joining club from discover page as logged in, not logged in
-  it('go to the clubs discover page as not logged in', () => {
-    cy.visit('/clubs/discover')
-    cy.findByText(/Create an account/iu)
+  it('go to the supporter page as not logged in', () => {
+    cy.visit('/supporter')
+    cy.findAllByText('BECOME A SUPPORTER').should('be.visible')
   })
 
   it('go to the help page', () => {

@@ -13,6 +13,7 @@ import {
 } from '@//:modules/content/HookedComponents/Form'
 import { useLingui } from '@lingui/react'
 import VerifyToken6DigitSecret from '@//:modules/validation/VerifyToken6DigitSecret'
+import { useEffect } from 'react'
 
 interface RegisterValues {
   secret: string
@@ -40,6 +41,28 @@ export default function CodeAuthenticationTokenJoinForm (props: Props): JSX.Elem
       schema
     )
   })
+
+  const {
+    watch,
+    handleSubmit,
+    setValue
+  } = methods
+
+  useEffect(() => {
+    const subscription = watch((value, {
+      name
+    }) => {
+      if (name === 'secret') {
+        if (value.secret != null && value.secret !== '' && value.secret.trim().length !== value.secret.length) {
+          setValue('secret', value.secret.trim())
+        } else if (value.secret != null && value.secret.trim().length === 6) {
+          console.log('submit')
+          void handleSubmit(onSubmit)()
+        }
+      }
+    })
+    return () => subscription.unsubscribe()
+  }, [handleSubmit, watch])
 
   return (
     <Form {...methods} onSubmit={onSubmit}>
