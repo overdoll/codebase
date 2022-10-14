@@ -82,3 +82,5 @@ RUN curl -sL https://sentry.io/get-cli/ | SENTRY_CLI_VERSION="2.1.0" bash
 RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
 RUN unzip awscliv2.zip
 RUN ./aws/install
+
+RUN curl -sSL https://rover.apollo.dev/nix/latest | sh

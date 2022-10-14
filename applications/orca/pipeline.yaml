@@ -16,6 +16,27 @@ steps:
         port: 8000
         priority: 0
 
+  publish_subgraph:
+    graphs:
+      - service: eva
+        file: ./applications/orca/schema/services/eva.graphql
+        routing_url: http://eva-http.default.svc:8000/api/graphql
+      - service: sting
+        file: ./applications/orca/schema/services/sting.graphql
+        routing_url: http://sting-http.default.svc:8000/api/graphql
+      - service: hades
+        file: ./applications/orca/schema/services/hades.graphql
+        routing_url: http://hades-http.default.svc:8000/api/graphql
+      - service: parley
+        file: ./applications/orca/schema/services/parley.graphql
+        routing_url: http://parley-http.default.svc:8000/api/graphql
+      - service: ringer
+        file: ./applications/orca/schema/services/ringer.graphql
+        routing_url: http://ringer-http.default.svc:8000/api/graphql
+      - service: loader
+        file: ./applications/orca/schema/services/loader.graphql
+        routing_url: http://loader-http.default.svc:8000/api/graphql
+
   publish_image:
     copy:
       - from_repo: orca/dev

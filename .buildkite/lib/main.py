@@ -647,6 +647,29 @@ def push_images(targets, tmpdir):
         bazel.execute_bazel_run(":docker: Pushing docker image {}".format(img), run_flags, target, [])
 
 
+def execute_publish_schema_commands(configs):
+    publish = configs.get("publish_subgraph", {}).get("graphs", [])
+    for img in publish:
+        service = img.get("service")
+        file = img.get("file")
+        routing_url = img.get("routing_url")
+
+        terminal_print.print_expanded_group(":graphql: Publishing subgraph schema for {}".format(service))
+
+        exec.execute_command([
+            "rover",
+            "subgraph",
+            "publish",
+            "od-prod@current",
+            "--schema",
+            file,
+            "--name",
+            service,
+            "--routing-url",
+            routing_url,
+        ])
+
+
 def execute_publish_commands(configs):
     publish = configs.get("publish_image", {}).get("copy", [])
     for img in publish:
@@ -720,6 +743,7 @@ def main(argv=None):
             print_project_pipeline()
         elif args.subparsers_name == "publish":
             execute_publish_commands(configs)
+            execute_publish_schema_commands(configs)
 
     except exception.BuildkiteException as e:
         terminal_print.eprint(str(e))

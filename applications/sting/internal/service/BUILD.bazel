@@ -30,6 +30,7 @@ go_test(
         "club_component_test.go",
         "club_members_component_test.go",
         "component_test.go",
+        "curation_feed_component_test.go",
         "curation_profile_component_test.go",
         "games_component_test.go",
         "mocks_component_test.go",

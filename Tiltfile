@@ -41,6 +41,7 @@ if "orca" in to_run or is_raw:
         "bazel_image": "bazel/applications/orca:local-image",
         "container_workdir": "",
         "container_binary": "",
+        "docker_sandbox": "true",
         "entrypoint": "/app/applications/orca/local-image_binary",
         "dependencies": [
             "applications/orca/apollo-gateway.ts",

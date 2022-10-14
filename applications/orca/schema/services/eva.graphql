@@ -1,0 +1,1300 @@
+type Account implements Node @key(fields: "id") {
+  """ID representing the account"""
+  id: ID!
+
+  """The ID that the account can be referenced by"""
+  reference: String!
+
+  """A URL pointing to the account's public avatar."""
+  avatar: Resource
+
+  """The username of the account."""
+  username: String!
+
+  """Whether or not this account is a staff member"""
+  isStaff: Boolean!
+
+  """Whether or not this account is an artist"""
+  isArtist: Boolean!
+
+  """Whether or not this account is part of the moderation team"""
+  isModerator: Boolean!
+
+  """Whether or not this account is part of the worker team"""
+  isWorker: Boolean!
+
+  """
+  Whether or not this account is secure.
+
+  At the moment, an account is secure once they have two factor authentication enabled. This may include future conditions.
+  """
+  isSecure: Boolean! @goField(forceResolver: true)
+
+  """
+  Whether or not this account is deleted.
+
+  When an account is deleted, the username, email and any other data is blank.
+  """
+  isDeleted: Boolean!
+
+  """The details of the account lock."""
+  lock: AccountLock @goField(forceResolver: true)
+
+  """The details of a deleting state."""
+  deleting: AccountDeleting @goField(forceResolver: true)
+}
+
+type AccountLock {
+  expires: Time!
+}
+
+type AccountDeleting {
+  scheduledDeletion: Time!
+}
+
+"""Input for locking an account."""
+input LockAccountInput {
+  """The account to lock."""
+  accountID: ID!
+
+  """When the lock should end."""
+  endTime: Time!
+}
+
+"""Input for deleting an account."""
+input DeleteAccountInput {
+  """
+  The account to delete.
+  """
+  accountID: ID!
+}
+
+"""Input for cancelling an account deletion."""
+input CancelAccountDeletionInput {
+  """
+  The account to cancel deletion.
+  """
+  accountID: ID!
+}
+
+"""Input for unlocking an account"""
+input UnlockAccountInput {
+  """The account to unlock."""
+  accountID: ID!
+}
+
+"""Payload for the unlocked account"""
+type UnlockAccountPayload {
+  """Account that was unlocked"""
+  account: Account
+}
+
+"""Payload for the locked account"""
+type LockAccountPayload {
+  """Account that was locked"""
+  account: Account
+}
+
+"""Payload for the delete account"""
+type DeleteAccountPayload {
+  """Account that was deleted"""
+  account: Account
+}
+
+"""Payload for cancelling an account deletion."""
+type CancelAccountDeletionPayload {
+  """Account that was cancelled for deletion."""
+  account: Account
+}
+
+"""Properties by which accounts connections can be sorted."""
+enum AccountsSort {
+  """Accounts by newest first"""
+  NEW
+}
+
+extend type Mutation {
+  """
+  Unlock Account - account may be locked for any reason. Use this endpoint to unlock the account.
+
+  Can be unlocked by staff+ regardless if time is past.
+  """
+  unlockAccount(input: UnlockAccountInput!): UnlockAccountPayload
+
+  """
+  Lock an account for a specific duration.
+  """
+  lockAccount(input: LockAccountInput!): LockAccountPayload
+
+  """
+  Delete an account.
+
+  The deletion will be scheduled and deleted after 30 days.
+
+  During this time, the account will be locked. (isLocked will not be true, however, "deleting" will be available).
+  """
+  deleteAccount(input: DeleteAccountInput!): DeleteAccountPayload
+
+  """
+  Cancel an account deletion.
+  """
+  cancelAccountDeletion(input: CancelAccountDeletionInput!): CancelAccountDeletionPayload
+}
+
+extend type Query {
+
+  """
+  Get the currently-authenticated account
+  """
+  viewer: Account
+
+  """Look up a single account"""
+  account(
+    """Look up a post by a username"""
+    username: String!
+  ): Account
+}
+
+extend type Query {
+  """
+  List of all available languages
+
+  Should be used as a reference for back-end queries when requesting a specific language or adding a new language to a backend list
+  """
+  languages: [Language!]!
+}
+
+"""Represents a physical location."""
+type Location {
+  """City"""
+  city: String!
+
+  """Country"""
+  country: String!
+
+  """Postal Code"""
+  postalCode: String!
+
+  """Subdivision"""
+  subdivision: String!
+
+  """Latitude"""
+  latitude: Float!
+
+  """Longitude"""
+  longitude: Float!
+}
+
+extend type Post implements Node @key(fields: "id") { id: ID! @external }
+extend type Series implements Node @key(fields: "id") { id: ID! @external }
+extend type Topic implements Node @key(fields: "id") { id: ID! @external }
+extend type AccountTransaction implements Node @key(fields: "id") { id: ID! @external }
+extend type Audience implements Node @key(fields: "id") { id: ID! @external }
+extend type CancellationReason implements Node @key(fields: "id") { id: ID! @external }
+extend type Category implements Node @key(fields: "id") { id: ID! @external }
+extend type Character implements Node @key(fields: "id") { id: ID! @external }
+extend type Club implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubInfractionHistory implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubMember implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubPayment implements Node @key(fields: "id") { id: ID! @external }
+extend type ClubPayout implements Node @key(fields: "id") { id: ID! @external }
+extend type DepositRequest implements Node @key(fields: "id") { id: ID! @external }
+extend type PostAuditLog implements Node @key(fields: "id") { id: ID! @external }
+extend type PostLike implements Node @key(fields: "id") { id: ID! @external }
+extend type PostReport implements Node @key(fields: "id") { id: ID! @external }
+extend type Rule implements Node @key(fields: "id") { id: ID! @external }
+
+extend type Query {
+  """
+  Fetch a node by the ID
+  """
+  node(id: ID!): Node
+}
+
+"""Session belonging to a specific account"""
+type AccountSession implements Node @key(fields: "id") {
+  """ID of the session"""
+  id: ID!
+
+  """The originating user agent device"""
+  device: String!
+
+  """The original IP"""
+  ip: String!
+
+  """Where the session was originally created"""
+  location: Location!
+
+  """When the session was created"""
+  created: Time!
+
+  """When the session was last seen (last API call)"""
+  lastSeen: Time!
+
+  """If the session belongs to the currently authenticated account. This means that the session cannot be revoked (or else we get weird stuff)"""
+  current: Boolean!
+}
+
+"""Edge of the account session"""
+type AccountSessionEdge {
+  cursor: String!
+  node: AccountSession!
+}
+
+"""Edge of the account session"""
+type AccountSessionConnection {
+  pageInfo: PageInfo!
+  edges: [AccountSessionEdge!]!
+}
+
+"""Payload of the revoked account session"""
+type RevokeAccountSessionPayload {
+  """The ID of the session that was revoked"""
+  accountSessionId: ID!
+}
+
+"""Input for updating an account's username"""
+input RevokeAccountSessionInput {
+  """
+  Session ID that should be revoked
+  """
+  accountSessionId: ID!
+}
+
+extend type Account {
+  """
+  Sessions linked to this account
+
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  sessions(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountSessionConnection! @goField(forceResolver: true)
+}
+
+extend type Mutation {
+  """
+  Revoke a session for this account
+  """
+  revokeAccountSession(input: RevokeAccountSessionInput!): RevokeAccountSessionPayload
+}
+
+enum AccountEmailStatus {
+  CONFIRMED
+  UNCONFIRMED
+  PRIMARY
+}
+
+"""Email belonging to a specific account"""
+type AccountEmail implements Node @key(fields: "id") {
+  """ID of the account email"""
+  id: ID!
+
+  """The account email"""
+  email: String!
+
+  """The current status of the account email"""
+  status: AccountEmailStatus!
+
+  """
+  The account that this email belongs to
+
+  May be null because unconfirmed emails are not yet actually attached to the account
+  """
+  account: Account @goField(forceResolver: true)
+}
+
+"""Edge of the account email"""
+type AccountEmailEdge {
+  cursor: String!
+  node: AccountEmail!
+}
+
+"""Connection of the account email"""
+type AccountEmailConnection {
+  pageInfo: PageInfo!
+  edges: [AccountEmailEdge!]!
+}
+
+"""The multi-factor recovery code belonging to the account"""
+type AccountMultiFactorRecoveryCode {
+  """The multi factor recovery code"""
+  code: String!
+}
+
+"""TOTP secret + image combination"""
+type MultiFactorTotp  {
+
+  """The TOTP ID. Should be sent back when creating the TOTP"""
+  id: String!
+
+  """The TOTP secret"""
+  secret: String!
+
+  """
+  Always html image compatible. Just set SRC tag to this and it will work!
+  """
+  imageSrc: String!
+}
+
+extend type Account {
+
+  """
+  The next time the username is available to be changed
+  """
+  usernameEditAvailableAt: Time! @goField(forceResolver: true)
+
+  """
+  Maximum amount of emails that this account can create
+  """
+  emailsLimit: Int! @goField(forceResolver: true)
+
+  """
+  Emails for account (multiple emails per account)
+
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  emails(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): AccountEmailConnection! @goField(forceResolver: true)
+
+  """
+  Have recovery codes been generated? Required in order to configure TOTP
+  """
+  recoveryCodesGenerated: Boolean! @goField(forceResolver: true)
+
+  """
+  Is multi factor enabled - can be toggled off if they want to
+  """
+  multiFactorEnabled: Boolean! @goField(forceResolver: true)
+
+  """
+  Privileged users cannot disable MFA (moderators, staff)
+  """
+  canDisableMultiFactor: Boolean! @goField(forceResolver: true)
+
+  """
+  Has TOTP been configured? Recovery codes must be generated before configuring
+  """
+  multiFactorTotpConfigured: Boolean! @goField(forceResolver: true)
+
+  """
+  MFA Recovery codes belonging to this account
+
+  Only queryable if the currently logged-in account belongs to the requested account
+  """
+  recoveryCodes: [AccountMultiFactorRecoveryCode!]! @goField(forceResolver: true)
+}
+
+"""Add an email to the account"""
+input AddAccountEmailInput {
+  """
+  The email that should be added to this account
+  """
+  email: String!
+}
+
+"""Input for removing an email from an account"""
+input DeleteAccountEmailInput {
+  """
+  The email that should be removed
+  """
+  accountEmailId: ID!
+}
+
+"""Input for updating an account's username"""
+input UpdateAccountUsernameInput {
+  """
+  The username that the account should be updated to
+  """
+  username: String!
+}
+
+"""Input for updating the account status to primary"""
+input UpdateAccountEmailStatusToPrimaryInput {
+  """
+  The email that should be updated
+  """
+  accountEmailId: ID!
+}
+
+"""Input for enrolling the account into TOTP"""
+input EnrollAccountMultiFactorTotpInput {
+
+  """
+  The TOTP ID, sent initially
+  """
+  id: String!
+
+  """
+  The code that the TOTP expects
+  """
+  code: String!
+}
+
+"""Input for confirming the account email"""
+input ConfirmAccountEmailInput {
+  """
+  The ID that is sent for confirmation
+  """
+  id: String!
+
+  """The secret for email confirmation."""
+  secret: String!
+}
+
+"""Email to add the account"""
+type AddAccountEmailPayload {
+  """The account email that was added to"""
+  accountEmail: AccountEmail
+
+  """Any validation errors from the backend"""
+  validation: AddAccountEmailValidation
+}
+
+"""Validation message for adding account email"""
+enum AddAccountEmailValidation {
+  INVALID_EMAIL
+}
+
+"""Email to add the account"""
+type DeleteAccountEmailPayload {
+  """The ID of the account email that was removed"""
+  accountEmailId: ID!
+}
+
+"""Validation message for updating account username"""
+enum UpdateAccountUsernameValidation {
+  USERNAME_TAKEN
+}
+
+"""Payload of the updated username"""
+type UpdateAccountUsernamePayload {
+  """Validation for taking an account username"""
+  validation: UpdateAccountUsernameValidation
+
+  """The account that was modified"""
+  account: Account
+}
+
+"""Payload of the updated account email"""
+type UpdateAccountEmailStatusToPrimaryPayload {
+  """The account email that was updated to primary"""
+  primaryAccountEmail: AccountEmail
+
+  """The account email that was updated to 'confirmed' status"""
+  updatedAccountEmail: AccountEmail
+}
+
+"""Payload of the created account recovery codes"""
+type GenerateAccountMultiFactorRecoveryCodesPayload {
+  """The recovery codes that were created"""
+  accountMultiFactorRecoveryCodes: [AccountMultiFactorRecoveryCode!]!
+}
+
+"""Payload of the generated TOTP token"""
+type GenerateAccountMultiFactorTotpPayload {
+  """TOTP pair that was generated"""
+  multiFactorTotp: MultiFactorTotp
+}
+
+"""Validation for enrolling in TOTP"""
+enum EnrollAccountMultiFactorTotpValidation {
+  INVALID_CODE
+}
+
+"""Payload of the enrolled totp payload"""
+type EnrollAccountMultiFactorTotpPayload {
+  """Validation for enrolling TOTP"""
+  validation: EnrollAccountMultiFactorTotpValidation
+
+  """The account that was enrolled."""
+  account: Account
+}
+
+"""Payload for disabling account multi factor"""
+type DisableAccountMultiFactorPayload {
+  """The account that was disabled."""
+  account: Account
+}
+
+"""Validation for confirming account email"""
+enum ConfirmAccountEmailValidation {
+  TOKEN_EXPIRED
+  EMAIL_TAKEN
+}
+
+"""Payload for confirming the account email"""
+type ConfirmAccountEmailPayload {
+  """Validation for confirming account email"""
+  validation: ConfirmAccountEmailValidation
+
+  """The account email that was confirmed"""
+  accountEmail: AccountEmail
+}
+
+extend type Mutation {
+  """
+  Add an email to the account, will need to be confirmed
+  """
+  addAccountEmail(input: AddAccountEmailInput!): AddAccountEmailPayload
+
+  """
+  Delete account email - email must belong to account and cannot be the primary email
+  """
+  deleteAccountEmail(input: DeleteAccountEmailInput!): DeleteAccountEmailPayload
+
+  """
+  Update the account username
+
+  Will retain the old username
+  """
+  updateAccountUsername(input: UpdateAccountUsernameInput!): UpdateAccountUsernamePayload
+
+  """
+  Update the account email status to primary
+
+  Cannot update if the email is not confirmed
+  """
+  updateAccountEmailStatusToPrimary(input: UpdateAccountEmailStatusToPrimaryInput!): UpdateAccountEmailStatusToPrimaryPayload
+
+  """
+  Generates a new set of recovery codes. The previous set (whatever it was) will be deleted!
+  """
+  generateAccountMultiFactorRecoveryCodes: GenerateAccountMultiFactorRecoveryCodesPayload
+
+  """
+  Generate a TOTP key for the current user. Recovery codes must be generated first.
+  """
+  generateAccountMultiFactorTotp: GenerateAccountMultiFactorTotpPayload
+
+  """
+  Enroll into TOTP.
+
+  Must have called "generateAccountMultiFactorTOTP" first before enrolling, since this will
+  generate a valid secret
+  """
+  enrollAccountMultiFactorTotp(input: EnrollAccountMultiFactorTotpInput!): EnrollAccountMultiFactorTotpPayload
+
+  """
+  Disable account multi factor
+
+  Will delete all multi factor settings (if TOTP is set up, etc...)
+
+  Priv. users cannot disable multi factor
+  """
+  disableAccountMultiFactor: DisableAccountMultiFactorPayload
+
+  """
+  Confirm account email, so it may be used
+  """
+  confirmAccountEmail(input: ConfirmAccountEmailInput!): ConfirmAccountEmailPayload
+}
+
+"""Assigned account"""
+type AssignAccountModeratorRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Input to assign account to a moderator role"""
+input AssignAccountModeratorRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountStaffRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Input to assign account to a staff role"""
+input AssignAccountStaffRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Input to assign account to a arist role"""
+input AssignAccountArtistRole {
+  """
+  The account ID that the role needs to be assigned to
+  """
+  accountId: ID!
+}
+
+"""Assigned account"""
+type AssignAccountArtistRolePayload {
+  """The account that the role was assigned to"""
+  account: Account
+}
+
+"""Revoked account"""
+type RevokeAccountModeratorRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke moderator role"""
+input RevokeAccountModeratorRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountStaffRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke staff role"""
+input RevokeAccountStaffRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+"""Revoked account"""
+type RevokeAccountArtistRolePayload {
+  """The account that the role was revoked from"""
+  account: Account
+}
+
+"""Input to revoke artist role"""
+input RevokeAccountArtistRole {
+  """
+  The account ID that the role needs to be revoked from
+  """
+  accountId: ID!
+}
+
+extend type Mutation {
+  """
+  Assign a moderator role to the account
+  """
+  assignAccountModeratorRole(input: AssignAccountModeratorRole!): AssignAccountModeratorRolePayload
+
+  """
+  Assign a staff role to the account
+  """
+  assignAccountStaffRole(input: AssignAccountStaffRole!): AssignAccountStaffRolePayload
+
+  """
+  Revoke the moderator role from the account
+  """
+  revokeAccountModeratorRole(input: RevokeAccountModeratorRole!): RevokeAccountModeratorRolePayload
+
+  """
+  Revoke the staff role from the account
+  """
+  revokeAccountStaffRole(input: RevokeAccountStaffRole!): RevokeAccountStaffRolePayload
+
+  """
+  Assign a artist role to the account
+  """
+  assignAccountArtistRole(input: AssignAccountArtistRole!): AssignAccountArtistRolePayload
+
+  """
+  Revoke the artist role from the account
+  """
+  revokeAccountArtistRole(input: RevokeAccountArtistRole!): RevokeAccountArtistRolePayload
+}
+
+"""The type of authentication token."""
+enum AuthenticationTokenMethod {
+  MAGIC_LINK
+  CODE
+}
+
+"""Types of multi factor enabled for this account"""
+type MultiFactor {
+  totp: Boolean!
+}
+
+type AuthenticationTokenAccountStatus {
+  """When verified, whether or not there is an account belonging to this token."""
+  registered: Boolean!
+
+  """If multi-factor is enabled for this account"""
+  multiFactor: MultiFactor
+}
+
+"""Authentication token. Used for logging in."""
+type AuthenticationToken {
+  """Unique ID of the token"""
+  id: ID!
+
+  """Token belong to this authentication token"""
+  token: String!
+
+  """When the token is viewed with the correct ID, whether or not the devices match (you cannot use the token unless the device is the same)."""
+  sameDevice: Boolean!
+
+  """Whether or not the token is verified (required in order to see account status, and to use it for completing the auth flow)."""
+  verified: Boolean!
+
+  """The method that is used by this authentication token."""
+  method: AuthenticationTokenMethod!
+
+  """
+  Whether or not this token is "secure"
+  Secure means that the token has been viewed from the same network as originally created
+  if it wasn't viewed in the same network, the interface should take care and double-check with
+  the user that they want to verify the token.
+  """
+  secure: Boolean!
+
+  """The userAgent this token was created from."""
+  userAgent: String!
+
+  """The location where this token was created at."""
+  location: Location!
+
+  """Once the token is verified, you can see the status of the account."""
+  accountStatus: AuthenticationTokenAccountStatus
+}
+
+"""Input for granting an authentication token"""
+input GrantAuthenticationTokenInput {
+  """The email that the token will be granted for"""
+  email: String!
+
+  """The method that will be used for the authentication token. By default, MAGIC_LINK is used."""
+  method: AuthenticationTokenMethod
+}
+
+"""Payload for granting access to an account using the token and the totp code"""
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput {
+  """The original token"""
+  token: String!
+
+  """TOTP code"""
+  code: String!
+}
+
+"""Payload for granting access to an account using the token and the recovery code"""
+input GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput {
+  """The original token"""
+  token: String!
+
+  """Recovery code"""
+  recoveryCode: String!
+}
+
+"""Input for verifying authentication token"""
+input VerifyAuthenticationTokenInput {
+  """The original token"""
+  token: String!
+
+  """Secret (get it from the email). Will either be a code or can be used as a link"""
+  secret: String!
+}
+
+"""Payload for creating an account with authentication token"""
+input CreateAccountWithAuthenticationTokenInput {
+  """The original token"""
+  token: String!
+
+  """
+  The username to create the account with.
+
+  Validation: Max 25 characters. No spaces allowed. Alphanumeric characters.
+  """
+  username: String!
+}
+
+"""Payload for granting account access with the token. Will fail if account has multi-factor auth enabled."""
+input GrantAccountAccessWithAuthenticationTokenInput {
+  """The original token"""
+  token: String!
+}
+
+"""Validation for granting an authentication token"""
+enum GrantAuthenticationTokenValidation {
+  INVALID_EMAIL
+}
+
+"""Payload for starting an authentication"""
+type GrantAuthenticationTokenPayload {
+  """The authentication token after starting"""
+  authenticationToken: AuthenticationToken
+
+  """Validation for granting an authentication token"""
+  validation: GrantAuthenticationTokenValidation
+}
+
+"""Validation for creating an account with an authentication token"""
+enum CreateAccountWithAuthenticationTokenValidation {
+  EMAIL_TAKEN
+  USERNAME_TAKEN
+  TOKEN_INVALID
+}
+
+"""Payload for creating an account"""
+type CreateAccountWithAuthenticationTokenPayload {
+  """Validation for creating an account"""
+  validation: CreateAccountWithAuthenticationTokenValidation
+
+  """The account that was created"""
+  account: Account
+
+  """A token is revoked once an account is created, this represents it"""
+  revokedAuthenticationTokenId: ID!
+}
+
+"""Payload for revoking the current viewer"""
+type RevokeAccountAccessPayload {
+  """The account that was revoked"""
+  revokedAccountId: ID!
+}
+
+"""Payload for revoking the authentication token"""
+type RevokeAuthenticationTokenPayload {
+  """The authentication token that was removed"""
+  revokedAuthenticationTokenId: ID!
+}
+
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation {
+  TOKEN_INVALID
+  CODE_INVALID
+}
+
+"""Payload for granting access to an account using the authentication token and TOTP code"""
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpValidation
+
+  """The account that granted access to"""
+  account: Account
+
+  """A token is revoked once the account access is granted, this represents it"""
+  revokedAuthenticationTokenId: ID!
+}
+
+"""Validation for granting account access with multi factor"""
+enum GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation {
+  TOKEN_INVALID
+  RECOVERY_CODE_INVALID
+}
+
+"""Payload for granting access to an account using the authentication token and Recovery Code"""
+type GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeValidation
+
+  """The account that granted access to"""
+  account: Account
+
+  """A token is revoked once the account access is granted, this represents it"""
+  revokedAuthenticationTokenId: ID!
+}
+
+enum GrantAccountAccessWithAuthenticationTokenValidation {
+  TOKEN_INVALID
+}
+
+type GrantAccountAccessWithAuthenticationTokenPayload {
+  """Validation options"""
+  validation: GrantAccountAccessWithAuthenticationTokenValidation
+
+  """The account that granted access to"""
+  account: Account
+
+  """A token is revoked once the account access is granted, this represents it"""
+  revokedAuthenticationTokenId: ID!
+}
+
+"""Validation for granting account access"""
+enum VerifyAuthenticationTokenValidation {
+  TOKEN_INVALID
+}
+
+"""Payload for verifying the authentication token"""
+type VerifyAuthenticationTokenPayload {
+  """Validation options"""
+  validation: VerifyAuthenticationTokenValidation
+
+  """The authentication token"""
+  authenticationToken: AuthenticationToken
+}
+
+"""Input for revoking an authentication token"""
+input RevokeAuthenticationTokenInput {
+  """The token to revoke"""
+  token: String!
+
+  """The secret associated with this token. Required if revoking the token not on the same device that created it."""
+  secret: String
+}
+
+type Mutation {
+  """
+  Grant authentication token
+
+  Authentication token can be used to login into a specific account, provided the token's value is first redeemed
+  with the query
+  """
+  grantAuthenticationToken(input: GrantAuthenticationTokenInput!): GrantAuthenticationTokenPayload
+
+  """
+  Revoke authentication token
+
+  Creating accounts and completing authentication flows will not be possible once it's revoked
+  """
+  revokeAuthenticationToken(input: RevokeAuthenticationTokenInput!): RevokeAuthenticationTokenPayload
+
+  """
+  Create an account using the current authentication token
+  """
+  createAccountWithAuthenticationToken(input: CreateAccountWithAuthenticationTokenInput!): CreateAccountWithAuthenticationTokenPayload
+
+  """
+  Grant account access with authentication token
+
+  Should be used if the token does not require a multi-factor authentication step, and the token has to be
+  verified first
+  """
+  grantAccountAccessWithAuthenticationToken(input: GrantAccountAccessWithAuthenticationTokenInput!): GrantAccountAccessWithAuthenticationTokenPayload
+
+  """
+  Grant account access using an authentication token and a multi factor option
+
+  Set "code" when authenticating with a TOTP code
+  """
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorTotp(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorTotpPayload
+
+  """
+  Grant account access using an authentication token and a multi factor option
+
+  Set "recoveryCode" when authenticating with a recovery code
+  """
+  grantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCode(input: GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodeInput!): GrantAccountAccessWithAuthenticationTokenAndMultiFactorRecoveryCodePayload
+
+  """
+  Will verify the authentication token. Requires the secret (sent in an email)
+  """
+  verifyAuthenticationToken(input: VerifyAuthenticationTokenInput!): VerifyAuthenticationTokenPayload
+
+  """
+  Logout the current account
+  """
+  revokeAccountAccess: RevokeAccountAccessPayload
+}
+
+type Query {
+  """
+  Get the status of the authentication token - whether or not it is redeemed, account status, etc..
+
+  Note: you can only view the authentication token if you're the originating device or you have entered a valid secret (not from same device)
+  """
+  viewAuthenticationToken(token: String!, secret: String): AuthenticationToken
+}
+
+scalar Time
+
+scalar Date
+
+"""An RFC 3986, RFC 3987, and RFC 6570 (level 4) compliant URI string."""
+scalar URI
+
+directive @goField(forceResolver: Boolean) on INPUT_FIELD_DEFINITION
+  | FIELD_DEFINITION
+
+directive @entityResolver(multi: Boolean) on OBJECT
+
+"""Localization formatted in BCP47."""
+scalar BCP47
+
+type Language {
+  """
+  BCP47 locale
+  """
+  locale: BCP47!
+
+  """
+  Fully qualified name
+  """
+  name: String!
+}
+
+type Translation {
+  """The language linked to this translation."""
+  language: Language!
+
+  """The translation text."""
+  text: String!
+}
+
+enum Currency {
+  USD
+  CAD
+  AUD
+  JPY
+  GBP
+  EUR
+}
+
+"""Identifies the type of resource"""
+enum ResourceType {
+  IMAGE
+  VIDEO
+}
+
+"""A type representing a url to the resource and the mimetype"""
+type ResourceUrl {
+  url: URI!
+  mimeType: String!
+}
+
+extend type ResourceProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+A resource represents an image or a video format that contains an ID to uniquely identify it,
+and urls to access the resources. We have many urls in order to provide a fallback for older browsers
+
+We also identify the type of resource (image or video) to make it easy to distinguish them
+"""
+type Resource {
+  """An ID uniquely identifying this resource."""
+  id: ID!
+
+  """The type of resource - either an image or a video."""
+  type: ResourceType!
+
+  """Whether or not the resource is processed. Can be used for additional permission checks."""
+  processed: Boolean!
+
+  """URLs to access the resource."""
+  urls: [ResourceUrl!]!
+
+  """The width."""
+  width: Int!
+
+  """The height."""
+  height: Int!
+
+  """Duration, if video."""
+  videoDuration: Int!
+
+  """Video thumbnail, if video."""
+  videoThumbnail: ResourceUrl
+
+  """Whether or not the video has audio."""
+  videoNoAudio: Boolean!
+
+  """A hex-code color of the resource that can be used in-place while the resource is loading."""
+  preview: String!
+
+  """
+  This field identifies the progress for the resource.
+
+  If the resource is not yet processed, this will not be nil.
+
+  If we have some sort of state information available about the progress, this will not be nil.
+  """
+  progress: ResourceProgress
+
+  """
+  Whether or not this resource failed to process.
+
+  A failure can happen if:
+  - The supplied image is an unsupported format. This can happen if for example, someone submits a JPEG (unsupported) that was renamed to a PNG (supported)
+  - The supplied image is corrupted.
+  - The supplied video is invalid or corrupted.
+
+  """
+  failed: Boolean!
+}
+
+"""Type used to access a specific image."""
+type ImageMediaAccess {
+  """The width of the image."""
+  width: Int!
+
+  """The height of the image."""
+  height: Int!
+
+  """The URL used to access the image."""
+  url: URI!
+}
+
+"""
+All variants available for an image.
+"""
+type ImageMediaVariants {
+  """100x100 crop of an image. Suitable for mini icons."""
+  mini: ImageMediaAccess!
+  """200x200 crop of an image. Suitable for icons."""
+  icon: ImageMediaAccess!
+  """300x300 crop of an image. Suitable for small previews."""
+  thumbnail: ImageMediaAccess!
+  """400x400 crop of an image. Suitable for small previews."""
+  avatar: ImageMediaAccess!
+  """720px width or height resize."""
+  small: ImageMediaAccess!
+  """1200px width or height resize."""
+  medium: ImageMediaAccess!
+  """2048px width or height resize."""
+  large: ImageMediaAccess!
+  """4096px width or height resize."""
+  hd: ImageMediaAccess!
+  """720px width or height resize."""
+  banner: ImageMediaAccess!
+  """360px width or height resize."""
+  smallBanner: ImageMediaAccess!
+}
+
+type ColorPalette {
+  percent: Float!
+  red: Int!
+  green: Int!
+  blue: Int!
+}
+
+extend type MediaProgress @key(fields: "id") {
+  """An ID identifying this progress."""
+  id: ID! @external
+}
+
+"""
+RawMedia represents an unprocessed media object.
+
+While a media object is RawMedia, it is still in the process of processing.
+"""
+type RawMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The name of the original file, when it was uploaded."""
+  originalFileName: String!
+
+  """Whether or not the media failed processing."""
+  failed: Boolean!
+
+  """The current progress of the media processing."""
+  progress: MediaProgress
+}
+
+type ImageMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """All available variants for this media."""
+  variants: ImageMediaVariants!
+
+  """Color palettes for this image."""
+  colorPalettes: [ColorPalette!]!
+}
+
+"""Data about the aspect ratio."""
+type AspectRatio {
+  """The width."""
+  width: Int!
+  """The height."""
+  height: Int!
+}
+
+"""A video/mp4 video container."""
+type MP4VideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The bitrate of the video."""
+  bitrate: Int!
+
+  """The width of the video."""
+  width: Int!
+
+  """The height of the video."""
+  height: Int!
+}
+
+enum MediaDeviceType {
+  MOBILE
+  DESKTOP
+  UNIVERSAL
+}
+
+"""An application/x-mpegURL video container."""
+type HLSVideoContainer {
+  """The URL used to access the container."""
+  url: URI!
+
+  """The target device for this HLS container."""
+  targetDevice: MediaDeviceType!
+}
+
+"""A container used to access the video."""
+union VideoContainer = HLSVideoContainer | MP4VideoContainer
+
+type VideoMedia {
+  """An ID uniquely identifying this media."""
+  id: ID!
+
+  """The cover for this image media."""
+  cover: ImageMedia!
+
+  """The aspect ratio of the media."""
+  aspectRatio: AspectRatio!
+
+  """
+  The container for videos.
+
+  A video can have multiple containers, for example, an HLS video for general playback, and an .mp4 video as fallback.
+  """
+  containers: [VideoContainer!]!
+
+  """The video duration, in milliseconds."""
+  duration: Int!
+
+  """Whether or not the video has audio."""
+  hasAudio: Boolean!
+}
+
+union Media = VideoMedia | ImageMedia | RawMedia
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+interface Node {
+  id: ID!
+}
