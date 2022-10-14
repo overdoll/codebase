@@ -1,6 +1,9 @@
 package curation
 
-import "time"
+import (
+	"overdoll/libraries/principal"
+	"time"
+)
 
 type PostsFeedData struct {
 	accountId                string
@@ -23,6 +26,18 @@ func (p *PostsFeedData) NextRegenerationTime() *time.Time {
 
 func (p *PostsFeedData) WasViewedSinceGeneration() bool {
 	return p.wasViewedSinceGeneration
+}
+
+func (p *PostsFeedData) WasViewed(requester *principal.Principal) error {
+
+	if err := requester.BelongsToAccount(p.accountId); err != nil {
+		return err
+	}
+
+	tm := time.Now().Add(time.Hour * 24)
+	p.nextRegenerationTime = &tm
+	p.wasViewedSinceGeneration = true
+	return nil
 }
 
 func UnmarshalPostsFeedData(accountId string, generatedAt, nextRegenerationTime *time.Time, wasViewedSinceGeneration bool) *PostsFeedData {

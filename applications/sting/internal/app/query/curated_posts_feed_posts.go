@@ -32,10 +32,19 @@ func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedP
 		return nil, err
 	}
 
+	hasNotBeenViewed := result.NextRegenerationTime() == nil && !result.WasViewedSinceGeneration()
+
 	// create a job to generate the event
-	if (result.NextRegenerationTime() == nil && !result.WasViewedSinceGeneration()) || result.GeneratedAt() == nil {
+	if (hasNotBeenViewed) || result.GeneratedAt() == nil {
+		if hasNotBeenViewed {
+			// update with next generation time
+			if err := h.pr.UpdateCuratedPostsFeedData(ctx, query.Principal, result); err != nil {
+				return nil, err
+			}
+		}
+
 		// generate curated posts feed
-		if err := h.event.CreateCuratedPostsFeed(ctx, result.AccountId()); err != nil {
+		if err := h.event.GenerateCuratedPostsFeed(ctx, result.AccountId()); err != nil {
 			return nil, err
 		}
 	}

@@ -16,6 +16,24 @@ func GenerateCuratedPostsFeed(ctx workflow.Context, input GenerateCuratedPostsFe
 
 	var a *activities.Activities
 
+	var payload *activities.GetCuratedPostsFeedDataPayload
+
+	if err := workflow.ExecuteActivity(ctx, a.GetCuratedPostsFeedData,
+		activities.GetCuratedPostsFeedDataInput{
+			AccountId: input.AccountId,
+		},
+	).Get(ctx, &payload); err != nil {
+		logger.Error("failed to get curated posts feed data", "Error", err)
+		return err
+	}
+
+	// if it has a next generation time, wait first, and then generate the posts feed
+	if payload.NextFeedGenerationTime != nil {
+		if err := workflow.Sleep(ctx, workflow.Now(ctx).Sub(*payload.NextFeedGenerationTime)); err != nil {
+			return err
+		}
+	}
+
 	if err := workflow.ExecuteActivity(ctx, a.GenerateCuratedPostsFeed,
 		activities.GenerateCuratedPostsFeedInput{
 			AccountId: input.AccountId,

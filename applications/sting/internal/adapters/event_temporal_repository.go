@@ -667,7 +667,7 @@ func (r EventTemporalRepository) UpdateTotalPostsForPostTags(ctx context.Context
 	return nil
 }
 
-func (r EventTemporalRepository) CreateCuratedPostsFeed(ctx context.Context, accountId string) error {
+func (r EventTemporalRepository) GenerateCuratedPostsFeed(ctx context.Context, accountId string) error {
 
 	options := client.StartWorkflowOptions{
 		TaskQueue: viper.GetString("temporal.queue"),
@@ -677,7 +677,7 @@ func (r EventTemporalRepository) CreateCuratedPostsFeed(ctx context.Context, acc
 	if _, err := r.client.ExecuteWorkflow(ctx, options, workflows.GenerateCuratedPostsFeed, workflows.GenerateCuratedPostsFeedInput{
 		AccountId: accountId,
 	}); err != nil {
-		return errors.Wrap(err, "failed to execute CreateCuratedPostsFeed workflow")
+		return errors.Wrap(err, "failed to execute GenerateCuratedPostsFeed workflow")
 	}
 
 	return nil

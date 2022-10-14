@@ -2,8 +2,6 @@ package curation
 
 import (
 	"context"
-	"overdoll/applications/sting/internal/domain/post"
-	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
 )
 
@@ -13,7 +11,9 @@ type Repository interface {
 	UpdateProfileCategory(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *Profile) error) (*Profile, error)
 	UpdateProfileAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(profile *Profile) error) (*Profile, error)
 	GetCuratedPostsFeedData(ctx context.Context, requester *principal.Principal, accountId string) (*PostsFeedData, error)
-	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*post.Post, error)
+	GetCuratedPostsFeedDataOperator(ctx context.Context, accountId string) (*PostsFeedData, error)
 
+	UpdateCuratedPostsFeedData(ctx context.Context, requester *principal.Principal, postsFeedData *PostsFeedData) error
+	UpdateCuratedPostsFeedDataOperator(ctx context.Context, postsFeedData *PostsFeedData) error
 	DeleteProfileOperator(ctx context.Context, accountId string) error
 }
