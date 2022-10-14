@@ -200,6 +200,7 @@ const Creators: PageProps<{}> = () => {
                   width: '100%',
                   height: '100%'
                 }}
+                alt='Creators banner'
               />
             </Flex>
             <Box
