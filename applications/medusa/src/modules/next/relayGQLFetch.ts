@@ -20,13 +20,22 @@ const fetchToMethod = async (url, kind, data, headers): Promise<any> => {
   })
 }
 
+const addExtraHeaders = (headers): void => {
+  headers['apollographql-client-name'] = 'web'
+  headers['apollographql-client-version'] = process.env.NEXT_BUILD_ID
+}
+
 export const clientFetch = (securityToken) => {
   return async (data, kind) => {
-    const response = await fetchToMethod('/api/graphql', kind, data, {
+    const headers = {
       Accept: 'application/json',
       'Content-Type': 'application/json',
       'X-overdoll-Security': securityToken
-    })
+    }
+
+    addExtraHeaders(headers)
+
+    const response = await fetchToMethod('/api/graphql', kind, data, headers)
 
     const result = await response.json()
 
@@ -92,6 +101,7 @@ export const serverMiddlewareFetch = (req) => {
     headers.accept = 'application/json'
     headers['Content-Type'] = 'application/json'
     headers['X-overdoll-Security'] = token
+    addExtraHeaders(headers)
 
     const response = await fetchToMethod(process.env.SERVER_GRAPHQL_ENDPOINT as string, 'query', data, headers)
 
@@ -111,6 +121,8 @@ export const serverFetch = (req, res) => {
 
     headers.accept = 'application/json'
     headers['Content-Type'] = 'application/json'
+
+    addExtraHeaders(headers)
 
     const response = await fetchToMethod(process.env.SERVER_GRAPHQL_ENDPOINT as string, kind, data, headers)
 

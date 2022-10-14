@@ -88,7 +88,7 @@ func TestGetAccountCuratedPosts(t *testing.T) {
 
 	workflowExecution3.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
 
-	require.NotNil(t, curatedPosts.CuratedPostsFeedData.NextRegenerationTime, "should be nil")
+	require.Nil(t, curatedPosts.CuratedPostsFeedData.NextRegenerationTime, "should be nil")
 	require.NotNil(t, curatedPosts.CuratedPostsFeedData.GeneratedAt, "should not have a generated at field")
-	require.NotNil(t, curatedPosts.CuratedPostsFeedData.ViewedAt, "should not have a viewed at field")
+	require.Nil(t, curatedPosts.CuratedPostsFeedData.ViewedAt, "should not have a viewed at field")
 }

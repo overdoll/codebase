@@ -2,7 +2,6 @@ package adapters
 
 import (
 	"context"
-	"fmt"
 	"github.com/gocql/gocql"
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
@@ -88,13 +87,6 @@ func (r CurationCassandraRepository) UpdateCuratedPostsFeedPostsOperator(ctx con
 }
 
 func (r CurationCassandraRepository) UpdateCuratedPostsFeedDataOperator(ctx context.Context, postsFeedData *curation.PostsFeedData) error {
-
-	fmt.Println(curatedPostsFeedData{
-		AccountId:            postsFeedData.AccountId(),
-		GeneratedAt:          postsFeedData.GeneratedAt(),
-		NextRegenerationTime: postsFeedData.NextRegenerationTime(),
-		ViewedAt:             postsFeedData.ViewedAt(),
-	})
 
 	if err := r.session.
 		Query(curatedPostsFeedDataTable.Update(
@@ -203,6 +195,7 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)))
 
 	query.Filter(filterQueries...)
+	builder.Query(query)
 
 	response, err := builder.Do(ctx)
 
