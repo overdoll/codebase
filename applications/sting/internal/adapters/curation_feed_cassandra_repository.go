@@ -195,6 +195,7 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)))
 
 	query.Filter(filterQueries...)
+	builder.Query(query)
 
 	response, err := builder.Do(ctx)
 
