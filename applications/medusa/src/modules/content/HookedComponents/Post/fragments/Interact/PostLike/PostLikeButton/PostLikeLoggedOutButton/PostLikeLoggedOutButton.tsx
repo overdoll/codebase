@@ -64,7 +64,7 @@ export default function PostLikeLoggedOutButton ({
   return (
     <>
       <MediumGenericButton isIcon onClick={onOpenLike} icon={HeartOutline}>
-        {i18n._(t`Save`)}
+        {i18n._(t`Like`)}
       </MediumGenericButton>
       <Modal
         isCentered
