@@ -17,23 +17,23 @@ msgstr ""
 #~ msgid "...or, you can just browse our content!"
 #~ msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:356
+#: src/domain/creators/Creators/Creators.tsx:373
 msgid "<0>overdoll</0> focuses exclusively on pornography that is drawn or animated. You may only post pornography that does<1><2> not</2></1> feature real human beings."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:314
+#: src/domain/creators/Creators/Creators.tsx:331
 msgid "<0>overdoll</0> is a content distribution platform designed for creators who draw or animate/render digital pornography."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:327
+#: src/domain/creators/Creators/Creators.tsx:344
 msgid "<0>overdoll</0> is free of charge to content creators. Content creators may post as much as they want, without restrictions."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:340
+#: src/domain/creators/Creators/Creators.tsx:357
 msgid "<0>overdoll</0> is used by both creators and fans. Fans use <1>overdoll</1> to browse adult content, and may find new creators directly through the discovery and search features. Creators use<2> overdoll</2> to feature their adult content and may collect subscriptions for premium content."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:370
+#: src/domain/creators/Creators/Creators.tsx:387
 msgid "<0>overdoll</0> offers content creators the ability to paywall some or all posts on their club pages in order to make money.<1> overdoll</1> also offers extra platform features to your fans, if they subscribe."
 msgstr ""
 
@@ -61,11 +61,11 @@ msgstr ""
 msgid "Enter anything else you'd like to tell us."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:294
+#: src/domain/creators/Creators/Creators.tsx:311
 msgid "Frequently Asked Questions"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:205
+#: src/domain/creators/Creators/Creators.tsx:222
 msgid "Get paid."
 msgstr ""
 
@@ -77,15 +77,15 @@ msgstr ""
 msgid "Hold on!"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:135
+#: src/domain/creators/Creators/Creators.tsx:133
 msgid "Home"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:365
+#: src/domain/creators/Creators/Creators.tsx:382
 msgid "How can I make money on overdoll?"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:322
+#: src/domain/creators/Creators/Creators.tsx:339
 msgid "How much does overdoll cost?"
 msgstr ""
 
@@ -117,15 +117,15 @@ msgstr ""
 #~ msgid "Open Form Link"
 #~ msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:71
+#: src/domain/creators/Creators/Creators.tsx:73
 msgid "Please enter a portfolio url"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:72
+#: src/domain/creators/Creators/Creators.tsx:74
 msgid "Please enter a valid url"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:64
+#: src/domain/creators/Creators/Creators.tsx:66
 msgid "Please enter an username"
 msgstr ""
 
@@ -133,7 +133,7 @@ msgstr ""
 #~ msgid "Ready to start posting your content? Contact us!"
 #~ msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:386
+#: src/domain/creators/Creators/Creators.tsx:403
 msgid "Ready to try overdoll, free of charge?"
 msgstr ""
 
@@ -149,11 +149,11 @@ msgstr ""
 msgid "Thank you for your submission! We'll be in touch."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:236
+#: src/domain/creators/Creators/Creators.tsx:253
 msgid "The best browsing experience."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:158
+#: src/domain/creators/Creators/Creators.tsx:156
 msgid "The next platform for 18+ creators."
 msgstr ""
 
@@ -173,7 +173,7 @@ msgstr ""
 #~ msgid "Use search and tags to easily find your content"
 #~ msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:221
+#: src/domain/creators/Creators/Creators.tsx:238
 msgid "Visible to the entire universe."
 msgstr ""
 
@@ -181,7 +181,7 @@ msgstr ""
 #~ msgid "We can also reach out to you - just send us your details!"
 #~ msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:210
+#: src/domain/creators/Creators/Creators.tsx:227
 msgid "We exclusively partner with adult payment processors. Stop waiting for the day they shut down your PayPal account."
 msgstr ""
 
@@ -189,15 +189,15 @@ msgstr ""
 msgid "We prefer to contact you by email, if possible."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:309
+#: src/domain/creators/Creators/Creators.tsx:326
 msgid "What is overdoll?"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:351
+#: src/domain/creators/Creators/Creators.tsx:368
 msgid "What type of content is allowed on overdoll?"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:335
+#: src/domain/creators/Creators/Creators.tsx:352
 msgid "Who uses overdoll?"
 msgstr ""
 
@@ -209,15 +209,15 @@ msgstr ""
 msgid "Your Name"
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:226
+#: src/domain/creators/Creators/Creators.tsx:243
 msgid "Your brand is always visible on our platform. We don't force you to hide your content just because it contains nudity."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:267
+#: src/domain/creators/Creators/Creators.tsx:284
 msgid "Your favourite adult content creators are making money on overdoll."
 msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:241
+#: src/domain/creators/Creators/Creators.tsx:258
 msgid "Your images are served up to 4k by 4k and videos up to 1080p@60fps. We are optimized for all devices - mobile & desktop."
 msgstr ""
 
@@ -233,7 +233,7 @@ msgstr ""
 #~ msgid "overdoll is invite-only"
 #~ msgstr ""
 
-#: src/domain/creators/Creators/Creators.tsx:168
+#: src/domain/creators/Creators/Creators.tsx:166
 msgid "overdoll is the first platform to offer a full end-to-end ecosystem for adult content creators."
 msgstr ""
 

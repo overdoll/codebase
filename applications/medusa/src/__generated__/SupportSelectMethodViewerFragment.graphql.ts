@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<68a91e8317cfeb7ba70f28887f3fa56c>>
+ * @generated SignedSource<<f25fb2de8b30f67ce99049be6fa5ea84>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SupportSelectMethodViewerFragment$data = {
-  readonly __typename: "Account";
   readonly savedPaymentMethods: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -19,7 +18,7 @@ export type SupportSelectMethodViewerFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"NewPaymentMethodViewerFragment" | "SavedPaymentMethodViewerFragment" | "SelectMethodChoiceViewerFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"HeaderPaymentMethodFragment" | "SavedPaymentMethodViewerFragment" | "SelectMethodChoiceViewerFragment">;
   readonly " $fragmentType": "SupportSelectMethodViewerFragment";
 };
 export type SupportSelectMethodViewerFragment$key = {
@@ -27,21 +26,12 @@ export type SupportSelectMethodViewerFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"SupportSelectMethodViewerFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "SupportSelectMethodViewerFragment",
   "selections": [
-    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -66,7 +56,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
               ],
               "storageKey": null
             }
@@ -89,14 +85,13 @@ return {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "NewPaymentMethodViewerFragment"
+      "name": "HeaderPaymentMethodFragment"
     }
   ],
   "type": "Account",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "d60bfc66eadec2c683ab2378bd7029a8";
+(node as any).hash = "fb3d1bc70869c7c95832d7408410eddb";
 
 export default node;

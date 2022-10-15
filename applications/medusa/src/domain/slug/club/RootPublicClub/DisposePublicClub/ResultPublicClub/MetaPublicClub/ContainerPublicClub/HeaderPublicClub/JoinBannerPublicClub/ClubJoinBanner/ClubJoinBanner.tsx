@@ -14,12 +14,12 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment ClubJoinBannerFragment on Club {
-    id
     name
     viewerMember {
       __typename
     }
     viewerIsOwner
+    canSupport
     ...ClubJoinButtonFragment
   }
 `
@@ -60,7 +60,11 @@ export default function ClubJoinBanner (props: Props): JSX.Element {
           </Heading>
         </Box>
       </HStack>
-      <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
+      <ClubJoinButton
+        colorScheme={clubData.canSupport ? 'gray' : 'green'}
+        clubQuery={clubData}
+        viewerQuery={viewerData}
+      />
     </Stack>
   )
 }

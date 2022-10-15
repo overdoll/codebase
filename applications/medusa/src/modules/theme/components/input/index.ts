@@ -205,39 +205,42 @@ const variantFilled: PartsStyleFunction<typeof parts> = (props) => {
   }
 }
 
-const variantFlushed: PartsStyleFunction<typeof parts> = (props) => {
-  const { theme } = props
-  const {
-    focusBorderColor: fc,
-    errorBorderColor: ec
-  } = getDefaults(props)
+const variantFlushed: PartsStyleFunction<typeof parts> = () => {
+  // const { theme } = props
+  // const {
+  //   focusBorderColor: fc,
+  //   errorBorderColor: ec
+  // } = getDefaults(props)
 
   return {
     field: {
-      borderBottom: '1px solid',
-      borderColor: 'inherit',
-      borderRadius: 0,
+      borderRadius: 'md',
+      border: 'none',
       px: 0,
+      color: 'gray.200',
       bg: 'transparent',
       _readOnly: {
         boxShadow: 'none !important',
         userSelect: 'all'
       },
       _invalid: {
-        borderColor: getColor(theme, ec),
-        boxShadow: `0px 1px 0px 0px ${getColor(theme, ec) as string}`
+        boxShadow: 'none !important'
       },
       _focus: {
-        borderColor: getColor(theme, fc),
-        boxShadow: `0px 1px 0px 0px ${getColor(theme, fc) as string}`
+        color: 'gray.100',
+        boxShadow: 'none !important'
       }
     },
     addon: {
-      borderBottom: '2px solid',
+      fill: 'gray.200',
+      color: 'gray.200',
       borderColor: 'inherit',
       borderRadius: 0,
       px: 0,
-      bg: 'transparent'
+      bg: 'transparent',
+      _focus: {
+        color: 'gray.100'
+      }
     }
   }
 }

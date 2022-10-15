@@ -1,8 +1,11 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollClubPostsFragment$key } from '@//:artifacts/ScrollClubPostsFragment.graphql'
 import type { LazyClubPostsQuery } from '@//:artifacts/LazyClubPostsQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { PreviewPost } from '@//:modules/content/HookedComponents/Post'
 import ClubEmptyPosts from '../ClubEmptyPosts/ClubEmptyPosts'
+import { Flex, Stack } from '@chakra-ui/react'
+import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   clubQuery: ScrollClubPostsFragment$key
@@ -19,16 +22,18 @@ const Fragment = graphql`
     posts(
       first: $first,
       after: $after,
-      sortBy: ALGORITHM,
+      sortBy: NEW,
       seed: $seed)
     @connection (key: "ClubPostsPreview_posts") {
       edges {
         node {
+          id
           ...PreviewPostFragment
         }
       }
       ...VerticalPaginationScrollerFragment
     }
+    slug
     ...ClubEmptyPostsFragment
   }
 `
@@ -39,10 +44,7 @@ export default function ScrollClubPosts (props: Props): JSX.Element {
   } = props
 
   const {
-    data,
-    hasNext,
-    loadNext,
-    isLoadingNext
+    data
   } = usePaginationFragment<LazyClubPostsQuery, any>(
     Fragment,
     clubQuery
@@ -55,19 +57,29 @@ export default function ScrollClubPosts (props: Props): JSX.Element {
   }
 
   return (
-    <VerticalPaginationScroller
-      postConnectionQuery={data.posts}
-      hasNext={hasNext}
-      loadNext={loadNext}
-      isLoadingNext={isLoadingNext}
-    >
-      {({
-        index
-      }) => (
+    <Stack spacing={16}>
+      {data.posts.edges.map((item) => (
         <PreviewPost
-          postQuery={data?.posts?.edges?.[index]?.node}
+          key={item.node.id}
+          postQuery={item.node}
         />
-      )}
-    </VerticalPaginationScroller>
+      ))}
+      <Flex w='100%' justify='center'>
+        <LinkButton
+          size='lg'
+          colorScheme='gray'
+          href={{
+            pathname: '/[slug]/posts',
+            query: {
+              slug: data.slug
+            }
+          }}
+        >
+          <Trans>
+            See all posts
+          </Trans>
+        </LinkButton>
+      </Flex>
+    </Stack>
   )
 }

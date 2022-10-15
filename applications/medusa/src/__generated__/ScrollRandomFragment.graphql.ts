@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d39c0f41c1337586459ecb7c5fd9447b>>
+ * @generated SignedSource<<f49d6886bba762342950606cb168dfa9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ScrollRandomFragment$data = {
-  readonly postsFeed: {
+  readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
@@ -28,7 +28,7 @@ export type ScrollRandomFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "postsFeed"
+  "posts"
 ];
 return {
   "argumentDefinitions": [
@@ -45,6 +45,11 @@ return {
     {
       "kind": "RootArgument",
       "name": "seed"
+    },
+    {
+      "defaultValue": "ALGORITHM",
+      "kind": "LocalArgument",
+      "name": "sortBy"
     }
   ],
   "kind": "Fragment",
@@ -73,17 +78,27 @@ return {
   "name": "ScrollRandomFragment",
   "selections": [
     {
-      "alias": "postsFeed",
+      "alias": "posts",
       "args": [
         {
           "kind": "Variable",
           "name": "seed",
           "variableName": "seed"
+        },
+        {
+          "kind": "Variable",
+          "name": "sortBy",
+          "variableName": "sortBy"
+        },
+        {
+          "kind": "Literal",
+          "name": "state",
+          "value": "PUBLISHED"
         }
       ],
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__RandomPosts_postsFeed_connection",
+      "name": "__RandomPosts_posts_connection",
       "plural": false,
       "selections": [
         {
@@ -166,6 +181,6 @@ return {
 };
 })();
 
-(node as any).hash = "96e07ab6a57cfd06d7675594f35473eb";
+(node as any).hash = "9e7038ce5cf37c2205b872bf3089d824";
 
 export default node;

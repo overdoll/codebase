@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/HeaderPublicClubCharacter.tsx:49
+#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/HeaderPublicClubCharacter.tsx:56
 msgid "Club Character"
 msgstr ""
 
@@ -25,17 +25,23 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareDiscordButton/SearchCustomCharacterShareDiscordButton.tsx:55
-msgid "Share on Discord"
+#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareDiscordButton/SearchCustomCharacterShareDiscordButton.tsx:54
+#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton.tsx:49
+#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton.tsx:56
+msgid "Share"
 msgstr ""
+
+#: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareDiscordButton/SearchCustomCharacterShareDiscordButton.tsx:55
+#~ msgid "Share on Discord"
+#~ msgstr ""
 
 #: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton.tsx:50
-msgid "Share on Reddit"
-msgstr ""
+#~ msgid "Share on Reddit"
+#~ msgstr ""
 
 #: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/MetaPublicClubCharacter/ContainerPublicClubCharacter/HeaderPublicClubCharacter/SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton.tsx:57
-msgid "Share on Twitter"
-msgstr ""
+#~ msgid "Share on Twitter"
+#~ msgstr ""
 
 #: src/domain/slug/character/RootPublicClubCharacter/DisposePublicClubCharacter/ResultPublicClubCharacter/EmptyPublicClubCharacter/EmptyPublicClubCharacter.tsx:16
 msgid "This character was not found"

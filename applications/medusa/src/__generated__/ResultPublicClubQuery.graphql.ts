@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7c74b0e499d4c07b9d807fd28543c59b>>
- * @relayHash 399e713779e817427b934903d699ee6f
+ * @generated SignedSource<<4cb914b53cbdc4be1327f9c032167286>>
+ * @relayHash dde0745e5dbbfb6e713d4212a16d0a88
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 399e713779e817427b934903d699ee6f
+// @relayRequestID dde0745e5dbbfb6e713d4212a16d0a88
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -148,22 +148,6 @@ v12 = {
   "storageKey": null
 },
 v13 = [
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "currency",
-    "storageKey": null
-  },
-  {
-    "alias": null,
-    "args": null,
-    "kind": "ScalarField",
-    "name": "amount",
-    "storageKey": null
-  }
-],
-v14 = [
   (v9/*: any*/),
   {
     "alias": null,
@@ -197,6 +181,22 @@ v14 = [
     "storageKey": null
   },
   (v8/*: any*/)
+],
+v14 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "currency",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "amount",
+    "storageKey": null
+  }
 ];
 return {
   "fragment": {
@@ -382,7 +382,6 @@ return {
             ],
             "storageKey": null
           },
-          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -417,11 +416,43 @@ return {
             "selections": (v5/*: any*/),
             "storageKey": null
           },
+          (v8/*: any*/),
           {
             "alias": null,
             "args": null,
-            "kind": "ScalarField",
-            "name": "viewerIsOwner",
+            "concreteType": null,
+            "kind": "LinkedField",
+            "name": "thumbnailMedia",
+            "plural": false,
+            "selections": [
+              (v2/*: any*/),
+              (v3/*: any*/),
+              {
+                "kind": "InlineFragment",
+                "selections": (v13/*: any*/),
+                "type": "ImageMedia",
+                "abstractKey": null
+              },
+              {
+                "kind": "InlineFragment",
+                "selections": [
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": "ImageMedia",
+                    "kind": "LinkedField",
+                    "name": "cover",
+                    "plural": false,
+                    "selections": (v13/*: any*/),
+                    "storageKey": null
+                  },
+                  (v8/*: any*/)
+                ],
+                "type": "VideoMedia",
+                "abstractKey": null
+              },
+              (v11/*: any*/)
+            ],
             "storageKey": null
           },
           {
@@ -432,6 +463,8 @@ return {
             "name": "viewerMember",
             "plural": false,
             "selections": [
+              (v2/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -439,7 +472,6 @@ return {
                 "name": "isSupporter",
                 "storageKey": null
               },
-              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -471,9 +503,15 @@ return {
                   }
                 ],
                 "storageKey": null
-              },
-              (v2/*: any*/)
+              }
             ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "viewerIsOwner",
             "storageKey": null
           },
           {
@@ -498,7 +536,7 @@ return {
                 "kind": "LinkedField",
                 "name": "localizedPrice",
                 "plural": false,
-                "selections": (v13/*: any*/),
+                "selections": (v14/*: any*/),
                 "storageKey": null
               },
               {
@@ -508,47 +546,9 @@ return {
                 "kind": "LinkedField",
                 "name": "prices",
                 "plural": true,
-                "selections": (v13/*: any*/),
+                "selections": (v14/*: any*/),
                 "storageKey": null
               }
-            ],
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": null,
-            "kind": "LinkedField",
-            "name": "thumbnailMedia",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              (v3/*: any*/),
-              {
-                "kind": "InlineFragment",
-                "selections": (v14/*: any*/),
-                "type": "ImageMedia",
-                "abstractKey": null
-              },
-              {
-                "kind": "InlineFragment",
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "concreteType": "ImageMedia",
-                    "kind": "LinkedField",
-                    "name": "cover",
-                    "plural": false,
-                    "selections": (v14/*: any*/),
-                    "storageKey": null
-                  },
-                  (v8/*: any*/)
-                ],
-                "type": "VideoMedia",
-                "abstractKey": null
-              },
-              (v11/*: any*/)
             ],
             "storageKey": null
           }
@@ -596,7 +596,20 @@ return {
             "storageKey": null
           },
           (v8/*: any*/),
-          (v2/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsLimit",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "clubMembershipsCount",
+            "storageKey": null
+          },
           {
             "alias": null,
             "args": null,
@@ -682,27 +695,14 @@ return {
             "name": "isSecure",
             "storageKey": null
           },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "clubMembershipsLimit",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "clubMembershipsCount",
-            "storageKey": null
-          }
+          (v2/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "399e713779e817427b934903d699ee6f",
+    "id": "dde0745e5dbbfb6e713d4212a16d0a88",
     "metadata": {},
     "name": "ResultPublicClubQuery",
     "operationKind": "query",

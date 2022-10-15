@@ -19,6 +19,7 @@ import { useSearch } from '@//:modules/content/HookedComponents/Search'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { JoinModalProviderFragment$key } from '@//:artifacts/JoinModalProviderFragment.graphql'
 import dynamic from 'next/dynamic'
+import posthog from 'posthog-js'
 
 const Lazy = dynamic(
   async () => {
@@ -122,38 +123,14 @@ export function useJoinContext (): JoinModalContextProps {
 }
 
 export function useJoin (redirect?: string | UrlObject, from?: string): () => void {
-  // const { onOpen } = useJoinContext()
-  // const [canFlag, setCanFlag] = useState(false)
-
-  const gotoRedirect = redirect != null ? encodeJoinRedirect(redirect, from) : '/join'
+  const gotoRedirect = redirect != null ? encodeJoinRedirect(redirect) : '/join'
 
   const router = useRouter()
-  //
-  // const onOpenJoin = (): void => {
-  //   posthog?.capture('open-join-modal', { from: from })
-  //   onOpen()
-  // }
-
-  //
-  // useEffect(() => {
-  //   posthog.onFeatureFlags(() => {
-  //     setCanFlag(true)
-  //   })
-  // }, [])
-  //
-  // if (!canFlag) {
-  //   return onRedirectJoin
-  // }
-  //
-  // if (posthog?.getFeatureFlag('join-modal') === 'control') {
-  //   return onRedirectJoin
-  // }
-  //
-  // if (posthog?.getFeatureFlag('join-modal') === 'test_modal') {
-  //   return onOpenJoin
-  // }
 
   return (): void => {
     void router.push(gotoRedirect)
+    if (from != null) {
+      posthog?.capture('clicked-join', { from: from })
+    }
   }
 }

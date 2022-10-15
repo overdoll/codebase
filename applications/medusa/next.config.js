@@ -209,6 +209,36 @@ const moduleExports = withBundleAnalyzer({
         permanent: true
       },
       {
+        source: '/new',
+        destination: '/random',
+        permanent: true
+      },
+      {
+        source: '/top',
+        destination: '/random',
+        permanent: true
+      },
+      {
+        source: '/clubs/feed',
+        destination: '/feed',
+        permanent: true
+      },
+      {
+        source: '/clubs/liked-posts',
+        destination: '/likes',
+        permanent: true
+      },
+      {
+        source: '/clubs/discover',
+        destination: '/discover',
+        permanent: true
+      },
+      {
+        source: '/browse',
+        destination: '/random',
+        permanent: true
+      },
+      {
         source: '/clubs/invite-only',
         destination: '/creators',
         permanent: true

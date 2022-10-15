@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<d7d10c901c29a72308620421ad858f6a>>
+ * @generated SignedSource<<d0bf34802bd811630b287539c61d946d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,9 +12,11 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type HeaderSearchCharacterFragment$data = {
   readonly name: string;
-  readonly totalLikes: number;
-  readonly totalPosts: number;
-  readonly " $fragmentSpreads": FragmentRefs<"SearchCharacterCopyLinkButtonFragment" | "SearchCharacterRecommendationsFragment" | "SearchCharacterShareDiscordButtonFragment" | "SearchCharacterShareRedditButtonFragment" | "SearchCharacterShareTwitterButtonFragment">;
+  readonly series: {
+    readonly slug: string;
+    readonly title: string;
+  } | null;
+  readonly " $fragmentSpreads": FragmentRefs<"CharacterBannerFragment" | "SearchCharacterCopyLinkButtonFragment" | "SearchCharacterRecommendationsFragment" | "SearchCharacterShareDiscordButtonFragment" | "SearchCharacterShareRedditButtonFragment" | "SearchCharacterShareTwitterButtonFragment">;
   readonly " $fragmentType": "HeaderSearchCharacterFragment";
 };
 export type HeaderSearchCharacterFragment$key = {
@@ -38,16 +40,32 @@ const node: ReaderFragment = {
     {
       "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "totalLikes",
+      "concreteType": "Series",
+      "kind": "LinkedField",
+      "name": "series",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "title",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        }
+      ],
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "totalPosts",
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "CharacterBannerFragment"
     },
     {
       "args": null,
@@ -79,6 +97,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1cad7a332a78246297098c51965a7390";
+(node as any).hash = "ace1b98c9d3363d8594c7b96e4044456";
 
 export default node;

@@ -43,11 +43,10 @@ export default function SearchSeriesShareDiscordButton ({ query }: Props): JSX.E
   return (
     <SmallGenericButton
       colorScheme='facebook'
-      isIcon
       onClick={onCopy}
       icon={SocialDiscord}
     >
-      {i18n._(t`Share on Discord`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dc28864e93d3abdc8cf84705647ecfb7>>
- * @relayHash 98f077f6e9b1f56ef5f9ca9151718e44
+ * @generated SignedSource<<32e381b6cee73c14c92bf94a10b8e939>>
+ * @relayHash 7a2e692fb1223f86d2d3b897c2b62435
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 98f077f6e9b1f56ef5f9ca9151718e44
+// @relayRequestID 7a2e692fb1223f86d2d3b897c2b62435
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type LikePostInput = {
@@ -22,6 +22,7 @@ export type PostLikeWrapperLikeMutation$data = {
   readonly likePost: {
     readonly postLike: {
       readonly __typename: "PostLike";
+      readonly id: string;
     } | null;
   } | null;
 };
@@ -40,49 +41,55 @@ var v0 = [
 ],
 v1 = [
   {
-    "kind": "Variable",
-    "name": "input",
-    "variableName": "input"
-  }
-],
-v2 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
-return {
-  "fragment": {
-    "argumentDefinitions": (v0/*: any*/),
-    "kind": "Fragment",
-    "metadata": null,
-    "name": "PostLikeWrapperLikeMutation",
+    "alias": null,
+    "args": [
+      {
+        "kind": "Variable",
+        "name": "input",
+        "variableName": "input"
+      }
+    ],
+    "concreteType": "LikePostPayload",
+    "kind": "LinkedField",
+    "name": "likePost",
+    "plural": false,
     "selections": [
       {
         "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "LikePostPayload",
+        "args": null,
+        "concreteType": "PostLike",
         "kind": "LinkedField",
-        "name": "likePost",
+        "name": "postLike",
         "plural": false,
         "selections": [
           {
             "alias": null,
             "args": null,
-            "concreteType": "PostLike",
-            "kind": "LinkedField",
-            "name": "postLike",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "__typename",
             "storageKey": null
           }
         ],
         "storageKey": null
       }
     ],
+    "storageKey": null
+  }
+];
+return {
+  "fragment": {
+    "argumentDefinitions": (v0/*: any*/),
+    "kind": "Fragment",
+    "metadata": null,
+    "name": "PostLikeWrapperLikeMutation",
+    "selections": (v1/*: any*/),
     "type": "Mutation",
     "abstractKey": null
   },
@@ -91,41 +98,10 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "PostLikeWrapperLikeMutation",
-    "selections": [
-      {
-        "alias": null,
-        "args": (v1/*: any*/),
-        "concreteType": "LikePostPayload",
-        "kind": "LinkedField",
-        "name": "likePost",
-        "plural": false,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "concreteType": "PostLike",
-            "kind": "LinkedField",
-            "name": "postLike",
-            "plural": false,
-            "selections": [
-              (v2/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "id",
-                "storageKey": null
-              }
-            ],
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ]
+    "selections": (v1/*: any*/)
   },
   "params": {
-    "id": "98f077f6e9b1f56ef5f9ca9151718e44",
+    "id": "7a2e692fb1223f86d2d3b897c2b62435",
     "metadata": {},
     "name": "PostLikeWrapperLikeMutation",
     "operationKind": "mutation",
@@ -134,6 +110,6 @@ return {
 };
 })();
 
-(node as any).hash = "1d588adb89a319d86114452478dc5f0a";
+(node as any).hash = "d5982b26746b7ec8ecb490927a818421";
 
 export default node;

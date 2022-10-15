@@ -26,6 +26,7 @@ const AccountAuthorizerGQL = graphql`
     isStaff
     isArtist
     isWorker
+    hasClubSupporterSubscription
   }
 `
 
@@ -45,7 +46,8 @@ export default function AccountAuthorizer ({
             isStaff: data.isStaff,
             isLocked: data.lock != null || data.deleting != null,
             isArtist: data.isArtist,
-            isWorker: data.isWorker
+            isWorker: data.isWorker,
+            isSupporter: data.hasClubSupporterSubscription
           }
         : null
     )), [data])
@@ -95,7 +97,8 @@ export default function AccountAuthorizer ({
               isArtist: data?.isArtist,
               isModerator: data?.isModerator,
               isWorker: data?.isWorker,
-              username: data?.username
+              username: data?.username,
+              isSupporter: data?.hasClubSupporterSubscription
             })
 
             // don't capture data from staff or workers

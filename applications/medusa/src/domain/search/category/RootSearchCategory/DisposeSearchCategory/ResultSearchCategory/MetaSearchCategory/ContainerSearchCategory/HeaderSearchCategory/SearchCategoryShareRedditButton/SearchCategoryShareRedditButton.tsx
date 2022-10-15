@@ -26,7 +26,7 @@ export default function SearchCategoryShareRedditButton ({ query }: Props): JSX.
 
   const onOpen = useRedditShare({
     url: {
-      pathname: '/search/category/[slug]',
+      pathname: '/search/category/[categorySlug]',
       query: {
         slug: data.slug
       }
@@ -38,11 +38,10 @@ export default function SearchCategoryShareRedditButton ({ query }: Props): JSX.
   return (
     <SmallGenericButton
       colorScheme='red'
-      isIcon
       onClick={onOpen}
       icon={SocialReddit}
     >
-      {i18n._(t`Share on Reddit`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

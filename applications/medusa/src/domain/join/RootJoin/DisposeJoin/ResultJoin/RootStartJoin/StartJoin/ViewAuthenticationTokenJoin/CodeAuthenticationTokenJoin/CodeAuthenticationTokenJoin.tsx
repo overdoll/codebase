@@ -144,7 +144,10 @@ export default function CodeAuthenticationTokenJoin (props: Props): JSX.Element 
           </Heading>
         </Flex>
         <Stack w='100%' spacing={2} align='center' justify='center'>
-          <CodeAuthenticationTokenJoinForm onSubmit={onSubmit} isLoading={isVerifyingToken} />
+          <CodeAuthenticationTokenJoinForm
+            onSubmit={onSubmit}
+            isLoading={isVerifyingToken}
+          />
           <Flex w={60} align='center' justify='center'>
             <Text textAlign='center' color='whiteAlpha.300' fontSize='md'>
               <Trans>

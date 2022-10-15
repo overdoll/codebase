@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<1c4019f5af3a622e92e7ca1509a95c50>>
- * @relayHash 359be9c22d58b739b35b52986b733c14
+ * @generated SignedSource<<9eddadf44de7fd75f5a35f890ebc688f>>
+ * @relayHash 662760010c4916849a6f6baed590a287
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 359be9c22d58b739b35b52986b733c14
+// @relayRequestID 662760010c4916849a6f6baed590a287
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -93,7 +93,7 @@ v10 = [
   {
     "kind": "Literal",
     "name": "sortBy",
-    "value": "ALGORITHM"
+    "value": "NEW"
   }
 ],
 v11 = {
@@ -322,6 +322,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -401,7 +402,6 @@ return {
                             "name": "description",
                             "storageKey": null
                           },
-                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -655,7 +655,7 @@ return {
     ]
   },
   "params": {
-    "id": "359be9c22d58b739b35b52986b733c14",
+    "id": "662760010c4916849a6f6baed590a287",
     "metadata": {},
     "name": "ScrollClubPostsFragmentPaginationQuery",
     "operationKind": "query",
@@ -664,6 +664,6 @@ return {
 };
 })();
 
-(node as any).hash = "236da99985d66dfb15bc33a0a2f58eac";
+(node as any).hash = "96effe63d213ae850ac5da825172a7ed";
 
 export default node;

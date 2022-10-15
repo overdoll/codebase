@@ -1,0 +1,42 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-10-10 19:41-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/CompleteFeedBanner/CompleteFeedBanner.tsx:16
+#~ msgid "Finish setting up your curation profile so we can tailor your feed"
+#~ msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/EmptyFeed/JoinFeedBanner/JoinFeedBanner.tsx:11
+msgid "Join"
+msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/EmptyFeed/JoinFeedBanner/JoinFeedBanner.tsx:10
+#~ msgid "Join to get a daily personalized content feed"
+#~ msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/EmptyFeed/JoinFeedBanner/JoinFeedBanner.tsx:10
+msgid "Join to unlock a daily personalized content feed"
+msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/CompleteFeedBanner/CompleteFeedBanner.tsx:17
+msgid "Set Up"
+msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/CompleteFeedBanner/CompleteFeedBanner.tsx:16
+msgid "Set up your curation profile so we can tailor your feed"
+msgstr ""
+
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/HeaderFeed.tsx:29
+msgid "Your feed"
+msgstr ""

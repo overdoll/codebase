@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<13f92e555a7ffef7e5947f2cbec77273>>
- * @relayHash 8e1360c510b8760a02e483ec202e3062
+ * @generated SignedSource<<cb6640b81822a4bb90a72afb257e8259>>
+ * @relayHash 70346326e134998988244c5c8dba65f3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8e1360c510b8760a02e483ec202e3062
+// @relayRequestID 70346326e134998988244c5c8dba65f3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -45,6 +45,16 @@ v1 = [
     "kind": "Variable",
     "name": "seed",
     "variableName": "seed"
+  },
+  {
+    "kind": "Literal",
+    "name": "sortBy",
+    "value": "ALGORITHM"
+  },
+  {
+    "kind": "Literal",
+    "name": "state",
+    "value": "PUBLISHED"
   }
 ],
 v2 = {
@@ -239,7 +249,7 @@ return {
         "args": (v1/*: any*/),
         "concreteType": "PostConnection",
         "kind": "LinkedField",
-        "name": "postsFeed",
+        "name": "posts",
         "plural": false,
         "selections": [
           {
@@ -571,12 +581,14 @@ return {
         "alias": null,
         "args": (v1/*: any*/),
         "filters": [
-          "seed"
+          "seed",
+          "state",
+          "sortBy"
         ],
         "handle": "connection",
-        "key": "RandomPosts_postsFeed",
+        "key": "RandomPosts_posts",
         "kind": "LinkedHandle",
-        "name": "postsFeed"
+        "name": "posts"
       },
       {
         "alias": null,
@@ -589,41 +601,18 @@ return {
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountLock",
-            "kind": "LinkedField",
-            "name": "lock",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "expires",
-                "storageKey": null
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
             "storageKey": null
           },
           {
             "alias": null,
             "args": null,
-            "concreteType": "AccountDeleting",
-            "kind": "LinkedField",
-            "name": "deleting",
-            "plural": false,
-            "selections": [
-              (v3/*: any*/),
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "scheduledDeletion",
-                "storageKey": null
-              }
-            ],
+            "kind": "ScalarField",
+            "name": "isStaff",
             "storageKey": null
           },
+          (v3/*: any*/),
           (v2/*: any*/)
         ],
         "storageKey": null
@@ -631,7 +620,7 @@ return {
     ]
   },
   "params": {
-    "id": "8e1360c510b8760a02e483ec202e3062",
+    "id": "70346326e134998988244c5c8dba65f3",
     "metadata": {},
     "name": "ResultRandomQuery",
     "operationKind": "query",

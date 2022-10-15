@@ -29,8 +29,7 @@ import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
 import usePreventWindowUnload from '@//:modules/hooks/usePreventWindowUnload'
 import identifyAccount from '@//:modules/external/identifyAccount'
-import captureRegistration from '@//:modules/external/captureRegistration'
-import { StringParam, useQueryParam } from 'use-query-params'
+import posthog from 'posthog-js'
 
 interface RegisterValues {
   username: string
@@ -78,8 +77,6 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
   )
 
   const data = useFragment(Fragment, query)
-
-  const [from] = useQueryParam<string | null | undefined>('from', StringParam)
 
   const notify = useToast()
 
@@ -134,15 +131,13 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
           return
         }
         const viewerPayload = store.getRootField('createAccountWithAuthenticationToken').getLinkedRecord('account')
-
-        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
-        flash('new.account', '')
-
         notify({
           status: 'success',
           title: t`Welcome to overdoll!`,
           isClosable: true
         })
+        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
+        flash('new.account', '')
       },
       onCompleted (data) {
         const tokenAccount = data?.createAccountWithAuthenticationToken?.account
@@ -159,7 +154,9 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
               }
             : null
         })
-        captureRegistration({ from: from })
+        posthog?.capture(
+          'registered'
+        )
       },
       onError () {
         notify({

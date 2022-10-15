@@ -1,5 +1,5 @@
 import { Trans } from '@lingui/macro'
-import { CogDouble, ContentBrushPen, LoginKeys, SafetyExitDoorLeft, SafetyFloat } from '@//:assets/icons'
+import { CogDouble, ContentBrushPen, HeartFull, LoginKeys, SafetyExitDoorLeft, SafetyFloat } from '@//:assets/icons'
 import Can from '@//:modules/authorization/Can'
 import React, { Suspense } from 'react'
 import SkeletonDropdownMenuButton
@@ -33,6 +33,15 @@ export default function MobileDropdownMenuButtons (): JSX.Element {
         >
           <MobileDropdownMenuButtonProfile />
         </Suspense>
+        <MobileHorizontalNavigationDropdownMenuButton
+          href='/likes'
+          icon={HeartFull}
+          label={
+            <Trans>
+              Liked Posts
+            </Trans>
+          }
+        />
       </Can>
       <Can I='staff' a='Entity'>
         <MobileHorizontalNavigationDropdownMenuButton

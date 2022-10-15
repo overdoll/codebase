@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import {
-  Icon,
   MobileContainer,
   PageSectionDescription,
   PageSectionTitle,
@@ -19,7 +18,6 @@ import SkeletonUploadCharacterGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 import SearchBooleanButton
   from '@//:modules/content/HookedComponents/Search/components/SearchBooleanButton/SearchBooleanButton'
-import { CharacterIdentifier } from '@//:assets/icons'
 import Head from 'next/head'
 
 export interface UploadCharacterSearchProps {
@@ -90,16 +88,12 @@ export default function UploadCharacterStep (): JSX.Element {
             placeholder={i18n._(t`Search for a character by name`)}
           />
           <SearchBooleanButton
-            icon={<Icon
-              icon={CharacterIdentifier}
-              h={5}
-              w={5}
-              fill={searchArguments.variables.clubCharacters === true ? 'green.900' : 'gray.300'}
-                  />}
             aria-label={searchArguments.variables.clubCharacters === true ? i18n._(t`Show all characters`) : i18n._(t`Show only original characters`)}
             colorScheme={searchArguments.variables.clubCharacters === true ? 'green' : 'gray'}
             {...registerSearch('clubCharacters', 'change')}
-          />
+          >
+            OC
+          </SearchBooleanButton>
         </HStack>
         <ChoiceRemovableTags
           values={values}

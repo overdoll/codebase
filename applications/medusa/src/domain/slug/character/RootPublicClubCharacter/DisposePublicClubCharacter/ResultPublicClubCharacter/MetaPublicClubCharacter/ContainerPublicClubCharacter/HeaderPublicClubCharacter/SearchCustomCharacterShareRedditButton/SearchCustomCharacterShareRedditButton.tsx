@@ -43,11 +43,10 @@ export default function SearchCustomCharacterShareRedditButton ({ query }: Props
   return (
     <SmallGenericButton
       colorScheme='red'
-      isIcon
       onClick={onOpen}
       icon={SocialReddit}
     >
-      {i18n._(t`Share on Reddit`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

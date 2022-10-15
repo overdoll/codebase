@@ -5,9 +5,25 @@ import { ContainerPublicClubViewerFragment$key } from '@//:artifacts/ContainerPu
 import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
 import BannerPublicClub from './BannerPublicClub/BannerPublicClub'
 import HeaderPublicClub from './HeaderPublicClub/HeaderPublicClub'
-import ButtonsPublicClub from './ButtonsPublicClub/ButtonsPublicClub'
 import { Stack } from '@chakra-ui/react'
 import PrepareClubPosts from './PrepareClubPosts/PrepareClubPosts'
+import dynamic from 'next/dynamic'
+import SupportPublicClub from './SupportPublicClub/SupportPublicClub'
+import { Suspense } from 'react'
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { suspense: true }
+)
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { suspense: true }
+)
 
 interface Props {
   clubQuery: ContainerPublicClubFragment$key
@@ -16,11 +32,11 @@ interface Props {
 
 const ClubFragment = graphql`
   fragment ContainerPublicClubFragment on Club {
-    id
+    name
     ...BannerPublicClubFragment
     ...HeaderPublicClubFragment
-    ...ButtonsPublicClubFragment
     ...PrepareClubPostsFragment
+    ...SupportPublicClubFragment
   }
 `
 
@@ -28,6 +44,7 @@ const ViewerFragment = graphql`
   fragment ContainerPublicClubViewerFragment on Account {
     ...BannerPublicClubViewerFragment
     ...HeaderPublicClubViewerFragment
+    ...SupportPublicClubViewerFragment
   }
 `
 
@@ -42,13 +59,21 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
 
   return (
     <>
+      <Suspense fallback={<></>}>
+        {viewerData == null && (
+          <>
+            <LazyModal />
+            <LazyBanner />
+          </>
+        )}
+      </Suspense>
       <BannerContainer pt={2}>
         <BannerPublicClub clubQuery={clubData} viewerQuery={viewerData} />
       </BannerContainer>
       <ContentContainer>
-        <Stack spacing={4}>
+        <Stack spacing={6}>
           <HeaderPublicClub clubQuery={clubData} viewerQuery={viewerData} />
-          <ButtonsPublicClub clubQuery={clubData} />
+          <SupportPublicClub clubQuery={clubData} viewerQuery={viewerData} />
           <PrepareClubPosts clubQuery={clubData} />
         </Stack>
       </ContentContainer>

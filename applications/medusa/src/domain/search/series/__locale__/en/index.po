@@ -21,21 +21,27 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/HeaderSearchSeries.tsx:42
+#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/HeaderSearchSeries.tsx:49
 msgid "Series"
 msgstr ""
 
-#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareDiscordButton/SearchSeriesShareDiscordButton.tsx:50
-msgid "Share on Discord"
+#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareDiscordButton/SearchSeriesShareDiscordButton.tsx:49
+#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareRedditButton/SearchSeriesShareRedditButton.tsx:44
+#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareTwitterButton/SearchSeriesShareTwitterButton.tsx:51
+msgid "Share"
 msgstr ""
+
+#: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareDiscordButton/SearchSeriesShareDiscordButton.tsx:50
+#~ msgid "Share on Discord"
+#~ msgstr ""
 
 #: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareRedditButton/SearchSeriesShareRedditButton.tsx:45
-msgid "Share on Reddit"
-msgstr ""
+#~ msgid "Share on Reddit"
+#~ msgstr ""
 
 #: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/MetaSearchSeries/ContainerSearchSeries/HeaderSearchSeries/SearchSeriesShareTwitterButton/SearchSeriesShareTwitterButton.tsx:52
-msgid "Share on Twitter"
-msgstr ""
+#~ msgid "Share on Twitter"
+#~ msgstr ""
 
 #: src/domain/search/series/RootSearchSeries/DisposeSearchSeries/ResultSearchSeries/EmptySearchSeries/EmptySearchSeries.tsx:16
 msgid "This series was not found"

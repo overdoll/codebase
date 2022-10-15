@@ -33,16 +33,20 @@ msgstr ""
 msgid "Contributor"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:51
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:63
 msgid "Edit"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:67
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:79
 msgid "Edit Post"
 msgstr ""
 
 #: src/domain/staff/post/RootStaffPost/StaffPost/StaffPost.tsx:93
 msgid "Information"
+msgstr ""
+
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:87
+msgid "MP4 Videos"
 msgstr ""
 
 #: src/domain/staff/post/RootStaffPost/RootStaffPost.tsx:39
@@ -62,11 +66,11 @@ msgstr ""
 #~ msgid "Post is processing"
 #~ msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:32
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:44
 msgid "Remove"
 msgstr ""
 
-#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:39
+#: src/domain/staff/post/RootStaffPost/StaffPost/ModerationPostActions/ModerationPostActions.tsx:51
 msgid "Remove Post"
 msgstr ""
 

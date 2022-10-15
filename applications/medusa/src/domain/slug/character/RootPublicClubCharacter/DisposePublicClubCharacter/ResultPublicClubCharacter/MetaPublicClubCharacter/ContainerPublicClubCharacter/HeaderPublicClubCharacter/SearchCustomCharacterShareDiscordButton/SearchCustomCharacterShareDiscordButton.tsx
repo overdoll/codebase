@@ -48,11 +48,10 @@ export default function SearchCustomCharacterShareDiscordButton ({ query }: Prop
   return (
     <SmallGenericButton
       colorScheme='facebook'
-      isIcon
       onClick={onCopy}
       icon={SocialDiscord}
     >
-      {i18n._(t`Share on Discord`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

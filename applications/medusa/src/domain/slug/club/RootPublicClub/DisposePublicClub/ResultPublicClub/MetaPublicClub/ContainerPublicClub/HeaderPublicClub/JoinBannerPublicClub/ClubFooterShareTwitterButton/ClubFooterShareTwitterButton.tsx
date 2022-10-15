@@ -38,7 +38,7 @@ export default function ClubFooterShareTwitterButton ({ query }: Props): JSX.Ele
 
   return (
     <SmallGenericButton
-      colorScheme='twitter'
+      colorScheme='gray'
       onClick={onOpen}
       icon={SocialTwitter}
     >

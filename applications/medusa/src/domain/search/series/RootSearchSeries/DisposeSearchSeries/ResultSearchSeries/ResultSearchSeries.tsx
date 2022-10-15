@@ -17,6 +17,9 @@ const Query = graphql`
     serial(slug: $seriesSlug) {
       ...MetaSearchSeriesFragment
     }
+    viewer {
+      ...MetaSearchSeriesAccountFragment
+    }
   }
 `
 
@@ -33,6 +36,6 @@ export default function ResultSearchSeries (props: Props): JSX.Element {
   }
 
   return (
-    <MetaSearchSeries seriesQuery={queryData.serial} />
+    <MetaSearchSeries accountQuery={queryData.viewer} seriesQuery={queryData.serial} />
   )
 }

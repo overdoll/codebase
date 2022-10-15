@@ -1,4 +1,4 @@
-import { BookmarkFull, BookmarkLarge, LoginKeys } from '@//:assets/icons'
+import { HeartFull, HeartOutline } from '@//:assets/icons'
 import {
   Box,
   ButtonProps,
@@ -63,8 +63,8 @@ export default function PostLikeLoggedOutButton ({
 
   return (
     <>
-      <MediumGenericButton isIcon onClick={onOpenLike} icon={BookmarkFull}>
-        {i18n._(t`Save`)}
+      <MediumGenericButton isIcon onClick={onOpenLike} icon={HeartOutline}>
+        {i18n._(t`Like`)}
       </MediumGenericButton>
       <Modal
         isCentered
@@ -83,21 +83,20 @@ export default function PostLikeLoggedOutButton ({
           />
           <ModalBody my={3}>
             <Stack justify='center' align='center' spacing={6}>
-              <Icon icon={BookmarkLarge} w={12} h={12} fill='primary.400' />
+              <Icon icon={HeartFull} w={12} h={12} fill='primary.400' />
               <Box>
                 <Heading color='gray.00' fontSize='lg'>
                   <Trans>
-                    Save this post to your bookmarks
+                    Like this post
                   </Trans>
                 </Heading>
                 <Text fontSize='md' color='gray.100'>
                   <Trans>
-                    Join overdoll to save this post and let {postData.club.name} know you like their post
+                    Join overdoll to let {postData.club.name} know you like their post
                   </Trans>
                 </Text>
               </Box>
               <Button
-                leftIcon={<Icon icon={LoginKeys} w={5} h={5} fill='primary.900' />}
                 w='100%'
                 size='lg'
                 colorScheme='primary'

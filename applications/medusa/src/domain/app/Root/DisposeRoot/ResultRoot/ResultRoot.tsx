@@ -36,7 +36,6 @@ const Query = graphql`
     viewer {
       id
       ...AccountAuthorizerFragment
-      ...NavigationPopupFragment
     }
   }
 `
@@ -68,7 +67,7 @@ export default function ResultRoot (props: Props): JSX.Element {
       </AccountAuthorizer>
       <NoScript />
       <DynamicRouteProgressBar />
-      <DynamicNavigationPopup query={data.viewer} />
+      <DynamicNavigationPopup />
       <SafeModal />
       <RootRichObject />
     </>

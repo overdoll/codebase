@@ -1,27 +1,30 @@
 import { Box, ButtonProps, Tooltip } from '@chakra-ui/react'
 import { Icon } from '../../../../PageLayout'
 import { forwardRef, ReactNode } from 'react'
-import Button from '../../../../../form/Button/Button'
 import IconButton from '../../../../../form/IconButton/IconButton'
 import { IconType } from '@//:types/components'
 
 interface Props extends ButtonProps {
-  icon?: IconType
+  icon: IconType
   label: ReactNode
   colorScheme?: string
   children?: ReactNode
   isActive?: boolean
+  hasBadge?: boolean
 }
 
-const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
-  icon,
-  label,
-  onClick,
-  children,
-  colorScheme = 'gray',
-  isActive = false,
-  ...rest
-}: Props, forwardRef): JSX.Element => {
+const HorizontalNavigationButtonBody = forwardRef<any, Props>((props: Props, forwardRef): JSX.Element => {
+  const {
+    icon,
+    label,
+    onClick,
+    children,
+    colorScheme = 'gray',
+    isActive = false,
+    hasBadge,
+    ...rest
+  } = props
+
   const fillColor = colorScheme === 'gray' ? 'gray.100' : `${colorScheme}.400`
 
   const ButtonProps = {
@@ -39,48 +42,40 @@ const HorizontalNavigationButtonBody = forwardRef<any, Props>(({
     ref: forwardRef
   }
 
-  const ButtonWrapper = ({ children }: { children: ReactNode }): JSX.Element => {
-    return (
-      <Tooltip
-        hasArrow
-        label={label}
-        placement='bottom'
-      >
-        <Box pointerEvents='auto'>
-          {children}
-        </Box>
-      </Tooltip>
-    )
-  }
-
-  if (icon == null) {
-    return (
-      <ButtonWrapper>
-        <Button
-          p={0}
-          {...ButtonProps}
-          {...rest}
-        >
-          {children}
-        </Button>
-      </ButtonWrapper>
-    )
-  }
-
   return (
-    <ButtonWrapper>
-      <IconButton
-        aria-label={label as string}
-        icon={<Icon
-          icon={icon}
-          p={2}
-          fill={isActive ? fillColor : 'gray.300'}
-          h='38px'
-              />}
-        {...ButtonProps}
-        {...rest}
-      />
-    </ButtonWrapper>
+    <Tooltip
+      hasArrow
+      label={label}
+      placement='bottom'
+    >
+      <Box position='relative' pointerEvents='auto'>
+        {children ??
+          (
+            <IconButton
+              aria-label={label as string}
+              icon={<Icon
+                icon={icon}
+                p={2}
+                fill={isActive ? fillColor : 'gray.300'}
+                h='38px'
+                    />}
+              {...ButtonProps}
+              {...rest}
+            />
+          )}
+        {(hasBadge === true && !isActive) && (
+          <Box
+            w={2}
+            h={2}
+            top={2}
+            right={2}
+            borderRadius='full'
+            bg={fillColor}
+            position='absolute'
+          />
+        )}
+      </Box>
+    </Tooltip>
   )
 })
 

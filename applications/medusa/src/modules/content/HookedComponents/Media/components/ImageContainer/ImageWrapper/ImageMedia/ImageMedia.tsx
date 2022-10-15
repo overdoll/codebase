@@ -58,8 +58,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
         <NextImage
           src='data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=='
           loading='lazy'
-          width={width ?? undefined}
-          height={height ?? undefined}
+          width={width ?? 1000}
+          height={height ?? 1000}
           {...IMAGE_STYLE}
         />
       </Flex>
@@ -74,8 +74,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
         priority={loadFirst}
         onError={onError}
         unoptimized
-        width={width ?? undefined}
-        height={height ?? undefined}
+        width={width ?? 1000}
+        height={height ?? 1000}
         {...IMAGE_STYLE}
       />
     )
@@ -97,8 +97,8 @@ export default function ImageMedia (props: ImageMediaProps): JSX.Element {
         priority={loadFirst}
         onError={onError}
         unoptimized
-        width={width ?? undefined}
-        height={height ?? undefined}
+        width={width ?? 1000}
+        height={height ?? 1000}
         {...IMAGE_STYLE}
       />
     </Flex>

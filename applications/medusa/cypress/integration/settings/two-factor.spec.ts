@@ -119,7 +119,6 @@ describe('Recovery Codes and Two-Factor', () => {
       typeIntoPlaceholder(/recovery code/iu, cookie?.value as string)
       cy.findByRole('button', { name: 'Submit' }).click()
       cy.findByText(/A recovery code was successfully used up to log you in/iu).should('exist')
-      cy.findByText('Rule34 Roulette').should('be.visible')
     })
 
     /**

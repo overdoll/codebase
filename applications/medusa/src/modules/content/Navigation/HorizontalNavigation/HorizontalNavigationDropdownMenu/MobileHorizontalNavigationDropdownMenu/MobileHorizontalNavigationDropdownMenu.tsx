@@ -1,8 +1,12 @@
-import { ReactNode } from 'react'
+import React, { ReactNode } from 'react'
 import { IconType } from '@//:types/components'
-import { Box, Modal, ModalBody, ModalContent, ModalOverlay, useDisclosure, Wrap } from '@chakra-ui/react'
+import { Box, Flex, Modal, ModalBody, ModalContent, ModalOverlay, Stack, useDisclosure, Wrap } from '@chakra-ui/react'
 import { HorizontalNavigationDropdownMenuContext } from '../context'
 import HorizontalNavigationButton from '../../HorizontalNavigationButton/HorizontalNavigationButton'
+import { Trans } from '@lingui/macro'
+import LinkButton from '../../../../ThemeComponents/LinkButton/LinkButton'
+import SiteLinkLogo from '@//:domain/app/Root/DisposeRoot/ResultRoot/UniversalNavigator/SiteLinkLogo/SiteLinkLogo'
+import Can from '../../../../../authorization/Can'
 
 interface Props {
   children: ReactNode
@@ -49,9 +53,26 @@ const MobileHorizontalNavigationDropdownMenu = (props: Props): JSX.Element => {
           <ModalBody
             p={3}
           >
-            <Wrap justify='center' align='center'>
-              {children}
-            </Wrap>
+            <Stack spacing={2}>
+              <Flex align='center' w='100%' justify='space-between'>
+                <SiteLinkLogo />
+                <Can not I='create' a='Club'>
+                  <LinkButton
+                    borderRadius='md'
+                    colorScheme='orange'
+                    href='/supporter'
+                    onClick={onClose}
+                  >
+                    <Trans>
+                      Become Supporter
+                    </Trans>
+                  </LinkButton>
+                </Can>
+              </Flex>
+              <Wrap justify='center' align='center'>
+                {children}
+              </Wrap>
+            </Stack>
           </ModalBody>
         </ModalContent>
       </Modal>

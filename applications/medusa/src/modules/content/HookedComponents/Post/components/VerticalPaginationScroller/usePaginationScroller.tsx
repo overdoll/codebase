@@ -1,6 +1,6 @@
 import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { Disposable } from 'react-relay/hooks'
-import { useEffect, useState, useTransition } from 'react'
+import { useCallback, useEffect, useState, useTransition } from 'react'
 import { DisposeFn } from 'relay-runtime/lib/util/RelayRuntimeTypes'
 
 interface Props {
@@ -27,7 +27,7 @@ export default function usePaginationScroller (props: Props): ReturnProps {
     timeoutMs: 300
   })
 
-  const onLoadNext = (): void => {
+  const onLoadNext = useCallback(() => {
     setHasError(false)
     const disposedLoad = (): Disposable => {
       return loadNext(8, {
@@ -46,7 +46,7 @@ export default function usePaginationScroller (props: Props): ReturnProps {
       disposedLoad()
     })
     setDispose(disposedLoad().dispose)
-  }
+  }, [])
 
   // on unmount, we dispose of the query if it's loading data
   useEffect(() => {

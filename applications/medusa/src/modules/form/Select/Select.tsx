@@ -15,7 +15,7 @@ export default function Select ({
 }: Props): JSX.Element {
   // @ts-expect-error
   const [isPending, startTransition] = useTransition({
-    timeoutMs: 3000
+    timeoutMs: 300
   })
 
   const onStartChange = (e): void => {
@@ -29,7 +29,7 @@ export default function Select ({
       {...rest}
       icon={isPending
         ? <Spinner />
-        : <Icon icon={ArrowButtonDown} fill='inherit' p={1} />}
+        : <Icon icon={ArrowButtonDown} fill='gray.200' p={1} />}
       onChange={onStartChange}
       isDisabled={isPending}
     >

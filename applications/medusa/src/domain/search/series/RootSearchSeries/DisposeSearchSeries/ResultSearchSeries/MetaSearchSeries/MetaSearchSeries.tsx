@@ -1,11 +1,14 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MetaSearchSeriesFragment$key } from '@//:artifacts/MetaSearchSeriesFragment.graphql'
+import { MetaSearchSeriesAccountFragment$key } from '@//:artifacts/MetaSearchSeriesAccountFragment.graphql'
 import SearchSeriesRichObject from './SearchSeriesRichObject/SearchSeriesRichObject'
 import ContainerSearchSeries from './ContainerSearchSeries/ContainerSearchSeries'
 
 interface Props {
   seriesQuery: MetaSearchSeriesFragment$key
+  accountQuery: MetaSearchSeriesAccountFragment$key | null
+
 }
 
 const SeriesFragment = graphql`
@@ -15,17 +18,25 @@ const SeriesFragment = graphql`
   }
 `
 
+const AccountFragment = graphql`
+  fragment MetaSearchSeriesAccountFragment on Account {
+    ...ContainerSearchSeriesAccountFragment
+  }
+`
+
 export default function MetaSearchSeries (props: Props): JSX.Element {
   const {
-    seriesQuery
+    seriesQuery,
+    accountQuery
   } = props
 
   const seriesData = useFragment(SeriesFragment, seriesQuery)
+  const accountData = useFragment(AccountFragment, accountQuery)
 
   return (
     <>
       <SearchSeriesRichObject query={seriesData} />
-      <ContainerSearchSeries seriesQuery={seriesData} />
+      <ContainerSearchSeries accountQuery={accountData} seriesQuery={seriesData} />
     </>
   )
 }

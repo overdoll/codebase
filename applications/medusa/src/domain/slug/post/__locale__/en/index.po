@@ -33,6 +33,10 @@ msgstr ""
 msgid "Let the artist know you love their content"
 msgstr ""
 
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/SavePublicPost/SavePublicPost.tsx:60
+msgid "Like this post"
+msgstr ""
+
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/CopyLinkPublicPost/CopyLinkPublicPost.tsx:48
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:54
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareRedditButton/PostShareRedditButton.tsx:54
@@ -45,10 +49,10 @@ msgid "Reveal"
 msgstr ""
 
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/SavePublicPost/SavePublicPost.tsx:60
-msgid "Save this post"
-msgstr ""
+#~ msgid "Save this post"
+#~ msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:89
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:82
 msgid "Similar content"
 msgstr ""
 

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ede3a93bcc93daaa7c66a0c95326d23b>>
+ * @generated SignedSource<<1cbc767ddadd75560af8a2bcb6067204>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,7 +18,7 @@ export type BillingSummaryFragment$data = {
       readonly currency: Currency;
     }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"LargeClubHeaderFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ChooseCurrencyFragment">;
   readonly " $fragmentType": "BillingSummaryFragment";
 };
 export type BillingSummaryFragment$key = {
@@ -71,13 +71,13 @@ const node: ReaderFragment = {
     {
       "args": null,
       "kind": "FragmentSpread",
-      "name": "LargeClubHeaderFragment"
+      "name": "ChooseCurrencyFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "87edb41c9895ea0611d040d169694a93";
+(node as any).hash = "eb0c2e96feb70814936d92d41e4dfe41";
 
 export default node;

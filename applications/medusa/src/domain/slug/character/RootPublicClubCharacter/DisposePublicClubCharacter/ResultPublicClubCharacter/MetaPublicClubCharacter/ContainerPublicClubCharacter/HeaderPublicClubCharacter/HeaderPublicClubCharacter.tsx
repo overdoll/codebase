@@ -2,9 +2,8 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { HeaderPublicClubCharacterFragment$key } from '@//:artifacts/HeaderPublicClubCharacterFragment.graphql'
 import ClubCharacterRecommendations from './ClubCharacterRecommendations/ClubCharacterRecommendations'
-import SearchSummary from '@//:common/components/PageHeader/SearchSummary/SearchSummary'
 import { Trans } from '@lingui/macro'
-import { HStack, Stack } from '@chakra-ui/react'
+import { Heading, HStack, Stack } from '@chakra-ui/react'
 import SearchCustomCharacterCopyLinkButton
   from './SearchCustomCharacterCopyLinkButton/SearchCustomCharacterCopyLinkButton'
 import SearchCustomCharacterShareDiscordButton
@@ -13,7 +12,9 @@ import SearchCustomCharacterShareRedditButton
   from './SearchCustomCharacterShareRedditButton/SearchCustomCharacterShareRedditButton'
 import SearchCustomCharacterShareTwitterButton
   from './SearchCustomCharacterShareTwitterButton/SearchCustomCharacterShareTwitterButton'
-import SearchButton from '@//:common/components/PageHeader/SearchButton/SearchButton'
+import CharacterBanner from '@//:modules/content/PageLayout/Display/fragments/Banner/CharacterBanner/CharacterBanner'
+import { TileOverlay } from '@//:modules/content/ContentSelection'
+import React from 'react'
 
 interface Props {
   characterQuery: HeaderPublicClubCharacterFragment$key
@@ -25,8 +26,7 @@ const CharacterFragment = graphql`
       ...ClubCharacterRecommendationsFragment
     }
     name
-    totalLikes
-    totalPosts
+    ...CharacterBannerFragment
     ...SearchCustomCharacterCopyLinkButtonFragment
     ...SearchCustomCharacterShareDiscordButtonFragment
     ...SearchCustomCharacterShareRedditButtonFragment
@@ -44,20 +44,26 @@ export default function HeaderPublicClubCharacter (props: Props): JSX.Element {
   return (
     <Stack spacing={2}>
       <ClubCharacterRecommendations query={characterData.club} />
-      <SearchSummary
-        title={characterData.name}
-        type={<Trans>Club Character</Trans>}
-        totalPosts={characterData.totalPosts}
-        totalLikes={characterData.totalLikes}
-      />
-      <HStack justify='space-between' spacing={2}>
-        <HStack spacing={1}>
-          <SearchCustomCharacterCopyLinkButton query={characterData} />
-          <SearchCustomCharacterShareDiscordButton query={characterData} />
-          <SearchCustomCharacterShareRedditButton query={characterData} />
-          <SearchCustomCharacterShareTwitterButton query={characterData} />
-        </HStack>
-        <SearchButton />
+      <TileOverlay backdrop={(
+        <CharacterBanner characterQuery={characterData} />
+      )}
+      >
+        <Stack minH={150} spacing={2} align='center' justify='center' px={2}>
+          <Heading textAlign='center' fontSize='3xl' color='gray.00'>
+            {characterData.name}
+          </Heading>
+          <Heading textAlign='center' fontSize='lg' color='gray.100'>
+            <Trans>
+              Club Character
+            </Trans>
+          </Heading>
+        </Stack>
+      </TileOverlay>
+      <HStack justify='flex-end' spacing={1}>
+        <SearchCustomCharacterCopyLinkButton query={characterData} />
+        <SearchCustomCharacterShareDiscordButton query={characterData} />
+        <SearchCustomCharacterShareRedditButton query={characterData} />
+        <SearchCustomCharacterShareTwitterButton query={characterData} />
       </HStack>
     </Stack>
   )

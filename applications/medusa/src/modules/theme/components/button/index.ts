@@ -45,6 +45,27 @@ const variantSolid: SystemStyleFunction = (props) => {
     }
   }
 
+  if (c === 'white') {
+    const bg = 'white'
+
+    return {
+      bg,
+      color: mode('gray.200', 'gray.900')(props),
+      _hover: {
+        opacity: 0.8,
+        _disabled: {
+          bg,
+          color: mode('gray.200', 'gray.100')(props)
+        }
+      },
+      _active: {
+        opacity: 1,
+        bg: mode('gray.300', 'white')(props),
+        boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize('white', 0.7)(theme)) as string}`
+      }
+    }
+  }
+
   const {
     bg = `${c}.500`,
     color = 'white'
@@ -233,7 +254,10 @@ const variantLink: SystemStyleFunction = (props) => {
 }
 
 const variantPanel: SystemStyleFunction = (props) => {
-  const { colorScheme: c } = props
+  const {
+    colorScheme: c,
+    theme
+  } = props
 
   if (c === 'gray') {
     const bg = mode('gray.500', 'gray.800')(props)
@@ -250,7 +274,9 @@ const variantPanel: SystemStyleFunction = (props) => {
           bg
         }
       },
-      _active: { bg: mode('gray.300', 'gray.800')(props) }
+      _active: {
+        bg: mode('gray.300', 'gray.800')(props)
+      }
     }
   }
 
@@ -277,7 +303,8 @@ const variantPanel: SystemStyleFunction = (props) => {
         bg: background
       }
     },
-    _active: {
+    _focus: {
+      boxShadow: `0 0 0 2.5px ${getColor(theme, transparentize(c === 'primary' ? `${c}.500` : `${c}.400`, 0.7)(theme)) as string}`,
       bg: background,
       color: mode(activeBg, `${c}.600`)(props)
     }

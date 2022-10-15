@@ -32,7 +32,7 @@ export default function SearchCategoryShareTwitterButton ({ query }: Props): JSX
 
   const onOpen = useTwitterShare({
     url: {
-      pathname: '/search/category/[slug]',
+      pathname: '/search/category/[categorySlug]',
       query: {
         slug: data.slug
       }
@@ -45,11 +45,10 @@ export default function SearchCategoryShareTwitterButton ({ query }: Props): JSX
   return (
     <SmallGenericButton
       colorScheme='twitter'
-      isIcon
       onClick={onOpen}
       icon={SocialTwitter}
     >
-      {i18n._(t`Share on Twitter`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

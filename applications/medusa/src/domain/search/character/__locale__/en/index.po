@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/HeaderSearchCharacter.tsx:42
+#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/HeaderSearchCharacter.tsx:55
 msgid "Character"
 msgstr ""
 
@@ -25,17 +25,23 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareDiscordButton/SearchCharacterShareDiscordButton.tsx:55
-msgid "Share on Discord"
+#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareDiscordButton/SearchCharacterShareDiscordButton.tsx:54
+#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareRedditButton/SearchCharacterShareRedditButton.tsx:49
+#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareTwitterButton/SearchCharacterShareTwitterButton.tsx:61
+msgid "Share"
 msgstr ""
+
+#: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareDiscordButton/SearchCharacterShareDiscordButton.tsx:55
+#~ msgid "Share on Discord"
+#~ msgstr ""
 
 #: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareRedditButton/SearchCharacterShareRedditButton.tsx:50
-msgid "Share on Reddit"
-msgstr ""
+#~ msgid "Share on Reddit"
+#~ msgstr ""
 
 #: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/MetaSearchCharacter/ContainerSearchCharacter/HeaderSearchCharacter/SearchCharacterShareTwitterButton/SearchCharacterShareTwitterButton.tsx:62
-msgid "Share on Twitter"
-msgstr ""
+#~ msgid "Share on Twitter"
+#~ msgstr ""
 
 #: src/domain/search/character/RootSearchCharacter/DisposeSearchCharacter/ResultSearchCharacter/EmptySearchCharacter/EmptySearchCharacter.tsx:16
 msgid "This character was not found"

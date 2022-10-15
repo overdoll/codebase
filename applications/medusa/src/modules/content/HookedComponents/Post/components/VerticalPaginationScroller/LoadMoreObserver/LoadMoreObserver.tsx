@@ -1,24 +1,49 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Box } from '@chakra-ui/react'
-import { useDebounce, useIntersectionObserver } from 'usehooks-ts'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   onObserve: () => void
+  isLoadingNext: boolean
 }
 
 export default function LoadMoreObserver (props: Props): JSX.Element {
-  const { onObserve } = props
+  const {
+    onObserve,
+    isLoadingNext
+  } = props
 
   const ref = useRef(null)
+  const [observing, setObserving] = useState(false)
 
-  const entry = useIntersectionObserver(ref, {})
-  const isIntersecting = useDebounce(entry?.isIntersecting, 100)
+  const observerCallback = (entries): void => {
+    const [entry] = entries
 
-  useEffect(() => {
-    if (isIntersecting === true) {
+    if (entry.isIntersecting === true && !isLoadingNext) {
+      setObserving(true)
+    } else if (entry.isIntersecting === false && !isLoadingNext) {
+      setObserving(false)
+    }
+  }
+
+  useUpdateEffect(() => {
+    if (observing) {
       onObserve()
     }
-  }, [isIntersecting])
+  }, [observing])
+
+  useEffect(() => {
+    if (ref.current == null) return
+
+    const observer = new IntersectionObserver(observerCallback)
+
+    observer.observe(ref.current)
+
+    return () => {
+      if (ref.current == null) return
+      observer.unobserve(ref.current)
+    }
+  }, [ref, isLoadingNext])
 
   return <Box ref={ref} />
 }

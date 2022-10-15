@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<65bc2cef4ea0d1ff57a263c0f4596514>>
- * @relayHash ebab304bbd2064a77002ce9a870d3a61
+ * @generated SignedSource<<9e838cf7b8581ffa21f59b76d53630d3>>
+ * @relayHash 1695d88e53fa03ea364d6a5c84f3f044
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ebab304bbd2064a77002ce9a870d3a61
+// @relayRequestID 1695d88e53fa03ea364d6a5c84f3f044
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -30,13 +30,6 @@ var v0 = {
   "args": null,
   "kind": "ScalarField",
   "name": "__typename",
-  "storageKey": null
-},
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
   "storageKey": null
 };
 return {
@@ -118,25 +111,18 @@ return {
             ],
             "storageKey": null
           },
-          (v1/*: any*/),
-          (v0/*: any*/),
           {
             "alias": null,
             "args": null,
-            "concreteType": "CurationProfile",
-            "kind": "LinkedField",
-            "name": "curationProfile",
-            "plural": false,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "completed",
-                "storageKey": null
-              },
-              (v1/*: any*/)
-            ],
+            "kind": "ScalarField",
+            "name": "id",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
             "storageKey": null
           }
         ],
@@ -145,7 +131,7 @@ return {
     ]
   },
   "params": {
-    "id": "ebab304bbd2064a77002ce9a870d3a61",
+    "id": "1695d88e53fa03ea364d6a5c84f3f044",
     "metadata": {},
     "name": "ResultHomeQuery",
     "operationKind": "query",

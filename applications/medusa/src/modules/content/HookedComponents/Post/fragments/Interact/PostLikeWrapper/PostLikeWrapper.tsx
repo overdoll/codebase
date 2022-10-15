@@ -37,6 +37,7 @@ const LikeMutation = graphql`
   mutation PostLikeWrapperLikeMutation($input: LikePostInput!) {
     likePost(input: $input) {
       postLike {
+        id
         __typename
       }
     }
@@ -70,6 +71,7 @@ export default function PostLikeWrapper ({
         }
       },
       updater: (store) => {
+        // update likes store
         const node = store.get(postData.id)
         const payload = store.getRootField('likePost')?.getLinkedRecord('postLike')
         if (node != null) {
@@ -78,6 +80,14 @@ export default function PostLikeWrapper ({
             node.setLinkedRecord(payload, 'viewerLiked')
           }
         }
+
+        // const viewerNode = store.getRootField('viewer')
+        // if (viewerNode != null) {
+        //   const likedPostsNode = viewerNode.getLinkedRecord('likedPosts')
+        //   if (likedPostsNode != null) {
+        //     likedPostsNode.invalidateRecord()
+        //   }
+        // }
       },
       onCompleted () {
         posthog?.capture('liked-post', {

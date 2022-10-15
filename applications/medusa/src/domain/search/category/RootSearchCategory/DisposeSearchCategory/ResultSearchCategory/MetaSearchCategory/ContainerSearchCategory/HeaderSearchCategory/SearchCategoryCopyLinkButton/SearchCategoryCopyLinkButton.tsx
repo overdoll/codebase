@@ -28,7 +28,7 @@ export default function SearchCategoryCopyLinkButton ({ query }: Props): JSX.Ele
   const router = useRouter()
 
   const [, resolved] = resolveHref(router, {
-    pathname: '/search/category/[slug]',
+    pathname: '/search/category/[categorySlug]',
     query: {
       slug: data.slug
     }

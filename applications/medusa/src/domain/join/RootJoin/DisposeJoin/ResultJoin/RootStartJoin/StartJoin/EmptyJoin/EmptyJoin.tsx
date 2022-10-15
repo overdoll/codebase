@@ -1,115 +1,15 @@
-import { graphql, useMutation } from 'react-relay/hooks'
 import { Heading, Stack } from '@chakra-ui/react'
 import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 import { OverdollLogoOutline } from '@//:assets/logos'
-import { useCookies } from 'react-cookie'
-import { EmptyJoinMutation } from '@//:artifacts/EmptyJoinMutation.graphql'
-import { t, Trans } from '@lingui/macro'
-import { useToast } from '@//:modules/content/ThemeComponents'
+import { Trans } from '@lingui/macro'
 import EmptyJoinForm from './EmptyJoinForm/EmptyJoinForm'
-import posthog from 'posthog-js'
-import { AuthenticationTokenMethod } from '@//:artifacts/RootStartJoinFragment.graphql'
-import { useEffect, useState } from 'react'
-
-const Mutation = graphql`
-  mutation EmptyJoinMutation($input: GrantAuthenticationTokenInput!) {
-    grantAuthenticationToken(input: $input) {
-      authenticationToken {
-        id
-        email
-        token
-        sameDevice
-        method
-        ...ViewAuthenticationTokenJoinFragment
-      }
-    }
-  }
-`
+import useEmptyJoinForm from '../support/useEmptyJoinForm'
 
 export default function EmptyJoin (): JSX.Element {
-  const [commit, isInFlight] = useMutation<EmptyJoinMutation>(Mutation)
-
-  const notify = useToast()
-
-  const [cookies, setCookie] = useCookies<string>(['token'])
-
-  const [canFlag, setCanFlag] = useState(false)
-
-  const onSubmit = ({ email }): void => {
-    const getMethod = (): string => {
-      if (!canFlag) {
-        return 'MAGIC_LINK'
-      }
-
-      if (posthog?.getFeatureFlag('join-six-digit-code') === 'control') {
-        return 'MAGIC_LINK'
-      }
-
-      if (posthog?.getFeatureFlag('join-six-digit-code') === 'code') {
-        return 'CODE'
-      }
-
-      return 'MAGIC_LINK'
-    }
-
-    commit({
-      variables: {
-        input: {
-          email: email,
-          method: getMethod() as AuthenticationTokenMethod
-        }
-      },
-      updater: (store, payload) => {
-        if (payload.grantAuthenticationToken?.authenticationToken == null) {
-          return
-        }
-
-        const token = payload.grantAuthenticationToken.authenticationToken.token
-        const id = payload.grantAuthenticationToken.authenticationToken.id
-
-        // after the mutation, update the root 'viewAuthenticationToken' so that the query can start the lobby queries
-        const node = store.get(id)
-
-        if (node == null) {
-          return
-        }
-
-        node.setValue(email, 'email')
-
-        let tokenCookie = cookies.token
-
-        if (tokenCookie != null) {
-          tokenCookie = tokenCookie.split(';')[0]
-        }
-
-        store
-          .getRoot()
-          .setLinkedRecord(node, `viewAuthenticationToken(token:"${tokenCookie as string ?? ''}")`)
-
-        // store cookie in token for later
-        setCookie('token', `${token};${email as string}`, {
-          path: '/',
-          secure: true,
-          sameSite: 'lax'
-        })
-        posthog?.capture('submit-email')
-      },
-      onCompleted () {
-      },
-      onError (data) {
-        notify({
-          status: 'error',
-          title: t`There was an error with joining`
-        })
-      }
-    })
-  }
-
-  useEffect(() => {
-    posthog.onFeatureFlags(() => {
-      setCanFlag(true)
-    })
-  }, [])
+  const {
+    onSubmit,
+    isInFlight
+  } = useEmptyJoinForm({})
 
   // Ask user to authenticate
   return (
@@ -128,7 +28,7 @@ export default function EmptyJoin (): JSX.Element {
         </Heading>
       </Stack>
       <EmptyJoinForm
-        onSubmit={onSubmit}
+        onSubmit={({ email }) => onSubmit(email)}
         isLoading={isInFlight}
       />
     </Stack>

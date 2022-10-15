@@ -1,4 +1,4 @@
-import { LoginKeys, PlusCircle } from '@//:assets/icons'
+import { PlusCircle } from '@//:assets/icons'
 import {
   Box,
   ButtonProps,
@@ -93,7 +93,6 @@ export default function ClubJoinLoggedOutButton (props: Props): JSX.Element {
                 </Text>
               </Box>
               <Button
-                leftIcon={<Icon icon={LoginKeys} w={5} h={5} fill='green.900' />}
                 w='100%'
                 size='lg'
                 colorScheme='green'

@@ -28,7 +28,8 @@ const getAbilityFromRequest = async (request: NextRequest): Promise<AppAbility> 
             isStaff: viewer.isStaff,
             isLocked: viewer.lock != null || viewer.deleting != null,
             isArtist: viewer.isArtist,
-            isWorker: viewer.isWorker
+            isWorker: viewer.isWorker,
+            isSupporter: viewer.hasClubSupporterSubscription
           }
         : null
     ))

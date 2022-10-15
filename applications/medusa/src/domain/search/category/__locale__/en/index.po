@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/HeaderSearchCategory.tsx:40
+#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/HeaderSearchCategory.tsx:47
 msgid "Category"
 msgstr ""
 
@@ -25,17 +25,23 @@ msgstr ""
 msgid "Copy Link"
 msgstr ""
 
-#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton.tsx:50
-msgid "Share on Discord"
+#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton.tsx:49
+#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareRedditButton/SearchCategoryShareRedditButton.tsx:44
+#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareTwitterButton/SearchCategoryShareTwitterButton.tsx:51
+msgid "Share"
 msgstr ""
+
+#: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareDiscordButton/SearchCategoryShareDiscordButton.tsx:50
+#~ msgid "Share on Discord"
+#~ msgstr ""
 
 #: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareRedditButton/SearchCategoryShareRedditButton.tsx:45
-msgid "Share on Reddit"
-msgstr ""
+#~ msgid "Share on Reddit"
+#~ msgstr ""
 
 #: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/MetaSearchCategory/ContainerSearchCategory/HeaderSearchCategory/SearchCategoryShareTwitterButton/SearchCategoryShareTwitterButton.tsx:52
-msgid "Share on Twitter"
-msgstr ""
+#~ msgid "Share on Twitter"
+#~ msgstr ""
 
 #: src/domain/search/category/RootSearchCategory/DisposeSearchCategory/ResultSearchCategory/EmptySearchCategory/EmptySearchCategory.tsx:16
 msgid "This category was not found"

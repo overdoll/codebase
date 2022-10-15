@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<796b6ca0a7ff1e8a84d41f67671d27d4>>
+ * @generated SignedSource<<19c0abd54a75aeee9dfbc2467a1c0fdb>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type AccountAuthorizerFragment$data = {
   readonly deleting: {
     readonly __typename: "AccountDeleting";
   } | null;
+  readonly hasClubSupporterSubscription: boolean;
   readonly isArtist: boolean;
   readonly isModerator: boolean;
   readonly isStaff: boolean;
@@ -107,6 +108,13 @@ return {
       "kind": "ScalarField",
       "name": "isWorker",
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "hasClubSupporterSubscription",
+      "storageKey": null
     }
   ],
   "type": "Account",
@@ -114,6 +122,6 @@ return {
 };
 })();
 
-(node as any).hash = "c6137b28d1ce4c729a61e0ee6ce0f77e";
+(node as any).hash = "5628aa312b3faf8af2f5a097cac23ec9";
 
 export default node;

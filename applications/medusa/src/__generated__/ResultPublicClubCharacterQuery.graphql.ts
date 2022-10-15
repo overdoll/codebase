@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<443647f60ee06975b8333e34522f3dcb>>
- * @relayHash 8c3cbbf4e580629f59764daae5956898
+ * @generated SignedSource<<aba29fe052c5a025d0980f2bd4ce6542>>
+ * @relayHash 55174fac51c110e98871f9d479c34818
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8c3cbbf4e580629f59764daae5956898
+// @relayRequestID 55174fac51c110e98871f9d479c34818
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -23,6 +23,9 @@ export type ResultPublicClubCharacterQuery$variables = {
 export type ResultPublicClubCharacterQuery$data = {
   readonly character: {
     readonly " $fragmentSpreads": FragmentRefs<"MetaPublicClubCharacterFragment">;
+  } | null;
+  readonly viewer: {
+    readonly " $fragmentSpreads": FragmentRefs<"MetaPublicClubCharacterAccountFragment">;
   } | null;
 };
 export type ResultPublicClubCharacterQuery = {
@@ -255,12 +258,22 @@ v21 = {
   "args": null,
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
+  "name": "banner",
+  "plural": false,
+  "selections": (v14/*: any*/),
+  "storageKey": null
+},
+v22 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
   "name": "small",
   "plural": false,
   "selections": (v14/*: any*/),
   "storageKey": null
 },
-v22 = [
+v23 = [
   {
     "kind": "Literal",
     "name": "first",
@@ -277,7 +290,7 @@ v22 = [
     "variableName": "sortBy"
   }
 ],
-v23 = {
+v24 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
@@ -287,7 +300,7 @@ v23 = {
   "selections": (v14/*: any*/),
   "storageKey": null
 },
-v24 = {
+v25 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaAccess",
@@ -321,6 +334,22 @@ return {
             "args": null,
             "kind": "FragmentSpread",
             "name": "MetaPublicClubCharacterFragment"
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "MetaPublicClubCharacterAccountFragment"
           }
         ],
         "storageKey": null
@@ -417,11 +446,13 @@ return {
                             "plural": false,
                             "selections": (v18/*: any*/),
                             "storageKey": null
-                          }
+                          },
+                          (v21/*: any*/)
                         ],
                         "storageKey": null
                       },
-                      (v7/*: any*/)
+                      (v7/*: any*/),
+                      (v10/*: any*/)
                     ],
                     "storageKey": null
                   },
@@ -441,11 +472,13 @@ return {
                     "name": "variants",
                     "plural": false,
                     "selections": [
+                      (v22/*: any*/),
                       (v21/*: any*/)
                     ],
                     "storageKey": null
                   },
-                  (v7/*: any*/)
+                  (v7/*: any*/),
+                  (v10/*: any*/)
                 ],
                 "type": "ImageMedia",
                 "abstractKey": null
@@ -454,23 +487,10 @@ return {
             ],
             "storageKey": null
           },
+          (v7/*: any*/),
           {
             "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalLikes",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "totalPosts",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": (v22/*: any*/),
+            "args": (v23/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
             "name": "posts",
@@ -561,9 +581,9 @@ return {
                                     "name": "variants",
                                     "plural": false,
                                     "selections": [
-                                      (v21/*: any*/),
-                                      (v23/*: any*/),
-                                      (v24/*: any*/)
+                                      (v22/*: any*/),
+                                      (v24/*: any*/),
+                                      (v25/*: any*/)
                                     ],
                                     "storageKey": null
                                   },
@@ -592,9 +612,9 @@ return {
                                         "name": "variants",
                                         "plural": false,
                                         "selections": [
+                                          (v25/*: any*/),
                                           (v24/*: any*/),
-                                          (v23/*: any*/),
-                                          (v21/*: any*/)
+                                          (v22/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -741,7 +761,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v22/*: any*/),
+            "args": (v23/*: any*/),
             "filters": [
               "sortBy",
               "seed"
@@ -750,7 +770,33 @@ return {
             "key": "PublicClubCharacterPosts_posts",
             "kind": "LinkedHandle",
             "name": "posts"
+          }
+        ],
+        "storageKey": null
+      },
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "Account",
+        "kind": "LinkedField",
+        "name": "viewer",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
           },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isStaff",
+            "storageKey": null
+          },
+          (v8/*: any*/),
           (v7/*: any*/)
         ],
         "storageKey": null
@@ -758,7 +804,7 @@ return {
     ]
   },
   "params": {
-    "id": "8c3cbbf4e580629f59764daae5956898",
+    "id": "55174fac51c110e98871f9d479c34818",
     "metadata": {},
     "name": "ResultPublicClubCharacterQuery",
     "operationKind": "query",
@@ -767,7 +813,7 @@ return {
 };
 })();
 
-(node as any).hash = "a66ea69d0fb5a3debd9e027a462959f7";
+(node as any).hash = "ccb1d76a015efc747521fb748d587600";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);

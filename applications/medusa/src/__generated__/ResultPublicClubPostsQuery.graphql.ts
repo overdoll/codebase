@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fd2f0466edb9516dd1a636601f42e1d2>>
- * @relayHash 91f7f0942921242230616ab6b64714bd
+ * @generated SignedSource<<58d2067bc9a2ab7c31049edb9a2f6b14>>
+ * @relayHash b5df175bfeee58c9c61690254d000bb8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 91f7f0942921242230616ab6b64714bd
+// @relayRequestID b5df175bfeee58c9c61690254d000bb8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -836,14 +836,28 @@ return {
             ],
             "storageKey": null
           },
-          (v16/*: any*/)
+          (v16/*: any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "hasClubSupporterSubscription",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "isStaff",
+            "storageKey": null
+          }
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "91f7f0942921242230616ab6b64714bd",
+    "id": "b5df175bfeee58c9c61690254d000bb8",
     "metadata": {},
     "name": "ResultPublicClubPostsQuery",
     "operationKind": "query",

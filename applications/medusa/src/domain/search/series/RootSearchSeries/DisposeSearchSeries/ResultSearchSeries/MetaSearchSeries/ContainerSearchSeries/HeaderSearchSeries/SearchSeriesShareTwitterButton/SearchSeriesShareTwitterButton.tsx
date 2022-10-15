@@ -45,11 +45,10 @@ export default function SearchSeriesShareTwitterButton ({ query }: Props): JSX.E
   return (
     <SmallGenericButton
       colorScheme='twitter'
-      isIcon
       onClick={onOpen}
       icon={SocialTwitter}
     >
-      {i18n._(t`Share on Twitter`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

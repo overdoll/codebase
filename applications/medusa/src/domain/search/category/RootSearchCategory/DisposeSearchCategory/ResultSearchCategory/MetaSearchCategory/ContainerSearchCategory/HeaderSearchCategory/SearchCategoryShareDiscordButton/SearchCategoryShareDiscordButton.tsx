@@ -29,7 +29,7 @@ export default function SearchCategoryShareDiscordButton ({ query }: Props): JSX
   const router = useRouter()
 
   const [, resolved] = resolveHref(router, {
-    pathname: '/search/category/[slug]',
+    pathname: '/search/category/[categorySlug]',
     query: {
       slug: data.slug
     }
@@ -43,11 +43,10 @@ export default function SearchCategoryShareDiscordButton ({ query }: Props): JSX
   return (
     <SmallGenericButton
       colorScheme='facebook'
-      isIcon
       onClick={onCopy}
       icon={SocialDiscord}
     >
-      {i18n._(t`Share on Discord`)}
+      {i18n._(t`Share`)}
     </SmallGenericButton>
   )
 }

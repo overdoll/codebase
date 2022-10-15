@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<244281e884c7ef5ec300bcc289e96db2>>
- * @relayHash 38ccb6eb94a25984ad878a164116894f
+ * @generated SignedSource<<0832d3244a85ae3834ad841423fbb95b>>
+ * @relayHash 56672f4be3121ebc7def9bf8ad0eb9f4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 38ccb6eb94a25984ad878a164116894f
+// @relayRequestID 56672f4be3121ebc7def9bf8ad0eb9f4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -33,7 +33,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 17,
+    "defaultValue": 11,
     "kind": "LocalArgument",
     "name": "first"
   }
@@ -248,6 +248,19 @@ return {
                   {
                     "alias": null,
                     "args": null,
+                    "concreteType": "ClubMember",
+                    "kind": "LinkedField",
+                    "name": "viewerMember",
+                    "plural": false,
+                    "selections": [
+                      (v3/*: any*/),
+                      (v2/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
+                  {
+                    "alias": null,
+                    "args": null,
                     "kind": "ScalarField",
                     "name": "viewerIsOwner",
                     "storageKey": null
@@ -415,7 +428,7 @@ return {
     ]
   },
   "params": {
-    "id": "38ccb6eb94a25984ad878a164116894f",
+    "id": "56672f4be3121ebc7def9bf8ad0eb9f4",
     "metadata": {},
     "name": "DiscoverClubsPaginationQuery",
     "operationKind": "query",
@@ -424,6 +437,6 @@ return {
 };
 })();
 
-(node as any).hash = "b48290ae9c7a51517fb792c194faf188";
+(node as any).hash = "d20ab4ae13ca0b006ae26d34718ceb6e";
 
 export default node;

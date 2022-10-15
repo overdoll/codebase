@@ -1,12 +1,31 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerSearchSeriesFragment$key } from '@//:artifacts/ContainerSearchSeriesFragment.graphql'
-import { ContentContainer, MobileContainer } from '@//:modules/content/PageLayout'
+import { ContainerSearchSeriesAccountFragment$key } from '@//:artifacts/ContainerSearchSeriesAccountFragment.graphql'
+import { ContentContainer } from '@//:modules/content/PageLayout'
 import HeaderSearchSeries from './HeaderSearchSeries/HeaderSearchSeries'
 import ScrollSearchSeries from './ScrollSearchSeries/ScrollSearchSeries'
+import dynamic from 'next/dynamic'
+import { Stack } from '@chakra-ui/react'
+import { Suspense } from 'react'
+
+const LazyBanner = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
+  },
+  { suspense: true }
+)
+
+const LazyModal = dynamic(
+  async () => {
+    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
+  },
+  { suspense: true }
+)
 
 interface Props {
   seriesQuery: ContainerSearchSeriesFragment$key
+  accountQuery: ContainerSearchSeriesAccountFragment$key | null
 }
 
 const SeriesFragment = graphql`
@@ -16,20 +35,36 @@ const SeriesFragment = graphql`
   }
 `
 
+const AccountFragment = graphql`
+  fragment ContainerSearchSeriesAccountFragment on Account {
+    ...ScrollSearchSeriesAccountFragment
+  }
+`
+
 export default function ContainerSearchSeries (props: Props): JSX.Element {
   const {
-    seriesQuery
+    seriesQuery,
+    accountQuery
   } = props
 
   const seriesData = useFragment(SeriesFragment, seriesQuery)
+  const accountData = useFragment(AccountFragment, accountQuery)
 
   return (
     <>
-      <MobileContainer pt={2}>
-        <HeaderSearchSeries seriesQuery={seriesData} />
-      </MobileContainer>
-      <ContentContainer pt={8}>
-        <ScrollSearchSeries seriesQuery={seriesData} />
+      <Suspense fallback={<></>}>
+        {accountData == null && (
+          <>
+            <LazyBanner />
+            <LazyModal />
+          </>
+        )}
+      </Suspense>
+      <ContentContainer pt={2}>
+        <Stack spacing={8}>
+          <HeaderSearchSeries seriesQuery={seriesData} />
+          <ScrollSearchSeries accountQuery={accountData} seriesQuery={seriesData} />
+        </Stack>
       </ContentContainer>
     </>
   )

@@ -90,7 +90,7 @@ msgstr ""
 #~ msgid "Email"
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoinForm/CodeAuthenticationTokenJoinForm.tsx:53
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoinForm/CodeAuthenticationTokenJoinForm.tsx:76
 msgid "Enter 6-digit code"
 msgstr ""
 
@@ -155,7 +155,7 @@ msgstr ""
 #~ msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:112
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:25
 msgid "Join overdoll."
 msgstr ""
 
@@ -171,7 +171,7 @@ msgstr ""
 #~ msgid "Logging in"
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoin.tsx:150
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoin.tsx:153
 msgid "Make sure to check your spam and don't close this page"
 msgstr ""
 
@@ -180,7 +180,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoinForm/EmptyJoinForm.tsx:68
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoinForm/CodeAuthenticationTokenJoinForm.tsx:65
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/CodeAuthenticationTokenJoin/CodeAuthenticationTokenJoinForm/CodeAuthenticationTokenJoinForm.tsx:88
 msgid "Next"
 msgstr ""
 
@@ -265,7 +265,7 @@ msgstr ""
 msgid "There was an error submitting the code"
 msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:95
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/support/useEmptyJoinForm.tsx:91
 msgid "There was an error with joining"
 msgstr ""
 
@@ -297,7 +297,7 @@ msgstr ""
 msgid "Welcome back! Thanks for using two-factor to log in!"
 msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:143
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/RegisterAuthenticationToken/RegisterAuthenticationToken.tsx:139
 msgid "Welcome to overdoll!"
 msgstr ""
 

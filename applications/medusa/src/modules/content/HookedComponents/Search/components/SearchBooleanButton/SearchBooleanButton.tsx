@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { IconButtonProps, Tooltip } from '@chakra-ui/react'
 import { RegisterFunctionReturn } from '../../types'
-import IconButton from '../../../../../form/IconButton/IconButton'
+import Button from '../../../../../form/Button/Button'
 
 interface Props extends Omit<IconButtonProps, 'id' | 'defaultValue'>, RegisterFunctionReturn {
   nullifyOnClear?: boolean
@@ -45,7 +45,7 @@ export default function SearchBooleanButton ({
     <Tooltip
       label={rest['aria-label']}
     >
-      <IconButton
+      <Button
         onClick={onClick}
         id={id}
         isLoading={isPending}

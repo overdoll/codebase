@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3e83bd6bd0c3b83d4afba4241bea7450>>
+ * @generated SignedSource<<8fb6bb0c0686b489e9fe8a3fc692fc26>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,6 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type SelectMethodChoiceViewerFragment$data = {
-  readonly __typename: "Account";
   readonly isSecure: boolean;
   readonly savedPaymentMethods: {
     readonly edges: ReadonlyArray<{
@@ -27,21 +26,12 @@ export type SelectMethodChoiceViewerFragment$key = {
   readonly " $fragmentSpreads": FragmentRefs<"SelectMethodChoiceViewerFragment">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "__typename",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "SelectMethodChoiceViewerFragment",
   "selections": [
-    (v0/*: any*/),
     {
       "alias": null,
       "args": null,
@@ -66,7 +56,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v0/*: any*/)
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                }
               ],
               "storageKey": null
             }
@@ -87,8 +83,7 @@ return {
   "type": "Account",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "46eed205da5ed3cec71e4611e4024c96";
+(node as any).hash = "b86604cff358a12bc2bc92238c5aaca2";
 
 export default node;

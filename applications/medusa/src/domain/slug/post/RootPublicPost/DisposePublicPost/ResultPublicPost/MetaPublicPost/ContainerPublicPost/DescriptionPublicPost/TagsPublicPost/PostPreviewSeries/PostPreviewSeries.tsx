@@ -33,6 +33,10 @@ export default function PostPreviewSeries (props: Props): JSX.Element {
 
   const uniqueSeries = [...getSeries.reduce((map, obj) => map.set(obj?.id, obj), new Map()).values()]
 
+  if (uniqueSeries.length < 1) {
+    return <></>
+  }
+
   return (
     <Stack w='100%' spacing={1}>
       <Grid

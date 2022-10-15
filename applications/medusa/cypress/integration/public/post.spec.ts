@@ -1,17 +1,15 @@
-import { clickOnButton } from '../../support/user_actions'
 import { generateUsernameAndEmail } from '../../support/generate'
 
 Cypress.config('defaultCommandTimeout', 20000)
 
 // const club = 'Test Club'
-const rule = 'Rule #1 without infraction'
 const character = 'Susannah Aguilar'
 const category = 'Assure'
 
 describe('Post', () => {
   const gotoPost = (): void => {
     cy.visit('/TestClub/post/25WqmS7kgwotdDaxQDEa6I4CjuO')
-    cy.findByText('Save this post').should('be.visible')
+    cy.findByText('Like this post').should('be.visible')
   }
 
   const loginAndGotoPost = (): void => {
@@ -25,7 +23,7 @@ describe('Post', () => {
   }
 
   const clickOnPostLikeButton = (): void => {
-    cy.findAllByRole('button', { name: 'Save' }).first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findAllByRole('button', { name: 'Like' }).first().should('be.visible').should('not.be.disabled').click({ force: true })
   }
 
   const clickonReportPostMenuItem = (): void => {
@@ -61,18 +59,18 @@ describe('Post', () => {
      */
     loginAndGotoPost()
     clickOnPostLikeButton()
-    cy.findAllByRole('button', { name: 'Saved' }).first().should('not.be.disabled').click({ force: true })
-    cy.findAllByRole('button', { name: 'Save' }).first().should('not.be.disabled')
+    cy.findAllByRole('button', { name: 'Liked' }).first().should('not.be.disabled').click({ force: true })
+    cy.findAllByRole('button', { name: 'Like' }).first().should('not.be.disabled')
 
     /**
      * Report post
      */
-    clickonReportPostMenuItem()
-    cy.findByText(rule).should('not.be.disabled').click({ force: true })
-    clickOnButton('Submit Report')
-    cy.findByText(/Post report was submitted/iu).should('be.visible')
-    cy.get('button[aria-label="Open Menu"]').first().click({ force: true })
-    cy.findAllByText(/Reported/iu).should('be.visible')
+    // clickonReportPostMenuItem()
+    // cy.findByText(rule).should('not.be.disabled').click({ force: true })
+    // clickOnButton('Submit Report')
+    // cy.findByText(/Post report was submitted/iu).should('be.visible')
+    // cy.get('button[aria-label="Open Menu"]').first().click({ force: true })
+    // cy.findAllByText(/Reported/iu).should('be.visible')
 
     /**
      * Join from post
@@ -88,7 +86,7 @@ describe('Post', () => {
      */
     gotoPost()
     clickOnPostLikeButton()
-    cy.findByText(/Save this post to your bookmarks/iu).should('be.visible')
+    cy.findByText(/Like this post/iu).should('be.visible')
 
     /**
      * Join from post

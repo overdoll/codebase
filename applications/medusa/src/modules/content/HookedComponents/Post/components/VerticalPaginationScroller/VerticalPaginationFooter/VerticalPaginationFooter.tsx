@@ -18,22 +18,16 @@ export default function VerticalPaginationFooter (props: Props): JSX.Element {
     isLoadingNext
   } = props
 
-  if (isLoadingNext) {
-    return <LoadingSpinner />
-  }
-
   if (!hasNext) {
     return <></>
   }
 
-  if (hasError) {
-    return <ErrorButton onClick={loadNext} />
-  }
-
   return (
     <>
-      <LoadMoreObserver onObserve={loadNext} />
-      <LoadMoreButton onClick={loadNext} />
+      {isLoadingNext && <LoadingSpinner />}
+      {hasError && <ErrorButton onClick={loadNext} />}
+      <LoadMoreObserver isLoadingNext={isLoadingNext || hasError || !hasNext} onObserve={loadNext} />
+      {(!isLoadingNext && !hasError) && <LoadMoreButton onClick={loadNext} />}
     </>
   )
 }

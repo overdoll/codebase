@@ -22,7 +22,7 @@ export default function ClickableCharacter ({ query }: Props): JSX.Element {
     <CharacterLinkTile query={data}>
       <SmallBackgroundBox p={2} borderRadius='inherit'>
         <HStack spacing={2} align='center'>
-          <Heading noOfLines={1} color='gray.100' fontSize='xl'>
+          <Heading noOfLines={1} color='gray.100' fontSize='md'>
             {data.name}
           </Heading>
         </HStack>

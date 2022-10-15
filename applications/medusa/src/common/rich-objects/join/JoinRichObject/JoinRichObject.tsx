@@ -1,11 +1,10 @@
 import Head from 'next/head'
 import React from 'react'
-import { DESCRIPTION_FEATURES, TITLE_SUFFIX } from '@//:modules/constants/rich-objects'
 import ImageRichObject from '../../default/ImageRichObject/ImageRichObject'
 
 export default function JoinRichObject (): JSX.Element {
-  const TITLE = `Create an Account - ${TITLE_SUFFIX}`
-  const DESCRIPTION = `Create an account and post or discover ${DESCRIPTION_FEATURES}. overdoll allows artists to post and monetize their content and for fans to discover new content.`
+  const TITLE = 'Join overdoll'
+  const DESCRIPTION = 'Join overdoll to get a personalized feed or post your content. overdoll allows artists to post and monetize their content and for fans to discover new content.'
 
   const URL = 'https://overdoll.com/join'
 

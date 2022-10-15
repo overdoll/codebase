@@ -25,7 +25,7 @@ msgstr ""
 msgid "Billing help and subscriptions"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:225
+#: src/domain/help/Help/Help.tsx:236
 msgid "Build ID: {0}"
 msgstr ""
 
@@ -53,11 +53,11 @@ msgstr ""
 msgid "DMCA claims information"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:213
+#: src/domain/help/Help/Help.tsx:224
 msgid "Discord"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:205
+#: src/domain/help/Help/Help.tsx:216
 msgid "Follow us on Twitter!"
 msgstr ""
 
@@ -67,6 +67,10 @@ msgstr ""
 
 #: src/domain/help/Help/Help.tsx:84
 msgid "General platform rules for everyone"
+msgstr ""
+
+#: src/domain/help/Help/Help.tsx:191
+msgid "Give Feedback"
 msgstr ""
 
 #: src/domain/help/Help/Help.tsx:150
@@ -85,7 +89,7 @@ msgstr ""
 msgid "Information about payouts"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:216
+#: src/domain/help/Help/Help.tsx:227
 msgid "Join our discord!"
 msgstr ""
 
@@ -101,7 +105,7 @@ msgstr ""
 msgid "Platform"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:192
+#: src/domain/help/Help/Help.tsx:203
 msgid "Social"
 msgstr ""
 
@@ -109,11 +113,15 @@ msgstr ""
 msgid "Supporter Guidelines"
 msgstr ""
 
+#: src/domain/help/Help/Help.tsx:194
+msgid "Tell us what you really think"
+msgstr ""
+
 #: src/domain/help/Help/Help.tsx:136
 msgid "Terms of Service"
 msgstr ""
 
-#: src/domain/help/Help/Help.tsx:202
+#: src/domain/help/Help/Help.tsx:213
 msgid "Twitter"
 msgstr ""
 

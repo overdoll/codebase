@@ -10,7 +10,7 @@ export default function HorizontalNavigationRight ({ children }: Props): JSX.Ele
     <Flex
       m='auto'
       right={0}
-      mr={1}
+      mr={2}
     >
       <Flex
         borderRadius='md'
