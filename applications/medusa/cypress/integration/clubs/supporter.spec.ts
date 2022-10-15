@@ -136,7 +136,7 @@ describe('Supporter', () => {
     clickOnButton(/Cancel/iu)
     cy.findByText(/Become a supporter to help/iu).should('be.visible')
 
-    cy.get('button[aria-label="Close"]').click()
+    cy.get('button[aria-label="Back"]').click()
     cy.findByText(/Use a saved payment method/iu).should('not.be.disabled').click({ force: true })
     clickOnButton('Next')
     cy.findByText(/Select a saved payment method/iu).should('be.visible')

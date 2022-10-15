@@ -60,7 +60,7 @@ describe('Club Page', () => {
 
   it('click club buttons', () => {
     cy.visit(`/${ClubSlug}`)
-    clickOnButton('All Posts')
+    clickOnButton('See all posts')
     cy.url().should('contain', `/${ClubSlug}/posts`)
   })
 })
