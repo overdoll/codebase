@@ -144,7 +144,7 @@ describe('Supporter', () => {
     // // use saved payment method to subscribe
     cy.findByText(`${testCardDetails.cardExpirationMonth}/${testCardDetails.cardExpirationYear}`).should('not.be.disabled').click({ force: true })
     clickOnToggle(/I have read and agree to the/iu, true)
-    clickOnButton('Subscribe')
+    cy.findByRole('button', { name: 'Subscribe' }).should('not.be.disabled').click({ force: true })
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
     cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
