@@ -1,4 +1,3 @@
-import { clickOnButton } from '../../support/user_actions'
 import { generateUsernameAndEmail } from '../../support/generate'
 
 Cypress.config('defaultCommandTimeout', 20000)
@@ -67,12 +66,12 @@ describe('Post', () => {
     /**
      * Report post
      */
-    clickonReportPostMenuItem()
-    cy.findByText(rule).should('not.be.disabled').click({ force: true })
-    clickOnButton('Submit Report')
-    cy.findByText(/Post report was submitted/iu).should('be.visible')
-    cy.get('button[aria-label="Open Menu"]').first().click({ force: true })
-    cy.findAllByText(/Reported/iu).should('be.visible')
+    // clickonReportPostMenuItem()
+    // cy.findByText(rule).should('not.be.disabled').click({ force: true })
+    // clickOnButton('Submit Report')
+    // cy.findByText(/Post report was submitted/iu).should('be.visible')
+    // cy.get('button[aria-label="Open Menu"]').first().click({ force: true })
+    // cy.findAllByText(/Reported/iu).should('be.visible')
 
     /**
      * Join from post
