@@ -3,7 +3,6 @@ import { generateUsernameAndEmail } from '../../support/generate'
 Cypress.config('defaultCommandTimeout', 20000)
 
 // const club = 'Test Club'
-const rule = 'Rule #1 without infraction'
 const character = 'Susannah Aguilar'
 const category = 'Assure'
 
