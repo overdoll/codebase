@@ -20,7 +20,7 @@ describe('Join', () => {
     typeIntoPlaceholder('Enter a username', username)
     clickOnButton(/Register/iu)
     cy.findByText(/Welcome to overdoll!/iu).should('exist')
-    cy.url().should('include', '/feed')
+    cy.url().should('include', '/')
 
     /**
      * Log out and check state

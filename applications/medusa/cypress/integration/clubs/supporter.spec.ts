@@ -120,7 +120,7 @@ describe('Supporter', () => {
      */
     cy.visit(`/${savedPaymentMethodClub}`)
     clickOnButton(/Become a Supporter/iu)
-    cy.findByText(/How will you pay/iu).should('be.visible')
+    cy.findByText(/You will be asked to enter your payment/iu).should('be.visible')
 
     // check selections
     cy.findByText(/Enter a new payment method/iu).should('not.be.disabled').click({ force: true })
