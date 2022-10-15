@@ -300,7 +300,7 @@ describe('Create & Manage Posts', () => {
     cy.joinWithNewAccount(newUsername)
     cy.visit(`/${clubName}`)
     cy.findAllByRole('button', { name: /Become a Supporter/iu }).first().should('be.visible').should('not.be.disabled').click({ force: true })
-    cy.findByText(/Your contribution directly supports/iu).should('be.visible')
+    cy.findByText(/Become a supporter to help/iu).should('be.visible')
 
     /**
      * Remove post as staff
