@@ -10,6 +10,7 @@ import SwiperType from 'swiper'
 import { PlayerType } from '../../../../Media/types'
 import { UrlObject } from 'url'
 import { Link } from '../../../../../../routing'
+import MemoKey from '../../../components/VerticalPaginationScroller/MemoKey/MemoKey'
 
 interface Props {
   postQuery: PreviewPostFragment$key
@@ -17,6 +18,7 @@ interface Props {
 
 const PostFragment = graphql`
   fragment PreviewPostFragment on Post {
+    id
     reference
     club {
       slug
@@ -85,7 +87,9 @@ export default function PreviewPost (props: Props): JSX.Element {
         />
       </Link>
       <PreviewHeader mb={1} postQuery={postData} />
-      <PreviewContent onPlayerInit={setPlayer} onSwiper={setSwiper} postQuery={postData} />
+      <MemoKey memoKey={postData.id}>
+        <PreviewContent onPlayerInit={setPlayer} onSwiper={setSwiper} postQuery={postData} />
+      </MemoKey>
       <PreviewFooter mt={1} postQuery={postData} />
     </Box>
   )

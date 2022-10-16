@@ -46,7 +46,7 @@ export default function usePaginationScroller (props: Props): ReturnProps {
       disposedLoad()
     })
     setDispose(disposedLoad().dispose)
-  }, [])
+  }, [loadNext, setDispose])
 
   // on unmount, we dispose of the query if it's loading data
   useEffect(() => {

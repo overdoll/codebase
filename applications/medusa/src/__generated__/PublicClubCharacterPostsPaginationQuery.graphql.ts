@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<8139969ceee427872e0ba005d2919f2a>>
- * @relayHash 1d5ac3ee9adae65b79fdbebb097a67d3
+ * @generated SignedSource<<b35c5c4dba710785c13bb80c15234178>>
+ * @relayHash 69454abfb3d1f4b6ea9d8af14205e3c0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1d5ac3ee9adae65b79fdbebb097a67d3
+// @relayRequestID 69454abfb3d1f4b6ea9d8af14205e3c0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -322,6 +322,7 @@ return {
                         "name": "node",
                         "plural": false,
                         "selections": [
+                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -407,7 +408,6 @@ return {
                             "name": "description",
                             "storageKey": null
                           },
-                          (v9/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -653,7 +653,7 @@ return {
     ]
   },
   "params": {
-    "id": "1d5ac3ee9adae65b79fdbebb097a67d3",
+    "id": "69454abfb3d1f4b6ea9d8af14205e3c0",
     "metadata": {},
     "name": "PublicClubCharacterPostsPaginationQuery",
     "operationKind": "query",

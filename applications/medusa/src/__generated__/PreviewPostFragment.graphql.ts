@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<62f17281023491a4f61c9e3e0f468c7c>>
+ * @generated SignedSource<<c0b27c78625c18e5d7100a49f439f125>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type PreviewPostFragment$data = {
   readonly club: {
     readonly slug: string;
   };
+  readonly id: string;
   readonly reference: string;
   readonly " $fragmentSpreads": FragmentRefs<"PreviewContentFragment" | "PreviewFooterFragment" | "PreviewHeaderFragment">;
   readonly " $fragmentType": "PreviewPostFragment";
@@ -29,6 +30,13 @@ const node: ReaderFragment = {
   "metadata": null,
   "name": "PreviewPostFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -74,6 +82,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "33372c363bc9c5396860bd304c3cecce";
+(node as any).hash = "1f6064060c4547a3f1cf67ea4695e8d0";
 
 export default node;

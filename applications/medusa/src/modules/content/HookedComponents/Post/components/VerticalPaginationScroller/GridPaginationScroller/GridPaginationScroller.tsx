@@ -7,7 +7,7 @@ import { Box, Grid } from '@chakra-ui/react'
 import VerticalPaginationFooter from '../VerticalPaginationFooter/VerticalPaginationFooter'
 import usePaginationScroller from '../usePaginationScroller'
 import GridPaginationPost from './GridPaginationPost/GridPaginationPost'
-import JoinRedirectPrompt from '@//:common/components/JoinRedirectPrompt/JoinRedirectPrompt'
+import MemoKey from '../MemoKey/MemoKey'
 
 interface Props {
   postConnectionQuery: GridPaginationScrollerFragment$key
@@ -72,23 +72,19 @@ export default function GridPaginationScroller (props: Props): JSX.Element {
           >
             <Box pt='120%' />
             <Box top={0} w='100%' h='100%' position='absolute'>
-              <GridPaginationPost query={item.node} />
+              <MemoKey memoKey={item.node.id}>
+                <GridPaginationPost query={item.node} />
+              </MemoKey>
             </Box>
           </Box>
         ))}
       </Grid>
-      {data.edges.length < 24
-        ? (
-          <VerticalPaginationFooter
-            loadNext={onLoadNext}
-            hasNext={hasNext}
-            hasError={hasError}
-            isLoadingNext={isLoadingNext || isPending}
-          />
-          )
-        : (
-          <JoinRedirectPrompt mt={16} seed={data.__id} />
-          )}
+      <VerticalPaginationFooter
+        loadNext={onLoadNext}
+        hasNext={hasNext}
+        hasError={hasError}
+        isLoadingNext={isLoadingNext || isPending}
+      />
     </Box>
   )
 }
