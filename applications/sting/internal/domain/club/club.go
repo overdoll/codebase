@@ -128,7 +128,7 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 		ownerAccountId:              requester.AccountId(),
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
-		supporterOnlyPostsDisabled:  true,
+		supporterOnlyPostsDisabled:  false,
 		createdAt:                   time.Now(),
 		updatedAt:                   time.Now(),
 	}, nil
