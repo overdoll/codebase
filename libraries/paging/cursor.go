@@ -149,7 +149,7 @@ func (c *Cursor) GetCursor() ([]interface{}, error) {
 		var afterValue []interface{}
 
 		if err := c.After().Decode(&afterValue); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to decode cursor")
 		}
 
 		return afterValue, nil
@@ -160,7 +160,7 @@ func (c *Cursor) GetCursor() ([]interface{}, error) {
 		var beforeValue []interface{}
 
 		if err := c.Before().Decode(&beforeValue); err != nil {
-			return nil, err
+			return nil, errors.Wrap(err, "failed to decode cursor")
 		}
 
 		return beforeValue, nil
@@ -252,7 +252,7 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascend
 
 			err = buff.Decode(&createdCursorTimeUUID)
 			if err != nil {
-				return err
+				return errors.Wrap(err, "failed to decode cursor")
 			}
 		}
 
@@ -273,7 +273,7 @@ func (c *Cursor) BuildCassandra(builder *qb.SelectBuilder, column string, ascend
 
 			err = buff.Decode(&createdCursorTimeUUID)
 			if err != nil {
-				return err
+				return errors.Wrap(err, "failed to decode cursor")
 			}
 		}
 
@@ -341,7 +341,7 @@ func (c *Cursor) BuildRedis(k []string) ([]string, error) {
 			var afterValue string
 
 			if err := c.After().Decode(&afterValue); err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "failed to decode cursor")
 			}
 
 			if v == afterValue {
@@ -365,7 +365,7 @@ func (c *Cursor) BuildRedis(k []string) ([]string, error) {
 			var beforeValue string
 
 			if err := c.Before().Decode(&beforeValue); err != nil {
-				return nil, err
+				return nil, errors.Wrap(err, "failed to decode cursor")
 			}
 
 			if v == beforeValue {

@@ -2,6 +2,7 @@ package post
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/libraries/media"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/passport"
@@ -158,6 +159,6 @@ type Repository interface {
 
 	GenerateSitemap(ctx context.Context) error
 
-	GenerateCuratedPostIds(ctx context.Context, accountId string, audienceIds []string) ([]string, error)
+	GenerateCuratedPostIds(ctx context.Context, accountId string, digest *club.AccountClubDigest, audienceIds []string) ([]string, error)
 	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Post, error)
 }

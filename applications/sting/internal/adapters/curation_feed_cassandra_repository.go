@@ -6,6 +6,7 @@ import (
 	"github.com/olivere/elastic/v7"
 	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/errors"
@@ -190,7 +191,7 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 		return nil, err
 	}
 
-	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("id", postIds...)))
+	filterQueries = append(filterQueries, elastic.NewBoolQuery().Must(elastic.NewTermsQueryFromStrings("id", postIds...)))
 	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
 	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)))
 
@@ -219,7 +220,7 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 	return posts, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) GenerateCuratedPostIds(ctx context.Context, accountId string, audienceIds []string) ([]string, error) {
+func (r PostsCassandraElasticsearchRepository) GenerateCuratedPostIds(ctx context.Context, accountId string, digest *club.AccountClubDigest, audienceIds []string) ([]string, error) {
 
 	// first, grab all post IDs that this account has observed
 	buckets, err := r.getPostObservationBuckets(ctx, accountId)
@@ -261,20 +262,18 @@ func (r PostsCassandraElasticsearchRepository) GenerateCuratedPostIds(ctx contex
 		MustNot(elastic.NewTermsQueryFromStrings("id", collectedPostIds...)),
 	)
 
-	// TODO: add weights to clubs that you follow, but set a small priority
-	// TODO: use this to add posts that the club has posted that are new, with a maximum amount
-	// TODO: ensure the list always contains at least 1 premium post from one of our clubs, on the first page of the posts
+	// boost for audience
+	query.Should(elastic.NewTermsQueryFromStrings("audience_id", audienceIds...))
 
-	if len(audienceIds) > 0 {
-		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", audienceIds...))
-	}
+	// boost for club memberships, for posts created recently
+	query.Should(elastic.NewBoolQuery().Must(
+		elastic.NewTermsQueryFromStrings("club_id", digest.ClubMembershipIds()...)).Must(elastic.NewRangeQuery("posted_at").Gte(time.Now())))
 
-	if filterQueries != nil {
-		query.Filter(filterQueries...)
-	}
-
+	query.Filter(filterQueries...)
 	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction()))
 
+	builder.Sort("_score", false)
+	builder.Sort("id", true)
 	builder.Size(50)
 	builder.Query(query)
 

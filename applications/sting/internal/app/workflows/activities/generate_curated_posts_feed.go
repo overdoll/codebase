@@ -20,7 +20,12 @@ func (h *Activities) GenerateCuratedPostsFeed(ctx context.Context, input Generat
 		return err
 	}
 
-	postIds, err := h.pr.GenerateCuratedPostIds(ctx, input.AccountId, profile.AudienceIds())
+	digest, err := h.cr.GetAccountClubDigestById(ctx, input.AccountId)
+	if err != nil {
+		return err
+	}
+
+	postIds, err := h.pr.GenerateCuratedPostIds(ctx, input.AccountId, digest, profile.AudienceIds())
 	if err != nil {
 		return err
 	}

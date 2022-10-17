@@ -3,9 +3,9 @@ package passport
 import (
 	"crypto/hmac"
 	"crypto/sha256"
-	"errors"
 	"github.com/golang/protobuf/proto"
 	"os"
+	"overdoll/libraries/errors"
 
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
@@ -26,7 +26,7 @@ func signPassport(signatureTarget *libraries_passport_v1.Passport) error {
 	msg, err := proto.Marshal(target)
 
 	if err != nil {
-		return err
+		return errors.Wrap(err, "failed to marshal passport")
 	}
 
 	// Create a new HMAC by defining the hash type and the key (as byte array)
