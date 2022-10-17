@@ -58,6 +58,7 @@ def create_docker_step(label, commands, additional_env_vars=None, cache=None):
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_POSTHOG_TRACKING_CODE",
         "NEXT_PUBLIC_POSTHOG_DOMAIN",
+        "APOLLO_KEY",
     ]
 
     step = {
@@ -160,6 +161,7 @@ def create_docker_compose_step(label, commands, additional_env_vars=None, config
         "NEXT_PUBLIC_SENTRY_DSN",
         "NEXT_PUBLIC_POSTHOG_TRACKING_CODE",
         "NEXT_PUBLIC_POSTHOG_DOMAIN",
+        "APOLLO_KEY"
     ]
 
     step = {
