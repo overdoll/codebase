@@ -657,7 +657,7 @@ def execute_publish_schema_commands(configs):
         terminal_print.print_expanded_group(":graphql: Publishing subgraph schema for {}".format(service))
 
         exec.execute_command([
-            "rover",
+            "/root/.rover/bin/rover",
             "subgraph",
             "publish",
             "od-prod@current",

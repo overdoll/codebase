@@ -3,6 +3,7 @@ package passport
 import (
 	"encoding/base64"
 	"github.com/golang/protobuf/proto"
+	"overdoll/libraries/errors"
 	libraries_passport_v1 "overdoll/libraries/passport/proto"
 )
 
@@ -11,7 +12,7 @@ func unmarshalPassport(marshal []byte) (*Passport, error) {
 	var msg libraries_passport_v1.Passport
 
 	if err := proto.Unmarshal(marshal, &msg); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to unmarshal passport")
 	}
 
 	if err := verifyPassport(&msg); err != nil {
@@ -26,7 +27,7 @@ func marshalPassport(p *Passport) ([]byte, error) {
 	msg, err := proto.Marshal(p.passport)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to marshal passport")
 	}
 
 	return msg, nil
@@ -41,7 +42,7 @@ func unserializeFromString(raw string) (*Passport, error) {
 	sDec, err := base64.RawURLEncoding.DecodeString(raw)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err, "failed to decode string")
 	}
 
 	return unmarshalPassport(sDec)
