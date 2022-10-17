@@ -5,17 +5,7 @@ import { ContentContainer } from '@//:modules/content/PageLayout'
 import ScrollPostsFeed from './ScrollPostsFeed/ScrollPostsFeed'
 import { Stack } from '@chakra-ui/react'
 import HeaderFeed from './HeaderFeed/HeaderFeed'
-import dynamic from 'next/dynamic'
-import { Suspense } from 'react'
-
-const LazyBanner = dynamic(
-  async () => {
-    return await import('./CompleteFeedBanner/CompleteFeedBanner')
-  },
-  {
-    suspense: true
-  }
-)
+import CompleteFeedBanner from './CompleteFeedBanner/CompleteFeedBanner'
 
 interface Props {
   viewerQuery: ContainerFeedViewerFragment$key
@@ -23,12 +13,7 @@ interface Props {
 
 const ViewerFragment = graphql`
   fragment ContainerFeedViewerFragment on Account {
-    clubMembershipsCount
-    curationProfile {
-      audience {
-        completed
-      }
-    }
+    ...CompleteFeedBannerFragment
     ...HeaderFeedViewerFragment
     ...ScrollPostsFeedFragment
   }
@@ -43,11 +28,7 @@ export default function ContainerFeed (props: Props): JSX.Element {
 
   return (
     <ContentContainer pt={2}>
-      <Suspense fallback={<></>}>
-        {(viewerData.clubMembershipsCount < 1 || !viewerData.curationProfile.audience.completed) && (
-          <LazyBanner />
-        )}
-      </Suspense>
+      <CompleteFeedBanner viewerQuery={viewerData} />
       <Stack spacing={4}>
         <HeaderFeed viewerQuery={viewerData} />
         <ScrollPostsFeed accountQuery={viewerData} />

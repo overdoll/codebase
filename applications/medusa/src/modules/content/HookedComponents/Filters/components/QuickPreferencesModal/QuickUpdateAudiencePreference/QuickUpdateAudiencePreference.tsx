@@ -79,7 +79,7 @@ export default function QuickUpdateAudiencePreference (props: Props): JSX.Elemen
     updateAudience({
       variables: {
         audienceIds: Object.keys(methods.state.audience),
-        skipped: false
+        skipped: !(Object.keys(methods.state.audience).length > 0)
       },
       onCompleted () {
         onClose()

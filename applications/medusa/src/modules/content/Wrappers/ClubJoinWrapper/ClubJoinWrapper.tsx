@@ -92,6 +92,10 @@ export default function ClubJoinWrapper ({
       updater: (store) => {
         const node = store.get(clubData.id)
         const payload = store.getRootField('joinClub').getLinkedRecord('clubMember')
+        const accountNode = store.getRoot().getLinkedRecord('viewer')
+        if (accountNode != null) {
+          accountNode.setValue(accountNode.getValue('clubMembershipsCount') as number + 1, 'clubMembershipsCount')
+        }
         if (node != null) {
           node.setValue(node.getValue('membersCount') as number + 1, 'membersCount')
           if (payload != null) {

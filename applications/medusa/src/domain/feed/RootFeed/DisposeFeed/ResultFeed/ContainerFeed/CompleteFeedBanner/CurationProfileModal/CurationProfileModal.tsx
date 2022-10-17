@@ -8,7 +8,7 @@ import LazyCurationProfile from './LazyCurationProfile/LazyCurationProfile'
 interface Props extends Pick<UseDisclosureReturn, 'isOpen' | 'onClose'> {
 }
 
-export function CurationProfileModal (props: Props): JSX.Element {
+export default function CurationProfileModal (props: Props): JSX.Element {
   const {
     isOpen,
     onClose

@@ -63,7 +63,6 @@ export default function ScrollRandom (props: Props): JSX.Element {
       <Stack spacing={2}>
         <PostsFilters loadQuery={refetch} accountQuery={accountData} />
         <VerticalPaginationScroller
-          limit={20}
           postConnectionQuery={data.posts}
           hasNext={hasNext}
           loadNext={loadNext}

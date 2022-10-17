@@ -14,11 +14,11 @@ const Fragment = graphql`
     after: {type: String}
   )
   @refetchable(queryName: "ScrollPostsFeedPaginationQuery" ) {
-    clubMembersPostsFeed (
+    curatedPostsFeedPosts (
       first: $first,
       after: $after,
     )
-    @connection (key: "ScrollPostsFeed_clubMembersPostsFeed") {
+    @connection (key: "ScrollPostsFeed_curatedPostsFeedPosts") {
       edges {
         node {
           ...PreviewPostFragment
@@ -46,7 +46,7 @@ export default function ScrollPostsFeed (props: Props): JSX.Element {
 
   return (
     <VerticalPaginationScroller
-      postConnectionQuery={data.clubMembersPostsFeed}
+      postConnectionQuery={data.curatedPostsFeedPosts}
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
@@ -55,7 +55,7 @@ export default function ScrollPostsFeed (props: Props): JSX.Element {
         index
       }) => (
         <PreviewPost
-          postQuery={data.clubMembersPostsFeed.edges[index].node}
+          postQuery={data.curatedPostsFeedPosts.edges[index].node}
         />
       )}
     </VerticalPaginationScroller>

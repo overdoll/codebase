@@ -6,6 +6,7 @@ import { useLingui } from '@lingui/react'
 import HorizontalNavigationButton
   from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationButton/HorizontalNavigationButton'
 import { useMemo } from 'react'
+import isBefore from 'date-fns/isBefore'
 
 const Query = graphql`
   query MainMenuButtonFeedQuery {
@@ -15,6 +16,11 @@ const Query = graphql`
         audience {
           completed
         }
+      }
+      curatedPostsFeedData {
+        viewedAt
+        nextRegenerationTime
+        generatedAt
       }
     }
   }
@@ -29,7 +35,12 @@ export default function MainMenuButtonFeed (): JSX.Element {
     <HorizontalNavigationButton
       exact
       colorScheme='primary'
-      hasBadge={data?.viewer == null || data.viewer?.clubMembershipsCount < 1 || !data.viewer?.curationProfile?.audience?.completed}
+      hasBadge={data?.viewer == null ||
+        data.viewer?.clubMembershipsCount < 1 ||
+        !data.viewer?.curationProfile?.audience?.completed ||
+        data.viewer.curatedPostsFeedData.viewedAt == null ||
+        data.viewer.curatedPostsFeedData.generatedAt == null ||
+        isBefore(new Date(data.viewer.curatedPostsFeedData.nextRegenerationTime), new Date())}
       href='/feed'
       icon={FeedMenu}
       label={i18n._(t`Your Feed`)}

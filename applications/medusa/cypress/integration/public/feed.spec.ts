@@ -19,8 +19,10 @@ describe('Feed', () => {
     cy.findByText('Year').parent().select('1990')
     clickOnButton('Save')
     cy.findByText(/Choose what you want to see/).should('be.visible')
-    // TODO finish feed test
-    // clickOnButton('Next')
+    clickOnButton('Skip')
+    cy.findAllByRole('button', { name: 'Join' }).first().should('be.visible').should('not.be.disabled').click({ force: true }).should('not.exist')
+    clickOnButton('Finish')
+    cy.findByText(/Set up your curation profile/iu).should('not.exist')
   })
 
   it('go to the feed page as logged out', () => {

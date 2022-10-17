@@ -36,6 +36,7 @@ const AccountFragment = graphql`
         completed
       }
     }
+    clubMembershipsCount
     ...CurationProfileFooterFragment
   }
 `

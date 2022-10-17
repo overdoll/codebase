@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<dd0459a5ec7b127d84902827bcddd4c3>>
+ * @generated SignedSource<<c44a9414e19bdcb8127134d289022144>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PrepareCurationProfileFragment$data = {
+  readonly clubMembershipsCount: number;
   readonly curationProfile: {
     readonly audience: {
       readonly audiences: ReadonlyArray<{
@@ -102,6 +103,13 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "clubMembershipsCount",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "CurationProfileFooterFragment"
@@ -111,6 +119,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "63b44593b0a7c4a3cf5d2548e298c943";
+(node as any).hash = "317480142cca8b030cee787e5cf34192";
 
 export default node;

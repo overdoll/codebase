@@ -31,6 +31,18 @@ describe('Supporter', () => {
     cy.joinWithNewAccount(username)
 
     /**
+     * See that you can't access supporter top/new buttons
+     */
+    cy.visit('/random')
+    clickOnButton(/Top/iu)
+    cy.findByText('Unlock this feature').should('be.visible')
+    clickOnButton('Become a Supporter')
+    cy.url().should('contain', '/supporter')
+    cy.visit('/random')
+    clickOnButton(/New/iu)
+    cy.findByText('Unlock this feature').should('be.visible')
+
+    /**
      * Become supporter using new payment method
      */
     cy.visit(`/${newPaymentMethodClub}`)
@@ -169,6 +181,15 @@ describe('Supporter', () => {
     clickOnPanel('Delete Account')
     cy.url().should('include', '/settings/profile/delete-account')
     cy.findByText(/You cannot delete your account until you cancel your subscriptions/iu).should('be.visible')
+
+    /**
+     * Check that you can use supporter filters
+     */
+    cy.visit('/random')
+    clickOnButton(/Top/iu)
+    cy.findByText('Unlock this feature').should('not.exist')
+    clickOnButton(/New/iu)
+    cy.findByText('Unlock this feature').should('not.exist')
 
     /**
      * Disable two factor so you can switch between accounts

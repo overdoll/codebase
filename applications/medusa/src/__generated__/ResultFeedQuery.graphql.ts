@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c22965f8ccae407a215fcc9c4cd0981c>>
- * @relayHash 7b4cb4b05b140fd10c987bc7023d2df3
+ * @generated SignedSource<<bec4f9d5a2dc6d5b9b9a16da8259b303>>
+ * @relayHash 3103909366dd8f5f97be75353391dd8a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7b4cb4b05b140fd10c987bc7023d2df3
+// @relayRequestID 3103909366dd8f5f97be75353391dd8a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -262,10 +262,49 @@ return {
           (v1/*: any*/),
           {
             "alias": null,
+            "args": null,
+            "concreteType": "CuratedPostsFeedData",
+            "kind": "LinkedField",
+            "name": "curatedPostsFeedData",
+            "plural": false,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "generatedAt",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "nextRegenerationTime",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "nextRegenerationTimeDuration",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "viewedAt",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          },
+          {
+            "alias": null,
             "args": (v2/*: any*/),
             "concreteType": "PostConnection",
             "kind": "LinkedField",
-            "name": "clubMembersPostsFeed",
+            "name": "curatedPostsFeedPosts",
             "plural": false,
             "selections": [
               {
@@ -591,16 +630,16 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "clubMembersPostsFeed(first:5)"
+            "storageKey": "curatedPostsFeedPosts(first:5)"
           },
           {
             "alias": null,
             "args": (v2/*: any*/),
             "filters": null,
             "handle": "connection",
-            "key": "ScrollPostsFeed_clubMembersPostsFeed",
+            "key": "ScrollPostsFeed_curatedPostsFeedPosts",
             "kind": "LinkedHandle",
-            "name": "clubMembersPostsFeed"
+            "name": "curatedPostsFeedPosts"
           },
           (v0/*: any*/)
         ],
@@ -609,7 +648,7 @@ return {
     ]
   },
   "params": {
-    "id": "7b4cb4b05b140fd10c987bc7023d2df3",
+    "id": "3103909366dd8f5f97be75353391dd8a",
     "metadata": {},
     "name": "ResultFeedQuery",
     "operationKind": "query",

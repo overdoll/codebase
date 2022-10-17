@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<57d96ca196051133a7d35e341a2d96fe>>
- * @relayHash 7d48b8149c9a02b64d0b83722ef5c7b8
+ * @generated SignedSource<<86fcb14ad673ade499ef8175c7bdf00e>>
+ * @relayHash 0bfe593b546ac533458d76dacdf64232
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7d48b8149c9a02b64d0b83722ef5c7b8
+// @relayRequestID 0bfe593b546ac533458d76dacdf64232
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -265,7 +265,7 @@ return {
                 "args": (v2/*: any*/),
                 "concreteType": "PostConnection",
                 "kind": "LinkedField",
-                "name": "clubMembersPostsFeed",
+                "name": "curatedPostsFeedPosts",
                 "plural": false,
                 "selections": [
                   {
@@ -598,9 +598,9 @@ return {
                 "args": (v2/*: any*/),
                 "filters": null,
                 "handle": "connection",
-                "key": "ScrollPostsFeed_clubMembersPostsFeed",
+                "key": "ScrollPostsFeed_curatedPostsFeedPosts",
                 "kind": "LinkedHandle",
-                "name": "clubMembersPostsFeed"
+                "name": "curatedPostsFeedPosts"
               }
             ],
             "type": "Account",
@@ -612,7 +612,7 @@ return {
     ]
   },
   "params": {
-    "id": "7d48b8149c9a02b64d0b83722ef5c7b8",
+    "id": "0bfe593b546ac533458d76dacdf64232",
     "metadata": {},
     "name": "ScrollPostsFeedPaginationQuery",
     "operationKind": "query",
@@ -621,6 +621,6 @@ return {
 };
 })();
 
-(node as any).hash = "1f8ad8723c5083093d88bfbfeac59b14";
+(node as any).hash = "2d57648280c02cd37c5fca9cd2a52e5f";
 
 export default node;
