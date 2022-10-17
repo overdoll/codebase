@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<43f5927a4e17e80ebf71e33308c1c4ad>>
+ * @generated SignedSource<<95f192343876dd367c524ceb0235ba14>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,13 +11,7 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ContainerFeedViewerFragment$data = {
-  readonly clubMembershipsCount: number;
-  readonly curationProfile: {
-    readonly audience: {
-      readonly completed: boolean;
-    };
-  };
-  readonly " $fragmentSpreads": FragmentRefs<"HeaderFeedViewerFragment" | "ScrollPostsFeedFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"CompleteFeedBannerFragment" | "HeaderFeedViewerFragment" | "ScrollPostsFeedFragment">;
   readonly " $fragmentType": "ContainerFeedViewerFragment";
 };
 export type ContainerFeedViewerFragment$key = {
@@ -32,40 +26,9 @@ const node: ReaderFragment = {
   "name": "ContainerFeedViewerFragment",
   "selections": [
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "clubMembershipsCount",
-      "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "concreteType": "CurationProfile",
-      "kind": "LinkedField",
-      "name": "curationProfile",
-      "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "AudienceCurationProfile",
-          "kind": "LinkedField",
-          "name": "audience",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "completed",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        }
-      ],
-      "storageKey": null
+      "kind": "FragmentSpread",
+      "name": "CompleteFeedBannerFragment"
     },
     {
       "args": null,
@@ -82,6 +45,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "14670498d903d9fb926bfe66ca1a7bc9";
+(node as any).hash = "be57299f17d0c8ab384b1333ebd0745d";
 
 export default node;

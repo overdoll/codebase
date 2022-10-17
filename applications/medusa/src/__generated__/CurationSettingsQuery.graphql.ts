@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<290aaf4197d238069e4735e7e760a1f2>>
- * @relayHash af3bd1034f4abc23d04461eecfcaaceb
+ * @generated SignedSource<<fdd6fd5616ae294e2936cca5f7660298>>
+ * @relayHash ee8eb28e9e1d51caa5c1fa1054be0ce4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID af3bd1034f4abc23d04461eecfcaaceb
+// @relayRequestID ee8eb28e9e1d51caa5c1fa1054be0ce4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -492,7 +492,7 @@ return {
     ]
   },
   "params": {
-    "id": "af3bd1034f4abc23d04461eecfcaaceb",
+    "id": "ee8eb28e9e1d51caa5c1fa1054be0ce4",
     "metadata": {},
     "name": "CurationSettingsQuery",
     "operationKind": "query",

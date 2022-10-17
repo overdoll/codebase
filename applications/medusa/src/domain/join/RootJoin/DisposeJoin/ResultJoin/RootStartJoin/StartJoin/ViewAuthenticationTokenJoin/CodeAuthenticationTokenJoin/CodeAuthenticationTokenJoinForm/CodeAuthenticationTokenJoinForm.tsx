@@ -56,7 +56,6 @@ export default function CodeAuthenticationTokenJoinForm (props: Props): JSX.Elem
         if (value.secret != null && value.secret !== '' && value.secret.trim().length !== value.secret.length) {
           setValue('secret', value.secret.trim())
         } else if (value.secret != null && value.secret.trim().length === 6) {
-          console.log('submit')
           void handleSubmit(onSubmit)()
         }
       }

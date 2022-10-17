@@ -33,20 +33,22 @@ export default function CurationProfileClubsButton (props: Props): JSX.Element {
     })
   }
 
+  const isDisabled = data.clubMembershipsCount < 1
+
   if (onClose == null) {
     return <></>
   }
 
   return (
     <Button
-      isDisabled={data.clubMembershipsCount < 1}
+      isDisabled={isDisabled}
       onClick={onClick}
       size='lg'
-      colorScheme='gray'
+      colorScheme={isDisabled ? 'gray' : 'green'}
       variant='solid'
     >
       <Trans>
-        Close
+        Finish
       </Trans>
     </Button>
   )

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<887a3252d57eee5648fb1bde09da9d6f>>
+ * @generated SignedSource<<67c49475c8b43ee966781f9f4a86a90c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,7 +11,7 @@
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ScrollPostsFeedFragment$data = {
-  readonly clubMembersPostsFeed: {
+  readonly curatedPostsFeedPosts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
@@ -29,7 +29,7 @@ export type ScrollPostsFeedFragment$key = {
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "clubMembersPostsFeed"
+  "curatedPostsFeedPosts"
 ];
 return {
   "argumentDefinitions": [
@@ -73,11 +73,11 @@ return {
   "name": "ScrollPostsFeedFragment",
   "selections": [
     {
-      "alias": "clubMembersPostsFeed",
+      "alias": "curatedPostsFeedPosts",
       "args": null,
       "concreteType": "PostConnection",
       "kind": "LinkedField",
-      "name": "__ScrollPostsFeed_clubMembersPostsFeed_connection",
+      "name": "__ScrollPostsFeed_curatedPostsFeedPosts_connection",
       "plural": false,
       "selections": [
         {
@@ -167,6 +167,6 @@ return {
 };
 })();
 
-(node as any).hash = "1f8ad8723c5083093d88bfbfeac59b14";
+(node as any).hash = "2d57648280c02cd37c5fca9cd2a52e5f";
 
 export default node;

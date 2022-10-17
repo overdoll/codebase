@@ -127,7 +127,6 @@ msgid "Clear Search"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:111
-#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileClubsButton/CurationProfileClubsButton.tsx:48
 msgid "Close"
 msgstr ""
 
@@ -249,7 +248,7 @@ msgstr ""
 msgid "Enter a weight 0-9999. Higher will show up first."
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/PrepareCurationProfile.tsx:83
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/PrepareCurationProfile.tsx:84
 msgid "Enter your birthday"
 msgstr ""
 
@@ -283,6 +282,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickPreferencesModal.tsx:69
 msgid "Filter out content"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/CurationProfileFooter/CurationProfileClubsButton/CurationProfileClubsButton.tsx:50
+msgid "Finish"
 msgstr ""
 
 #: src/common/components/PageHeader/PostOrderButton/PostOrderButton.tsx:34
@@ -355,7 +358,7 @@ msgstr ""
 #~ msgid "Join overdoll to save this post and let {0} know you like their post"
 #~ msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/PrepareCurationProfile.tsx:94
+#: src/modules/content/HookedComponents/Filters/fragments/PrepareCurationProfile/PrepareCurationProfile.tsx:95
 msgid "Join some clubs"
 msgstr ""
 
@@ -384,6 +387,7 @@ msgid "Let your favorite artists know about us! Use any one of the share buttons
 msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:66
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:67
 msgid "Like"
 msgstr ""
 
@@ -748,7 +752,6 @@ msgid "Revenue"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/components/QuickPreferencesModal/QuickUpdateAudiencePreference/QuickUpdateAudiencePreference.tsx:117
-#: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeLoggedOutButton/PostLikeLoggedOutButton.tsx:67
 #: src/modules/content/PageLayout/FlowBuilder/FlowBuilderFooter/FlowBuilderSaveButton/FlowBuilderSaveButton.tsx:13
 msgid "Save"
 msgstr ""
