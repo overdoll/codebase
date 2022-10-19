@@ -56,7 +56,7 @@ export default function ClubSupportPrompt (props: Props): JSX.Element {
     setSupportParam(true)
   }
 
-  if (clubData?.viewerMember?.isSupporter === true || clubData.viewerIsOwner) {
+  if ((clubData?.viewerMember?.isSupporter === true && !clubData.viewerIsOwner) || (clubData.viewerIsOwner && clubData.canSupport)) {
     return (
       <Box px={2} py={4} position='relative'>
         <Box

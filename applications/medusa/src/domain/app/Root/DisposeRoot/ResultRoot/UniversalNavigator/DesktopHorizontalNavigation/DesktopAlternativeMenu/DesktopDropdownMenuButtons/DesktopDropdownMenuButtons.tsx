@@ -15,6 +15,14 @@ export default function DesktopDropdownMenuButtons (): JSX.Element {
 
   return (
     <>
+      <Can I='create' a='Club'>
+        <Suspense fallback={
+          <SkeletonDropdownMenuButton />
+        }
+        >
+          <DesktopDropdownMenuButtonClub />
+        </Suspense>
+      </Can>
       <Can not I='configure' a='Account'>
         <DesktopHorizontalNavigationDropdownMenuButton
           onClick={onJoin}
@@ -27,12 +35,16 @@ export default function DesktopDropdownMenuButtons (): JSX.Element {
         />
       </Can>
       <Can I='configure' a='Account'>
-        <Suspense fallback={
-          <SkeletonDropdownMenuButton />
-        }
-        >
-          <DesktopDropdownMenuButtonProfile />
-        </Suspense>
+        <Can not I='create' a='Club'>
+          <Suspense fallback={
+            <SkeletonDropdownMenuButton />
+          }
+          >
+            <DesktopDropdownMenuButtonProfile />
+          </Suspense>
+        </Can>
+      </Can>
+      <Can I='configure' a='Account'>
         <DesktopHorizontalNavigationDropdownMenuButton
           href='/likes'
           icon={HeartFull}
@@ -75,14 +87,6 @@ export default function DesktopDropdownMenuButtons (): JSX.Element {
             </Trans>
           }
         />
-      </Can>
-      <Can I='create' a='Club'>
-        <Suspense fallback={
-          <SkeletonDropdownMenuButton />
-        }
-        >
-          <DesktopDropdownMenuButtonClub />
-        </Suspense>
       </Can>
       <Can I='configure' a='Account'>
         <DesktopHorizontalNavigationDropdownMenuButton

@@ -15,6 +15,14 @@ export default function MobileDropdownMenuButtons (): JSX.Element {
 
   return (
     <>
+      <Can I='create' a='Club'>
+        <Suspense fallback={
+          <SkeletonDropdownMenuButton />
+        }
+        >
+          <MobileDropdownMenuButtonClub />
+        </Suspense>
+      </Can>
       <Can not I='configure' a='Account'>
         <MobileHorizontalNavigationDropdownMenuButton
           onClick={onJoin}
@@ -27,12 +35,16 @@ export default function MobileDropdownMenuButtons (): JSX.Element {
         />
       </Can>
       <Can I='configure' a='Account'>
-        <Suspense fallback={
-          <SkeletonDropdownMenuButton />
-        }
-        >
-          <MobileDropdownMenuButtonProfile />
-        </Suspense>
+        <Can not I='create' a='Club'>
+          <Suspense fallback={
+            <SkeletonDropdownMenuButton />
+          }
+          >
+            <MobileDropdownMenuButtonProfile />
+          </Suspense>
+        </Can>
+      </Can>
+      <Can I='configure' a='Account'>
         <MobileHorizontalNavigationDropdownMenuButton
           href='/likes'
           icon={HeartFull}
@@ -75,14 +87,6 @@ export default function MobileDropdownMenuButtons (): JSX.Element {
             </Trans>
           }
         />
-      </Can>
-      <Can I='create' a='Club'>
-        <Suspense fallback={
-          <SkeletonDropdownMenuButton />
-        }
-        >
-          <MobileDropdownMenuButtonClub />
-        </Suspense>
       </Can>
       <Can I='configure' a='Account'>
         <MobileHorizontalNavigationDropdownMenuButton
