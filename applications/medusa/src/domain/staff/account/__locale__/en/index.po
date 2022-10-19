@@ -91,6 +91,10 @@ msgstr ""
 msgid "EXPIRED"
 msgstr ""
 
+#: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffPermissions/StaffPermissions.tsx:45
+msgid "ID"
+msgstr ""
+
 #: src/domain/staff/account/RootStaffAccount/StaffAccount/StaffLockAccount/StaffLockAccount.tsx:64
 msgid "Lock Account"
 msgstr ""

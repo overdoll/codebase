@@ -29,6 +29,10 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTransferOwnership/StaffClubTransferOwnershipForm/StaffClubTransferOwnershipForm.tsx:104
+msgid "Account ID"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubStatus.tsx:98
 msgid "Active"
 msgstr ""
@@ -157,11 +161,11 @@ msgstr ""
 msgid "No infractions found"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:67
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:69
 msgid "No payout details entered for this account"
 msgstr ""
 
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:78
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:80
 msgid "No payout method set up for this account"
 msgstr ""
 
@@ -178,7 +182,7 @@ msgid "Number of characters"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClub.tsx:75
-#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:45
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubOwner/StaffClubOwner.tsx:47
 msgid "Owner"
 msgstr ""
 
@@ -313,6 +317,10 @@ msgstr ""
 msgid "Successfully terminated club"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTransferOwnership/StaffClubTransferOwnershipForm/StaffClubTransferOwnershipForm.tsx:80
+msgid "Successfully transferred ownership"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:56
 msgid "Successfully un-suspended club"
 msgstr ""
@@ -438,6 +446,10 @@ msgstr ""
 msgid "There was an error terminating the club"
 msgstr ""
 
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTransferOwnership/StaffClubTransferOwnershipForm/StaffClubTransferOwnershipForm.tsx:86
+msgid "There was an error transferring ownership"
+msgstr ""
+
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubStatus/StaffClubUnSuspendButton/StaffClubUnSuspendButton.tsx:62
 msgid "There was an error un-suspending club"
 msgstr ""
@@ -448,6 +460,11 @@ msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubPayouts/UpdateClubPlatformFeeForm/UpdateClubPlatformFeeForm.tsx:83
 msgid "There was an error updating the platform fee"
+msgstr ""
+
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTransferOwnership/StaffClubTransferOwnership.tsx:23
+#: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubTransferOwnership/StaffClubTransferOwnershipForm/StaffClubTransferOwnershipForm.tsx:119
+msgid "Transfer Ownership"
 msgstr ""
 
 #: src/domain/staff/club/RootStaffClub/StaffClub/StaffClubSuspensions/StaffClubSuspensionLogs/StaffClubSuspensionLogs.tsx:72

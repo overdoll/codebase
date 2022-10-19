@@ -13,6 +13,7 @@ import PayoutMethod
   from '../../../../../settings/payouts/method/RootPayoutMethodSettings/PayoutMethodSettings/PayoutMethod/PayoutMethod'
 import AccountDetails
   from '../../../../../settings/payouts/root/RootPayoutsSettings/PayoutsSettings/PayoutsDetailsSettings/AccountDetails/AccountDetails'
+import StaffClubTransferOwnership from '../StaffClubTransferOwnership/StaffClubTransferOwnership'
 
 interface Props {
   query: StaffClubOwnerFragment$key
@@ -31,6 +32,7 @@ const Fragment = graphql`
         ...AccountDetailsFragment
       }
     }
+    ...StaffClubTransferOwnershipFragment
   }
 `
 
@@ -79,6 +81,7 @@ export default function StaffClubOwner ({ query }: Props): JSX.Element {
               No payout method set up for this account
             </Trans>
           </LargeBackgroundBox>)}
+      <StaffClubTransferOwnership query={data} />
     </Stack>
 
   )
