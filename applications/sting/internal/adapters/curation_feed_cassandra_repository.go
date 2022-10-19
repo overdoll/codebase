@@ -147,7 +147,7 @@ func (r CurationCassandraRepository) UpdateCuratedPostsFeedData(ctx context.Cont
 	return r.UpdateCuratedPostsFeedDataOperator(ctx, postsFeedData)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string, seed int64) ([]*post.Post, error) {
 
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return nil, err
@@ -177,7 +177,7 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 
 	builder := r.client.Search(PostReaderIndex)
 
-	if err := cursor.BuildElasticsearch(builder, "posted_at", "id", false); err != nil {
+	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
 		return nil, err
 	}
 
@@ -195,6 +195,8 @@ func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Conte
 	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
 	filterQueries = append(filterQueries, elastic.NewBoolQuery().MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)))
 
+	// use random function so posts aren't ordered by post date
+	query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
 	query.Filter(filterQueries...)
 	builder.Query(query)
 

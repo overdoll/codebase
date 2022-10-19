@@ -613,7 +613,7 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		posts = append(posts, createdPost)
 	}
 
-	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts)
+	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts, filters.AudienceIds())
 	if err != nil {
 		return nil, err
 	}
@@ -766,7 +766,7 @@ func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, re
 		posts = append(posts, createdPost)
 	}
 
-	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts)
+	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts, filter.AudienceIds())
 	if err != nil {
 		return nil, err
 	}
@@ -911,7 +911,7 @@ func (r PostsCassandraElasticsearchRepository) SearchPosts(ctx context.Context, 
 
 	// if not filtering by club ids, get a random post as part of our "algorithm"
 	if len(filter.ClubIds()) == 0 {
-		posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts)
+		posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts, filter.AudienceIds())
 		if err != nil {
 			return nil, err
 		}
