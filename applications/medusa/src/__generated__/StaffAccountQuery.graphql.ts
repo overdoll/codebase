@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<c9f3a1681a4675024577ec54f24cd5f7>>
- * @relayHash 72f630ce3008c508380f491a72a80a52
+ * @generated SignedSource<<b892e4e3a655ce38be90508f3f3b2f42>>
+ * @relayHash 50fd10c2be79059a653ed442710f11c6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 72f630ce3008c508380f491a72a80a52
+// @relayRequestID 50fd10c2be79059a653ed442710f11c6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -335,6 +335,7 @@ return {
         "name": "account",
         "plural": false,
         "selections": [
+          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -353,7 +354,6 @@ return {
             ],
             "storageKey": null
           },
-          (v2/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -763,7 +763,7 @@ return {
     ]
   },
   "params": {
-    "id": "72f630ce3008c508380f491a72a80a52",
+    "id": "50fd10c2be79059a653ed442710f11c6",
     "metadata": {},
     "name": "StaffAccountQuery",
     "operationKind": "query",

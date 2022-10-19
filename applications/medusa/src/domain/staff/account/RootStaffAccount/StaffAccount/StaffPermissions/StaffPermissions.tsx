@@ -5,6 +5,8 @@ import StaffLockAccount from '../StaffLockAccount/StaffLockAccount'
 import StaffAssignModerator from '../StaffAssignModerator/StaffAssignModerator'
 import StaffAssignStaff from '../StaffAssignStaff/StaffAssignStaff'
 import StaffAssignArtist from '../StaffAssignArtist/StaffAssignArtist'
+import { PageSectionTitle, PageSectionWrap, SmallBackgroundBox } from '@//:modules/content/PageLayout'
+import { Trans } from '@lingui/macro'
 
 interface Props {
   query: StaffPermissionsFragment$key
@@ -12,6 +14,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment StaffPermissionsFragment on Account {
+    id
     ...StaffLockAccountFragment
     ...StaffAssignModeratorFragment
     ...StaffAssignStaffFragment
@@ -36,6 +39,18 @@ export default function StaffPermissions ({ query }: Props): JSX.Element {
           <StaffAssignStaff query={data} />
         </Box>
       </Stack>
+      <Box>
+        <PageSectionWrap>
+          <PageSectionTitle>
+            <Trans>
+              ID
+            </Trans>
+          </PageSectionTitle>
+        </PageSectionWrap>
+        <SmallBackgroundBox>
+          {data.id}
+        </SmallBackgroundBox>
+      </Box>
     </Stack>
   )
 }

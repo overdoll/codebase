@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ace45d5134193379f43df434a1a436ee>>
+ * @generated SignedSource<<5fdbc13d0c0cf1e4c3aaa1e586480b45>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -20,6 +20,7 @@ export type StaffClubOwnerFragment$data = {
     } | null;
     readonly " $fragmentSpreads": FragmentRefs<"LargeAccountHeaderFragment" | "ProfilePageButtonFragment" | "ProfileStaffButtonFragment">;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"StaffClubTransferOwnershipFragment">;
   readonly " $fragmentType": "StaffClubOwnerFragment";
 };
 export type StaffClubOwnerFragment$key = {
@@ -90,12 +91,17 @@ const node: ReaderFragment = {
         }
       ],
       "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "StaffClubTransferOwnershipFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "9106608ffcf186d3d61e72fe50ed0b44";
+(node as any).hash = "f06178b606bdd276551bd15df6467873";
 
 export default node;
