@@ -495,7 +495,7 @@ func addClubWeightsToESQuery(session gocqlx.Session, ctx context.Context, key st
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) getRandomPostWeighted(ctx context.Context, requester *principal.Principal, limit int, posts []*post.Post) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) getRandomPostWeighted(ctx context.Context, requester *principal.Principal, limit int, posts []*post.Post, audienceIds []string) ([]*post.Post, error) {
 
 	if requester != nil && len(requester.ClubExtension().SupportedClubIds()) > 0 {
 		return posts, nil
@@ -542,6 +542,12 @@ func (r PostsCassandraElasticsearchRepository) getRandomPostWeighted(ctx context
 
 		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("club_id", clubIds...))
 		filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
+
+		// filter out by audience ids
+		if len(audienceIds) > 0 {
+			filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", audienceIds...))
+		}
+
 		query.Must(elastic.NewFunctionScoreQuery().AddScoreFunc(elastic.NewRandomFunction()))
 		query.Filter(filterQueries...)
 
