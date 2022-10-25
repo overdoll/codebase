@@ -8,7 +8,7 @@ import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButto
 import { ButtonProps, forwardRef } from '@chakra-ui/react'
 
 interface Props extends ButtonProps {
-  icon: IconType
+  icon?: IconType
   children: ReactNode
   isIcon?: boolean
   href?: HrefType
@@ -23,13 +23,15 @@ const MediumGenericButton = forwardRef<Props, any>(({
   leftIcon,
   ...rest
 }: Props, forwardRef): JSX.Element => {
-  const IconItem = (
-    <Icon
-      icon={icon}
-      fill={(colorScheme !== 'gray' && colorScheme != null) ? `${colorScheme}.900` : 'gray.100'}
-      h={4}
-    />
-  )
+  const IconItem = icon != null
+    ? (
+      <Icon
+        icon={icon}
+        fill={(colorScheme !== 'gray' && colorScheme != null) ? `${colorScheme}.900` : 'gray.100'}
+        h={4}
+      />
+      )
+    : null
 
   const DEFAULT_BUTTON_PROPS = {
     size: 'md',
@@ -40,7 +42,7 @@ const MediumGenericButton = forwardRef<Props, any>(({
 
   if (isIcon) {
     const ICON_BUTTON_PROPS = {
-      icon: IconItem,
+      ...(IconItem != null && { icon: IconItem }),
       'aria-label': children as string,
       ...DEFAULT_BUTTON_PROPS
     }
@@ -53,7 +55,7 @@ const MediumGenericButton = forwardRef<Props, any>(({
   }
 
   const BUTTON_PROPS = {
-    rightIcon: IconItem,
+    ...(IconItem != null && { rightIcon: IconItem }),
     children: children,
     ...DEFAULT_BUTTON_PROPS
   }

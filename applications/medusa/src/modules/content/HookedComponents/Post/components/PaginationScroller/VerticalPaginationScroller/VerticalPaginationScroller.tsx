@@ -47,14 +47,16 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     isPending
   } = usePaginationScroller({
     loadNext,
-    isLoadingNext
+    isLoadingNext,
+    limit,
+    currentCount: data.edges.length
   })
 
-  if (data == null || data?.edges.length < 1) {
+  if (data?.edges.length < 1) {
     return <EmptyPaginationScroller />
   }
 
-  const canLoadNext = limit == null || (data.edges.length <= limit)
+  const canLoadNext = (limit == null || (data.edges.length <= limit)) && data.edges.length !== limit
 
   // we use a memo here because loading more posts re-renders the whole tree
   // since additional dom nodes are added
@@ -66,7 +68,7 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
           {(canLoadNext && hasNext && !hasError && data.edges.length - 2 === index) &&
             <LoadMoreObserver isLoadingNext={isPending || isLoadingNext} onObserve={onLoadNext} />}
           <MemoKey memoKey={item.node.id}>
-            <Box mb={16}>
+            <Box mb={index === data.edges.length - 1 ? 0 : 16}>
               <PreviewPost
                 postQuery={item.node}
               />

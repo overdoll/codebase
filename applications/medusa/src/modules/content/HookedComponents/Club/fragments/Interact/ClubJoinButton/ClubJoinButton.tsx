@@ -6,7 +6,6 @@ import { ClubJoinButtonMutation } from '@//:artifacts/ClubJoinButtonMutation.gra
 import { useToast } from '../../../../../ThemeComponents'
 import { t } from '@lingui/macro'
 import posthog from 'posthog-js'
-import { PlusCircle } from '@//:assets/icons'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
 import Can from '../../../../../../authorization/Can'
@@ -112,7 +111,6 @@ export default function ClubJoinButton (props: Props): JSX.Element {
           isLoading={isJoiningClub}
           colorScheme='gray'
           onClick={onJoinClub}
-          icon={PlusCircle}
         >
           {i18n._(t`Join`)}
         </MediumGenericButton>

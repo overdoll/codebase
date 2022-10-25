@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ef009cebc2499e9c23dc19fac938cd12>>
- * @relayHash e3b25609f9086b61243c8f73d806dfea
+ * @generated SignedSource<<ed19f259187f3a97ce636906f772d658>>
+ * @relayHash a09d7d4a89bc0eeea7c7227378f7d5f5
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e3b25609f9086b61243c8f73d806dfea
+// @relayRequestID a09d7d4a89bc0eeea7c7227378f7d5f5
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -137,7 +137,7 @@ v16 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 12
+    "value": 6
   },
   {
     "kind": "Literal",
@@ -713,7 +713,7 @@ return {
                 "storageKey": null
               }
             ],
-            "storageKey": "posts(first:12,sortBy:\"NEW\")"
+            "storageKey": "posts(first:6,sortBy:\"NEW\")"
           },
           {
             "alias": null,
@@ -727,6 +727,13 @@ return {
             "kind": "LinkedHandle",
             "name": "posts"
           },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "postsView",
+            "storageKey": null
+          },
           (v10/*: any*/)
         ],
         "storageKey": null
@@ -734,7 +741,7 @@ return {
     ]
   },
   "params": {
-    "id": "e3b25609f9086b61243c8f73d806dfea",
+    "id": "a09d7d4a89bc0eeea7c7227378f7d5f5",
     "metadata": {},
     "name": "ResultPublicClubQuery",
     "operationKind": "query",

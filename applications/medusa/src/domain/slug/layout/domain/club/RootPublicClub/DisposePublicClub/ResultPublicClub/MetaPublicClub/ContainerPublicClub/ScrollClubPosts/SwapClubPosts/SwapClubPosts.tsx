@@ -12,7 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment SwapClubPostsFragment on Club
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 12}
+    first: {type: Int, defaultValue: 6}
     after: {type: String}
     seed: {type: String}
   )
@@ -30,6 +30,7 @@ const Fragment = graphql`
       }
       ...SwapPaginationScrollerFragment
     }
+    postsView
     ...ClubEmptyPostsFragment
   }
 `
@@ -47,8 +48,6 @@ export default function SwapClubPosts (props: Props): JSX.Element {
     clubQuery
   )
 
-  console.log(data)
-
   if (data.posts.edges.length < 1) {
     return (
       <ClubEmptyPosts clubQuery={data} />
@@ -57,7 +56,8 @@ export default function SwapClubPosts (props: Props): JSX.Element {
 
   return (
     <SwapPaginationScroller
-      limit={11}
+      type={data.postsView}
+      limit={12}
       postConnectionQuery={data.posts}
       hasNext={hasNext}
       loadNext={loadNext}

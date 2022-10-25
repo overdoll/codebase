@@ -1,15 +1,22 @@
 import type { ResultPublicClubPostsQuery } from '@//:artifacts/ResultPublicClubPostsQuery.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
 import type { ScrollPublicClubPostsFragment$key } from '@//:artifacts/ScrollPublicClubPostsFragment.graphql'
+import { ClubPostsView } from '@//:artifacts/ScrollPublicClubPostsFragment.graphql'
 import type {
   ScrollPublicClubPostsAccountFragment$key
 } from '@//:artifacts/ScrollPublicClubPostsAccountFragment.graphql'
-import { Stack } from '@chakra-ui/react'
+import { HStack, Stack } from '@chakra-ui/react'
 import { useFragment } from 'react-relay/hooks'
 import PostsSupporterFilters
   from '@//:modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters'
 import SwapPaginationScroller from '../../../../../../../../components/SwapPaginationScroller/SwapPaginationScroller'
 import FilterPublicClubPosts from './FilterPublicClubPosts/FilterPublicClubPosts'
+import { useState } from 'react'
+import { Icon } from '@//:modules/content/PageLayout'
+import { CardPostsView, GalleryPostsView } from '@//:assets/icons'
+import IconButton from '@//:modules/form/IconButton/IconButton'
+import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react'
 
 interface Props {
   clubQuery: ScrollPublicClubPostsFragment$key
@@ -19,7 +26,7 @@ interface Props {
 const ClubFragment = graphql`
   fragment ScrollPublicClubPostsFragment on Club
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 12}
+    first: {type: Int, defaultValue: 6}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPublicPostsPaginationQuery" ) {
@@ -41,6 +48,7 @@ const ClubFragment = graphql`
       }
       ...SwapPaginationScrollerFragment
     }
+    postsView
     ...FilterPublicClubPostsFragment
   }
 `
@@ -70,11 +78,70 @@ export default function ScrollPublicClubPosts (props: Props): JSX.Element {
 
   const accountData = useFragment(AccountFragment, accountQuery)
 
+  const defaultSort = 'NEW'
+
+  const [postsView, setPostsView] = useState<ClubPostsView>(data.postsView)
+  const [savedParams, setSavedParams] = useState<Record<string, any>>({
+    sortBy: defaultSort
+  })
+
+  const { i18n } = useLingui()
+
+  const onRefetch = (params): void => {
+    const {
+      sortBy,
+      ...restSavedParams
+    } = savedParams
+    refetch({
+      ...restSavedParams,
+      ...params,
+      sortBy: params.sortBy != null ? params.sortBy : sortBy
+    })
+    setSavedParams(x => ({
+      ...x,
+      ...params,
+      sortBy: params?.sortBy ?? x.sortBy
+    }))
+  }
+
+  const onToggleView = (): void => {
+    setPostsView(x => x === 'GALLERY' ? 'CARD' : 'GALLERY')
+  }
+
   return (
     <Stack spacing={2}>
-      <PostsSupporterFilters defaultValue='NEW' newLocked={false} loadQuery={refetch} query={accountData} />
-      <FilterPublicClubPosts loadQuery={refetch} query={data} />
+      <HStack w='100%' justify='space-between'>
+        <PostsSupporterFilters
+          defaultValue={defaultSort}
+          newLocked={false}
+          loadQuery={onRefetch}
+          query={accountData}
+        />
+        <IconButton
+          aria-label={i18n._(t`Swap View`)}
+          onClick={onToggleView}
+          colorScheme='white'
+          borderRadius='lg'
+          color='gray.00'
+          position='relative'
+          flexShrink={0}
+          icon={<Icon
+            icon={postsView === 'CARD' ? GalleryPostsView : CardPostsView}
+            fill='gray.900'
+            w={4}
+            h={4}
+                />}
+          size='sm'
+          variant='solid'
+        />
+      </HStack>
+      <FilterPublicClubPosts
+        currentFilters={savedParams}
+        loadQuery={onRefetch}
+        query={data}
+      />
       <SwapPaginationScroller
+        type={postsView}
         postConnectionQuery={data.posts}
         hasNext={hasNext}
         loadNext={loadNext}

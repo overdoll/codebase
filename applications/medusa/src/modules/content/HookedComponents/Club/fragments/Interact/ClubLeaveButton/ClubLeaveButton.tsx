@@ -2,7 +2,6 @@ import { ClubLeaveButtonFragment$key } from '@//:artifacts/ClubLeaveButtonFragme
 import { graphql } from 'react-relay'
 import { useFragment, useMutation } from 'react-relay/hooks'
 import { ClubLeaveButtonMutation } from '@//:artifacts/ClubLeaveButtonMutation.graphql'
-import { PlusCircle } from '@//:assets/icons'
 import { t } from '@lingui/macro'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
@@ -59,7 +58,6 @@ export default function ClubLeaveButton (props: Props): JSX.Element {
       isLoading={isLeavingClub}
       colorScheme='primary'
       onClick={onLeaveClub}
-      icon={PlusCircle}
     >
       {i18n._(t`Joined`)}
     </MediumGenericButton>

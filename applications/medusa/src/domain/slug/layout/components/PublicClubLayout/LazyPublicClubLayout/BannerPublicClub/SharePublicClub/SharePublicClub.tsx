@@ -34,9 +34,9 @@ export default function SharePublicClub (props: Props): JSX.Element {
       icon={
         <Icon
           icon={ShareExternalMedia}
-          w={6}
-          h={6}
-          fill='whiteAlpha.700'
+          w={5}
+          h={5}
+          fill='whiteAlpha.800'
         />
       }
       size='md'

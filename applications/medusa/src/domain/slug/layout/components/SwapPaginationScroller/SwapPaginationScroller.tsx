@@ -3,6 +3,7 @@ import { LoadMoreFn } from 'react-relay/relay-hooks/useLoadMoreFunction'
 import { graphql } from 'react-relay'
 import { useFragment } from 'react-relay/hooks'
 import dynamic from 'next/dynamic'
+import { ClubPostsView } from '@//:artifacts/ScrollPublicClubPostsFragment.graphql'
 
 const LazyGrid = dynamic(
   async () => {
@@ -22,7 +23,7 @@ interface Props {
   loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
   limit?: number
-  type?: 'grid' | 'list'
+  type?: ClubPostsView
 }
 
 const PostConnectionFragment = graphql`
@@ -35,13 +36,13 @@ const PostConnectionFragment = graphql`
 export default function SwapPaginationScroller (props: Props): JSX.Element {
   const {
     postConnectionQuery,
-    type = 'grid',
+    type = 'GALLERY',
     ...rest
   } = props
 
   const data = useFragment(PostConnectionFragment, postConnectionQuery)
 
-  if (type === 'grid') {
+  if (type === 'GALLERY') {
     return <LazyGrid postConnectionQuery={data} {...rest} />
   }
 

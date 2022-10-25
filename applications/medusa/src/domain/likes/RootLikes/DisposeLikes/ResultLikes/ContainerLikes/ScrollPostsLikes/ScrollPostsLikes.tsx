@@ -1,7 +1,7 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollPostsLikesFragment$key } from '@//:artifacts/ScrollPostsLikesFragment.graphql'
 import type { ResultLikesQuery } from '@//:artifacts/ResultLikesQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   accountQuery: ScrollPostsLikesFragment$key

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2cdd2a8809cb19363e571ac2bece9769>>
+ * @generated SignedSource<<c76f8176061bbc3485b290a76e006231>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
+export type ClubPostsView = "CARD" | "GALLERY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type SwapClubPostsFragment$data = {
   readonly id: string;
@@ -20,6 +21,7 @@ export type SwapClubPostsFragment$data = {
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"SwapPaginationScrollerFragment">;
   };
+  readonly postsView: ClubPostsView;
   readonly " $fragmentSpreads": FragmentRefs<"ClubEmptyPostsFragment">;
   readonly " $fragmentType": "SwapClubPostsFragment";
 };
@@ -47,7 +49,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 12,
+      "defaultValue": 6,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -175,6 +177,13 @@ return {
       "storageKey": null
     },
     {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "postsView",
+      "storageKey": null
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ClubEmptyPostsFragment"
@@ -186,6 +195,6 @@ return {
 };
 })();
 
-(node as any).hash = "05245e98f0ff5a2e7e1e6e1e5e6e121e";
+(node as any).hash = "b4014fa00c2613fc9e468eff543f8598";
 
 export default node;

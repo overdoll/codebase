@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f21cbd140b7561201f5e7527a6dc3c54>>
- * @relayHash 4e0397dc803bb171b5503f0db9cd0f79
+ * @generated SignedSource<<b0c90ae64469d5a29ea42515610b172c>>
+ * @relayHash 23553e1e879f57555c84446020e24c3c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 4e0397dc803bb171b5503f0db9cd0f79
+// @relayRequestID 23553e1e879f57555c84446020e24c3c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ var v0 = {
   "name": "after"
 },
 v1 = {
-  "defaultValue": 12,
+  "defaultValue": 6,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -673,6 +673,13 @@ return {
                 "kind": "LinkedHandle",
                 "name": "posts"
               },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "postsView",
+                "storageKey": null
+              },
               (v11/*: any*/),
               {
                 "alias": null,
@@ -691,7 +698,7 @@ return {
     ]
   },
   "params": {
-    "id": "4e0397dc803bb171b5503f0db9cd0f79",
+    "id": "23553e1e879f57555c84446020e24c3c",
     "metadata": {},
     "name": "ScrollClubPostsFragmentPaginationQuery",
     "operationKind": "query",
@@ -700,6 +707,6 @@ return {
 };
 })();
 
-(node as any).hash = "05245e98f0ff5a2e7e1e6e1e5e6e121e";
+(node as any).hash = "b4014fa00c2613fc9e468eff543f8598";
 
 export default node;

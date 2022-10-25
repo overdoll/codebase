@@ -47,14 +47,16 @@ export default function GridPaginationScroller (props: Props): JSX.Element {
   } = usePaginationScroller({
     loadNext,
     isLoadingNext,
-    loadCount: 12
+    loadCount: 12,
+    limit,
+    currentCount: data.edges.length
   })
 
   if (data?.edges.length < 1) {
     return <EmptyPaginationScroller />
   }
 
-  const canLoadNext = limit == null || (data.edges.length <= limit)
+  const canLoadNext = (limit == null || (data.edges.length <= limit)) && data.edges.length !== limit
 
   // we use a memo here because loading more posts re-renders the whole tree
   // since additional dom nodes are added

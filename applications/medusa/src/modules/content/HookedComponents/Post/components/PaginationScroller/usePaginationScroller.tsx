@@ -7,6 +7,8 @@ interface Props {
   loadNext: LoadMoreFn<any>
   isLoadingNext: boolean
   loadCount?: number
+  limit?: number
+  currentCount?: number
 }
 
 interface ReturnProps {
@@ -19,7 +21,9 @@ export default function usePaginationScroller (props: Props): ReturnProps {
   const {
     loadNext,
     isLoadingNext,
-    loadCount = 8
+    loadCount = 8,
+    limit,
+    currentCount
   } = props
 
   const [hasError, setHasError] = useState(false)
@@ -32,7 +36,8 @@ export default function usePaginationScroller (props: Props): ReturnProps {
   const onLoadNext = useCallback(() => {
     setHasError(false)
     const disposedLoad = (): Disposable => {
-      return loadNext(loadCount, {
+      const calculatedLoadCount = currentCount != null && limit != null ? (limit - currentCount) : loadCount
+      return loadNext(calculatedLoadCount, {
         onComplete: (error) => {
           if (error != null) {
             setHasError(true)

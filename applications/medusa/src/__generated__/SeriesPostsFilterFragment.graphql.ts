@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a0d4f7c203db6f87ccb56fbf4bd57473>>
+ * @generated SignedSource<<162c4d859b42d5d18c8d88d0cbf17833>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,22 +10,22 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type ClubJoinWrapperFragment$data = {
+export type SeriesPostsFilterFragment$data = {
   readonly id: string;
-  readonly name: string;
   readonly slug: string;
-  readonly " $fragmentType": "ClubJoinWrapperFragment";
+  readonly title: string;
+  readonly " $fragmentType": "SeriesPostsFilterFragment";
 };
-export type ClubJoinWrapperFragment$key = {
-  readonly " $data"?: ClubJoinWrapperFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubJoinWrapperFragment">;
+export type SeriesPostsFilterFragment$key = {
+  readonly " $data"?: SeriesPostsFilterFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SeriesPostsFilterFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "ClubJoinWrapperFragment",
+  "name": "SeriesPostsFilterFragment",
   "selections": [
     {
       "alias": null,
@@ -38,21 +38,21 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "name",
+      "name": "slug",
       "storageKey": null
     },
     {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "slug",
+      "name": "title",
       "storageKey": null
     }
   ],
-  "type": "Club",
+  "type": "Series",
   "abstractKey": null
 };
 
-(node as any).hash = "eeafd67f604400879eb4d4d30e42d201";
+(node as any).hash = "ce736e9ca9a0a3d4a7992db92088eeb9";
 
 export default node;

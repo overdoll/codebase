@@ -48,7 +48,7 @@ export default function MenuPublicClub (props: Props): JSX.Element {
           icon={NavigationMenuHorizontal}
           w={6}
           h={6}
-          fill='whiteAlpha.700'
+          fill='whiteAlpha.800'
         />
       }
       size='md'
