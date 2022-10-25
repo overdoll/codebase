@@ -431,8 +431,8 @@ def go_repositories():
         name = "com_github_cpuguy83_go_md2man_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/cpuguy83/go-md2man/v2",
-        sum = "h1:p1EgwI/C7NhT0JmVkwCD2ZBK8j4aeHQX2pMHHBfMQ6w=",
-        version = "v2.0.2",
+        sum = "h1:r/myEWzV9lfsM1tFLgDyu0atFtJ1fXn261LKYj/3DxU=",
+        version = "v2.0.1",
     )
     go_repository(
         name = "com_github_creack_pty",
@@ -2215,8 +2215,8 @@ def go_repositories():
         name = "com_github_urfave_cli_v2",
         build_file_proto_mode = "disable",
         importpath = "github.com/urfave/cli/v2",
-        sum = "h1:eXu5089gqqiDQKSnFW+H/FhjrxRGztwSxlTsVK7IuqQ=",
-        version = "v2.19.2",
+        sum = "h1:CGuYNZF9IKZY/rfBe3lJpccSoIY1ytfvmgQT90cNOl4=",
+        version = "v2.8.1",
     )
     go_repository(
         name = "com_github_urfave_negroni",
