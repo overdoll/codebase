@@ -1110,6 +1110,47 @@ func MarshalSearchToGraphQLConnection(ctx context.Context, results []interface{}
 	}
 }
 
+func MarshalTagToGraphQLConnection(ctx context.Context, results []interface{}, cursor *paging.Cursor) *TagConnection {
+
+	var clubs []*TagEdge
+
+	for _, result := range results {
+		switch v := result.(type) {
+		case *post.Category:
+			clubs = append(clubs, &TagEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalCategoryToGraphQL(ctx, v),
+			})
+			break
+		case *post.Character:
+			clubs = append(clubs, &TagEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalCharacterToGraphQL(ctx, v),
+			})
+			break
+		case *post.Series:
+			clubs = append(clubs, &TagEdge{
+				Cursor: "U2VhcmNoOjo=",
+				Node:   MarshalSeriesToGraphQL(ctx, v),
+			})
+			break
+		default:
+			continue
+		}
+
+	}
+
+	return &TagConnection{
+		PageInfo: &relay.PageInfo{
+			HasNextPage:     false,
+			HasPreviousPage: false,
+			StartCursor:     nil,
+			EndCursor:       nil,
+		},
+		Edges: clubs,
+	}
+}
+
 func MarshalClubsToGraphQLConnection(ctx context.Context, results []*club.Club, cursor *paging.Cursor) *ClubConnection {
 
 	var clubs []*ClubEdge

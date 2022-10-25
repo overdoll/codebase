@@ -28,6 +28,7 @@ go_library(
         "post_like_cassandra_repository.go",
         "post_series_cassandra_repository.go",
         "post_series_elasticsearch_repository.go",
+        "post_tags_elasticsearch_repository.go",
         "post_topic_cassandra_repository.go",
         "post_topic_elasticsearch_repository.go",
         "posts_randomizer_elasticsearch_repository.go",

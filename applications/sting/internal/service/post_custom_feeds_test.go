@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/shurcooL/graphql"
 	"github.com/stretchr/testify/require"
+	"overdoll/applications/sting/internal/ports/graphql/types"
 	"testing"
 )
 
@@ -153,4 +154,50 @@ func TestGetSuggestedPostsForPost(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error grabbing suggested posts")
+}
+
+type ClubTags struct {
+	Entities []struct {
+		Club struct {
+			ID        string
+			PostsView types.ClubPostsView
+			Tags      *struct {
+				Edges []*struct {
+					Node struct {
+						Item CharacterModified `graphql:"... on Character"`
+					}
+				}
+			}
+		} `graphql:"... on Club"`
+	} `graphql:"_entities(representations: $representations)"`
+}
+
+func TestGetClubTags(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	clb := seedClub(t, testingAccountId)
+	clubId := clb.ID()
+	mockAccountNormal(t, testingAccountId)
+
+	// seed a post with the club ID that is the account ID for easy lookup in tests
+	seedPublishedPostWithClub(t, testingAccountId, clubId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
+	var clubTags ClubTags
+
+	err := client.Query(context.Background(), &clubTags, map[string]interface{}{
+		"representations": []_Any{
+			{
+				"__typename": "Club",
+				"id":         convertClubIdToRelayId(clubId),
+			},
+		},
+	})
+
+	require.NoError(t, err, "no error grabbing club memberships posts feed")
+	require.Len(t, clubTags.Entities[0].Club.Tags.Edges, 4, "should have 1 tag")
+	require.Equal(t, types.ClubPostsViewCard, clubTags.Entities[0].Club.PostsView, "should have the correct view")
+
 }

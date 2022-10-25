@@ -16,6 +16,49 @@ type ClubResolver struct {
 	App *app.Application
 }
 
+func (r ClubResolver) PostsView(ctx context.Context, obj *types.Club) (types.ClubPostsView, error) {
+
+	result, err := r.App.Queries.ClubPostsView.Handle(ctx, query.ClubPostsView{
+		ClubId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	var view types.ClubPostsView
+
+	if result == club.CardView {
+		view = types.ClubPostsViewCard
+	}
+
+	if result == club.GalleryView {
+		view = types.ClubPostsViewGallery
+	}
+
+	return view, nil
+}
+
+func (r ClubResolver) Tags(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int) (*types.TagConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.ClubTags.Handle(ctx, query.ClubTags{
+		Cursor: cursor,
+		ClubId: obj.ID.GetID(),
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalTagToGraphQLConnection(ctx, results, cursor), nil
+}
+
 func (r ClubResolver) CharactersCount(ctx context.Context, obj *types.Club) (int, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
