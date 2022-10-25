@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<6f760178fb8ac1a876324721c0763415>>
+ * @generated SignedSource<<ad53c6b8356274bda89dbd4fe185a7aa>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,11 +15,12 @@ export type ScrollPublicClubPostsFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
+        readonly id: string;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SwapPaginationScrollerFragment">;
   };
+  readonly " $fragmentSpreads": FragmentRefs<"FilterPublicClubPostsFragment">;
   readonly " $fragmentType": "ScrollPublicClubPostsFragment";
 };
 export type ScrollPublicClubPostsFragment$key = {
@@ -30,7 +31,14 @@ export type ScrollPublicClubPostsFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "posts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -47,7 +55,7 @@ return {
       "name": "characterSlugs"
     },
     {
-      "defaultValue": 5,
+      "defaultValue": 12,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -151,11 +159,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PreviewPostFragment"
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -179,7 +183,7 @@ return {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "VerticalPaginationScrollerFragment"
+          "name": "SwapPaginationScrollerFragment"
         },
         {
           "alias": null,
@@ -210,18 +214,17 @@ return {
       "storageKey": null
     },
     {
-      "alias": null,
       "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+      "kind": "FragmentSpread",
+      "name": "FilterPublicClubPostsFragment"
+    },
+    (v1/*: any*/)
   ],
   "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "41d4b8fa69bd34218630e551798c9dac";
+(node as any).hash = "9a9db9624edcc2ae377517e4b304b6ef";
 
 export default node;

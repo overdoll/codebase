@@ -1,73 +1,121 @@
-import { graphql, useFragment } from 'react-relay/hooks'
-import type { ClubJoinButtonFragment$key } from '@//:artifacts/ClubJoinButtonFragment.graphql'
-import type { ClubJoinButtonViewerFragment$key } from '@//:artifacts/ClubJoinButtonViewerFragment.graphql'
-import ClubJoinWrapper from '../../../../../Wrappers/ClubJoinWrapper/ClubJoinWrapper'
-import Can from '../../../../../../authorization/Can'
-import ClubJoinLoggedOutButton from '../ClubJoinLoggedOutButton/ClubJoinLoggedOutButton'
-import { PlusCircle } from '@//:assets/icons'
+import { ClubJoinButtonFragment$key } from '@//:artifacts/ClubJoinButtonFragment.graphql'
+import { ClubJoinButtonViewerFragment$key } from '@//:artifacts/ClubJoinButtonViewerFragment.graphql'
+import { graphql } from 'react-relay'
+import { useFragment, useMutation } from 'react-relay/hooks'
+import { ClubJoinButtonMutation } from '@//:artifacts/ClubJoinButtonMutation.graphql'
+import { useToast } from '../../../../../ThemeComponents'
 import { t } from '@lingui/macro'
+import posthog from 'posthog-js'
+import { PlusCircle } from '@//:assets/icons'
 import MediumGenericButton from '@//:common/components/GenericButtons/MediumGenericButton/MediumGenericButton'
 import { useLingui } from '@lingui/react'
-import { ButtonProps } from '@chakra-ui/react'
+import Can from '../../../../../../authorization/Can'
 
-interface Props extends ButtonProps {
+interface Props {
   clubQuery: ClubJoinButtonFragment$key
   viewerQuery: ClubJoinButtonViewerFragment$key | null
 }
 
 const ClubFragment = graphql`
   fragment ClubJoinButtonFragment on Club {
-    viewerIsOwner
-    ...ClubJoinLoggedOutButtonFragment
-    ...ClubJoinWrapperFragment
+    id
+    name
+    slug
   }
 `
 
 const ViewerFragment = graphql`
   fragment ClubJoinButtonViewerFragment on Account {
-    ...ClubJoinWrapperViewerFragment
+    clubMembershipsLimit
+    clubMembershipsCount
+  }
+`
+
+const Mutation = graphql`
+  mutation ClubJoinButtonMutation($input: JoinClubInput!) {
+    joinClub(input: $input) {
+      clubMember {
+        id
+        club {
+          id
+          viewerMember {
+            __typename
+          }
+        }
+        account {
+          id
+        }
+        joinedAt
+      }
+    }
   }
 `
 
 export default function ClubJoinButton (props: Props): JSX.Element {
   const {
     clubQuery,
-    viewerQuery,
-    ...rest
+    viewerQuery
   } = props
 
   const clubData = useFragment(ClubFragment, clubQuery)
+
   const viewerData = useFragment(ViewerFragment, viewerQuery)
+
+  const [joinClub, isJoiningClub] = useMutation<ClubJoinButtonMutation>(Mutation)
+
+  const canJoinClub = viewerData !== null ? viewerData.clubMembershipsCount < viewerData.clubMembershipsLimit : true
+
   const { i18n } = useLingui()
 
-  if (clubData.viewerIsOwner) {
-    return <></>
-  }
+  const notify = useToast()
 
-  if (viewerData == null) {
-    return <ClubJoinLoggedOutButton clubQuery={clubData} />
+  const onJoinClub = (): void => {
+    if (clubData?.id == null) return
+
+    joinClub({
+      variables: {
+        input: {
+          clubId: clubData.id
+        }
+      },
+      onCompleted () {
+        notify({
+          status: 'success',
+          title: t`You are now a member of ${clubData.name}!`
+        })
+        posthog?.capture('joined-club', {
+          club: clubData.slug
+        })
+      },
+      updater: (store) => {
+        const node = store.get(clubData.id)
+        const payload = store.getRootField('joinClub').getLinkedRecord('clubMember')
+        const accountNode = store.getRoot().getLinkedRecord('viewer')
+        if (accountNode != null) {
+          accountNode.setValue(accountNode.getValue('clubMembershipsCount') as number + 1, 'clubMembershipsCount')
+        }
+        if (node != null) {
+          node.setValue(node.getValue('membersCount') as number + 1, 'membersCount')
+          if (payload != null) {
+            node.setLinkedRecord(payload, 'viewerMember')
+          }
+        }
+      }
+    })
   }
 
   return (
     <Can I='interact' a='Club' passThrough>
       {allowed => (
-        <ClubJoinWrapper clubQuery={clubData} viewerQuery={viewerData}>
-          {({
-            joinClub,
-            canJoinClub,
-            isJoiningClub
-          }) => (
-            <MediumGenericButton
-              colorScheme='green'
-              isDisabled={isJoiningClub || !canJoinClub || allowed === false}
-              onClick={joinClub}
-              icon={PlusCircle}
-              {...rest}
-            >
-              {i18n._(t`Join`)}
-            </MediumGenericButton>
-          )}
-        </ClubJoinWrapper>
+        <MediumGenericButton
+          isDisabled={!canJoinClub || allowed === false}
+          isLoading={isJoiningClub}
+          colorScheme='gray'
+          onClick={onJoinClub}
+          icon={PlusCircle}
+        >
+          {i18n._(t`Join`)}
+        </MediumGenericButton>
       )}
     </Can>
   )

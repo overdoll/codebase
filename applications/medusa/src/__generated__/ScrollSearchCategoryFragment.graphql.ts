@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0a9d177a9ac058d85a9e839fa4baf69c>>
+ * @generated SignedSource<<b79749c4fabb6de42387fa04013ad3db>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ScrollSearchCategoryFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
+        readonly id: string;
       };
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
@@ -30,7 +30,14 @@ export type ScrollSearchCategoryFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "posts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -115,11 +122,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PreviewPostFragment"
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -173,19 +176,13 @@ return {
       ],
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Category",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "170932aa86051dc934f593080c3de46d";
+(node as any).hash = "9e49e729ccb136e293ecd70082dc81ea";
 
 export default node;

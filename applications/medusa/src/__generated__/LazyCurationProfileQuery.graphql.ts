@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<26e3b0fae24f6eef06b14b4cedd2436a>>
- * @relayHash 310e7c59eb1b9aeb38268903bc53a86d
+ * @generated SignedSource<<950d207c8b4ccc253a77d26f4b806f40>>
+ * @relayHash 936da5e02b63d2c43137cfee9918c40c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 310e7c59eb1b9aeb38268903bc53a86d
+// @relayRequestID 936da5e02b63d2c43137cfee9918c40c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -347,13 +347,6 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "viewerIsOwner",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "name",
                     "storageKey": null
                   },
@@ -487,7 +480,7 @@ return {
     ]
   },
   "params": {
-    "id": "310e7c59eb1b9aeb38268903bc53a86d",
+    "id": "936da5e02b63d2c43137cfee9918c40c",
     "metadata": {},
     "name": "LazyCurationProfileQuery",
     "operationKind": "query",

@@ -16,7 +16,7 @@ export { default as PreviewContent } from './fragments/Content/PreviewContent/Pr
 // For all vertical post infinite scrolling purposes
 export {
   default as VerticalPaginationScroller
-} from './components/VerticalPaginationScroller/VerticalPaginationScroller'
+} from './components/PaginationScroller/VerticalPaginationScroller/VerticalPaginationScroller'
 export {
   default as SuspenseLazyPosts
 } from './components/SuspenseLazyPosts/SuspenseLazyPosts'

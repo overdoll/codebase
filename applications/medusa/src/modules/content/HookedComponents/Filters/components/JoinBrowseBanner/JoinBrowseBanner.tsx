@@ -40,7 +40,7 @@ export default function JoinBrowseBanner (): JSX.Element {
         <BannerPrompt
           onClick={onJoin}
           buttonText={<Trans>Join</Trans>}
-          bannerText={<Trans>Join overdoll to get the full experience</Trans>}
+          bannerText={<Trans>Join overdoll to get a personal feed and like posts</Trans>}
           colorScheme='primary'
         />
       )}

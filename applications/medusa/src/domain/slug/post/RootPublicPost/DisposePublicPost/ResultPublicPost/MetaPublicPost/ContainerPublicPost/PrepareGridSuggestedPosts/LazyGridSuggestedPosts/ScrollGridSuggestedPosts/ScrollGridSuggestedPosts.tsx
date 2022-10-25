@@ -3,7 +3,7 @@ import { graphql, usePaginationFragment } from 'react-relay'
 import { LazySuggestedPostsQuery } from '@//:artifacts/LazySuggestedPostsQuery.graphql'
 import React from 'react'
 import GridPaginationScroller
-  from '@//:modules/content/HookedComponents/Post/components/VerticalPaginationScroller/GridPaginationScroller/GridPaginationScroller'
+  from '@//:modules/content/HookedComponents/Post/components/PaginationScroller/GridPaginationScroller/GridPaginationScroller'
 
 interface Props {
   postQuery: ScrollGridSuggestedPostsFragment$key

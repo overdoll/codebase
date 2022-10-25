@@ -3,8 +3,6 @@ import type { BannerPublicPostFragment$key } from '@//:artifacts/BannerPublicPos
 import type { BannerPublicPostViewerFragment$key } from '@//:artifacts/BannerPublicPostViewerFragment.graphql'
 import React from 'react'
 import AccountInformationBanner from '@//:common/components/AccountInformationBanner/AccountInformationBanner'
-import ClubSuspendedStaffAlert
-  from '../../../../../../../club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/BannerPublicClub/ClubSuspendedStaffAlert/ClubSuspendedStaffAlert'
 import { Alert, AlertDescription, AlertIcon } from '@//:modules/content/ThemeComponents'
 import { Box, HStack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
@@ -16,9 +14,6 @@ interface Props {
 
 const PostFragment = graphql`
   fragment BannerPublicPostFragment on Post {
-    club {
-      ...ClubSuspendedStaffAlertFragment
-    }
     state
   }
 `
@@ -42,7 +37,6 @@ export default function BannerPublicPost (props: Props): JSX.Element {
   return (
     <Box>
       <AccountInformationBanner query={viewerData} />
-      <ClubSuspendedStaffAlert query={postData.club} />
       {(!['PUBLISHED', 'ARCHIVED'].includes(postData.state)) && (
         <Alert mb={2} status='warning'>
           <HStack>

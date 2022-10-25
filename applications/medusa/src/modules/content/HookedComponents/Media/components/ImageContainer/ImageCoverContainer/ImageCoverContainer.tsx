@@ -1,7 +1,6 @@
 import { Flex } from '@chakra-ui/react'
 import CoverImage from '../ImageWrapper/CoverImage/CoverImage'
 import ImageMedia, { ImageMediaProps } from '../ImageWrapper/ImageMedia/ImageMedia'
-import ImageBorder from '../ImageWrapper/ImageBorder/ImageBorder'
 import { ColorType } from '../../../types'
 
 interface Props extends Omit<ImageMediaProps, 'color'>, ColorType {
@@ -19,7 +18,7 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
   } = props
 
   const bgColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgb(${rgb.red},${rgb.green},${rgb.blue})` : undefined)
-  const borderColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgba(${rgb.red},${rgb?.green},${rgb?.blue},0.15)` : undefined)
+  // const borderColor = typeof rgb === 'string' ? rgb : (rgb != null ? `rgba(${rgb.red},${rgb?.green},${rgb?.blue},0.15)` : undefined)
 
   return (
     <Flex
@@ -33,7 +32,6 @@ export default function ImageCoverContainer (props: Props): JSX.Element {
       bg={bgColor ?? 'transparent'}
     >
       <CoverImage>
-        <ImageBorder color={borderColor ?? 'gray.50'} />
         <ImageMedia
           tiny={tiny}
           width={width}

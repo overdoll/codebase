@@ -21,7 +21,7 @@ const Fragment = graphql`
     @connection (key: "ScrollPostsFeed_curatedPostsFeedPosts") {
       edges {
         node {
-          ...PreviewPostFragment
+          id
         }
       }
       ...VerticalPaginationScrollerFragment
@@ -50,14 +50,6 @@ export default function ScrollPostsFeed (props: Props): JSX.Element {
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-    >
-      {({
-        index
-      }) => (
-        <PreviewPost
-          postQuery={data.curatedPostsFeedPosts.edges[index].node}
-        />
-      )}
-    </VerticalPaginationScroller>
+    />
   )
 }

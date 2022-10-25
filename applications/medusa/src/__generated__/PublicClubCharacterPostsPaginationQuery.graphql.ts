@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b35c5c4dba710785c13bb80c15234178>>
- * @relayHash 69454abfb3d1f4b6ea9d8af14205e3c0
+ * @generated SignedSource<<5f09e25cf23983282f15581e6f5052cf>>
+ * @relayHash cc06b9fe560cd5d9886c5a0acb58dc3b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 69454abfb3d1f4b6ea9d8af14205e3c0
+// @relayRequestID cc06b9fe560cd5d9886c5a0acb58dc3b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -323,6 +323,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v9/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -588,8 +589,7 @@ return {
                               (v9/*: any*/)
                             ],
                             "storageKey": null
-                          },
-                          (v8/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -653,7 +653,7 @@ return {
     ]
   },
   "params": {
-    "id": "69454abfb3d1f4b6ea9d8af14205e3c0",
+    "id": "cc06b9fe560cd5d9886c5a0acb58dc3b",
     "metadata": {},
     "name": "PublicClubCharacterPostsPaginationQuery",
     "operationKind": "query",
@@ -662,6 +662,6 @@ return {
 };
 })();
 
-(node as any).hash = "e238e90af5bef1946e3b69c244ff5af3";
+(node as any).hash = "31d00219022ab3cce60b1c793de5d279";
 
 export default node;

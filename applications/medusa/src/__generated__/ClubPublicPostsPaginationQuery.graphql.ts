@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<2833f08f13890c10b116d1a31a77b795>>
- * @relayHash 5fc4518283c9bc8a53f167fd3f3a2c5d
+ * @generated SignedSource<<ae4c0ecce0d4643890e6c3e32e0b9b5f>>
+ * @relayHash 017d8da89baac5dbc31d54715c681f70
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 5fc4518283c9bc8a53f167fd3f3a2c5d
+// @relayRequestID 017d8da89baac5dbc31d54715c681f70
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -53,7 +53,7 @@ v2 = {
   "name": "characterSlugs"
 },
 v3 = {
-  "defaultValue": 5,
+  "defaultValue": 12,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -281,6 +281,26 @@ v25 = {
   "plural": false,
   "selections": (v20/*: any*/),
   "storageKey": null
+},
+v26 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "banner",
+  "plural": false,
+  "selections": (v20/*: any*/),
+  "storageKey": null
+},
+v27 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "smallBanner",
+  "plural": false,
+  "selections": (v20/*: any*/),
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -376,6 +396,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v13/*: any*/),
+                          (v12/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -495,7 +516,9 @@ return {
                                         "selections": [
                                           (v23/*: any*/),
                                           (v24/*: any*/),
-                                          (v25/*: any*/)
+                                          (v25/*: any*/),
+                                          (v26/*: any*/),
+                                          (v27/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -526,7 +549,9 @@ return {
                                             "selections": [
                                               (v25/*: any*/),
                                               (v24/*: any*/),
-                                              (v23/*: any*/)
+                                              (v23/*: any*/),
+                                              (v26/*: any*/),
+                                              (v27/*: any*/)
                                             ],
                                             "storageKey": null
                                           },
@@ -641,8 +666,7 @@ return {
                               (v13/*: any*/)
                             ],
                             "storageKey": null
-                          },
-                          (v12/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -655,6 +679,18 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   },
                   {
                     "alias": null,
@@ -710,7 +746,7 @@ return {
     ]
   },
   "params": {
-    "id": "5fc4518283c9bc8a53f167fd3f3a2c5d",
+    "id": "017d8da89baac5dbc31d54715c681f70",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",
@@ -719,6 +755,6 @@ return {
 };
 })();
 
-(node as any).hash = "41d4b8fa69bd34218630e551798c9dac";
+(node as any).hash = "9a9db9624edcc2ae377517e4b304b6ef";
 
 export default node;

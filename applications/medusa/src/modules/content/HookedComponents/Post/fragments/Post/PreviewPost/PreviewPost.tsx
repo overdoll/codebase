@@ -10,7 +10,7 @@ import SwiperType from 'swiper'
 import { PlayerType } from '../../../../Media/types'
 import { UrlObject } from 'url'
 import { Link } from '../../../../../../routing'
-import MemoKey from '../../../components/VerticalPaginationScroller/MemoKey/MemoKey'
+import MemoKey from '../../../components/PaginationScroller/MemoKey/MemoKey'
 
 interface Props {
   postQuery: PreviewPostFragment$key

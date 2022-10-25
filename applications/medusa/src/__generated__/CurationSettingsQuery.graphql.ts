@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<fdd6fd5616ae294e2936cca5f7660298>>
- * @relayHash ee8eb28e9e1d51caa5c1fa1054be0ce4
+ * @generated SignedSource<<35f65db6b0292a4bb22cde9852e9509c>>
+ * @relayHash f62d5e276fa1c32f9b67c9964d3f07e3
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID ee8eb28e9e1d51caa5c1fa1054be0ce4
+// @relayRequestID f62d5e276fa1c32f9b67c9964d3f07e3
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -352,13 +352,6 @@ return {
                     "alias": null,
                     "args": null,
                     "kind": "ScalarField",
-                    "name": "viewerIsOwner",
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
                     "name": "name",
                     "storageKey": null
                   },
@@ -492,7 +485,7 @@ return {
     ]
   },
   "params": {
-    "id": "ee8eb28e9e1d51caa5c1fa1054be0ce4",
+    "id": "f62d5e276fa1c32f9b67c9964d3f07e3",
     "metadata": {},
     "name": "CurationSettingsQuery",
     "operationKind": "query",

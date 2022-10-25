@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<f49d6886bba762342950606cb168dfa9>>
+ * @generated SignedSource<<a280e00b824ceabc3448fba07e54609c>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,7 +14,7 @@ export type ScrollRandomFragment$data = {
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
+        readonly id: string;
       };
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
@@ -118,9 +118,11 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
                   "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PreviewPostFragment"
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
                 },
                 {
                   "alias": null,
@@ -181,6 +183,6 @@ return {
 };
 })();
 
-(node as any).hash = "9e7038ce5cf37c2205b872bf3089d824";
+(node as any).hash = "b967ee71fce3f2e1634c56d38b438fff";
 
 export default node;

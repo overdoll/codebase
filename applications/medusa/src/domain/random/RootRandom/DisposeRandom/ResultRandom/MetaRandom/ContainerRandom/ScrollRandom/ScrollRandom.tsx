@@ -25,7 +25,7 @@ const RootFragment = graphql`
     @connection (key: "RandomPosts_posts") {
       edges {
         node {
-          ...PreviewPostFragment
+          id
         }
       }
       ...VerticalPaginationScrollerFragment
@@ -67,15 +67,7 @@ export default function ScrollRandom (props: Props): JSX.Element {
           hasNext={hasNext}
           loadNext={loadNext}
           isLoadingNext={isLoadingNext}
-        >
-          {({
-            index
-          }) => (
-            <PreviewPost
-              postQuery={data?.posts?.edges?.[index]?.node}
-            />
-          )}
-        </VerticalPaginationScroller>
+        />
       </Stack>
       <RandomizeButton />
     </>

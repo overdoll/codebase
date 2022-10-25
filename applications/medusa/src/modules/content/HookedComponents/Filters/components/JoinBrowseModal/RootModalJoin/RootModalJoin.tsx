@@ -73,7 +73,7 @@ export default function RootModalJoin (): JSX.Element {
         />
         <Heading fontSize='2xl' color='gray.00'>
           <Trans>
-            Join overdoll for the full 18+ art experience.
+            Join overdoll to get a personal feed and like posts.
           </Trans>
         </Heading>
       </Stack>
@@ -81,18 +81,6 @@ export default function RootModalJoin (): JSX.Element {
         onSubmit={({ email }) => onSubmit(email)}
         isLoading={isInFlight}
       />
-      <Stack spacing={1}>
-        <Heading fontSize='lg' color='gray.200'>
-          <Trans>
-            Personal content feed
-          </Trans>
-        </Heading>
-        <Heading fontSize='sm' color='gray.300'>
-          <Trans>
-            Get a daily personal content feed when you join
-          </Trans>
-        </Heading>
-      </Stack>
     </Stack>
   )
 }

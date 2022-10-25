@@ -30,7 +30,7 @@ const Fragment = graphql`
     @connection (key: "PublicClubCharacterPosts_posts") {
       edges {
         node {
-          ...PreviewPostFragment
+          id
         }
       }
       ...VerticalPaginationScrollerFragment
@@ -71,15 +71,7 @@ export default function ScrollPublicClubCharacter (props: Props): JSX.Element {
         hasNext={hasNext}
         loadNext={loadNext}
         isLoadingNext={isLoadingNext}
-      >
-        {({
-          index
-        }) => (
-          <PreviewPost
-            postQuery={data?.posts?.edges?.[index]?.node}
-          />
-        )}
-      </VerticalPaginationScroller>
+      />
     </Stack>
   )
 }
