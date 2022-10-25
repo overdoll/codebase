@@ -204,4 +204,7 @@ type Queries struct {
 	AccountStats query.AccountStatsHandler
 
 	HasClubSupporterSubscription query.HasClubSupporterSubscriptionHandler
+
+	ClubTags      query.ClubTagsHandler
+	ClubPostsView query.ClubPostsViewHandler
 }

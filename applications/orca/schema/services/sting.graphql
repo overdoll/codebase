@@ -714,6 +714,11 @@ extend type Mutation {
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
 }
 
+enum ClubPostsView {
+  GALLERY
+  CARD
+}
+
 type ClubLink {
   """A link."""
   url: URI!
@@ -728,6 +733,9 @@ type Club implements Node @key(fields: "id") {
 
   """A url-friendly ID. Should be used when searching"""
   slug: String!
+
+  """How the posts are displayed for this club."""
+  postsView: ClubPostsView! @goField(forceResolver: true)
 
   """
   Maximum amount of slug aliases that can be created for this club.
@@ -777,6 +785,23 @@ type Club implements Node @key(fields: "id") {
   Whether or not this club is suspended.
   """
   suspension: ClubSuspension
+
+  """
+  Tags used by this club.
+  """
+  tags(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TagConnection! @goField(forceResolver: true)
 
   """
   Club Suspension Logs.
@@ -2276,6 +2301,18 @@ enum PostsSort {
 
   """Posts by algorithm sort"""
   ALGORITHM
+}
+
+union Tag = Category | Character | Series
+
+type TagEdge {
+  cursor: String!
+  node: Search!
+}
+
+type TagConnection {
+  edges: [TagEdge!]!
+  pageInfo: PageInfo!
 }
 
 union Search = Category | Character | Series | Club

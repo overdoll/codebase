@@ -1097,3 +1097,45 @@ func (r ClubCassandraElasticsearchRepository) HasNonTerminatedClubs(ctx context.
 
 	return r.hasNonTerminatedClubs(ctx, accountId)
 }
+
+var clubPostsViewTable = table.New(table.Metadata{
+	Name: "club_posts_view",
+	Columns: []string{
+		"club_id",
+		"view_type",
+	},
+	PartKey: []string{"club_id"},
+	SortKey: []string{},
+})
+
+type clubPostsView struct {
+	ClubId   string `db:"club_id"`
+	ViewType string `db:"view_type"`
+}
+
+func (r ClubCassandraElasticsearchRepository) PostsView(ctx context.Context, clubId string) (club.PostsView, error) {
+
+	var b clubPostsView
+
+	if err := r.session.
+		Query(clubPostsViewTable.Get()).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(clubPostsView{ClubId: clubId}).
+		GetRelease(&b); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return club.GetDefaultView(), nil
+		}
+
+		return club.PostsView{}, errors.Wrap(support.NewGocqlError(err), "failed to get club by id")
+	}
+
+	view, err := club.PostsViewFromString(b.ViewType)
+	if err != nil {
+		return club.PostsView{}, err
+	}
+
+	return view, nil
+}

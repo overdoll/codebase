@@ -11,6 +11,7 @@ go_library(
         "club_members_filters.go",
         "club_members_filters_sorting.go",
         "club_suspension_log.go",
+        "posts_view.go",
         "repository.go",
         "suspension_reason.go",
     ],

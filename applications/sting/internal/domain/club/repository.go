@@ -66,4 +66,6 @@ type Repository interface {
 
 	UpdateClubTotalPostsCount(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
 	UpdateClubTotalLikesCount(ctx context.Context, clubId string, updateFn func(club *Club) error) (*Club, error)
+
+	PostsView(ctx context.Context, clubId string) (PostsView, error)
 }

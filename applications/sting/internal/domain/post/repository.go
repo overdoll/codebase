@@ -161,4 +161,6 @@ type Repository interface {
 
 	GenerateCuratedPostIds(ctx context.Context, accountId string, digest *club.AccountClubDigest, audienceIds []string) ([]string, error)
 	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string, seed int64) ([]*Post, error)
+
+	ClubTags(ctx context.Context, cursor *paging.Cursor, clubId string) ([]interface{}, error)
 }
