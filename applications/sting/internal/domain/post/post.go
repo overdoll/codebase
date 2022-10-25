@@ -440,8 +440,8 @@ func (p *Post) AddContentRequest(requester *principal.Principal, resources []*me
 		}
 	}
 
-	if len(newContent) > 20 {
-		return domainerror.NewValidation("only maximum 20 content pieces allowed")
+	if len(newContent) > 40 {
+		return domainerror.NewValidation("only maximum 40 content pieces allowed")
 	}
 
 	p.content = append(p.content, newContent...)
@@ -603,15 +603,6 @@ func (p *Post) UpdateCharactersRequest(requester *principal.Principal, character
 		return err
 	}
 
-	for _, c := range characters {
-		if c.clubId != nil {
-			if err := requester.CheckClubOwner(*c.clubId); err != nil {
-				return domainerror.NewValidation("cannot use club character if you are not owner of club")
-			}
-		}
-
-	}
-
 	return p.UpdateCharacters(characters)
 }
 
@@ -628,11 +619,6 @@ func (p *Post) RemoveCategory(categoryId string) error {
 
 	p.categoryIds = categoryIds
 	p.update()
-
-	return nil
-}
-
-func (p *Post) RemoveCharacter(character *Character) error {
 
 	return nil
 }

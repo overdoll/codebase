@@ -328,6 +328,18 @@ enum PostsSort {
   ALGORITHM
 }
 
+union Tag = Category | Character | Series
+
+type TagEdge {
+  cursor: String!
+  node: Search!
+}
+
+type TagConnection {
+  edges: [TagEdge!]!
+  pageInfo: PageInfo!
+}
+
 union Search = Category | Character | Series | Club
 
 type SearchEdge {

@@ -336,6 +336,18 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	})
 
+	remove.AddCommand(&cobra.Command{
+		Use:  "character [category_id]",
+		Args: cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.RemoveCharacter.Handle(context.Background(), command.RemoveCharacter{
+				CharacterId: args[0],
+			}); err != nil {
+				zap.S().Fatalw("failed to remove character", zap.Error(err))
+			}
+		},
+	})
+
 	reprocess := &cobra.Command{
 		Use: "reprocess-media",
 	}

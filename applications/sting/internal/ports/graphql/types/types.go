@@ -24,6 +24,10 @@ type Search interface {
 	IsSearch()
 }
 
+type Tag interface {
+	IsTag()
+}
+
 type Account struct {
 	// Whether or not this account has at least 1 club supporter subscription.
 	HasClubSupporterSubscription bool `json:"hasClubSupporterSubscription"`
@@ -211,6 +215,7 @@ type Category struct {
 }
 
 func (Category) IsNode()   {}
+func (Category) IsTag()    {}
 func (Category) IsSearch() {}
 func (Category) IsEntity() {}
 
@@ -265,6 +270,7 @@ type Character struct {
 }
 
 func (Character) IsNode()   {}
+func (Character) IsTag()    {}
 func (Character) IsSearch() {}
 func (Character) IsEntity() {}
 
@@ -285,6 +291,8 @@ type Club struct {
 	Reference string `json:"reference"`
 	// A url-friendly ID. Should be used when searching
 	Slug string `json:"slug"`
+	// How the posts are displayed for this club.
+	PostsView ClubPostsView `json:"postsView"`
 	// Maximum amount of slug aliases that can be created for this club.
 	SlugAliasesLimit int `json:"slugAliasesLimit"`
 	// The total number of posts for this club.
@@ -311,6 +319,8 @@ type Club struct {
 	Termination *ClubTermination `json:"termination"`
 	// Whether or not this club is suspended.
 	Suspension *ClubSuspension `json:"suspension"`
+	// Tags used by this club.
+	Tags *TagConnection `json:"tags"`
 	// Club Suspension Logs.
 	//
 	// Can see who a club was suspended by, the reason and who unsuspended a particular club.
@@ -1007,6 +1017,7 @@ type Series struct {
 	Posts *PostConnection `json:"posts"`
 }
 
+func (Series) IsTag()    {}
 func (Series) IsSearch() {}
 func (Series) IsNode()   {}
 func (Series) IsEntity() {}
@@ -1057,6 +1068,16 @@ type SuspendClubInput struct {
 type SuspendClubPayload struct {
 	// The new club after it's suspended.
 	Club *Club `json:"club"`
+}
+
+type TagConnection struct {
+	Edges    []*TagEdge      `json:"edges"`
+	PageInfo *relay.PageInfo `json:"pageInfo"`
+}
+
+type TagEdge struct {
+	Cursor string `json:"cursor"`
+	Node   Search `json:"node"`
 }
 
 // Terminate the club.
@@ -1762,6 +1783,47 @@ func (e *ClubMembersSort) UnmarshalGQL(v interface{}) error {
 }
 
 func (e ClubMembersSort) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type ClubPostsView string
+
+const (
+	ClubPostsViewGallery ClubPostsView = "GALLERY"
+	ClubPostsViewCard    ClubPostsView = "CARD"
+)
+
+var AllClubPostsView = []ClubPostsView{
+	ClubPostsViewGallery,
+	ClubPostsViewCard,
+}
+
+func (e ClubPostsView) IsValid() bool {
+	switch e {
+	case ClubPostsViewGallery, ClubPostsViewCard:
+		return true
+	}
+	return false
+}
+
+func (e ClubPostsView) String() string {
+	return string(e)
+}
+
+func (e *ClubPostsView) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ClubPostsView(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ClubPostsView", str)
+	}
+	return nil
+}
+
+func (e ClubPostsView) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
