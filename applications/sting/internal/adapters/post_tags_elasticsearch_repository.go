@@ -12,14 +12,19 @@ import (
 
 func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cursor *paging.Cursor, clubId string) ([]interface{}, error) {
 
+	size := cursor.GetLimit()
+	if size == 0 {
+		size = 1
+	}
+
 	response, err := r.client.
 		Search().
 		Index(PostReaderIndex).
 		Size(0).
 		Query(elastic.NewBoolQuery().Must(elastic.NewTermsQuery("club_id", clubId))).
-		Aggregation("character_ids", elastic.NewTermsAggregation().Size(cursor.GetLimit()).Field("character_ids").Meta(map[string]interface{}{"type": "character_ids"})).
-		Aggregation("series_ids", elastic.NewTermsAggregation().Size(cursor.GetLimit()).Field("series_ids").Meta(map[string]interface{}{"type": "series_ids"})).
-		Aggregation("category_ids", elastic.NewTermsAggregation().Size(cursor.GetLimit()).Field("category_ids").Meta(map[string]interface{}{"type": "category_ids"})).
+		Aggregation("character_ids", elastic.NewTermsAggregation().Size(size).Field("character_ids").Meta(map[string]interface{}{"type": "character_ids"})).
+		Aggregation("series_ids", elastic.NewTermsAggregation().Size(size).Field("series_ids").Meta(map[string]interface{}{"type": "series_ids"})).
+		Aggregation("category_ids", elastic.NewTermsAggregation().Size(size).Field("category_ids").Meta(map[string]interface{}{"type": "category_ids"})).
 		Pretty(true).Do(ctx)
 
 	if err != nil {
@@ -66,7 +71,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 	var seriesIds []string
 	var characterIds []string
 
-	for i := 0; i < cursor.GetLimit(); i++ {
+	for i := 0; i < size; i++ {
 		if i == len(aggregations)-1 {
 			break
 		}
@@ -109,9 +114,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 			},
 		)
 
-	if cursor != nil && cursor.GetLimit() > 0 {
-		builder.Size(cursor.GetLimit())
-	}
+	builder.Size(size)
 
 	query := elastic.NewBoolQuery()
 
