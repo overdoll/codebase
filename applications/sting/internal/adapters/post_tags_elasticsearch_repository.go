@@ -14,7 +14,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 
 	size := cursor.GetLimit()
 	if size == 0 {
-		size = 1
+		size = 10
 	}
 
 	response, err := r.client.
@@ -80,7 +80,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 		targetKey := aggregations[i].keyItem.Key.(string)
 
 		if metaType == "character_ids" {
-			categoryIds = append(categoryIds, targetKey)
+			characterIds = append(characterIds, targetKey)
 		}
 
 		if metaType == "series_ids" {

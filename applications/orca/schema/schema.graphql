@@ -2094,6 +2094,9 @@ type Club implements Node
     supporterOnlyStatus: [SupporterOnlyStatus!]
   ): PostConnection! @join__field(graph: STING)
 
+  """How the posts are displayed for this club."""
+  postsView: ClubPostsView! @join__field(graph: STING)
+
   """An internal reference, uniquely identifying the club."""
   reference: String! @join__field(graph: STING)
 
@@ -2154,6 +2157,23 @@ type Club implements Node
     """Returns the last _n_ elements from the list."""
     last: Int
   ): ClubSuspensionLogConnection! @join__field(graph: STING)
+
+  """Tags used by this club."""
+  tags(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """
+    Returns the elements in the list that come before the specified cursor.
+    """
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TagConnection! @join__field(graph: STING)
 
   """Whether or not this club is terminated."""
   termination: ClubTermination @join__field(graph: STING)
@@ -2539,6 +2559,11 @@ type ClubPlatformFee {
 
   """The percent of the club platform fee."""
   percent: Int!
+}
+
+enum ClubPostsView {
+  CARD
+  GALLERY
 }
 
 type ClubRemovedSuspensionLog {
@@ -6113,6 +6138,18 @@ input SuspendClubInput {
 type SuspendClubPayload {
   """The new club after it's suspended."""
   club: Club
+}
+
+union Tag = Category | Character | Series
+
+type TagConnection {
+  edges: [TagEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TagEdge {
+  cursor: String!
+  node: Search!
 }
 
 """Terminate the club."""
