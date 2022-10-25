@@ -197,7 +197,7 @@ func TestGetClubTags(t *testing.T) {
 	})
 
 	require.NoError(t, err, "no error grabbing club memberships posts feed")
-	require.Len(t, clubTags.Entities[0].Club.Tags.Edges, 1, "should have 1 tag")
+	require.Len(t, clubTags.Entities[0].Club.Tags.Edges, 5, "should have 1 tag")
 	require.Equal(t, types.ClubPostsViewCard, clubTags.Entities[0].Club.PostsView, "should have the correct view")
 
 }

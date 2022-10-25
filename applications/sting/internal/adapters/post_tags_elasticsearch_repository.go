@@ -120,19 +120,19 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewTermsQueryFromStrings("category_ids", categoryIds...),
+			NewTermsQueryFromStrings("id", categoryIds...),
 	).
 		Must(elastic.NewTermQuery("_index", CategoryReaderIndex)))
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewTermsQueryFromStrings("character_ids", characterIds...),
+			NewTermsQueryFromStrings("id", characterIds...),
 	).
 		Must(elastic.NewTermQuery("_index", CharacterReaderIndex)))
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewTermsQueryFromStrings("series_ids", seriesIds...),
+			NewTermsQueryFromStrings("id", seriesIds...),
 	).
 		Must(elastic.NewTermQuery("_index", SeriesReaderIndex)))
 
