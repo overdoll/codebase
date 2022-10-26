@@ -25,7 +25,6 @@ export default function CarouselGrid (props: Props): JSX.Element {
         justify='center'
         w='100%'
         h='100%'
-        px={1}
       >
         <Grid
           h='50px'

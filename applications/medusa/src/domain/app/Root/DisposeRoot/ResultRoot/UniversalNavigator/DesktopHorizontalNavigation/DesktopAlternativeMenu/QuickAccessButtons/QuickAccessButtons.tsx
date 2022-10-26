@@ -1,25 +1,18 @@
 import { graphql } from 'react-relay'
-import { Box, Flex } from '@chakra-ui/react'
-import HorizontalNavigationButton
-  from '@//:modules/content/Navigation/HorizontalNavigation/HorizontalNavigationButton/HorizontalNavigationButton'
 import { QuickAccessButtonsQuery } from '@//:artifacts/QuickAccessButtonsQuery.graphql'
 import { Trans } from '@lingui/macro'
 import { useLazyLoadQuery } from 'react-relay/hooks'
-import { FeedMenu, HeartFull } from '@//:assets/icons'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import React from 'react'
 import LinkButton from '@//:modules/content/ThemeComponents/LinkButton/LinkButton'
 
 const Query = graphql`
   query QuickAccessButtonsQuery {
     viewer {
-      ...AccountIconFragment
+      clubsCount
       clubs(first: 1) @connection(key: "CreateClubListener_clubs") {
         edges {
           node {
-            name
             slug
-            ...ClubIconFragment
           }
         }
       }
@@ -33,38 +26,53 @@ export default function QuickAccessButtons (): JSX.Element {
 
   if (data.viewer == null) return <></>
 
-  if (data.viewer?.clubs?.edges != null && data?.viewer?.clubs?.edges.length > 0) {
+  if (data.viewer?.clubs?.edges != null) {
+    if (data.viewer.clubsCount < 1 || data?.viewer?.clubs?.edges.length < 1 || data?.viewer?.clubs == null) {
+      return (
+        <LinkButton
+          ml={1}
+          borderRadius='lg'
+          colorScheme='primary'
+          href='/clubs/create-club'
+        >
+          <Trans>
+            Create Club
+          </Trans>
+        </LinkButton>
+      )
+    }
+
     const selectedClub = data.viewer?.clubs.edges[0].node
 
     return (
-      <Box p={2}>
-        <HorizontalNavigationButton
-          icon={FeedMenu}
-          href={{
-            pathname: '/club/[slug]/home',
-            query: { slug: selectedClub.slug }
-          }}
-          label={selectedClub.name}
-        >
-          <Flex
-            h='100%'
-            align='center'
-            justify='center'
-          >
-            <ClubIcon size='md' clubQuery={selectedClub} />
-          </Flex>
-        </HorizontalNavigationButton>
-      </Box>
+      <LinkButton
+        ml={1}
+        borderRadius='lg'
+        colorScheme='primary'
+        href={{
+          pathname: '/club/[slug]/create-post',
+          query: { slug: selectedClub.slug }
+        }}
+      >
+        <Trans>
+          Create Post
+        </Trans>
+      </LinkButton>
     )
   }
 
   if (data.viewer.hasClubSupporterSubscription) {
     return (
-      <HorizontalNavigationButton
-        icon={HeartFull}
+      <LinkButton
+        ml={1}
+        borderRadius='lg'
+        colorScheme='orange'
         href='/likes'
-        label={<Trans>Likes</Trans>}
-      />
+      >
+        <Trans>
+          My Likes
+        </Trans>
+      </LinkButton>
     )
   }
 

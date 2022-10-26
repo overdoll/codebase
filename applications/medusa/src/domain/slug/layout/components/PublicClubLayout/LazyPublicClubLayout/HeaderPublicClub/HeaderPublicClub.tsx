@@ -37,7 +37,7 @@ export default function HeaderPublicClub (props: Props): JSX.Element {
 
   return (
     <Stack spacing={2}>
-      <HStack justify='space-between'>
+      <HStack align='flex-start' justify='space-between'>
         <Stack spacing={2}>
           <Heading letterSpacing='wider' color='gray.00' fontSize='4xl' fontWeight='bold' noOfLines={2}>
             {clubData.name}
