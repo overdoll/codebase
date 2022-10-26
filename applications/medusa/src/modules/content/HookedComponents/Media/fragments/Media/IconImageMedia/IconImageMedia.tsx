@@ -25,7 +25,7 @@ const Fragment = graphql`
   }
 `
 
-export type IconSizes = 'sm' | 'md' | 'lg' | 'xl'
+export type IconSizes = 'sm' | 'md' | 'lg' | 'xl' | '2xl'
 
 interface Props {
   imageMediaQuery: IconImageMediaFragment$key

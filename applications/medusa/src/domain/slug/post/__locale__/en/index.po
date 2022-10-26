@@ -37,6 +37,10 @@ msgstr ""
 msgid "Like this post"
 msgstr ""
 
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:82
+msgid "Recommended content"
+msgstr ""
+
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/CopyLinkPublicPost/CopyLinkPublicPost.tsx:48
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareDiscordButton/PostShareDiscordButton.tsx:54
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/DescriptionPublicPost/RepostPublicPost/SocialRepostPublicPost/PostShareRedditButton/PostShareRedditButton.tsx:54
@@ -53,18 +57,18 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/ContainerPublicPost.tsx:82
-msgid "Similar content"
-msgstr ""
+#~ msgid "Similar content"
+#~ msgstr ""
 
 #: src/domain/slug/post/RootPublicPost/PublicPost/PublicPost.tsx:116
 #~ msgid "Suggested Posts"
 #~ msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/BannerPublicPost/BannerPublicPost.tsx:62
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/BannerPublicPost/BannerPublicPost.tsx:56
 msgid "This post is archived. Only you can see it."
 msgstr ""
 
-#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/BannerPublicPost/BannerPublicPost.tsx:51
+#: src/domain/slug/post/RootPublicPost/DisposePublicPost/ResultPublicPost/MetaPublicPost/ContainerPublicPost/BannerPublicPost/BannerPublicPost.tsx:45
 msgid "This post is not published. Only you can see it."
 msgstr ""
 

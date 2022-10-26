@@ -2,7 +2,7 @@ import { Center, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import NotFoundFooter from '../NotFoundFooter/NotFoundFooter'
 import RootPublicClubRichObject
-  from '../../../../../domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/EmptyPublicClub/RootPublicClubRichObject/RootPublicClubRichObject'
+  from '../../../../../domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/EmptyPublicClub/RootPublicClubRichObject/RootPublicClubRichObject'
 
 export default function NotFoundClub (): JSX.Element {
   return (

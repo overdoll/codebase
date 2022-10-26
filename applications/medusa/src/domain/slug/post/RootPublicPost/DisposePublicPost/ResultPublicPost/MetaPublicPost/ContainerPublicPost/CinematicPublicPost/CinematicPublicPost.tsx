@@ -2,7 +2,7 @@ import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { CinematicPublicPostFragment$key } from '@//:artifacts/CinematicPublicPostFragment.graphql'
 import { CinematicContent } from '@//:modules/content/HookedComponents/Post'
-import MemoKey from '@//:modules/content/HookedComponents/Post/components/VerticalPaginationScroller/MemoKey/MemoKey'
+import MemoKey from '@//:modules/content/HookedComponents/Post/components/PaginationScroller/MemoKey/MemoKey'
 
 interface Props {
   postQuery: CinematicPublicPostFragment$key

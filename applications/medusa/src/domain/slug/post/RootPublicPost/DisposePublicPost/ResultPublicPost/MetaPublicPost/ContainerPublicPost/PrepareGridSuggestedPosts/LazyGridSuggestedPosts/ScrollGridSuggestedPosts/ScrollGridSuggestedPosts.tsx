@@ -1,9 +1,9 @@
 import type { ScrollGridSuggestedPostsFragment$key } from '@//:artifacts/ScrollGridSuggestedPostsFragment.graphql'
 import { graphql, usePaginationFragment } from 'react-relay'
-import { LazySuggestedPostsQuery } from '@//:artifacts/LazySuggestedPostsQuery.graphql'
+import { LazyGridSuggestedPostsQuery } from '@//:artifacts/LazyGridSuggestedPostsQuery.graphql'
 import React from 'react'
 import GridPaginationScroller
-  from '@//:modules/content/HookedComponents/Post/components/VerticalPaginationScroller/GridPaginationScroller/GridPaginationScroller'
+  from '@//:modules/content/HookedComponents/Post/components/PaginationScroller/GridPaginationScroller/GridPaginationScroller'
 
 interface Props {
   postQuery: ScrollGridSuggestedPostsFragment$key
@@ -12,7 +12,7 @@ interface Props {
 const Fragment = graphql`
   fragment ScrollGridSuggestedPostsFragment on Post
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 8}
+    first: {type: Int, defaultValue: 6}
     after: {type: String}
   )
   @refetchable(queryName: "SuggestedPostsGridPaginationQuery" ) {
@@ -36,7 +36,7 @@ export default function ScrollGridSuggestedPosts (props: Props): JSX.Element {
     loadNext,
     hasNext,
     isLoadingNext
-  } = usePaginationFragment<LazySuggestedPostsQuery, any>(
+  } = usePaginationFragment<LazyGridSuggestedPostsQuery, any>(
     Fragment,
     postQuery
   )

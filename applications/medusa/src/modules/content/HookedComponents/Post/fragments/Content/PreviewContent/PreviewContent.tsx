@@ -28,6 +28,8 @@ const PostFragment = graphql`
   }
 `
 
+export const PREVIEW_LIMIT = 5
+
 export default function PreviewContent (props: Props): JSX.Element {
   const {
     postQuery,

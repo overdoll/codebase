@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<bec4f9d5a2dc6d5b9b9a16da8259b303>>
- * @relayHash 3103909366dd8f5f97be75353391dd8a
+ * @generated SignedSource<<84fe441a2e2399c3bc41a3084295cbcc>>
+ * @relayHash 4ca99995a4eafe2893c9291a5d6139a8
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 3103909366dd8f5f97be75353391dd8a
+// @relayRequestID 4ca99995a4eafe2893c9291a5d6139a8
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -324,6 +324,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v0/*: any*/),
+                      (v1/*: any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -589,8 +590,7 @@ return {
                           (v0/*: any*/)
                         ],
                         "storageKey": null
-                      },
-                      (v1/*: any*/)
+                      }
                     ],
                     "storageKey": null
                   },
@@ -648,7 +648,7 @@ return {
     ]
   },
   "params": {
-    "id": "3103909366dd8f5f97be75353391dd8a",
+    "id": "4ca99995a4eafe2893c9291a5d6139a8",
     "metadata": {},
     "name": "ResultFeedQuery",
     "operationKind": "query",

@@ -42,7 +42,7 @@ describe('Lock/Unlock Account', () => {
      * Attempt to unlock account as owner and see that you can't
      */
     cy.joinWithNewAccount(username)
-    cy.visit('/')
+    cy.visit('/settings/profile')
     clickOnButton('View Details')
     cy.findByText(/Locked for/iu).should('be.visible')
   })

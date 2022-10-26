@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b3449e0ddff3479e05cfa26f04fc417f>>
+ * @generated SignedSource<<e72395d9b6d790e73a1bd60fdee98622>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,8 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubJoinButtonFragment$data = {
-  readonly viewerIsOwner: boolean;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubJoinLoggedOutButtonFragment" | "ClubJoinWrapperFragment">;
+  readonly id: string;
+  readonly name: string;
+  readonly slug: string;
   readonly " $fragmentType": "ClubJoinButtonFragment";
 };
 export type ClubJoinButtonFragment$key = {
@@ -30,24 +31,28 @@ const node: ReaderFragment = {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "viewerIsOwner",
+      "name": "id",
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "ClubJoinLoggedOutButtonFragment"
+      "kind": "ScalarField",
+      "name": "name",
+      "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "ClubJoinWrapperFragment"
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "dd17f0ea0f331cd06dec20be7f36725d";
+(node as any).hash = "184c76bc0cfb4422d1bf06c82a9b5b87";
 
 export default node;

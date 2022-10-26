@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<faa630092fbb6993efe444e7548fb901>>
+ * @generated SignedSource<<bff673d63ec263abb5f6d0bce1bca052>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PreviewCarouselFragment$data = {
+  readonly club: {
+    readonly slug: string;
+  };
   readonly content: ReadonlyArray<{
     readonly id: string;
     readonly isSupporterOnly: boolean;
@@ -19,6 +22,7 @@ export type PreviewCarouselFragment$data = {
     };
   }>;
   readonly id: string;
+  readonly reference: string;
   readonly " $fragmentType": "PreviewCarouselFragment";
 };
 export type PreviewCarouselFragment$key = {
@@ -41,6 +45,31 @@ return {
   "name": "PreviewCarouselFragment",
   "selections": [
     (v0/*: any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -82,6 +111,6 @@ return {
 };
 })();
 
-(node as any).hash = "3ba454b7fed98a7175f0e462e185c74e";
+(node as any).hash = "b999db65b0e51e1888a0c48678d36823";
 
 export default node;

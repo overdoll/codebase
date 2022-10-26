@@ -1,9 +1,8 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollSearchCharacterFragment$key } from '@//:artifacts/ScrollSearchCharacterFragment.graphql'
 import { ScrollSearchCharacterAccountFragment$key } from '@//:artifacts/ScrollSearchCharacterAccountFragment.graphql'
-
 import { ResultSearchCharacterQuery } from '@//:artifacts/ResultSearchCharacterQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 import { Stack } from '@chakra-ui/react'
 import { useFragment } from 'react-relay/hooks'
 import PostsFilters from '@//:modules/content/HookedComponents/Filters/fragments/PostsFilters/PostsFilters'
@@ -29,7 +28,7 @@ const Fragment = graphql`
     @connection (key: "SearchCharacterPosts_posts") {
       edges {
         node {
-          ...PreviewPostFragment
+          id
         }
       }
       ...VerticalPaginationScrollerFragment
@@ -70,15 +69,7 @@ export default function ScrollSearchCharacter (props: Props): JSX.Element {
         hasNext={hasNext}
         loadNext={loadNext}
         isLoadingNext={isLoadingNext}
-      >
-        {({
-          index
-        }) => (
-          <PreviewPost
-            postQuery={data?.posts?.edges?.[index]?.node}
-          />
-        )}
-      </VerticalPaginationScroller>
+      />
     </Stack>
   )
 }

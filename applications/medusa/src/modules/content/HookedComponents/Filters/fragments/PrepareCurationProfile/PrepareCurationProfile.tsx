@@ -2,16 +2,15 @@ import { graphql, useFragment } from 'react-relay/hooks'
 import type { PrepareCurationProfileFragment$key } from '@//:artifacts/PrepareCurationProfileFragment.graphql'
 import type { PrepareCurationProfileRootFragment$key } from '@//:artifacts/PrepareCurationProfileRootFragment.graphql'
 
-import { ObjectResolver, SequenceProvider, useSequence, ValueResolver } from '../../../Sequence'
+import { ObjectResolver, SequenceProvider, useSequence } from '../../../Sequence'
 import { FlowBuilder, FlowBuilderBody, FlowBuilderFooter } from '../../../../PageLayout'
-import { CategoryIdentifier, ClubMembers, UserHuman } from '@//:assets/icons'
+import { CategoryIdentifier, ClubMembers } from '@//:assets/icons'
 import AudiencePreference, { AudiencePreferenceProp } from '../AudiencePreference/AudiencePreference'
 import CurationProfileFooter from './CurationProfileFooter/CurationProfileFooter'
 import DiscoverClubsList from '../DiscoverClubsList/DiscoverClubsList'
 import CurationProfileHeader from './CurationProfileHeader/CurationProfileHeader'
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import DateOfBirthPreference from '../DateOfBirthPreference/DateOfBirthPreference'
 
 interface Props {
   accountQuery: PrepareCurationProfileFragment$key
@@ -20,7 +19,6 @@ interface Props {
 }
 
 export interface PrepareCurationProfileSequenceProps extends AudiencePreferenceProp {
-  dateOfBirth: string | null
 }
 
 const AccountFragment = graphql`
@@ -31,9 +29,6 @@ const AccountFragment = graphql`
           id
           title
         }
-      }
-      dateOfBirth {
-        completed
       }
     }
     clubMembershipsCount
@@ -66,28 +61,16 @@ export default function PrepareCurationProfile (props: Props): JSX.Element {
 
   const methods = useSequence<PrepareCurationProfileSequenceProps>({
     defaultValue: {
-      audience: defaultAudience,
-      dateOfBirth: null
+      audience: defaultAudience
     },
     resolver: {
-      dateOfBirth: ValueResolver(),
       audience: ObjectResolver()
     }
   })
 
-  const steps = ['dateOfBirth', 'audience', 'clubs']
+  const steps = ['audience', 'clubs']
 
   const components = {
-    dateOfBirth: (
-      <Stack spacing={4}>
-        <Heading color='gray.00' fontSize='xl'>
-          <Trans>
-            Enter your birthday
-          </Trans>
-        </Heading>
-        <DateOfBirthPreference />
-      </Stack>
-    ),
     audience: <AudiencePreference audienceState={methods.state.audience} dispatch={methods.dispatch} />,
     clubs: (
       <Stack spacing={4}>
@@ -102,10 +85,6 @@ export default function PrepareCurationProfile (props: Props): JSX.Element {
   }
 
   const headers = {
-    dateOfBirth: {
-      title: 'Your Age',
-      icon: UserHuman
-    },
     audience: {
       title: 'Select Audiences',
       icon: ClubMembers
@@ -119,7 +98,7 @@ export default function PrepareCurationProfile (props: Props): JSX.Element {
   return (
     <SequenceProvider {...methods}>
       <FlowBuilder
-        defaultStep={data.curationProfile.dateOfBirth.completed ? 'audience' : 'dateOfBirth'}
+        defaultStep='audience'
         colorScheme='orange'
         stepsArray={steps}
         stepsComponents={components}

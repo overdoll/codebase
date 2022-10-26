@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c44a9414e19bdcb8127134d289022144>>
+ * @generated SignedSource<<92a60f65f80d714a8fde4f1fda850ace>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,9 +18,6 @@ export type PrepareCurationProfileFragment$data = {
         readonly id: string;
         readonly title: string;
       }>;
-    };
-    readonly dateOfBirth: {
-      readonly completed: boolean;
     };
   };
   readonly " $fragmentSpreads": FragmentRefs<"CurationProfileFooterFragment">;
@@ -80,24 +77,6 @@ const node: ReaderFragment = {
             }
           ],
           "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "concreteType": "DateOfBirthCurationProfile",
-          "kind": "LinkedField",
-          "name": "dateOfBirth",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "completed",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
         }
       ],
       "storageKey": null
@@ -119,6 +98,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "317480142cca8b030cee787e5cf34192";
+(node as any).hash = "46a8033710954e822f5a2a2c97f2dba9";
 
 export default node;
