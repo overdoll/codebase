@@ -61,6 +61,7 @@ var postTable = table.New(table.Metadata{
 		"id",
 		"state",
 		"likes",
+		"views",
 		"likes_last_update_id",
 		"supporter_only_status",
 		"content_resource_ids",
@@ -87,6 +88,7 @@ type posts struct {
 	Id                           string            `db:"id"`
 	State                        string            `db:"state"`
 	Likes                        int               `db:"likes"`
+	Views                        int               `db:"views"`
 	Description                  map[string]string `db:"description"`
 	LikesLastUpdateId            gocql.UUID        `db:"likes_last_update_id"`
 	SupporterOnlyStatus          string            `db:"supporter_only_status"`
@@ -299,6 +301,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.State,
 		postPending.SupporterOnlyStatus,
 		postPending.Likes,
+		postPending.Views,
 		postPending.ContributorId,
 		postPending.ContentMediaIds,
 		finalMedia,

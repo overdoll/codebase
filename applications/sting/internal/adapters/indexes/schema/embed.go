@@ -25,6 +25,9 @@ var PostsSchema string
 //go:embed search_history.json
 var SearchHistorySchema string
 
+//go:embed account_actions.json
+var AccoountActionsSchema string
+
 //go:embed series.json
 var SeriesSchema string
 

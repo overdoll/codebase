@@ -10,21 +10,26 @@ import (
 	"strings"
 )
 
-func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cursor *paging.Cursor, clubId string) ([]interface{}, error) {
+func (r PostsCassandraElasticsearchRepository) getTags(ctx context.Context, cursor *paging.Cursor, clubId *string) ([]interface{}, error) {
 
 	size := cursor.GetLimit()
 	if size == 0 {
 		size = 10
 	}
 
-	response, err := r.client.
+	builder := r.client.
 		Search().
 		Index(PostReaderIndex).
-		Size(0).
-		Query(elastic.NewBoolQuery().Must(elastic.NewTermsQuery("club_id", clubId))).
-		Aggregation("character_ids", elastic.NewTermsAggregation().Size(size).Field("character_ids").Meta(map[string]interface{}{"type": "character_ids"})).
-		Aggregation("series_ids", elastic.NewTermsAggregation().Size(size).Field("series_ids").Meta(map[string]interface{}{"type": "series_ids"})).
-		Aggregation("category_ids", elastic.NewTermsAggregation().Size(size).Field("category_ids").Meta(map[string]interface{}{"type": "category_ids"})).
+		Size(0)
+
+	if clubId != nil {
+		builder.Query(elastic.NewBoolQuery().Must(elastic.NewTermsQuery("club_id", clubId)))
+	}
+
+	response, err := builder.
+		Aggregation("character_ids", elastic.NewTermsAggregation().Size(20).Field("character_ids").Meta(map[string]interface{}{"type": "character_ids"})).
+		Aggregation("series_ids", elastic.NewTermsAggregation().Size(20).Field("series_ids").Meta(map[string]interface{}{"type": "series_ids"})).
+		Aggregation("category_ids", elastic.NewTermsAggregation().Size(20).Field("category_ids").Meta(map[string]interface{}{"type": "category_ids"})).
 		Pretty(true).Do(ctx)
 
 	if err != nil {
@@ -71,6 +76,18 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 	var seriesIds []string
 	var characterIds []string
 
+	var curseAll []interface{}
+	var curse string
+
+	if cursor.After() != nil {
+		if err := cursor.After().Decode(&curseAll); err != nil {
+			return nil, err
+		}
+		curse = curseAll[0].(string)
+	}
+
+	var foundCursor bool
+
 	for i := 0; i < size; i++ {
 		if i == len(aggregations)-1 {
 			break
@@ -78,6 +95,16 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 
 		metaType := aggregations[i].meta["type"].(string)
 		targetKey := aggregations[i].keyItem.Key.(string)
+
+		// make sure we reach our cursor
+		if curse != "" {
+			if targetKey == curse {
+				foundCursor = true
+			}
+			if !foundCursor {
+				continue
+			}
+		}
 
 		if metaType == "character_ids" {
 			characterIds = append(characterIds, targetKey)
@@ -94,7 +121,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 
 	var results []interface{}
 
-	builder := elastic.NewSearchSource().
+	sourceBuilder := elastic.NewSearchSource().
 		IndexBoosts(
 			elastic.IndexBoost{
 				Index: CategoryReaderIndex,
@@ -114,7 +141,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 			},
 		)
 
-	builder.Size(size)
+	sourceBuilder.Size(size)
 
 	query := elastic.NewBoolQuery()
 
@@ -138,7 +165,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 
 	builder.Query(query)
 
-	data, err := r.client.Search().SearchSource(builder).Pretty(true).Do(ctx)
+	data, err := r.client.Search().SearchSource(sourceBuilder).Pretty(true).Do(ctx)
 
 	if err != nil {
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search tags")
@@ -147,7 +174,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 	for _, hit := range data.Hits.Hits {
 
 		if strings.Contains(hit.Index, SeriesIndexName) {
-			result, err := r.unmarshalSeriesDocument(ctx, hit.Source, nil)
+			result, err := r.unmarshalSeriesDocument(ctx, hit.Source, []interface{}{hit.Id})
 
 			if err != nil {
 				return nil, err
@@ -157,7 +184,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 		}
 
 		if strings.Contains(hit.Index, CharacterIndexName) {
-			result, err := r.unmarshalCharacterDocument(ctx, hit.Source, nil)
+			result, err := r.unmarshalCharacterDocument(ctx, hit.Source, []interface{}{hit.Id})
 
 			if err != nil {
 				return nil, err
@@ -167,7 +194,7 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 		}
 
 		if strings.Contains(hit.Index, CategoryIndexName) {
-			result, err := r.unmarshalCategoryDocument(ctx, hit.Source, nil)
+			result, err := r.unmarshalCategoryDocument(ctx, hit.Source, []interface{}{hit.Id})
 
 			if err != nil {
 				return nil, err
@@ -178,4 +205,8 @@ func (r PostsCassandraElasticsearchRepository) ClubTags(ctx context.Context, cur
 	}
 
 	return results, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) Tags(ctx context.Context, cursor *paging.Cursor, clubId *string) ([]interface{}, error) {
+	return r.getTags(ctx, cursor, clubId)
 }

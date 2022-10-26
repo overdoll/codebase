@@ -149,7 +149,7 @@ func (r AccountResolver) CurationProfile(ctx context.Context, obj *types.Account
 	return types.MarshalCurationProfileToGraphQL(ctx, profile), nil
 }
 
-func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
 		return nil, err
@@ -183,6 +183,7 @@ func (r AccountResolver) Posts(ctx context.Context, obj *types.Account, after *s
 		SeriesSlugs:         seriesSlugs,
 		CategorySlugs:       categorySlugs,
 		CharacterSlugs:      characterSlugs,
+		ClubCharacterSlugs:  clubCharacterSlugs,
 		SortBy:              sortBy.String(),
 		State:               stateModified,
 		SupporterOnlyStatus: supporterOnly,

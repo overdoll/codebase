@@ -174,6 +174,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Lik
 		CreatedAt:               result.CreatedAt(),
 		PostedAt:                result.PostedAt(),
 		Likes:                   result.Likes(),
+		Views:                   result.Views(),
 	}
 }
 
@@ -1118,19 +1119,19 @@ func MarshalTagToGraphQLConnection(ctx context.Context, results []interface{}, c
 		switch v := result.(type) {
 		case *post.Category:
 			clubs = append(clubs, &TagEdge{
-				Cursor: "U2VhcmNoOjo=",
+				Cursor: v.Cursor(),
 				Node:   MarshalCategoryToGraphQL(ctx, v),
 			})
 			break
 		case *post.Character:
 			clubs = append(clubs, &TagEdge{
-				Cursor: "U2VhcmNoOjo=",
+				Cursor: v.Cursor(),
 				Node:   MarshalCharacterToGraphQL(ctx, v),
 			})
 			break
 		case *post.Series:
 			clubs = append(clubs, &TagEdge{
-				Cursor: "U2VhcmNoOjo=",
+				Cursor: v.Cursor(),
 				Node:   MarshalSeriesToGraphQL(ctx, v),
 			})
 			break

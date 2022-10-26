@@ -63,6 +63,10 @@ func registerIndexes() cache.IndexRegistry {
 		return nil
 	})
 
+	reg.Add(adapters.AccountActionsIndexName, schema.AccoountActionsSchema, func(ctx context.Context) error {
+		return nil
+	})
+
 	return reg
 }
 

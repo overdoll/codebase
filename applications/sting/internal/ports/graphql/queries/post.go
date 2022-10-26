@@ -54,7 +54,27 @@ func (r *QueryResolver) PostsFeed(ctx context.Context, after *string, before *st
 	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r *QueryResolver) PostsRecommendations(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error) {
+
+	cursor, err := paging.NewCursor(after, before, first, last)
+
+	if err != nil {
+		return nil, gqlerror.Errorf(err.Error())
+	}
+
+	results, err := r.App.Queries.PostsRecommendations.Handle(ctx, query.PostsRecommendations{
+		Principal: principal.FromContext(ctx),
+		Cursor:    cursor,
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
+}
+
+func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -80,6 +100,7 @@ func (r *QueryResolver) Posts(ctx context.Context, after *string, before *string
 		ContributorId:       nil,
 		SupporterOnlyStatus: supporterOnly,
 		AudienceSlugs:       audienceSlugs,
+		ClubCharacterSlugs:  clubCharacterSlugs,
 		CategorySlugs:       categorySlugs,
 		CharacterSlugs:      characterSlugs,
 		SeriesSlugs:         seriesSlugs,

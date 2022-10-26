@@ -47,9 +47,11 @@ func (r ClubResolver) Tags(ctx context.Context, obj *types.Club, after *string, 
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.ClubTags.Handle(ctx, query.ClubTags{
+	clubId := obj.ID.GetID()
+
+	results, err := r.App.Queries.Tags.Handle(ctx, query.Tags{
 		Cursor: cursor,
-		ClubId: obj.ID.GetID(),
+		ClubId: &clubId,
 	})
 
 	if err != nil {
@@ -93,7 +95,7 @@ func (r ClubResolver) Characters(ctx context.Context, obj *types.Club, after *st
 		Slugs:     slugs,
 		SortBy:    sortBy.String(),
 		Name:      name,
-		ClubId:    &clubId,
+		ClubSlug:  &clubId,
 	})
 
 	if err != nil {
@@ -103,7 +105,7 @@ func (r ClubResolver) Characters(ctx context.Context, obj *types.Club, after *st
 	return types.MarshalCharacterToGraphQLConnection(ctx, results, cursor), nil
 }
 
-func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -132,6 +134,7 @@ func (r ClubResolver) Posts(ctx context.Context, obj *types.Club, after *string,
 		AudienceSlugs:       audienceSlugs,
 		CategorySlugs:       categorySlugs,
 		CharacterSlugs:      characterSlugs,
+		ClubCharacterSlugs:  clubCharacterSlugs,
 		SeriesSlugs:         seriesSlugs,
 		State:               stateModified,
 		SortBy:              sortBy.String(),

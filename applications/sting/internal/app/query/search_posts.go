@@ -17,10 +17,11 @@ type SearchPosts struct {
 
 	CharacterIds []string
 
-	AudienceSlugs  []string
-	CategorySlugs  []string
-	CharacterSlugs []string
-	SeriesSlugs    []string
+	AudienceSlugs      []string
+	CategorySlugs      []string
+	CharacterSlugs     []string
+	SeriesSlugs        []string
+	ClubCharacterSlugs []string
 
 	SupporterOnlyStatus []string
 	State               *string
@@ -64,8 +65,27 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		}
 	}
 
-	var seriesIds []string
 	var characterIds []string
+	var clubCharacterIds []string
+
+	if len(query.ClubCharacterSlugs) > 0 {
+		// not a series character, search by a club slug
+		clubCharacterIds, err = h.cr.GetClubIdsFromSlugs(ctx, query.SeriesSlugs)
+
+		if err != nil {
+			return nil, err
+		}
+
+		if len(query.CharacterSlugs) > 0 && len(clubCharacterIds) > 0 {
+			characterIds, err = h.pr.GetCharacterIdsFromSlugs(ctx, query.CharacterSlugs, clubCharacterIds)
+
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	var seriesIds []string
 
 	if len(query.SeriesSlugs) > 0 {
 
@@ -75,16 +95,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 			return nil, err
 		}
 
-		// not a series character, search by a club slug
-		if len(seriesIds) == 0 {
-			seriesIds, err = h.cr.GetClubIdsFromSlugs(ctx, query.SeriesSlugs)
-
-			if err != nil {
-				return nil, err
-			}
-		}
-
-		if len(query.CharacterSlugs) > 0 {
+		if len(query.CharacterSlugs) > 0 && len(seriesIds) > 0 {
 
 			characterIds, err = h.pr.GetCharacterIdsFromSlugs(ctx, query.CharacterSlugs, seriesIds)
 
@@ -119,6 +130,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 		categoryIds,
 		characterIds,
 		seriesIds,
+		clubCharacterIds,
 		query.ShowSuspendedClubs,
 		query.Seed,
 	)

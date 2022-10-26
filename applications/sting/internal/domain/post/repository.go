@@ -123,6 +123,7 @@ type Repository interface {
 	UpdateCategoryTotalPostsOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 	UpdateCategoryTotalLikesOperator(ctx context.Context, id string, updateFn func(category *Category) error) (*Category, error)
 
+	PostsRecommendations(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
 	PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *Feed) ([]*Post, error)
 	ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*Post, error)
 	SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, post *Post, filters *Feed) ([]*Post, error)
@@ -162,5 +163,5 @@ type Repository interface {
 	GenerateCuratedPostIds(ctx context.Context, accountId string, digest *club.AccountClubDigest, audienceIds []string) ([]string, error)
 	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string, seed int64) ([]*Post, error)
 
-	ClubTags(ctx context.Context, cursor *paging.Cursor, clubId string) ([]interface{}, error)
+	Tags(ctx context.Context, cursor *paging.Cursor, clubId *string) ([]interface{}, error)
 }

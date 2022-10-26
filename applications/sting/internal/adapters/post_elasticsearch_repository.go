@@ -34,6 +34,7 @@ type postDocument struct {
 	ContentSupporterOnly         map[string]bool   `json:"content_supporter_only"`
 	ContentSupporterOnlyMediaIds map[string]string `json:"content_supporter_only_resource_ids"`
 	Likes                        int               `json:"likes"`
+	Views                        int               `json:"views"`
 	ContributorId                string            `json:"contributor_id"`
 	ClubId                       string            `json:"club_id"`
 	AudienceId                   string            `json:"audience_id"`
@@ -117,6 +118,7 @@ func unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []i
 		pst.State,
 		pst.SupporterOnlyStatus,
 		pst.Likes,
+		pst.Views,
 		pst.ContributorId,
 		pst.ContentMediaIds,
 		finalMedia,
@@ -514,113 +516,6 @@ func (r PostsCassandraElasticsearchRepository) GetPostsByIds(ctx context.Context
 	return posts, nil
 }
 
-func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, pst *post.Post, filters *post.Feed) ([]*post.Post, error) {
-
-	if !pst.IsPublished() {
-		return nil, nil
-	}
-
-	builder := r.client.Search().
-		Index(PostReaderIndex)
-
-	if cursor == nil {
-		return nil, paging.ErrCursorNotPresent
-	}
-
-	if err := cursor.BuildElasticsearch(builder, "_score", "id", false); err != nil {
-		return nil, err
-	}
-
-	query := elastic.NewBoolQuery()
-
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermsQueryFromStrings("category_ids", pst.CategoryIds()...).Boost(6),
-			),
-	)
-
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermsQueryFromStrings("character_ids", pst.CharacterIds()...).Boost(5),
-			),
-	)
-
-	query.Should(
-		elastic.
-			NewBoolQuery().
-			Should(
-				elastic.NewTermQuery("audience_id", *pst.AudienceId()).Boost(3),
-			),
-	)
-
-	seed, err := r.getRandomizerSeed(ctx, "suggestedPostsByPost:"+pst.ID())
-
-	if err != nil {
-		return nil, err
-	}
-
-	query.Must(elastic.NewFunctionScoreQuery().BoostMode("multiply").
-		// add a score func to randomly multiply
-		AddScoreFunc(elastic.NewRandomFunction().Seed(seed)))
-
-	builder.Query(query)
-
-	var filterQueries []elastic.Query
-
-	terminatedClubIds, err := r.getTerminatedClubIds(ctx)
-
-	if err != nil {
-		return nil, err
-	}
-
-	filterQueries = append(filterQueries, elastic.NewBoolQuery().
-		MustNot(elastic.NewTermsQueryFromStrings("club_id", terminatedClubIds...)).
-		MustNot(elastic.NewTermsQueryFromStrings("id", pst.ID())),
-	)
-
-	filterQueries = append(filterQueries, elastic.NewTermQuery("state", post.Published.String()))
-	filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("supporter_only_status", post.None.String(), post.Partial.String()))
-
-	// use curation profile when needed
-	if len(filters.AudienceIds()) > 0 {
-		filterQueries = append(filterQueries, elastic.NewTermsQueryFromStrings("audience_id", filters.AudienceIds()...))
-	}
-
-	query.Filter(filterQueries...)
-
-	builder.Query(query)
-
-	response, err := builder.Pretty(true).Do(ctx)
-
-	if err != nil {
-		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search suggested posts by post")
-	}
-
-	var posts []*post.Post
-
-	for _, hit := range response.Hits.Hits {
-
-		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
-
-		if err != nil {
-			return nil, err
-		}
-
-		posts = append(posts, createdPost)
-	}
-
-	posts, err = r.getRandomPostWeighted(ctx, requester, cursor.GetLimit(), posts, filters.AudienceIds())
-	if err != nil {
-		return nil, err
-	}
-
-	return posts, nil
-}
-
 func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor) ([]*post.Post, error) {
 
 	builder := r.client.Search().
@@ -685,6 +580,10 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 
 	// get some random posts
 	return r.PostsFeed(ctx, requester, cursor, filters)
+}
+
+func (r PostsCassandraElasticsearchRepository) PostsRecommendations(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.Feed) ([]*post.Post, error) {
+	return nil, nil
 }
 
 func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {

@@ -169,6 +169,8 @@ type Queries struct {
 
 	CurationProfileByAccountId query.CurationProfileByAccountIdHandler
 
+	PostsRecommendations query.PostsRecommendationsHandler
+
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler
 	ClubMembersPostsFeed  query.ClubMembersPostsFeedHandler
@@ -205,6 +207,6 @@ type Queries struct {
 
 	HasClubSupporterSubscription query.HasClubSupporterSubscriptionHandler
 
-	ClubTags      query.ClubTagsHandler
+	Tags          query.TagsHandler
 	ClubPostsView query.ClubPostsViewHandler
 }

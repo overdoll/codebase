@@ -47,6 +47,7 @@ type Post struct {
 	postedAt  *time.Time
 
 	likes int
+	views int
 }
 
 func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
@@ -73,7 +74,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int, contributorId string, contentResourceIds []string, contentMedia []*media.Media, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes, views int, contributorId string, contentResourceIds []string, contentMedia []*media.Media, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -123,6 +124,7 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes int,
 		clubId:              clubId,
 		description:         localization.UnmarshalTranslationFromDatabase(description),
 		likes:               likes,
+		views:               views,
 		audienceId:          audienceId,
 		contributorId:       contributorId,
 		content:             content,
@@ -153,6 +155,10 @@ func (p *Post) ClubId() string {
 
 func (p *Post) Likes() int {
 	return p.likes
+}
+
+func (p *Post) Views() int {
+	return p.views
 }
 
 func (p *Post) Description() *localization.Translation {

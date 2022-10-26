@@ -40,6 +40,9 @@ extend type Post {
   """The amount of likes on this post."""
   likes: Int!
 
+  """The amount of times the post has been viewed on the platform."""
+  views: Int!
+
   """Whether or not the viewer liked this post."""
   viewerLiked: PostLike @goField(forceResolver: true)
 }

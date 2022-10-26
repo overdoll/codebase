@@ -77,7 +77,7 @@ type ComplexityRoot struct {
 		HasNonTerminatedClubs        func(childComplexity int) int
 		ID                           func(childComplexity int) int
 		LikedPosts                   func(childComplexity int, after *string, before *string, first *int, last *int) int
-		Posts                        func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
+		Posts                        func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
 	}
 
 	AddCategoryAlternativeTitlePayload struct {
@@ -106,7 +106,7 @@ type ComplexityRoot struct {
 		Banner            func(childComplexity int) int
 		BannerMedia       func(childComplexity int) int
 		ID                func(childComplexity int) int
-		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
 		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Standard          func(childComplexity int) int
@@ -138,7 +138,7 @@ type ComplexityRoot struct {
 		Banner            func(childComplexity int) int
 		BannerMedia       func(childComplexity int) int
 		ID                func(childComplexity int) int
-		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
+		Posts             func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
 		Reference         func(childComplexity int) int
 		Slug              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
@@ -208,7 +208,7 @@ type ComplexityRoot struct {
 		Name                        func(childComplexity int) int
 		NextSupporterPostTime       func(childComplexity int) int
 		Owner                       func(childComplexity int) int
-		Posts                       func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
+		Posts                       func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
 		PostsView                   func(childComplexity int) int
 		Reference                   func(childComplexity int) int
 		Slug                        func(childComplexity int) int
@@ -553,6 +553,7 @@ type ComplexityRoot struct {
 		SuggestedPosts          func(childComplexity int, after *string, before *string, first *int, last *int) int
 		SupporterOnlyStatus     func(childComplexity int) int
 		ViewerLiked             func(childComplexity int) int
+		Views                   func(childComplexity int) int
 	}
 
 	PostConnection struct {
@@ -588,26 +589,28 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Audience           func(childComplexity int, slug string) int
-		Audiences          func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.AudiencesSort) int
-		Categories         func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, excludeEmpty bool, sortBy types.CategoriesSort) int
-		Category           func(childComplexity int, slug string) int
-		Character          func(childComplexity int, slug string, seriesSlug *string, clubSlug *string) int
-		Characters         func(childComplexity int, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug *string, clubSlug *string, name *string, excludeEmpty bool, sortBy types.CharactersSort) int
-		Club               func(childComplexity int, slug string) int
-		Clubs              func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, canSupport *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) int
-		DiscoverClubs      func(childComplexity int, after *string, before *string, first *int, last *int) int
-		GameSessionStatus  func(childComplexity int, reference string) int
-		Post               func(childComplexity int, reference string) int
-		Posts              func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
-		PostsFeed          func(childComplexity int, after *string, before *string, first *int, last *int, seed *string) int
-		Search             func(childComplexity int, after *string, before *string, first *int, last *int, query string) int
-		Serial             func(childComplexity int, slug string) int
-		Series             func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, excludeEmpty bool, sortBy types.SeriesSort) int
-		Topic              func(childComplexity int, slug string) int
-		Topics             func(childComplexity int, after *string, before *string, first *int, last *int) int
-		__resolve__service func(childComplexity int) int
-		__resolve_entities func(childComplexity int, representations []map[string]interface{}) int
+		Audience             func(childComplexity int, slug string) int
+		Audiences            func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, sortBy types.AudiencesSort) int
+		Categories           func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, excludeEmpty bool, sortBy types.CategoriesSort) int
+		Category             func(childComplexity int, slug string) int
+		Character            func(childComplexity int, slug string, seriesSlug *string, clubSlug *string) int
+		Characters           func(childComplexity int, after *string, before *string, first *int, last *int, clubCharacters *bool, slugs []string, seriesSlug *string, clubSlug *string, name *string, excludeEmpty bool, sortBy types.CharactersSort) int
+		Club                 func(childComplexity int, slug string) int
+		Clubs                func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, canSupport *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) int
+		DiscoverClubs        func(childComplexity int, after *string, before *string, first *int, last *int) int
+		GameSessionStatus    func(childComplexity int, reference string) int
+		Post                 func(childComplexity int, reference string) int
+		Posts                func(childComplexity int, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) int
+		PostsFeed            func(childComplexity int, after *string, before *string, first *int, last *int, seed *string) int
+		PostsRecommendations func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Search               func(childComplexity int, after *string, before *string, first *int, last *int, query string) int
+		Serial               func(childComplexity int, slug string) int
+		Series               func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, title *string, excludeEmpty bool, sortBy types.SeriesSort) int
+		Tags                 func(childComplexity int, after *string, before *string, first *int, last *int) int
+		Topic                func(childComplexity int, slug string) int
+		Topics               func(childComplexity int, after *string, before *string, first *int, last *int) int
+		__resolve__service   func(childComplexity int) int
+		__resolve_entities   func(childComplexity int, representations []map[string]interface{}) int
 	}
 
 	RawMedia struct {
@@ -902,13 +905,13 @@ type AccountResolver interface {
 	CuratedPostsFeedData(ctx context.Context, obj *types.Account) (*types.CuratedPostsFeedData, error)
 	CuratedPostsFeedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	ClubMembersPostsFeed(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
-	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
 	LikedPosts(ctx context.Context, obj *types.Account, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 }
 type AudienceResolver interface {
 	Title(ctx context.Context, obj *types.Audience, locale *string) (string, error)
 
-	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Audience, after *string, before *string, first *int, last *int, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type AudienceCurationProfileResolver interface {
 	Audiences(ctx context.Context, obj *types.AudienceCurationProfile) ([]*types.Audience, error)
@@ -917,7 +920,7 @@ type CategoryResolver interface {
 	Title(ctx context.Context, obj *types.Category, locale *string) (string, error)
 
 	Topic(ctx context.Context, obj *types.Category) (*types.Topic, error)
-	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type CategoryCurationProfileResolver interface {
 	Categories(ctx context.Context, obj *types.CategoryCurationProfile) ([]*types.Category, error)
@@ -941,7 +944,7 @@ type ClubResolver interface {
 
 	CharactersCount(ctx context.Context, obj *types.Club) (int, error)
 	Characters(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) (*types.CharacterConnection, error)
-	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, obj *types.Club, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
 }
 type ClubMemberResolver interface {
 	Club(ctx context.Context, obj *types.ClubMember) (*types.Club, error)
@@ -1041,10 +1044,12 @@ type QueryResolver interface {
 	Clubs(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, name *string, suspended *bool, canSupport *bool, terminated *bool, excludeEmpty bool, sortBy types.ClubsSort) (*types.ClubConnection, error)
 	Club(ctx context.Context, slug string) (*types.Club, error)
 	GameSessionStatus(ctx context.Context, reference string) (types.GameSessionStatus, error)
+	Tags(ctx context.Context, after *string, before *string, first *int, last *int) (*types.TagConnection, error)
 	Search(ctx context.Context, after *string, before *string, first *int, last *int, query string) (*types.SearchConnection, error)
+	PostsRecommendations(ctx context.Context, after *string, before *string, first *int, last *int) (*types.PostConnection, error)
 	PostsFeed(ctx context.Context, after *string, before *string, first *int, last *int, seed *string) (*types.PostConnection, error)
 	Post(ctx context.Context, reference string) (*types.Post, error)
-	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
+	Posts(ctx context.Context, after *string, before *string, first *int, last *int, audienceSlugs []string, categorySlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error)
 	Series(ctx context.Context, after *string, before *string, first *int, last *int, slugs []string, title *string, excludeEmpty bool, sortBy types.SeriesSort) (*types.SeriesConnection, error)
 	Serial(ctx context.Context, slug string) (*types.Series, error)
 	Topics(ctx context.Context, after *string, before *string, first *int, last *int) (*types.TopicConnection, error)
@@ -1215,7 +1220,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Account.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["clubCharacterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
 
 	case "AddCategoryAlternativeTitlePayload.category":
 		if e.complexity.AddCategoryAlternativeTitlePayload.Category == nil {
@@ -1297,7 +1302,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Audience.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["clubCharacterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
 
 	case "Audience.reference":
 		if e.complexity.Audience.Reference == nil {
@@ -1447,7 +1452,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Category.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["clubCharacterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
 
 	case "Category.reference":
 		if e.complexity.Category.Reference == nil {
@@ -1820,7 +1825,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Club.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["clubCharacterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
 
 	case "Club.postsView":
 		if e.complexity.Club.PostsView == nil {
@@ -3603,6 +3608,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Post.ViewerLiked(childComplexity), true
 
+	case "Post.views":
+		if e.complexity.Post.Views == nil {
+			break
+		}
+
+		return e.complexity.Post.Views(childComplexity), true
+
 	case "PostConnection.edges":
 		if e.complexity.PostConnection.Edges == nil {
 			break
@@ -3864,7 +3876,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
+		return e.complexity.Query.Posts(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["audienceSlugs"].([]string), args["categorySlugs"].([]string), args["characterSlugs"].([]string), args["seriesSlugs"].([]string), args["clubCharacterSlugs"].([]string), args["state"].(*types.PostState), args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), args["seed"].(*string), args["sortBy"].(types.PostsSort)), true
 
 	case "Query.postsFeed":
 		if e.complexity.Query.PostsFeed == nil {
@@ -3877,6 +3889,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.PostsFeed(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["seed"].(*string)), true
+
+	case "Query.postsRecommendations":
+		if e.complexity.Query.PostsRecommendations == nil {
+			break
+		}
+
+		args, err := ec.field_Query_postsRecommendations_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PostsRecommendations(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Query.search":
 		if e.complexity.Query.Search == nil {
@@ -3913,6 +3937,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Series(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int), args["slugs"].([]string), args["title"].(*string), args["excludeEmpty"].(bool), args["sortBy"].(types.SeriesSort)), true
+
+	case "Query.tags":
+		if e.complexity.Query.Tags == nil {
+			break
+		}
+
+		args, err := ec.field_Query_tags_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Tags(childComplexity, args["after"].(*string), args["before"].(*string), args["first"].(*int), args["last"].(*int)), true
 
 	case "Query.topic":
 		if e.complexity.Query.Topic == nil {
@@ -6863,6 +6899,9 @@ extend type Post {
   """The amount of likes on this post."""
   likes: Int!
 
+  """The amount of times the post has been viewed on the platform."""
+  views: Int!
+
   """Whether or not the viewer liked this post."""
   viewerLiked: PostLike @goField(forceResolver: true)
 }
@@ -7275,6 +7314,9 @@ extend type Account {
     """Search by series slugs."""
     seriesSlugs: [String!]
 
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
+
     """Search by a post state."""
     state: PostState = PUBLISHED
 
@@ -7376,6 +7418,21 @@ extend type Mutation {
 }
 
 extend type Query {
+  """Top tags to perform a search against, grabbing the most popular tags on the platform."""
+  tags(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TagConnection!
+
   """Perform a search across multiple types."""
   search(
     """Returns the elements in the list that come after the specified cursor."""
@@ -7393,6 +7450,29 @@ extend type Query {
     """What you want to search."""
     query: String!
   ): SearchConnection!
+
+  """
+  Post recommendations.
+
+  Post recommendations always generate recommended posts.
+
+  For logged-in users, recommendations will be based on the user's preferences.
+
+  For non logged-in users, recommendations will be based off of global recommendations.
+  """
+  postsRecommendations(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
 
   """Posts feed. The default."""
   postsFeed(
@@ -7444,6 +7524,9 @@ extend type Query {
     """Search by series slugs."""
     seriesSlugs: [String!]
 
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
+
     """Search by a post state."""
     state: PostState = PUBLISHED
 
@@ -7481,6 +7564,9 @@ extend type Category {
 
     """Search by series slugs."""
     seriesSlugs: [String!]
+
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
 
     """Search by a post state."""
     state: PostState = PUBLISHED
@@ -7596,6 +7682,9 @@ extend type Club {
     """Search by series slugs."""
     seriesSlugs: [String!]
 
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
+
     """Search by a post state."""
     state: PostState = PUBLISHED
 
@@ -7633,6 +7722,9 @@ extend type Audience {
 
     """Search by series slugs."""
     seriesSlugs: [String!]
+
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
 
     """Search by a post state."""
     state: PostState = PUBLISHED
@@ -8752,42 +8844,51 @@ func (ec *executionContext) field_Account_posts_args(ctx context.Context, rawArg
 		}
 	}
 	args["seriesSlugs"] = arg7
-	var arg8 *types.PostState
+	var arg8 []string
+	if tmp, ok := rawArgs["clubCharacterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubCharacterSlugs"))
+		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["clubCharacterSlugs"] = arg8
+	var arg9 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg8
-	var arg9 []types.SupporterOnlyStatus
+	args["state"] = arg9
+	var arg10 []types.SupporterOnlyStatus
 	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
-		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
+		arg10, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["supporterOnlyStatus"] = arg9
-	var arg10 *string
+	args["supporterOnlyStatus"] = arg10
+	var arg11 *string
 	if tmp, ok := rawArgs["seed"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg10, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg11, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["seed"] = arg10
-	var arg11 types.PostsSort
+	args["seed"] = arg11
+	var arg12 types.PostsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg11, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		arg12, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg11
+	args["sortBy"] = arg12
 	return args, nil
 }
 
@@ -8857,42 +8958,51 @@ func (ec *executionContext) field_Audience_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["seriesSlugs"] = arg6
-	var arg7 *types.PostState
+	var arg7 []string
+	if tmp, ok := rawArgs["clubCharacterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubCharacterSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["clubCharacterSlugs"] = arg7
+	var arg8 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg7
-	var arg8 []types.SupporterOnlyStatus
+	args["state"] = arg8
+	var arg9 []types.SupporterOnlyStatus
 	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
-		arg8, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
+		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["supporterOnlyStatus"] = arg8
-	var arg9 *string
+	args["supporterOnlyStatus"] = arg9
+	var arg10 *string
 	if tmp, ok := rawArgs["seed"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg9, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg10, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["seed"] = arg9
-	var arg10 types.PostsSort
+	args["seed"] = arg10
+	var arg11 types.PostsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg10, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		arg11, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg10
+	args["sortBy"] = arg11
 	return args, nil
 }
 
@@ -8977,42 +9087,51 @@ func (ec *executionContext) field_Category_posts_args(ctx context.Context, rawAr
 		}
 	}
 	args["seriesSlugs"] = arg6
-	var arg7 *types.PostState
+	var arg7 []string
+	if tmp, ok := rawArgs["clubCharacterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubCharacterSlugs"))
+		arg7, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["clubCharacterSlugs"] = arg7
+	var arg8 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg7, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg7
-	var arg8 []types.SupporterOnlyStatus
+	args["state"] = arg8
+	var arg9 []types.SupporterOnlyStatus
 	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
-		arg8, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
+		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["supporterOnlyStatus"] = arg8
-	var arg9 *string
+	args["supporterOnlyStatus"] = arg9
+	var arg10 *string
 	if tmp, ok := rawArgs["seed"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg9, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg10, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["seed"] = arg9
-	var arg10 types.PostsSort
+	args["seed"] = arg10
+	var arg11 types.PostsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg10, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		arg11, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg10
+	args["sortBy"] = arg11
 	return args, nil
 }
 
@@ -9346,42 +9465,51 @@ func (ec *executionContext) field_Club_posts_args(ctx context.Context, rawArgs m
 		}
 	}
 	args["seriesSlugs"] = arg7
-	var arg8 *types.PostState
+	var arg8 []string
+	if tmp, ok := rawArgs["clubCharacterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubCharacterSlugs"))
+		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["clubCharacterSlugs"] = arg8
+	var arg9 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg8
-	var arg9 []types.SupporterOnlyStatus
+	args["state"] = arg9
+	var arg10 []types.SupporterOnlyStatus
 	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
-		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
+		arg10, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["supporterOnlyStatus"] = arg9
-	var arg10 *string
+	args["supporterOnlyStatus"] = arg10
+	var arg11 *string
 	if tmp, ok := rawArgs["seed"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg10, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg11, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["seed"] = arg10
-	var arg11 types.PostsSort
+	args["seed"] = arg11
+	var arg12 types.PostsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg11, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		arg12, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg11
+	args["sortBy"] = arg12
 	return args, nil
 }
 
@@ -11134,6 +11262,48 @@ func (ec *executionContext) field_Query_postsFeed_args(ctx context.Context, rawA
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_postsRecommendations_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -11209,42 +11379,51 @@ func (ec *executionContext) field_Query_posts_args(ctx context.Context, rawArgs 
 		}
 	}
 	args["seriesSlugs"] = arg7
-	var arg8 *types.PostState
+	var arg8 []string
+	if tmp, ok := rawArgs["clubCharacterSlugs"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("clubCharacterSlugs"))
+		arg8, err = ec.unmarshalOString2ᚕstringᚄ(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["clubCharacterSlugs"] = arg8
+	var arg9 *types.PostState
 	if tmp, ok := rawArgs["state"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("state"))
-		arg8, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
+		arg9, err = ec.unmarshalOPostState2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostState(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["state"] = arg8
-	var arg9 []types.SupporterOnlyStatus
+	args["state"] = arg9
+	var arg10 []types.SupporterOnlyStatus
 	if tmp, ok := rawArgs["supporterOnlyStatus"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("supporterOnlyStatus"))
-		arg9, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
+		arg10, err = ec.unmarshalOSupporterOnlyStatus2ᚕoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐSupporterOnlyStatusᚄ(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["supporterOnlyStatus"] = arg9
-	var arg10 *string
+	args["supporterOnlyStatus"] = arg10
+	var arg11 *string
 	if tmp, ok := rawArgs["seed"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("seed"))
-		arg10, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		arg11, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["seed"] = arg10
-	var arg11 types.PostsSort
+	args["seed"] = arg11
+	var arg12 types.PostsSort
 	if tmp, ok := rawArgs["sortBy"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sortBy"))
-		arg11, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
+		arg12, err = ec.unmarshalNPostsSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostsSort(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["sortBy"] = arg11
+	args["sortBy"] = arg12
 	return args, nil
 }
 
@@ -11389,6 +11568,48 @@ func (ec *executionContext) field_Query_series_args(ctx context.Context, rawArgs
 		}
 	}
 	args["sortBy"] = arg7
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_tags_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["after"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("after"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["after"] = arg0
+	var arg1 *string
+	if tmp, ok := rawArgs["before"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("before"))
+		arg1, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["before"] = arg1
+	var arg2 *int
+	if tmp, ok := rawArgs["first"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("first"))
+		arg2, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["first"] = arg2
+	var arg3 *int
+	if tmp, ok := rawArgs["last"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("last"))
+		arg3, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["last"] = arg3
 	return args, nil
 }
 
@@ -12407,7 +12628,7 @@ func (ec *executionContext) _Account_posts(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Account().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Account().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["clubCharacterSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -12844,6 +13065,8 @@ func (ec *executionContext) fieldContext_AddPostContentPayload_post(ctx context.
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -12921,6 +13144,8 @@ func (ec *executionContext) fieldContext_ArchivePostPayload_post(ctx context.Con
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -13576,7 +13801,7 @@ func (ec *executionContext) _Audience_posts(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Audience().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Audience().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["clubCharacterSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -14628,7 +14853,7 @@ func (ec *executionContext) _Category_posts(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Category().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Category().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["clubCharacterSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -17546,7 +17771,7 @@ func (ec *executionContext) _Club_posts(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Club().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Club().Posts(rctx, obj, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["clubCharacterSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -19916,6 +20141,8 @@ func (ec *executionContext) fieldContext_CreatePostPayload_post(ctx context.Cont
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -21743,6 +21970,8 @@ func (ec *executionContext) fieldContext_Entity_findPostByID(ctx context.Context
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -26988,6 +27217,8 @@ func (ec *executionContext) fieldContext_ObservePostsPayload_posts(ctx context.C
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -28097,6 +28328,50 @@ func (ec *executionContext) fieldContext_Post_likes(ctx context.Context, field g
 	return fc, nil
 }
 
+func (ec *executionContext) _Post_views(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_views(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Views, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Post_views(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Post_viewerLiked(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Post_viewerLiked(ctx, field)
 	if err != nil {
@@ -28762,6 +29037,8 @@ func (ec *executionContext) fieldContext_PostEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -28930,6 +29207,8 @@ func (ec *executionContext) fieldContext_PostLike_post(ctx context.Context, fiel
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -29835,6 +30114,67 @@ func (ec *executionContext) fieldContext_Query_gameSessionStatus(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_tags(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_tags(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Tags(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.TagConnection)
+	fc.Result = res
+	return ec.marshalNTagConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐTagConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_tags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_TagConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_TagConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type TagConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_tags_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query_search(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query_search(ctx, field)
 	if err != nil {
@@ -29890,6 +30230,67 @@ func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_search_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_postsRecommendations(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_postsRecommendations(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PostsRecommendations(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*types.PostConnection)
+	fc.Result = res
+	return ec.marshalNPostConnection2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPostConnection(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_postsRecommendations(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "edges":
+				return ec.fieldContext_PostConnection_edges(ctx, field)
+			case "pageInfo":
+				return ec.fieldContext_PostConnection_pageInfo(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PostConnection", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_postsRecommendations_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -30025,6 +30426,8 @@ func (ec *executionContext) fieldContext_Query_post(ctx context.Context, field g
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -30059,7 +30462,7 @@ func (ec *executionContext) _Query_posts(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Posts(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
+		return ec.resolvers.Query().Posts(rctx, fc.Args["after"].(*string), fc.Args["before"].(*string), fc.Args["first"].(*int), fc.Args["last"].(*int), fc.Args["audienceSlugs"].([]string), fc.Args["categorySlugs"].([]string), fc.Args["characterSlugs"].([]string), fc.Args["seriesSlugs"].([]string), fc.Args["clubCharacterSlugs"].([]string), fc.Args["state"].(*types.PostState), fc.Args["supporterOnlyStatus"].([]types.SupporterOnlyStatus), fc.Args["seed"].(*string), fc.Args["sortBy"].(types.PostsSort))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -31035,6 +31438,8 @@ func (ec *executionContext) fieldContext_RemovePostContentPayload_post(ctx conte
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -31961,6 +32366,8 @@ func (ec *executionContext) fieldContext_RouletteGameState_post(ctx context.Cont
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -33366,6 +33773,8 @@ func (ec *executionContext) fieldContext_SubmitPostPayload_post(ctx context.Cont
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -34821,6 +35230,8 @@ func (ec *executionContext) fieldContext_UnArchivePostPayload_post(ctx context.C
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36041,6 +36452,8 @@ func (ec *executionContext) fieldContext_UpdatePostAudiencePayload_post(ctx cont
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36118,6 +36531,8 @@ func (ec *executionContext) fieldContext_UpdatePostCategoriesPayload_post(ctx co
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36195,6 +36610,8 @@ func (ec *executionContext) fieldContext_UpdatePostCharactersPayload_post(ctx co
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36272,6 +36689,8 @@ func (ec *executionContext) fieldContext_UpdatePostClubPayload_post(ctx context.
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36349,6 +36768,8 @@ func (ec *executionContext) fieldContext_UpdatePostContentIsSupporterOnlyPayload
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36426,6 +36847,8 @@ func (ec *executionContext) fieldContext_UpdatePostContentOrderPayload_post(ctx 
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -36503,6 +36926,8 @@ func (ec *executionContext) fieldContext_UpdatePostDescriptionPayload_post(ctx c
 				return ec.fieldContext_Post_characters(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
 			case "viewerLiked":
 				return ec.fieldContext_Post_viewerLiked(ctx, field)
 			}
@@ -44963,6 +45388,13 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "views":
+
+			out.Values[i] = ec._Post_views(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "viewerLiked":
 			field := field
 
@@ -45437,6 +45869,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Concurrently(i, func() graphql.Marshaler {
 				return rrm(innerCtx)
 			})
+		case "tags":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_tags(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
 		case "search":
 			field := field
 
@@ -45447,6 +45902,29 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_search(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "postsRecommendations":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_postsRecommendations(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}

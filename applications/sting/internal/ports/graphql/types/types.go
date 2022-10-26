@@ -837,6 +837,8 @@ type Post struct {
 	Characters []*Character `json:"characters"`
 	// The amount of likes on this post.
 	Likes int `json:"likes"`
+	// The amount of times the post has been viewed on the platform.
+	Views int `json:"views"`
 	// Whether or not the viewer liked this post.
 	ViewerLiked *PostLike `json:"viewerLiked"`
 }

@@ -15,13 +15,14 @@ type Filters struct {
 
 	showTerminatedClubs bool
 
-	characterIds []string
-	seriesIds    []string
-	audienceIds  []string
-	categoryIds  []string
+	characterIds     []string
+	seriesIds        []string
+	audienceIds      []string
+	categoryIds      []string
+	clubCharacterIds []string
 }
 
-func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds []string, showTerminatedClubs bool, seed *string) (*Filters, error) {
+func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlyStatus, clubIds, audienceIds, categoryIds, characterIds, seriesIds, clubCharacterIds []string, showTerminatedClubs bool, seed *string) (*Filters, error) {
 
 	if seed != nil {
 		if len(*seed) > 100 {
@@ -76,6 +77,7 @@ func NewPostFilters(sortBy string, state, contributorId *string, supporterOnlySt
 		characterIds:        characterIds,
 		seriesIds:           seriesIds,
 		showTerminatedClubs: showTerminatedClubs,
+		clubCharacterIds:    clubCharacterIds,
 		supporterOnlyStatus: supporterOnlyStatusItem,
 		seed:                seed,
 	}, nil
@@ -87,6 +89,10 @@ func (e *Filters) ContributorId() *string {
 
 func (e *Filters) ClubIds() []string {
 	return e.clubIds
+}
+
+func (e *Filters) ClubCharacterIds() []string {
+	return e.clubCharacterIds
 }
 
 func (e *Filters) State() State {

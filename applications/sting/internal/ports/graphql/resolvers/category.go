@@ -20,7 +20,7 @@ func (r CategoryResolver) Title(ctx context.Context, obj *types.Category, locale
 	return graphql.GetTranslationFromTranslationsAndLanguage(obj.TitleTranslations, locale)
 }
 
-func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
+func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after *string, before *string, first *int, last *int, audienceSlugs []string, characterSlugs []string, seriesSlugs []string, clubCharacterSlugs []string, state *types.PostState, supporterOnlyStatus []types.SupporterOnlyStatus, seed *string, sortBy types.PostsSort) (*types.PostConnection, error) {
 
 	cursor, err := paging.NewCursor(after, before, first, last)
 
@@ -48,6 +48,7 @@ func (r CategoryResolver) Posts(ctx context.Context, obj *types.Category, after 
 		SeriesSlugs:         seriesSlugs,
 		SupporterOnlyStatus: supporterOnly,
 		State:               stateModified,
+		ClubCharacterSlugs:  clubCharacterSlugs,
 		CategorySlugs:       []string{obj.Slug},
 		Principal:           principal.FromContext(ctx),
 		SortBy:              sortBy.String(),

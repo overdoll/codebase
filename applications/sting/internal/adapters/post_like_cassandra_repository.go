@@ -99,6 +99,10 @@ func (r PostsCassandraElasticsearchRepository) CreatePostLike(ctx context.Contex
 		return errors.Wrap(support.NewGocqlError(err), "failed to create post like")
 	}
 
+	if err := r.likePost(ctx, like); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -135,6 +139,10 @@ func (r PostsCassandraElasticsearchRepository) DeletePostLike(ctx context.Contex
 
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return errors.Wrap(support.NewGocqlError(err), "failed to delete post like")
+	}
+
+	if err := r.unLikePost(ctx, accountId, postId); err != nil {
+		return err
 	}
 
 	return nil
