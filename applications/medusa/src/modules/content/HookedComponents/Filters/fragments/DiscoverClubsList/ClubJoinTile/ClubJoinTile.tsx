@@ -4,6 +4,8 @@ import { ClubJoinTileViewerFragment$key } from '@//:artifacts/ClubJoinTileViewer
 import { ClubTileOverlay, LinkTile } from '../../../../../ContentSelection'
 import { Box, Flex } from '@chakra-ui/react'
 import ClubJoinButton from '../../../../Club/fragments/Interact/ClubJoinButton/ClubJoinButton'
+import ClubJoinLoggedOutButton
+  from '../../../../Club/fragments/Interact/ClubJoinLoggedOutButton/ClubJoinLoggedOutButton'
 
 interface Props {
   clubQuery: ClubJoinTileFragment$key
@@ -18,6 +20,7 @@ const ClubFragment = graphql`
     }
     ...ClubJoinButtonFragment
     ...ClubTileOverlayFragment
+    ...ClubJoinLoggedOutButtonFragment
   }
 `
 
@@ -46,9 +49,11 @@ export default function ClubJoinTile (props: Props): JSX.Element {
         <ClubTileOverlay query={clubData} />
       </LinkTile>
       <Box p={2} right={0} top={0} position='absolute'>
-        {clubData.viewerMember == null && (
-          <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
-        )}
+        {viewerData == null
+          ? <ClubJoinLoggedOutButton clubQuery={clubData} />
+          : (clubData.viewerMember == null
+              ? <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
+              : <></>)}
       </Box>
     </Flex>
   )

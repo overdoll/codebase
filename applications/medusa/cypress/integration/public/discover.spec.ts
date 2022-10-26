@@ -1,4 +1,5 @@
 import { generateUsernameAndEmail } from '../../support/generate'
+import { clickOnButton } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 20000)
 
@@ -9,7 +10,8 @@ describe('Discover', () => {
 
     // click on a club and see club page
     cy.findByText('Second Test Club').should('be.visible').click({ force: true })
-    cy.findByText('Join Second Test Club').should('be.visible').click({ force: true })
+    clickOnButton('Join')
+    cy.findByText('Join this club').should('be.visible')
 
     // join from discover page
     cy.visit('/discover')

@@ -91,7 +91,8 @@ describe('Supporter', () => {
     })
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    clickOnButton(/Manage Subscription/i)
+    cy.get('button[aria-label="Club Menu"]').should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText(/Manage Subscription/iu).click({ force: true })
     cy.findByText('Subscription Details').should('be.visible')
 
     /**
@@ -159,7 +160,8 @@ describe('Supporter', () => {
     cy.findByRole('button', { name: 'Subscribe' }).should('not.be.disabled').click({ force: true })
     cy.findByText(/Transaction Approved/iu, { timeout: 60000 }).should('be.visible')
     clickOnButton('Close')
-    cy.findByRole('button', { name: /Manage Subscription/iu }).should('be.visible')
+    cy.get('button[aria-label="Club Menu"]').should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText(/Thanks for supporting/iu).should('be.visible')
 
     /**
      * Remove saved payment method

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<0ad2ebea9848ca8c17ab957a87ef6433>>
+ * @generated SignedSource<<3d8b8f6ef05fd438d20bd28cdf898f58>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ClubJoinTileFragment$data = {
   readonly viewerMember: {
     readonly __typename: "ClubMember";
   } | null;
-  readonly " $fragmentSpreads": FragmentRefs<"ClubJoinButtonFragment" | "ClubTileOverlayFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubJoinButtonFragment" | "ClubJoinLoggedOutButtonFragment" | "ClubTileOverlayFragment">;
   readonly " $fragmentType": "ClubJoinTileFragment";
 };
 export type ClubJoinTileFragment$key = {
@@ -63,12 +63,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ClubTileOverlayFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubJoinLoggedOutButtonFragment"
     }
   ],
   "type": "Club",
   "abstractKey": null
 };
 
-(node as any).hash = "74774f6b9e921498a408b72e2236f465";
+(node as any).hash = "450e4032fb97bed8e1c20d498885ee46";
 
 export default node;

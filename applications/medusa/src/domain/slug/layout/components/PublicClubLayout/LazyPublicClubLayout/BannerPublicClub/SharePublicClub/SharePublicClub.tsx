@@ -8,6 +8,8 @@ import ClubShareDiscordButton from './ClubShareDiscordButton/ClubShareDiscordBut
 import ClubShareRedditButton from './ClubShareRedditButton/ClubShareRedditButton'
 import { Icon } from '@//:modules/content/PageLayout'
 import { ShareExternalMedia } from '@//:assets/icons'
+import { useLingui } from '@lingui/react'
+import { t } from '@lingui/macro'
 
 interface Props {
   clubQuery: SharePublicClubFragment$key
@@ -29,8 +31,11 @@ export default function SharePublicClub (props: Props): JSX.Element {
 
   const clubData = useFragment(ClubFragment, clubQuery)
 
+  const { i18n } = useLingui()
+
   return (
     <Menu
+      aria-label={i18n._(t`Share Menu`)}
       icon={
         <Icon
           icon={ShareExternalMedia}

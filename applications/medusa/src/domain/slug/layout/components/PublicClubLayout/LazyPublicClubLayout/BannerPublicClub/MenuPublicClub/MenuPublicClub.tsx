@@ -43,6 +43,7 @@ export default function MenuPublicClub (props: Props): JSX.Element {
   return (
     <Menu
       variant='ghost'
+      aria-label={i18n._(t`Club Menu`)}
       icon={
         <Icon
           icon={NavigationMenuHorizontal}
