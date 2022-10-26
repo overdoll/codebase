@@ -27,7 +27,7 @@ var postContentSizes = []*processImageSizes{
 		name:       "hd",
 		constraint: 4096,
 		mandatory:  true,
-		quality:    "90",
+		quality:    "85",
 	},
 	{
 		name:       "large",
