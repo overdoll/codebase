@@ -6,6 +6,12 @@ Cypress.config('defaultCommandTimeout', 20000)
 const ClubSlug = 'TestClub'
 
 describe('Club Page', () => {
+  it('click club posts button', () => {
+    cy.visit(`/${ClubSlug}`)
+    cy.findByRole('button', { name: 'See all' }).should('be.visible').should('not.be.disabled').click()
+    cy.url().should('contain', `/${ClubSlug}/posts`)
+  })
+
   it('join, support as not logged in', () => {
     cy.viewport('iphone-xr')
     /**
@@ -47,20 +53,14 @@ describe('Club Page', () => {
     cy.visit(`/${ClubSlug}`)
     cy.findAllByRole('button', { name: 'Join' }).first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.findByText(/You are now a member of/iu).should('be.visible')
-    clickOnButton(/Leave/iu)
-    cy.findByText(/See their newly/iu).should('be.visible')
+    clickOnButton(/Joined/iu)
+    cy.findByText(/Join/iu).should('be.visible')
 
     /**
      * Join from club page
      */
-    cy.visit('/clubs/discover')
+    cy.visit('/discover')
     cy.findAllByRole('button', { name: /Join/iu }).first().should('be.visible').should('not.be.disabled').click({ force: true })
     cy.findByText(/You are now a member of/iu).should('be.visible')
-  })
-
-  it('click club buttons', () => {
-    cy.visit(`/${ClubSlug}`)
-    clickOnButton('See all posts')
-    cy.url().should('contain', `/${ClubSlug}/posts`)
   })
 })

@@ -1,7 +1,7 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollPostsFeedFragment$key } from '@//:artifacts/ScrollPostsFeedFragment.graphql'
 import type { ResultFeedQuery } from '@//:artifacts/ResultFeedQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   accountQuery: ScrollPostsFeedFragment$key
@@ -21,7 +21,7 @@ const Fragment = graphql`
     @connection (key: "ScrollPostsFeed_curatedPostsFeedPosts") {
       edges {
         node {
-          ...PreviewPostFragment
+          id
         }
       }
       ...VerticalPaginationScrollerFragment
@@ -50,14 +50,6 @@ export default function ScrollPostsFeed (props: Props): JSX.Element {
       hasNext={hasNext}
       loadNext={loadNext}
       isLoadingNext={isLoadingNext}
-    >
-      {({
-        index
-      }) => (
-        <PreviewPost
-          postQuery={data.curatedPostsFeedPosts.edges[index].node}
-        />
-      )}
-    </VerticalPaginationScroller>
+    />
   )
 }

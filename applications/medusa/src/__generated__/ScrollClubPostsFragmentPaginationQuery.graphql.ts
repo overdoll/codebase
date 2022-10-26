@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<285b69d90f4e97eb202b18e5ebea2d40>>
- * @relayHash e9aa7217385f0d35d66b2603f5c892c9
+ * @generated SignedSource<<42abcc423897ac765e3b8ab460cdd894>>
+ * @relayHash aab08061edc60610f94e79a448ff9a30
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e9aa7217385f0d35d66b2603f5c892c9
+// @relayRequestID aab08061edc60610f94e79a448ff9a30
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -21,7 +21,7 @@ export type ScrollClubPostsFragmentPaginationQuery$variables = {
 };
 export type ScrollClubPostsFragmentPaginationQuery$data = {
   readonly node: {
-    readonly " $fragmentSpreads": FragmentRefs<"ScrollClubPostsFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"SwapClubPostsFragment">;
   } | null;
 };
 export type ScrollClubPostsFragmentPaginationQuery = {
@@ -36,7 +36,7 @@ var v0 = {
   "name": "after"
 },
 v1 = {
-  "defaultValue": 5,
+  "defaultValue": 6,
   "kind": "LocalArgument",
   "name": "first"
 },
@@ -237,6 +237,26 @@ v22 = {
   "plural": false,
   "selections": (v17/*: any*/),
   "storageKey": null
+},
+v23 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "banner",
+  "plural": false,
+  "selections": (v17/*: any*/),
+  "storageKey": null
+},
+v24 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "smallBanner",
+  "plural": false,
+  "selections": (v17/*: any*/),
+  "storageKey": null
 };
 return {
   "fragment": {
@@ -265,7 +285,7 @@ return {
               (v7/*: any*/)
             ],
             "kind": "FragmentSpread",
-            "name": "ScrollClubPostsFragment"
+            "name": "SwapClubPostsFragment"
           }
         ],
         "storageKey": null
@@ -323,6 +343,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v9/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -436,7 +457,9 @@ return {
                                         "selections": [
                                           (v20/*: any*/),
                                           (v21/*: any*/),
-                                          (v22/*: any*/)
+                                          (v22/*: any*/),
+                                          (v23/*: any*/),
+                                          (v24/*: any*/)
                                         ],
                                         "storageKey": null
                                       },
@@ -467,7 +490,9 @@ return {
                                             "selections": [
                                               (v22/*: any*/),
                                               (v21/*: any*/),
-                                              (v20/*: any*/)
+                                              (v20/*: any*/),
+                                              (v23/*: any*/),
+                                              (v24/*: any*/)
                                             ],
                                             "storageKey": null
                                           },
@@ -582,8 +607,7 @@ return {
                               (v9/*: any*/)
                             ],
                             "storageKey": null
-                          },
-                          (v8/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -596,6 +620,18 @@ return {
                       }
                     ],
                     "storageKey": null
+                  },
+                  {
+                    "kind": "ClientExtension",
+                    "selections": [
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "__id",
+                        "storageKey": null
+                      }
+                    ]
                   },
                   {
                     "alias": null,
@@ -637,6 +673,13 @@ return {
                 "kind": "LinkedHandle",
                 "name": "posts"
               },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "postsView",
+                "storageKey": null
+              },
               (v11/*: any*/),
               {
                 "alias": null,
@@ -655,7 +698,7 @@ return {
     ]
   },
   "params": {
-    "id": "e9aa7217385f0d35d66b2603f5c892c9",
+    "id": "aab08061edc60610f94e79a448ff9a30",
     "metadata": {},
     "name": "ScrollClubPostsFragmentPaginationQuery",
     "operationKind": "query",
@@ -664,6 +707,6 @@ return {
 };
 })();
 
-(node as any).hash = "96effe63d213ae850ac5da825172a7ed";
+(node as any).hash = "b4014fa00c2613fc9e468eff543f8598";
 
 export default node;

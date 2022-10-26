@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a8efd1b7cf60dd9a4c703ae2447a41a9>>
+ * @generated SignedSource<<304bc23d151e5a9072cbf99c8f38e434>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -12,13 +12,9 @@ import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type ClubPublicPostFragment$data = {
   readonly club: {
-    readonly id: string;
     readonly name: string;
     readonly slug: string;
-    readonly viewerMember: {
-      readonly __typename: "ClubMember";
-    } | null;
-    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment" | "ClubJoinButtonFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment" | "ClubJoinLeaveButtonFragment">;
   };
   readonly description: string;
   readonly " $fragmentType": "ClubPublicPostFragment";
@@ -46,13 +42,6 @@ const node: ReaderFragment = {
           "alias": null,
           "args": null,
           "kind": "ScalarField",
-          "name": "id",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
           "name": "name",
           "storageKey": null
         },
@@ -64,24 +53,6 @@ const node: ReaderFragment = {
           "storageKey": null
         },
         {
-          "alias": null,
-          "args": null,
-          "concreteType": "ClubMember",
-          "kind": "LinkedField",
-          "name": "viewerMember",
-          "plural": false,
-          "selections": [
-            {
-              "alias": null,
-              "args": null,
-              "kind": "ScalarField",
-              "name": "__typename",
-              "storageKey": null
-            }
-          ],
-          "storageKey": null
-        },
-        {
           "args": null,
           "kind": "FragmentSpread",
           "name": "ClubIconFragment"
@@ -89,7 +60,7 @@ const node: ReaderFragment = {
         {
           "args": null,
           "kind": "FragmentSpread",
-          "name": "ClubJoinButtonFragment"
+          "name": "ClubJoinLeaveButtonFragment"
         }
       ],
       "storageKey": null
@@ -106,6 +77,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "56cf97f78f88b55ce4d7f42b55872770";
+(node as any).hash = "d834d9bc7e88f51e57bf60f8cc89561d";
 
 export default node;

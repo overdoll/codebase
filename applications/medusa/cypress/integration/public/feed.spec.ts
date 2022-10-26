@@ -13,11 +13,11 @@ describe('Feed', () => {
 
     // set up curation profile
     clickOnButton('Set Up')
-    cy.findByText(/Enter your birthday/).should('be.visible')
-    cy.findByText('Month').parent().select('January')
-    cy.findByText('Day').parent().select('1')
-    cy.findByText('Year').parent().select('1990')
-    clickOnButton('Save')
+    // cy.findByText(/Enter your birthday/).should('be.visible')
+    // cy.findByText('Month').parent().select('January')
+    // cy.findByText('Day').parent().select('1')
+    // cy.findByText('Year').parent().select('1990')
+    // clickOnButton('Save')
     cy.findByText(/Choose what you want to see/).should('be.visible')
     clickOnButton('Skip')
     cy.findAllByRole('button', { name: 'Join' }).first().should('be.visible').should('not.be.disabled').click({ force: true }).should('not.exist')

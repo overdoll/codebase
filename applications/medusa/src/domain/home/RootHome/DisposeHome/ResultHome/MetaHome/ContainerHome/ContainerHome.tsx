@@ -1,10 +1,9 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { ContainerHomeViewerFragment$key } from '@//:artifacts/ContainerHomeViewerFragment.graphql'
-import { BannerContainer, ContentContainer } from '@//:modules/content/PageLayout'
-import BannerHome from './BannerHome/BannerHome'
-import SecretBox from './TilesHome/components/SecretBox/SecretBox'
+import { ContentContainer } from '@//:modules/content/PageLayout'
 import BoxesHome from './BoxesHome/BoxesHome'
+import UrlCurationProfile from './UrlCurationProfile/UrlCurationProfile'
 
 interface Props {
   viewerQuery: ContainerHomeViewerFragment$key | null
@@ -12,8 +11,8 @@ interface Props {
 
 const ViewerFragment = graphql`
   fragment ContainerHomeViewerFragment on Account {
-    ...BannerHomeViewerFragment
     ...BoxesHomeFragment
+    ...UrlCurationProfileFragment
   }
 `
 
@@ -25,14 +24,9 @@ export default function ContainerHome (props: Props): JSX.Element {
   const viewerData = useFragment(ViewerFragment, viewerQuery)
 
   return (
-    <>
-      <BannerContainer pt={2}>
-        <BannerHome viewerQuery={viewerData} />
-      </BannerContainer>
-      <ContentContainer>
-        <BoxesHome viewerQuery={viewerData} />
-        <SecretBox />
-      </ContentContainer>
-    </>
+    <ContentContainer pt={2}>
+      <BoxesHome viewerQuery={viewerData} />
+      <UrlCurationProfile viewerQuery={viewerData} />
+    </ContentContainer>
   )
 }

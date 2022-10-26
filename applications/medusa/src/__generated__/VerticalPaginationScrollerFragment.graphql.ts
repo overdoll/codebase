@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<971acd075cefc143b97f2041ba54290b>>
+ * @generated SignedSource<<8521a46ca9addcefdfb7d65b8838b826>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -14,6 +14,7 @@ export type VerticalPaginationScrollerFragment$data = {
   readonly edges: ReadonlyArray<{
     readonly node: {
       readonly id: string;
+      readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
     };
   }>;
   readonly " $fragmentType": "VerticalPaginationScrollerFragment";
@@ -51,6 +52,11 @@ const node: ReaderFragment = {
               "kind": "ScalarField",
               "name": "id",
               "storageKey": null
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "PreviewPostFragment"
             }
           ],
           "storageKey": null
@@ -63,6 +69,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "ce2e327cb13d49a1eed8b784b2145bad";
+(node as any).hash = "e3f4b0a87eabfacdbf4c753f25bdfa8a";
 
 export default node;

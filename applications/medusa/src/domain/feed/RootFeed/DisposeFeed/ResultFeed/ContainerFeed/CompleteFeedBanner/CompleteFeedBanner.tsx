@@ -17,7 +17,7 @@ const LazyBanner = dynamic(
 
 const LazyModal = dynamic(
   async () => {
-    return await import('./CurationProfileModal/CurationProfileModal')
+    return await import('../../../../../../../common/components/CurationProfileModal/CurationProfileModal')
   },
   {
     suspense: true

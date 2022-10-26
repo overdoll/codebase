@@ -33,7 +33,7 @@ export default function ClubIcon (props: Props): JSX.Element {
 
   if (data.thumbnailMedia == null || data.thumbnailMedia.__typename === 'RawMedia') {
     return (
-      <IconSizer size={size}>
+      <IconSizer size={size} {...rest}>
         <RandomIcon seed={data.id} />
       </IconSizer>
     )

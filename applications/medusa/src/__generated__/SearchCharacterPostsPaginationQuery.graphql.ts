@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<811c95785b7adc1c2001e3f335a4ad74>>
- * @relayHash 2479811bd25dc8c5c7ac87bb2beb155e
+ * @generated SignedSource<<f54b174bef2d95160bcb97bfb0d185d5>>
+ * @relayHash 9e41a063877ee18e9ac2cc883226bfc0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 2479811bd25dc8c5c7ac87bb2beb155e
+// @relayRequestID 9e41a063877ee18e9ac2cc883226bfc0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -323,6 +323,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v9/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -588,8 +589,7 @@ return {
                               (v9/*: any*/)
                             ],
                             "storageKey": null
-                          },
-                          (v8/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -653,7 +653,7 @@ return {
     ]
   },
   "params": {
-    "id": "2479811bd25dc8c5c7ac87bb2beb155e",
+    "id": "9e41a063877ee18e9ac2cc883226bfc0",
     "metadata": {},
     "name": "SearchCharacterPostsPaginationQuery",
     "operationKind": "query",
@@ -662,6 +662,6 @@ return {
 };
 })();
 
-(node as any).hash = "f47c6cb967bb06274a0e9b7a48cbdf1e";
+(node as any).hash = "9be0dc6f5ea0cb569a3b2cc022b2f4de";
 
 export default node;

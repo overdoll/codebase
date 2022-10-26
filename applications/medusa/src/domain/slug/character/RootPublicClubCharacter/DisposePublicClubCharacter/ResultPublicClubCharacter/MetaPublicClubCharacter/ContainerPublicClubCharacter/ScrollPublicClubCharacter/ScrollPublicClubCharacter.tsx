@@ -1,7 +1,7 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollPublicClubCharacterFragment$key } from '@//:artifacts/ScrollPublicClubCharacterFragment.graphql'
 import { ResultPublicClubCharacterQuery } from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 import {
   ScrollPublicClubCharacterAccountFragment$key
 } from '@//:artifacts/ScrollPublicClubCharacterAccountFragment.graphql'
@@ -30,7 +30,7 @@ const Fragment = graphql`
     @connection (key: "PublicClubCharacterPosts_posts") {
       edges {
         node {
-          ...PreviewPostFragment
+          id
         }
       }
       ...VerticalPaginationScrollerFragment
@@ -71,15 +71,7 @@ export default function ScrollPublicClubCharacter (props: Props): JSX.Element {
         hasNext={hasNext}
         loadNext={loadNext}
         isLoadingNext={isLoadingNext}
-      >
-        {({
-          index
-        }) => (
-          <PreviewPost
-            postQuery={data?.posts?.edges?.[index]?.node}
-          />
-        )}
-      </VerticalPaginationScroller>
+      />
     </Stack>
   )
 }

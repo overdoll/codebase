@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<45739622ca9d447e3cb93589585d49b0>>
- * @relayHash e89b2a4a4e73e9c6379fa1d3132143ae
+ * @generated SignedSource<<d4ce11cb2b2b8121f5d17fcde3e70a65>>
+ * @relayHash 3b76a6c22eae1c7d218ecc2329b1e3b6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID e89b2a4a4e73e9c6379fa1d3132143ae
+// @relayRequestID 3b76a6c22eae1c7d218ecc2329b1e3b6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -323,6 +323,7 @@ return {
                         "plural": false,
                         "selections": [
                           (v9/*: any*/),
+                          (v8/*: any*/),
                           {
                             "alias": null,
                             "args": null,
@@ -588,8 +589,7 @@ return {
                               (v9/*: any*/)
                             ],
                             "storageKey": null
-                          },
-                          (v8/*: any*/)
+                          }
                         ],
                         "storageKey": null
                       },
@@ -653,7 +653,7 @@ return {
     ]
   },
   "params": {
-    "id": "e89b2a4a4e73e9c6379fa1d3132143ae",
+    "id": "3b76a6c22eae1c7d218ecc2329b1e3b6",
     "metadata": {},
     "name": "SearchCategoryPostsPaginationQuery",
     "operationKind": "query",
@@ -662,6 +662,6 @@ return {
 };
 })();
 
-(node as any).hash = "170932aa86051dc934f593080c3de46d";
+(node as any).hash = "9e49e729ccb136e293ecd70082dc81ea";
 
 export default node;

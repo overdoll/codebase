@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<26e3b0fae24f6eef06b14b4cedd2436a>>
- * @relayHash 310e7c59eb1b9aeb38268903bc53a86d
+ * @generated SignedSource<<d4d29fa48567a0d1787dfd980eab1c83>>
+ * @relayHash 9329b590a49db005a7d4bfc71035980a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 310e7c59eb1b9aeb38268903bc53a86d
+// @relayRequestID 9329b590a49db005a7d4bfc71035980a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -258,24 +258,6 @@ return {
                 ],
                 "storageKey": null
               },
-              {
-                "alias": null,
-                "args": null,
-                "concreteType": "DateOfBirthCurationProfile",
-                "kind": "LinkedField",
-                "name": "dateOfBirth",
-                "plural": false,
-                "selections": [
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "completed",
-                    "storageKey": null
-                  }
-                ],
-                "storageKey": null
-              },
               (v0/*: any*/)
             ],
             "storageKey": null
@@ -341,13 +323,6 @@ return {
                       (v2/*: any*/),
                       (v0/*: any*/)
                     ],
-                    "storageKey": null
-                  },
-                  {
-                    "alias": null,
-                    "args": null,
-                    "kind": "ScalarField",
-                    "name": "viewerIsOwner",
                     "storageKey": null
                   },
                   {
@@ -487,7 +462,7 @@ return {
     ]
   },
   "params": {
-    "id": "310e7c59eb1b9aeb38268903bc53a86d",
+    "id": "9329b590a49db005a7d4bfc71035980a",
     "metadata": {},
     "name": "LazyCurationProfileQuery",
     "operationKind": "query",

@@ -3,7 +3,7 @@ import { invalidateToken, setViewer } from './support'
 import { useRouter } from 'next/router'
 import { useCookies } from 'react-cookie'
 
-type SuccessfulGrantType = (store, viewerPayload, revokedAuthenticationToken) => void
+type SuccessfulGrantType = (store, viewerPayload, revokedAuthenticationToken, isNew?: boolean) => void
 type InvalidateGrantType = (store, invalidatedAuthenticationToken) => void
 
 interface UseGrantCleanupReturn {
@@ -24,9 +24,9 @@ export default function useGrantCleanup (): UseGrantCleanupReturn {
     store.delete(authenticationTokenId)
   }
 
-  const successfulGrant: SuccessfulGrantType = (store, viewerPayload, revokedAuthenticationToken) => {
+  const successfulGrant: SuccessfulGrantType = (store, viewerPayload, revokedAuthenticationToken, isNew) => {
     setViewer(store, viewerPayload)
-    void router.push(redirect != null ? redirect : '/').then(() => {
+    void router.push(isNew === true ? '/?curation=true' : (redirect != null ? redirect : '/')).then(() => {
       removeCookie('token')
       invalidateAuthenticationToken(store, revokedAuthenticationToken)
     })

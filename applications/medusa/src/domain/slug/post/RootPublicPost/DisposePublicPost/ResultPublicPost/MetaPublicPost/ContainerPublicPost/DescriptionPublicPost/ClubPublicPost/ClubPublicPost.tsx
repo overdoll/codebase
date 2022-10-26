@@ -5,7 +5,8 @@ import { ClubPublicPostViewerFragment$key } from '@//:artifacts/ClubPublicPostVi
 import { Box, Flex, Heading, HStack, Text } from '@chakra-ui/react'
 import { Link } from '@//:modules/routing'
 import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
-import ClubJoinButton from '@//:modules/content/HookedComponents/Club/fragments/Interact/ClubJoinButton/ClubJoinButton'
+import ClubJoinLeaveButton
+  from '@//:modules/content/HookedComponents/Club/fragments/Interact/ClubJoinLeaveButton/ClubJoinLeaveButton'
 
 interface Props {
   postQuery: ClubPublicPostFragment$key
@@ -15,14 +16,10 @@ interface Props {
 const PostFragment = graphql`
   fragment ClubPublicPostFragment on Post {
     club {
-      id
       name
       slug
-      viewerMember {
-        __typename
-      }
       ...ClubIconFragment
-      ...ClubJoinButtonFragment
+      ...ClubJoinLeaveButtonFragment
     }
     description
   }
@@ -30,7 +27,7 @@ const PostFragment = graphql`
 
 const ViewerFragment = graphql`
   fragment ClubPublicPostViewerFragment on Account {
-    ...ClubJoinButtonViewerFragment
+    ...ClubJoinLeaveButtonViewerFragment
   }
 `
 
@@ -69,9 +66,7 @@ export default function ClubPublicPost (props: Props): JSX.Element {
               </Text>
             </Flex>
           </HStack>
-          {postData.club.viewerMember == null && (
-            <ClubJoinButton clubQuery={postData.club} viewerQuery={viewerData} />
-          )}
+          <ClubJoinLeaveButton clubQuery={postData.club} viewerQuery={viewerData} />
         </HStack>
         {postData.description.length > 0 && (
           <Text mt={1} lineHeight='20px' fontSize='sm' color='gray.200'>

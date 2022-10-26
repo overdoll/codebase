@@ -1,6 +1,6 @@
 const baseStyle = {
   fontFamily: 'heading',
-  fontWeight: 'bold'
+  fontWeight: 'semibold'
 }
 
 const sizes = {
@@ -29,9 +29,21 @@ const sizes = {
     fontSize: ['2xl', null, '3xl'],
     lineHeight: [1.33, null, 1.2]
   },
-  md: { fontWeight: 'semibold', fontSize: 'xl', lineHeight: 1.2 },
-  sm: { fontWeight: 'semibold', fontSize: 'md', lineHeight: 1.2 },
-  xs: { fontWeight: 'semibold', fontSize: 'sm', lineHeight: 1.2 }
+  md: {
+    fontWeight: 'semibold',
+    fontSize: 'xl',
+    lineHeight: 1.2
+  },
+  sm: {
+    fontWeight: 'semibold',
+    fontSize: 'md',
+    lineHeight: 1.2
+  },
+  xs: {
+    fontWeight: 'semibold',
+    fontSize: 'sm',
+    lineHeight: 1.2
+  }
 }
 
 const defaultProps = {

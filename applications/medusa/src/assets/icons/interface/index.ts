@@ -40,6 +40,8 @@ export { default as SubtractMinus } from './mini-bold/actions/subtract-minus.svg
 export { default as RemoveCross } from './mini-bold/actions/remove-cross.svg'
 export { default as PremiumStar } from './normal-bold/premium-star.svg'
 export { default as FiveStar } from './normal-bold/five-star.svg'
+export { default as CardPostsView } from './mini-bold/actions/card-posts-view.svg'
+export { default as GalleryPostsView } from './mini-bold/actions/gallery-posts-view.svg'
 
 export { default as CopyLink } from './mini-bold/actions/copy-link.svg'
 export { default as PictureIdentifier } from './normal-bold/picture-identifier.svg'
@@ -83,3 +85,4 @@ export { default as WarningBox } from './normal-bold/warning-box.svg'
 export { default as SuccessBox } from './normal-bold/success-box.svg'
 export { default as RegisterAccount } from './normal-bold/register-account.svg'
 export { default as RewardStar5 } from './normal-bold/reward-star-5.svg'
+export { default as ShareExternalMedia } from './mini-bold/actions/share-external-media.svg'

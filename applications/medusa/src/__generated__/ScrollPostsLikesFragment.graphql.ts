@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<1facba522f0e8837fed8603062182203>>
+ * @generated SignedSource<<4456f9f263ce818ad57eb364c2eef772>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type ScrollPostsLikesFragment$data = {
   readonly likedPosts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
-        readonly " $fragmentSpreads": FragmentRefs<"PreviewPostFragment">;
+        readonly id: string;
       };
     }>;
     readonly " $fragmentSpreads": FragmentRefs<"VerticalPaginationScrollerFragment">;
@@ -31,7 +31,14 @@ export type ScrollPostsLikesFragment$key = {
 const node: ReaderFragment = (function(){
 var v0 = [
   "likedPosts"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
@@ -97,11 +104,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "args": null,
-                  "kind": "FragmentSpread",
-                  "name": "PreviewPostFragment"
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -162,19 +165,13 @@ return {
       "name": "hasClubSupporterSubscription",
       "storageKey": null
     },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "id",
-      "storageKey": null
-    }
+    (v1/*: any*/)
   ],
   "type": "Account",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "5bdb8d81786ee9466118e706a81cb86c";
+(node as any).hash = "0ddd9325f3aa09227430be5bb2f6424a";
 
 export default node;

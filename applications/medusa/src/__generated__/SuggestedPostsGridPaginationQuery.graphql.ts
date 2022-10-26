@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<55aac7f227e978f97dfa18860eafab89>>
- * @relayHash de3c58f867cdc7f97a2bf60fe655371a
+ * @generated SignedSource<<71882dd0e81034e941104ddb3684005a>>
+ * @relayHash 8bd2f8680296472efb94f528b6048288
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID de3c58f867cdc7f97a2bf60fe655371a
+// @relayRequestID 8bd2f8680296472efb94f528b6048288
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -36,7 +36,7 @@ var v0 = [
     "name": "after"
   },
   {
-    "defaultValue": 8,
+    "defaultValue": 6,
     "kind": "LocalArgument",
     "name": "first"
   },
@@ -362,7 +362,7 @@ return {
     ]
   },
   "params": {
-    "id": "de3c58f867cdc7f97a2bf60fe655371a",
+    "id": "8bd2f8680296472efb94f528b6048288",
     "metadata": {},
     "name": "SuggestedPostsGridPaginationQuery",
     "operationKind": "query",
@@ -371,6 +371,6 @@ return {
 };
 })();
 
-(node as any).hash = "21403fb1530e7d148d0f5a91c8966fa8";
+(node as any).hash = "f6ffe412b9d710c286cf8363da0b2f81";
 
 export default node;

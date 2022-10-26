@@ -16,9 +16,13 @@ const LazyModal = dynamic(
 
 export type PostsSupporterFiltersLoadQuery = (variables: Record<string, any>) => void
 
+type DefaultFilterType = 'ALGORITHM' | 'NEW' | 'TOP'
+
 interface Props {
   loadQuery: PostsSupporterFiltersLoadQuery | RefetchFnDynamic<any, any>
   query: PostsSupporterFiltersFragment$key | null
+  defaultValue?: DefaultFilterType
+  newLocked?: boolean
 }
 
 const Fragment = graphql`
@@ -31,14 +35,16 @@ const Fragment = graphql`
 export default function PostsSupporterFilters (props: Props): JSX.Element {
   const {
     loadQuery,
-    query
+    query,
+    defaultValue = 'ALGORITHM',
+    newLocked = true
   } = props
 
   const data = useFragment(Fragment, query)
 
-  const [activeFilter, setActiveFilter] = useState('ALGORITHM')
+  const [activeFilter, setActiveFilter] = useState<DefaultFilterType>(defaultValue)
 
-  const onChangeFilter = (filter: string): void => {
+  const onChangeFilter = (filter: DefaultFilterType): void => {
     setActiveFilter(filter)
     loadQuery({ sortBy: filter }, { fetchPolicy: 'network-only' })
   }
@@ -53,29 +59,34 @@ export default function PostsSupporterFilters (props: Props): JSX.Element {
 
   const filterButtons = [
     {
-      sortBy: 'ALGORITHM',
+      order: newLocked ? 0 : 1,
+      sortBy: 'ALGORITHM' as DefaultFilterType,
       isLocked: false,
       title: <Trans>Trending</Trans>,
       icon: HotContent
     },
     {
-      sortBy: 'TOP',
+      order: newLocked ? 1 : 2,
+      sortBy: 'TOP' as DefaultFilterType,
       isLocked: filterLocked,
       title: <Trans>Top</Trans>,
       icon: RisingGraph
     },
     {
-      sortBy: 'NEW',
-      isLocked: filterLocked,
+      order: newLocked ? 2 : 0,
+      sortBy: 'NEW' as DefaultFilterType,
+      isLocked: filterLocked && newLocked,
       title: <Trans>New</Trans>,
       icon: FreshLeaf
     }
   ]
 
+  const sortedButtons = filterButtons.sort((a, b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0))
+
   return (
     <>
       <HStack spacing={1}>
-        {filterButtons.map((item) => (
+        {sortedButtons.map((item) => (
           <FilterButton
             key={item.sortBy}
             onClickEnabled={() => onChangeFilter(item.sortBy)}
