@@ -19,6 +19,7 @@ type processImageSizes struct {
 	resize     bool
 	mandatory  bool
 	smartCrop  bool
+	quality    string
 }
 
 var postContentSizes = []*processImageSizes{
@@ -26,24 +27,29 @@ var postContentSizes = []*processImageSizes{
 		name:       "hd",
 		constraint: 4096,
 		mandatory:  true,
+		quality:    "90",
 	},
 	{
 		name:       "large",
 		constraint: 2048,
+		quality:    "85",
 	},
 	{
 		name:       "medium",
 		constraint: 1200,
+		quality:    "85",
 	},
 	{
 		name:       "small",
 		constraint: 720,
+		quality:    "85",
 	},
 	{
 		name:       "thumbnail",
 		constraint: 300,
 		resize:     true,
 		smartCrop:  true,
+		quality:    "85",
 	},
 }
 
@@ -164,9 +170,17 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 				factor = float64(size.constraint) / float64(targetSize)
 			} else {
 				factor = 1
+
 			}
 
-			if err := vips.Resize(sourceFileName, imageFileName, factor); err != nil {
+			quality := "85"
+
+			// set custom quality if needed
+			if size.quality != "" {
+				quality = size.quality
+			}
+
+			if err := vips.Resize(sourceFileName, imageFileName, factor, quality); err != nil {
 				return nil, errors.Wrap(err, "failed to resize image by height")
 			}
 		}
