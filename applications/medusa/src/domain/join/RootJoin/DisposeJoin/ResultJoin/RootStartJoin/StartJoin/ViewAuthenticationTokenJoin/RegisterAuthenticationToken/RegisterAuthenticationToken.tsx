@@ -136,7 +136,7 @@ export default function RegisterAuthenticationToken (props: Props): JSX.Element 
           title: t`Welcome to overdoll!`,
           isClosable: true
         })
-        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId)
+        successfulGrant(store, viewerPayload, payload?.createAccountWithAuthenticationToken?.revokedAuthenticationTokenId, true)
         flash('new.account', '')
       },
       onCompleted (data) {

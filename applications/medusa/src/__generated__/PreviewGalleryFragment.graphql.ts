@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<923795d195b6be33c894690d08408773>>
+ * @generated SignedSource<<c5d65300036d4f813d6107a41a684027>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,14 +11,18 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PreviewGalleryFragment$data = {
+  readonly club: {
+    readonly slug: string;
+  };
   readonly content: ReadonlyArray<{
     readonly id: string;
     readonly media: {
-      readonly " $fragmentSpreads": FragmentRefs<"PreviewMediaFragment">;
+      readonly " $fragmentSpreads": FragmentRefs<"PreviewMediaFragment" | "ThumbnailCarouseItemFragment">;
     };
     readonly " $fragmentSpreads": FragmentRefs<"SupporterSlideFragment">;
   }>;
   readonly id: string;
+  readonly reference: string;
   readonly " $fragmentSpreads": FragmentRefs<"SupporterSlidePostFragment">;
   readonly " $fragmentType": "PreviewGalleryFragment";
 };
@@ -45,6 +49,31 @@ return {
     {
       "alias": null,
       "args": null,
+      "kind": "ScalarField",
+      "name": "reference",
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "Club",
+      "kind": "LinkedField",
+      "name": "club",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "slug",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
       "concreteType": "PostContent",
       "kind": "LinkedField",
       "name": "content",
@@ -63,6 +92,11 @@ return {
               "args": null,
               "kind": "FragmentSpread",
               "name": "PreviewMediaFragment"
+            },
+            {
+              "args": null,
+              "kind": "FragmentSpread",
+              "name": "ThumbnailCarouseItemFragment"
             }
           ],
           "storageKey": null
@@ -86,6 +120,6 @@ return {
 };
 })();
 
-(node as any).hash = "2289b622c8e093152953c11eb4bbb9bd";
+(node as any).hash = "e3ed3a9fe25fffe50d7dfdbe552c3115";
 
 export default node;

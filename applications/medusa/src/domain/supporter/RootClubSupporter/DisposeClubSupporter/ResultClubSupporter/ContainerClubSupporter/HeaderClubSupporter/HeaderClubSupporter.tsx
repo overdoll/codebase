@@ -43,7 +43,7 @@ export default function HeaderClubSupporter (props: Props): JSX.Element {
         />
       </Flex>
       <Center bg='dimmers.700' minH={300} py={24} position='relative' w='100%'>
-        <Stack spacing={8}>
+        <Stack w='100%' align='center' justify='center' spacing={8}>
           <Heading
             textShadow='1px 1px 20px #000'
             maxW={500}

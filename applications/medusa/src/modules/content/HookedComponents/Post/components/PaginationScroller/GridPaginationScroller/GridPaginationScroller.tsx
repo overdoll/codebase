@@ -65,8 +65,8 @@ export default function GridPaginationScroller (props: Props): JSX.Element {
     <Box>
       <Grid
         overflow='visible'
-        rowGap={1}
-        columnGap={1}
+        rowGap={2}
+        columnGap={2}
         templateColumns={{
           base: 'repeat(2, minmax(150px, 1fr))',
           lg: 'repeat(3, minmax(150px, 1fr))'

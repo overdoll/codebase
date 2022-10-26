@@ -33,20 +33,20 @@ export default function CarouselGridItem (props: Props): JSX.Element {
   }, [swiper])
 
   return (
-    <GridItem overflow='hidden' h='100%' w='100%'>
+    <GridItem overflow='hidden' w='100%'>
       <ClickableTile
         _active={{ boxShadow: 'none' }}
         _focus={{ boxShadow: 'none' }}
         isDisabled={swiper == null}
         onClick={() => swiper?.slideTo(index, 50)}
-        borderRadius='lg'
+        borderRadius='2px'
         position='relative'
         h='100%'
         w='100%'
       >
         <Flex
-          borderWidth={isActive ? 2 : 0}
-          borderColor={isActive ? (isSupporter ? 'orange.300' : 'whiteAlpha.800') : 'gray.50'}
+          borderWidth={isActive ? '1.5px' : 0}
+          borderColor={isActive ? (isSupporter ? 'orange.300' : 'gray.00') : 'gray.50'}
           borderRadius='inherit'
           position='relative'
           w='100%'

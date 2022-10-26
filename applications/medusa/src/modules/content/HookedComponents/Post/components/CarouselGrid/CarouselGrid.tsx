@@ -1,4 +1,4 @@
-import { Flex, Grid } from '@chakra-ui/react'
+import { Center, Flex, Grid } from '@chakra-ui/react'
 import { ReactNode } from 'react'
 
 interface Props {
@@ -17,19 +17,26 @@ export default function CarouselGrid (props: Props): JSX.Element {
   }
 
   return (
-    <Flex h='100%' w='100%' align='center' justify='center'>
-      <Grid
-        h='100%'
-        w='100%'
+    <Center w='100%'>
+      <Flex
         maxW='container.sm'
-        overflow='hidden'
-        gap={1}
-        justifyContent='center'
-        templateColumns={galleryLength > 10 ? 'repeat(10, 1fr)' : `repeat(${galleryLength}, minmax(20px, 100px))`}
-        templateRows={galleryLength > 10 ? 'repeat(2, 1fr)' : 'repeat(1, 1fr)'}
+        overflowY='hidden'
+        overflowX='scroll'
+        justify='center'
+        w='100%'
+        h='100%'
+        px={1}
       >
-        {children}
-      </Grid>
-    </Flex>
+        <Grid
+          h='50px'
+          w='100%'
+          justifyContent={galleryLength > 5 ? 'flex-start' : 'center'}
+          gap={1}
+          templateColumns={`repeat(${galleryLength}, minmax(50px, 100px))`}
+        >
+          {children}
+        </Grid>
+      </Flex>
+    </Center>
   )
 }

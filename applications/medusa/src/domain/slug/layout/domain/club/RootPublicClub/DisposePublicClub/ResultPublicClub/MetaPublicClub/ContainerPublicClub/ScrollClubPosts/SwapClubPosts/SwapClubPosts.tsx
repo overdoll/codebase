@@ -57,7 +57,7 @@ export default function SwapClubPosts (props: Props): JSX.Element {
   return (
     <SwapPaginationScroller
       type={data.postsView}
-      limit={12}
+      limit={6}
       postConnectionQuery={data.posts}
       hasNext={hasNext}
       loadNext={loadNext}

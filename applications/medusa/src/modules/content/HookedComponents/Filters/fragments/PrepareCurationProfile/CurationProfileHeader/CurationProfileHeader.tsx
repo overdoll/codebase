@@ -33,7 +33,7 @@ export default function CurationProfileHeader (props: Props): JSX.Element {
     <Grid h={12} w='100%' templateColumns='1fr 1fr 1fr'>
       <GridItem>
         <Flex align='center' justify='flex-start'>
-          {(currentStep === 'audience' || currentStep === 'dateOfBirth')
+          {(currentStep === 'audience')
             ? <></>
             : <IconButton
                 icon={<Icon icon={ArrowButtonLeft} w={4} h={4} fill='gray.100' />}
