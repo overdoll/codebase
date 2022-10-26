@@ -14,26 +14,32 @@ const (
 )
 
 type processImageSizes struct {
-	name       string
-	constraint int
-	resize     bool
-	mandatory  bool
-	smartCrop  bool
-	quality    string
+	name              string
+	constraint        int
+	resize            bool
+	mandatory         bool
+	smartCrop         bool
+	original          bool
+	originalQuality   string
+	quality           string
+	alternateOriginal bool
 }
 
 var postContentSizes = []*processImageSizes{
 	{
-		name:       "hd",
-		constraint: 4096,
-		mandatory:  true,
-		quality:    "90",
+		name:            "hd",
+		constraint:      4096,
+		mandatory:       true,
+		original:        true,
+		originalQuality: "95",
+		quality:         "85",
 	},
 	{
-		name:       "large",
-		constraint: 2048,
-		mandatory:  true,
-		quality:    "85",
+		name:              "large",
+		constraint:        2048,
+		mandatory:         true,
+		alternateOriginal: true,
+		quality:           "85",
 	},
 	{
 		name:       "medium",
@@ -145,6 +151,13 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 		shouldResizeHeight := isPortrait && dimensions.Height > size.constraint
 		shouldResizeWidth := !isPortrait && dimensions.Width > size.constraint
 
+		requiresHDOriginal := (isPortrait && dimensions.Height < 1600) || (!isPortrait && dimensions.Width < 1600)
+
+		// don't make "large" mandatory if we have a dimension greater than 1600px, since the hd original will be this good quality
+		if !requiresHDOriginal && size.alternateOriginal && size.mandatory {
+			size.mandatory = false
+		}
+
 		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
 			continue
 		}
@@ -153,7 +166,7 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 		imageFileName := fileName + "/" + imageName
 
 		if size.resize {
-			if err := vips.Thumbnail(sourceFileName, imageFileName, size.constraint, size.smartCrop); err != nil {
+			if err := vips.Thumbnail(sourceFileName, imageFileName, size.constraint, size.smartCrop, size.quality); err != nil {
 				return nil, errors.Wrap(err, "failed to create thumbnail from image")
 			}
 		} else {
@@ -171,7 +184,6 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 				factor = float64(size.constraint) / float64(targetSize)
 			} else {
 				factor = 1
-
 			}
 
 			quality := "85"
@@ -179,6 +191,12 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 			// set custom quality if needed
 			if size.quality != "" {
 				quality = size.quality
+			}
+
+			if size.original && !shouldResizeWidth && !shouldResizeHeight {
+				if requiresHDOriginal {
+					quality = size.originalQuality
+				}
 			}
 
 			if err := vips.Resize(sourceFileName, imageFileName, factor, quality); err != nil {

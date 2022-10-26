@@ -285,7 +285,7 @@ func (m *Media) generateUrlForImage(optimalSizes []int) *ImageMediaAccess {
 			if optimalSize == targetSize {
 				lastSize = size
 				break out
-			} else if optimalSize > targetSize {
+			} else if optimalSize >= targetSize {
 				if lastSize == nil {
 					lastSize = size
 				} else {
@@ -297,7 +297,7 @@ func (m *Media) generateUrlForImage(optimalSizes []int) *ImageMediaAccess {
 						sourceTargetSize = int(lastSize.Width)
 					}
 
-					if targetSize > sourceTargetSize {
+					if targetSize >= sourceTargetSize {
 						lastSize = size
 					}
 				}
@@ -380,7 +380,7 @@ func (m *Media) OriginalImageMediaAccess() *ImageMediaAccess {
 }
 
 func (m *Media) HdImageMediaAccess() *ImageMediaAccess {
-	return m.generateUrlForImage([]int{4096})
+	return m.generateUrlForImage([]int{})
 }
 
 func (m *Media) MiniImageMediaAccess() *ImageMediaAccess {
