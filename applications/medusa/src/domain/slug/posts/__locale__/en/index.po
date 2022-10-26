@@ -6,6 +6,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: @lingui/cli\n"
 "Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:279
 msgid "Attempt {timeoutCount} of {TIMEOUT_LIMIT}..."
@@ -36,6 +42,10 @@ msgstr ""
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:254
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:312
 msgid "Close"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:46
+msgid "Club Menu"
 msgstr ""
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareDiscordButton/ClubShareDiscordButton.tsx:38
@@ -90,12 +100,16 @@ msgstr ""
 msgid "Load more tags"
 msgstr ""
 
-#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:68
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:69
 msgid "Manage Club"
 msgstr ""
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/ClubFooterManageSubscriptionButton/ClubFooterManageSubscriptionButton.tsx:54
 msgid "Manage Subscription"
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:34
+msgid "New Posts"
 msgstr ""
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:132
@@ -120,8 +134,8 @@ msgid "Please select a payment method"
 msgstr ""
 
 #: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:34
-msgid "Posts"
-msgstr ""
+#~ msgid "Posts"
+#~ msgstr ""
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:145
 msgid "Remember this payment method"
@@ -145,6 +159,10 @@ msgstr ""
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:93
 msgid "Set Up"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/SharePublicClub.tsx:38
+msgid "Share Menu"
 msgstr ""
 
 #: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareDiscordButton/ClubShareDiscordButton.tsx:42
@@ -175,7 +193,7 @@ msgstr ""
 msgid "Sort posts by Top and New"
 msgstr ""
 
-#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:58
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:59
 msgid "Staff"
 msgstr ""
 
