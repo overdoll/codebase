@@ -95,7 +95,7 @@ export default function FilterPublicClubPosts (props: Props): JSX.Element {
     <>
       <Wrap overflow='visible' align='center' spacing={1}>
         {limitTags.map((item) => (
-          <WrapItem key={`${data.id as string}_${item.node.__typename as string}_${item.node.id ?? 0}`}>
+          <WrapItem key={`${data.id as string}_${item.node.__typename as string}_${item.node.id as string ?? 0}`}>
             <SelectPostsFilter
               currentFilters={currentFilters}
               loadQuery={onLoadQuery}

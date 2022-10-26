@@ -109,7 +109,7 @@ export default function ClubJoinButton (props: Props): JSX.Element {
         <MediumGenericButton
           isDisabled={!canJoinClub || allowed === false}
           isLoading={isJoiningClub}
-          colorScheme='gray'
+          colorScheme='white'
           onClick={onJoinClub}
         >
           {i18n._(t`Join`)}

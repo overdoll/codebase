@@ -56,7 +56,8 @@ export default function ClubLeaveButton (props: Props): JSX.Element {
   return (
     <MediumGenericButton
       isLoading={isLeavingClub}
-      colorScheme='primary'
+      colorScheme='gray'
+      variant='outline'
       onClick={onLeaveClub}
     >
       {i18n._(t`Joined`)}

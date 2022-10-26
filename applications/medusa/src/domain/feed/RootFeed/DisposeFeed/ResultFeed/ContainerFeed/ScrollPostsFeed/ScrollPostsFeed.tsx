@@ -1,7 +1,7 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollPostsFeedFragment$key } from '@//:artifacts/ScrollPostsFeedFragment.graphql'
 import type { ResultFeedQuery } from '@//:artifacts/ResultFeedQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 
 interface Props {
   accountQuery: ScrollPostsFeedFragment$key

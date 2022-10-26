@@ -6,7 +6,10 @@ export default function ClubJoinOwnerButton (): JSX.Element {
   const { i18n } = useLingui()
 
   return (
-    <MediumGenericButton colorScheme='primary'>
+    <MediumGenericButton
+      colorScheme='gray'
+      variant='outline'
+    >
       {i18n._(t`Joined`)}
     </MediumGenericButton>
   )

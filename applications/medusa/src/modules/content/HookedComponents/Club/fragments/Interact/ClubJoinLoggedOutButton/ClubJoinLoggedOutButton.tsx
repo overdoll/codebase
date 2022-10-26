@@ -59,7 +59,7 @@ export default function ClubJoinLoggedOutButton (props: Props): JSX.Element {
 
   return (
     <>
-      <MediumGenericButton colorScheme='gray' onClick={onOpenJoin}>
+      <MediumGenericButton colorScheme='white' onClick={onOpenJoin}>
         {i18n._(t`Join`)}
       </MediumGenericButton>
       <Modal

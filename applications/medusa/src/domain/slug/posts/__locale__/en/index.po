@@ -1,0 +1,274 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-10-25 20:55-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:279
+msgid "Attempt {timeoutCount} of {TIMEOUT_LIMIT}..."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/HeaderPaymentMethod/HeaderPaymentMethod.tsx:72
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:133
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:210
+msgid "Back"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportPrompt/ClubSupporterSubscriptionPriceButton/ClubSupporterSubscriptionPriceButton.tsx:59
+msgid "Become a Supporter {price}"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/FeatureSupportSummary/FeatureSupportSummary.tsx:41
+msgid "Become a supporter to help {0} keep doing what they're doing."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/BillingSummary/BillingSummary.tsx:78
+msgid "Billed every 30 days, starting from the day you subscribe. You can cancel at any time from your Billing page, which is located in your Account Settings."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:101
+msgid "Cancel"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:254
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:312
+msgid "Close"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareDiscordButton/ClubShareDiscordButton.tsx:38
+msgid "Copied Discord link! Send it in a channel or direct message!"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareLinkButton/ClubShareLinkButton.tsx:43
+msgid "Copy Link"
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ScrollClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:49
+msgid "Create Post"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:185
+msgid "Description"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:111
+msgid "Enter a new payment method"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:158
+msgid "Enter payment information"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:86
+msgid "Enter your payment details in the new window."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:169
+msgid "Error"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportBenefitsSummary/ClubSupportBenefitsSummary.tsx:20
+msgid "Exclusive content posted monthly"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportPrompt/ClubSupportPrompt.tsx:121
+msgid "Get access to {0}'s content and bonus platform features"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SupporterGuidelinesAgreement/SupporterGuidelinesAgreement.tsx:12
+msgid "I have read and agree to the <0>Supporter Guidelines</0>"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/BillingSummary/BillingSummary.tsx:84
+msgid "If requested, refunds may be considered on a case-by-case basis."
+msgstr ""
+
+#: src/domain/slug/layout/domain/posts/RootPublicClubPosts/DisposePublicClubPosts/ResultPublicClubPosts/MetaPublicClubPosts/ContainerPublicClubPosts/ScrollPublicClubPosts/FilterPublicClubPosts/FilterPublicClubPosts.tsx:176
+msgid "Load more tags"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:68
+msgid "Manage Club"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/ClubFooterManageSubscriptionButton/ClubFooterManageSubscriptionButton.tsx:54
+msgid "Manage Subscription"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:132
+msgid "Next"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:231
+msgid "Pending Club Benefits"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:201
+msgid "Please contact us if you continue to experience billing issues"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:247
+msgid "Please contact us if you continue to experience issues with receiving your club benefits"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:98
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:99
+msgid "Please select a payment method"
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:34
+msgid "Posts"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:145
+msgid "Remember this payment method"
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:53
+msgid "See all"
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ScrollClubPosts/ScrollClubPosts.tsx:46
+msgid "See all posts"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportBenefitsSummary/ClubSupportBenefitsSummary.tsx:36
+msgid "See your liked posts"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:147
+msgid "Select a saved payment method"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:93
+msgid "Set Up"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareDiscordButton/ClubShareDiscordButton.tsx:42
+msgid "Share on Discord"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareRedditButton/ClubShareRedditButton.tsx:36
+msgid "Share on Reddit"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/SharePublicClub/ClubShareTwitterButton/ClubShareTwitterButton.tsx:37
+msgid "Share on Twitter"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:106
+msgid "Show Window"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:127
+msgid "Sorry, we couldn't find the transaction. Please try again later."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:159
+msgid "Sorry, we were unable to process your payment. Please try another payment method."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportBenefitsSummary/ClubSupportBenefitsSummary.tsx:28
+msgid "Sort posts by Top and New"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/BannerPublicClub/MenuPublicClub/MenuPublicClub.tsx:58
+msgid "Staff"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:170
+msgid "Subscribe"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportPrompt/ClubSupportPrompt.tsx:116
+msgid "Support {0}"
+msgstr ""
+
+#: src/domain/slug/layout/domain/posts/RootPublicClubPosts/DisposePublicClubPosts/ResultPublicClubPosts/MetaPublicClubPosts/ContainerPublicClubPosts/ScrollPublicClubPosts/ScrollPublicClubPosts.tsx:121
+msgid "Swap View"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportPrompt/ClubSupportPrompt.tsx:77
+msgid "Thanks for supporting {0}!"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:116
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:133
+msgid "There was an error subscribing. Please try again later."
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ScrollClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:61
+msgid "This club hasn't posted any content yet"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillWindowListener/CCBillWindowListener.tsx:91
+msgid "This page will update after you have successfully submitted your payment details"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:301
+msgid "Transaction Approved!"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:154
+msgid "Transaction Declined"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:118
+msgid "Transaction not found"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportBenefitsSummary/ClubSupportBenefitsSummary.tsx:12
+msgid "Unlock exclusive content"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:66
+msgid "Use a saved payment method"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:268
+msgid "Verifying Transaction"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:236
+msgid "We received your payment, but weren't able to issue your club benefits in a reasonable amount of time. Try refreshing the page or coming back in a few minutes and you should see your club benefits!"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:273
+msgid "We've received your payment! Now we're issuing your club benefits. This page will update shortly."
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportTransactionProcess/CCBillDisplayTransaction/CCBillDisplayTransaction.tsx:306
+msgid "You can start using your club benefits right away!"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportPrompt/ClubSupportPrompt.tsx:82
+msgid "You have full access to exclusive content from {0} and bonus platform features"
+msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ScrollClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:30
+msgid "You haven't posted any content yet"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/NewPaymentMethod/CCBillSubscribeForm/CCBillSubscribeForm.tsx:70
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SavedPaymentMethod/CCBillSelectSavedPaymentForm/CCBillSelectSavedPaymentForm.tsx:92
+msgid "You must agree to the guidelines"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:82
+msgid "You must enable two-factor authentication before you can use a saved payment method"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:119
+msgid "You will be asked to enter your payment information and subscribe through our billing provider"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SelectMethodChoice/SelectMethodChoice.tsx:101
+msgid "You will be asked to subscribe using an existing payment method"
+msgstr ""
+
+#: src/domain/slug/layout/components/PublicClubLayout/LazyPublicClubLayout/SupportPublicClub/ClubSupportSelectMethod/SupportSelectMethod/SecureText/SecureText.tsx:11
+msgid "Your payment is safe and secure"
+msgstr ""

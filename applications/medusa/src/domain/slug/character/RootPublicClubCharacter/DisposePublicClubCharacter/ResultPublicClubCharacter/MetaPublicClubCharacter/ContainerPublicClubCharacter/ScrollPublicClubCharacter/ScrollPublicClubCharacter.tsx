@@ -1,7 +1,7 @@
 import { graphql, usePaginationFragment } from 'react-relay'
 import { ScrollPublicClubCharacterFragment$key } from '@//:artifacts/ScrollPublicClubCharacterFragment.graphql'
 import { ResultPublicClubCharacterQuery } from '@//:artifacts/ResultPublicClubCharacterQuery.graphql'
-import { PreviewPost, VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
+import { VerticalPaginationScroller } from '@//:modules/content/HookedComponents/Post'
 import {
   ScrollPublicClubCharacterAccountFragment$key
 } from '@//:artifacts/ScrollPublicClubCharacterAccountFragment.graphql'
