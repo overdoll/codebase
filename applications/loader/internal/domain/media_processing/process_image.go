@@ -187,7 +187,7 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 
 		data, err := vips.GetImageDimensions(imageFileName)
 		if err != nil {
-			return nil, errors.Wrap(err, "failed to get image dimensions")
+			return nil, errors.Wrap(err, "failed to get image dimension")
 		}
 
 		imageSizes = append(imageSizes, &proto.ImageDataSize{
