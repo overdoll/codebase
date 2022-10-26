@@ -220,7 +220,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			CategoryBySlug:   query.NewCategoryBySlugHandler(postRepo),
 			CategoriesByIds:  query.NewCategoriesByIdsHandler(postRepo),
 
-			SearchPosts:      query.NewSearchPostsHandler(postRepo, curationRepo),
+			SearchPosts:      query.NewSearchPostsHandler(postRepo, clubRepo, curationRepo),
 			PostById:         query.NewPostByIdHandler(postRepo),
 			PostByIdOperator: query.NewPostByIdOperatorHandler(postRepo),
 			PostsByIds:       query.NewPostsByIdsHandler(postRepo),
