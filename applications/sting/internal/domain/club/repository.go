@@ -13,6 +13,8 @@ type Repository interface {
 	GetClubById(ctx context.Context, clubId string) (*Club, error)
 	GetClubBySlug(ctx context.Context, requester *principal.Principal, slug string) (*Club, error)
 
+	GetClubIdsFromSlugs(ctx context.Context, slugs []string) ([]string, error)
+
 	CreateClub(ctx context.Context, club *Club) error
 
 	ReserveSlugForClub(ctx context.Context, club *Club) error

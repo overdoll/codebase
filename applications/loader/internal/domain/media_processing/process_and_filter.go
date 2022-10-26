@@ -63,7 +63,7 @@ func processImage(media *media.Media, mimeType string, file *os.File) (*ProcessR
 		return nil, err
 	}
 
-	move, err := processImageWithSizes(media, file)
+	move, err := processImageWithSizes(media, file, true)
 
 	if err != nil {
 		return nil, err
@@ -189,7 +189,7 @@ func ApplyFilters(media *media.Media, file *os.File, filters *ImageFilters, mime
 	}
 
 	_, _ = newFile.Seek(0, io.SeekStart)
-	move, err := processImageWithSizes(media, newFile)
+	move, err := processImageWithSizes(media, newFile, false)
 
 	if err != nil {
 		return nil, err

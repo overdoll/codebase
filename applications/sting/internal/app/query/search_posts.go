@@ -2,6 +2,7 @@ package query
 
 import (
 	"context"
+	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/curation"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/paging"
@@ -32,11 +33,12 @@ type SearchPosts struct {
 
 type SearchPostsHandler struct {
 	pr  post.Repository
+	cr  club.Repository
 	ppr curation.Repository
 }
 
-func NewSearchPostsHandler(pr post.Repository, ppr curation.Repository) SearchPostsHandler {
-	return SearchPostsHandler{pr: pr, ppr: ppr}
+func NewSearchPostsHandler(pr post.Repository, cr club.Repository, ppr curation.Repository) SearchPostsHandler {
+	return SearchPostsHandler{pr: pr, cr: cr, ppr: ppr}
 }
 
 func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*post.Post, error) {
@@ -73,6 +75,15 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 			return nil, err
 		}
 
+		// not a series character, search by a club slug
+		if len(seriesIds) == 0 {
+			seriesIds, err = h.cr.GetClubIdsFromSlugs(ctx, query.SeriesSlugs)
+
+			if err != nil {
+				return nil, err
+			}
+		}
+
 		if len(query.CharacterSlugs) > 0 {
 
 			characterIds, err = h.pr.GetCharacterIdsFromSlugs(ctx, query.CharacterSlugs, seriesIds)
@@ -80,7 +91,6 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 			if err != nil {
 				return nil, err
 			}
-
 		}
 	}
 

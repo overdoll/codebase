@@ -1056,7 +1056,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 	}
 
 	_, _ = fileThumbnail.Seek(0, io.SeekStart)
-	processedResponses, err := processImageWithSizes(target, fileThumbnail)
+	processedResponses, err := processImageWithSizes(target, fileThumbnail, false)
 
 	if err != nil {
 		return nil, err

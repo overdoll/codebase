@@ -1098,6 +1098,36 @@ func (r ClubCassandraElasticsearchRepository) HasNonTerminatedClubs(ctx context.
 	return r.hasNonTerminatedClubs(ctx, accountId)
 }
 
+func (r ClubCassandraElasticsearchRepository) GetClubIdsFromSlugs(ctx context.Context, slugs []string) ([]string, error) {
+
+	var clubSlugResults []clubSlugs
+
+	var lowercaseSlugs []string
+
+	for _, s := range slugs {
+		lowercaseSlugs = append(lowercaseSlugs, strings.ToLower(s))
+	}
+
+	if err := qb.Select(clubSlugTable.Name()).
+		Where(qb.In("slug")).
+		Query(r.session).
+		WithContext(ctx).
+		Idempotent(true).
+		Consistency(gocql.One).
+		Bind(lowercaseSlugs).
+		SelectRelease(&clubSlugResults); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to get club slugs")
+	}
+
+	var ids []string
+
+	for _, i := range clubSlugResults {
+		ids = append(ids, i.ClubId)
+	}
+
+	return ids, nil
+}
+
 var clubPostsViewTable = table.New(table.Metadata{
 	Name: "club_posts_view",
 	Columns: []string{

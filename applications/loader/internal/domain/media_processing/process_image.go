@@ -99,7 +99,7 @@ var banner = []*processImageSizes{
 	},
 }
 
-func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) {
+func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*Move, error) {
 
 	sourceFileName := file.Name()
 
@@ -151,10 +151,10 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 		shouldResizeHeight := isPortrait && dimensions.Height > size.constraint
 		shouldResizeWidth := !isPortrait && dimensions.Width > size.constraint
 
-		requiresHDOriginal := (isPortrait && dimensions.Height <= 1500) || (!isPortrait && dimensions.Width <= 1500)
+		requiresHDOriginal := useHd && ((isPortrait && dimensions.Height <= 1500) || (!isPortrait && dimensions.Width <= 1500))
 
 		// don't make "large" mandatory if we have a dimension greater than 1600px, since the hd original will be this good quality
-		if !requiresHDOriginal && size.alternateOriginal && size.mandatory {
+		if useHd && !requiresHDOriginal && size.alternateOriginal && size.mandatory {
 			size.mandatory = false
 		}
 
@@ -193,7 +193,7 @@ func processImageWithSizes(target *media.Media, file *os.File) ([]*Move, error) 
 				quality = size.quality
 			}
 
-			if size.original && !shouldResizeWidth && !shouldResizeHeight {
+			if useHd && size.original && !shouldResizeWidth && !shouldResizeHeight {
 				if requiresHDOriginal {
 					quality = size.originalQuality
 				}
