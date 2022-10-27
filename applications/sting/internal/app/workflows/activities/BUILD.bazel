@@ -41,6 +41,7 @@ go_library(
         "submit_post.go",
         "subtract_club_member.go",
         "suspend_club.go",
+        "sync_posts.go",
         "terminate_club.go",
         "un_archive_post.go",
         "un_suspend_club.go",

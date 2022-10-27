@@ -27,6 +27,7 @@ go_library(
         "remove_post_like.go",
         "submit_post.go",
         "suspend_club.go",
+        "sync_posts.go",
         "terminate_club.go",
         "transfer_club_ownership.go",
         "un_archive_post.go",
