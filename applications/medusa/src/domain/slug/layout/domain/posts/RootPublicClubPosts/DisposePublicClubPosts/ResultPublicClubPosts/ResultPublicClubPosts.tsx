@@ -15,6 +15,7 @@ const Query = graphql`
     $seriesSlugs: [String!],
     $characterSlugs: [String!],
     $supporterOnlyStatus: [SupporterOnlyStatus!],
+    $clubCharacterSlugs: [String!],
     $seed: String
   ) {
     club(slug: $slug) {

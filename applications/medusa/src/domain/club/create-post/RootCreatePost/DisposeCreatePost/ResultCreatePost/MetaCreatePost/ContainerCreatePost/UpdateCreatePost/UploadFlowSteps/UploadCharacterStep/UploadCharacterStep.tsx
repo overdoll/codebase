@@ -1,52 +1,48 @@
-import { Suspense } from 'react'
 import {
   MobileContainer,
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
 } from '@//:modules/content/PageLayout'
-import SearchInput from '@//:modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
-import { HStack, Stack } from '@chakra-ui/react'
-import { t, Trans } from '@lingui/macro'
-import { useLingui } from '@lingui/react'
-import SearchCharacters from './UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector'
-import QueryErrorBoundary from '@//:modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { useSearch } from '@//:modules/content/HookedComponents/Search'
+import { Flex, Stack, useDisclosure } from '@chakra-ui/react'
+import { Trans } from '@lingui/macro'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import SkeletonUploadCharacterGrid
-  from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
-import SearchBooleanButton
-  from '@//:modules/content/HookedComponents/Search/components/SearchBooleanButton/SearchBooleanButton'
 import Head from 'next/head'
-
-export interface UploadCharacterSearchProps {
-  name: string | null
-  clubCharacters?: boolean
-}
+import UploadSearchAllCharacters from './UploadSearchAllCharacters/UploadSearchAllCharacters'
+import { UploadCharacterStepFragment$key } from '@//:artifacts/UploadCharacterStepFragment.graphql'
+import { graphql, useFragment } from 'react-relay/hooks'
+import UploadSearchClubCharacters from './UploadSearchClubCharacters/UploadSearchClubCharacters'
+import Button from '@//:modules/form/Button/Button'
 
 interface ChoiceProps {
   name: string
 }
 
-export default function UploadCharacterStep (): JSX.Element {
-  const { i18n } = useLingui()
+interface Props {
+  query: UploadCharacterStepFragment$key
+}
+
+const Fragment = graphql`
+  fragment UploadCharacterStepFragment on Post {
+    ...UploadSearchClubCharactersFragment
+  }
+`
+
+export default function UploadCharacterStep (props: Props): JSX.Element {
+  const { query } = props
+
+  const data = useFragment(Fragment, query)
+
+  const {
+    isOpen,
+    onToggle
+  } = useDisclosure()
 
   const {
     state,
     dispatch
   } = useSequenceContext()
-
-  const {
-    searchArguments,
-    loadQuery,
-    register: registerSearch
-  } = useSearch<UploadCharacterSearchProps>({
-    defaultValue: {
-      clubCharacters: false,
-      name: null
-    }
-  })
 
   const {
     values,
@@ -81,35 +77,35 @@ export default function UploadCharacterStep (): JSX.Element {
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>
-        <HStack spacing={2}>
-          <SearchInput
-            nullifyOnClear
-            {...registerSearch('name', 'change')}
-            placeholder={i18n._(t`Search for a character by name`)}
-          />
-          <SearchBooleanButton
-            aria-label={searchArguments.variables.clubCharacters === true ? i18n._(t`Show all characters`) : i18n._(t`Show only original characters`)}
-            colorScheme={searchArguments.variables.clubCharacters === true ? 'green' : 'gray'}
-            {...registerSearch('clubCharacters', 'change')}
-          >
-            OC
-          </SearchBooleanButton>
-        </HStack>
+        <Flex>
+          <Button colorScheme='teal' onClick={onToggle} size='sm' variant='link'>
+            {isOpen
+              ? (
+                <Trans>
+                  Use a non-original character
+                </Trans>
+                )
+              : (
+                <Trans>
+                  I'm posting content with my original character
+                </Trans>
+                )}
+          </Button>
+        </Flex>
         <ChoiceRemovableTags
           values={values}
           removeValue={removeValue}
           titleKey='name'
         />
-        <QueryErrorBoundary
-          loadQuery={loadQuery}
-        >
-          <Suspense fallback={<SkeletonUploadCharacterGrid />}>
-            <SearchCharacters
-              searchArguments={searchArguments}
+        {isOpen
+          ? (
+            <UploadSearchClubCharacters query={data} register={register} />
+            )
+          : (
+            <UploadSearchAllCharacters
               register={register}
             />
-          </Suspense>
-        </QueryErrorBoundary>
+            )}
       </Stack>
     </MobileContainer>
   )

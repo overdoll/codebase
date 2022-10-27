@@ -34,14 +34,16 @@ export default function CategoryPostsFilter (props: Props): JSX.Element {
       loadQuery({
         categorySlugs: null,
         characterSlugs: null,
-        seriesSlugs: null
+        seriesSlugs: null,
+        clubCharacterSlugs: null
       })
       return
     }
     loadQuery({
       categorySlugs: [data.slug],
       characterSlugs: null,
-      seriesSlugs: null
+      seriesSlugs: null,
+      clubCharacterSlugs: null
     })
   }
 

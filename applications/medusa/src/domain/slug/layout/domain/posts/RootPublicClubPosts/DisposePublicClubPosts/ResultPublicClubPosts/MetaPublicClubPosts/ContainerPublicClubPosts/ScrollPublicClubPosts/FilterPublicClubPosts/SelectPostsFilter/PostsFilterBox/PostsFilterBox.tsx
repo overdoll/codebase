@@ -5,7 +5,7 @@ import { Random } from '@//:modules/utilities/random'
 import hash from '@//:modules/utilities/hash'
 import { DEFAULT_SEED, TAG_COLOR_PALETTE } from '@//:modules/constants/theme'
 import { RemoveCross } from '@//:assets/icons'
-import Icon from '../../../../../../../../../../../../../../modules/content/PageLayout/BuildingBlocks/Icon/Icon'
+import Icon from '@//:modules/content/PageLayout/BuildingBlocks/Icon/Icon'
 
 interface Props extends Omit<BoxProps, 'title'> {
   onClick: () => void

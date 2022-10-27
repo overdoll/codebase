@@ -241,15 +241,15 @@ const variantLink: SystemStyleFunction = (props) => {
     verticalAlign: 'baseline',
     fontFamily: 'body',
     fontWeight: 'normal',
-    color: mode(`${c}.500`, `${c}.400`)(props),
+    color: mode(`${c}.500`, `${c}.300`)(props),
     _hover: {
       _disabled: {
         textDecoration: 'none'
       }
     },
     _active: {
-      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.400`, 0.25)(theme)) as string}`,
-      color: mode(`${c}.700`, `${c}.600`)(props)
+      boxShadow: `0 0 0 3px ${getColor(theme, transparentize(`${c}.300`, 0.25)(theme)) as string}`,
+      color: mode(`${c}.700`, `${c}.300`)(props)
     }
   }
 }

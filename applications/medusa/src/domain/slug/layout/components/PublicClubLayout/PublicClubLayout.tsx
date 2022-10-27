@@ -4,7 +4,7 @@ import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/
 import { useRouter } from 'next/router'
 import LazyPublicClubLayout from './LazyPublicClubLayout/LazyPublicClubLayout'
 import SuspenseLazyPosts
-  from '../../../../../modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
+  from '@//:modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
 
 export interface PublicClubLayoutLazyProps {

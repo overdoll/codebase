@@ -9,7 +9,6 @@ import { HStack, Stack } from '@chakra-ui/react'
 import { useFragment } from 'react-relay/hooks'
 import PostsSupporterFilters
   from '@//:modules/content/HookedComponents/Filters/fragments/PostsSupporterFilters/PostsSupporterFilters'
-import SwapPaginationScroller from '../../../../../../../../components/SwapPaginationScroller/SwapPaginationScroller'
 import FilterPublicClubPosts from './FilterPublicClubPosts/FilterPublicClubPosts'
 import { useState } from 'react'
 import { Icon } from '@//:modules/content/PageLayout'
@@ -17,6 +16,7 @@ import { CardPostsView, GalleryPostsView } from '@//:assets/icons'
 import IconButton from '@//:modules/form/IconButton/IconButton'
 import { t } from '@lingui/macro'
 import { useLingui } from '@lingui/react'
+import SwapPaginationScroller from '../../../../../../../../components/SwapPaginationScroller/SwapPaginationScroller'
 
 interface Props {
   clubQuery: ScrollPublicClubPostsFragment$key
@@ -38,6 +38,7 @@ const ClubFragment = graphql`
       seriesSlugs: $seriesSlugs,
       characterSlugs: $characterSlugs,
       supporterOnlyStatus: $supporterOnlyStatus,
+      clubCharacterSlugs: $clubCharacterSlugs,
       seed: $seed
     )
     @connection (key: "ClubPublicPosts_posts") {
