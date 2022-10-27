@@ -41,7 +41,7 @@ func (r PostsCassandraElasticsearchRepository) getTags(ctx context.Context, curs
 	categories, okCategories := response.Aggregations.Terms("category_ids")
 
 	var aggregations []*elastic.AggregationBucketKeyItem
-	var metas map[string]map[string]interface{}
+	metas := make(map[string]map[string]interface{})
 
 	if okChars {
 		for _, bucket := range characters.Buckets {
