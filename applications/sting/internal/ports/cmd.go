@@ -412,8 +412,6 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	}
 
-	generateSitemap.PersistentFlags().String("schedule", "", "Sync posts on a cron schedule.")
-
 	return []*cobra.Command{
 		generateBannerRootCmd,
 		generateSitemap,
