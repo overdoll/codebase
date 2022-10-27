@@ -3,6 +3,8 @@ import type { ClubExternalLinksFragment$key } from '@//:artifacts/ClubExternalLi
 import { Flex, Heading, Stack } from '@chakra-ui/react'
 import { ExternalLink } from '@//:modules/routing'
 import ClickableTile from '@//:modules/content/ContentSelection/ClickableTile/ClickableTile'
+import { Icon } from '@//:modules/content/PageLayout'
+import { ShareExternalLink } from '@//:assets/icons'
 
 interface Props {
   clubQuery: ClubExternalLinksFragment$key
@@ -37,25 +39,24 @@ export default function ClubExternalLinks (props: Props): JSX.Element {
     >
       {links.map((item) => (
         <ExternalLink key={item.url} href={item.url}>
-          <ClickableTile borderRadius='semi'>
+          <ClickableTile w='auto' borderRadius='semi'>
             <Flex
-              p={2}
               overflow='hidden'
               borderRadius='semi'
               w='100%'
               h='100%'
               align='center'
-              justify='center'
-              bg='gray.800'
+              justify='flex-start'
             >
               <Heading
                 noOfLines={1}
-                color='gray.00'
+                color='gray.200'
                 fontSize='sm'
                 textAlign='center'
               >
                 {shortenUrl(item.url)}
               </Heading>
+              <Icon ml={2} icon={ShareExternalLink} w={3} h={3} fill='gray.200' />
             </Flex>
           </ClickableTile>
         </ExternalLink>

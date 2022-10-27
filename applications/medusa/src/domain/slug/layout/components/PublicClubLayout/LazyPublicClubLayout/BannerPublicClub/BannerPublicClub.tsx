@@ -41,9 +41,22 @@ export default function BannerPublicClub (props: Props): JSX.Element {
 
   return (
     <Box position='relative'>
-      <Grid overflow='hidden' minH='200px' maxH='30vh' h='100%' w='100%' templateColumns='1fr 1fr 1fr'>
+      <Grid
+        minH='200px'
+        maxH='30vh'
+        overflow='hidden'
+        h='100%'
+        w='100%'
+        templateColumns='1fr 1fr 1fr'
+        templateRows='1fr'
+      >
         {clubData.posts.edges.map((item) => (
-          <GridItem overflow='hidden' key={item.node.id}>
+          <GridItem
+            h='100%'
+            w='100%'
+            overflow='hidden'
+            key={item.node.id}
+          >
             <BannerPublicClubMedia mediaQuery={item.node.content[0].media} />
           </GridItem>
         ))}
@@ -52,8 +65,8 @@ export default function BannerPublicClub (props: Props): JSX.Element {
         <ContentContainer h='100%'>
           <Flex align='flex-end' h='100%' w='100%'>
             <Flex w='100%' align='flex-end' justify='space-between'>
-              <Box transform='translateY(10px)'>
-                <ClubIcon borderColor='gray.50' borderWidth={3} size='2xl' clubQuery={clubData} />
+              <Box transform='translateY(15px)'>
+                <ClubIcon borderColor='gray.900' borderWidth={3} size='2xl' clubQuery={clubData} />
               </Box>
               <HStack>
                 <SharePublicClub clubQuery={clubData} />

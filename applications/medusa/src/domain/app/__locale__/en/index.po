@@ -55,8 +55,8 @@ msgid "Back"
 msgstr ""
 
 #: src/modules/content/Navigation/HorizontalNavigation/HorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu/MobileHorizontalNavigationDropdownMenu.tsx:66
-msgid "Become Supporter"
-msgstr ""
+#~ msgid "Become Supporter"
+#~ msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/components/SupporterFeatureModal/SupporterFeatureModal.tsx:68
 #: src/modules/content/HookedComponents/Filters/components/SupporterUnlockShadow/SupporterUnlockShadow.tsx:27

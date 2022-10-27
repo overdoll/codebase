@@ -32,7 +32,7 @@ export default function ContainerPublicClub (props: Props): JSX.Element {
         <HStack justify='space-between'>
           <Heading color='gray.00' fontSize='xl'>
             <Trans>
-              Posts
+              New Posts
             </Trans>
           </Heading>
           <LinkButton

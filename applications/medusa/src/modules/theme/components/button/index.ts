@@ -130,7 +130,7 @@ const variantOutline: SystemStyleFunction = (props) => {
     size
   } = props
   const { theme } = props
-  const borderColor = mode('gray.200', 'gray.300')(props)
+  const borderColor = mode('gray.200', 'gray.200')(props)
   const combinedColor = mode(`${c}.200`, `${c}.500`)(props)
 
   const determineBorderWidth = (size): number => {
@@ -155,6 +155,7 @@ const variantOutline: SystemStyleFunction = (props) => {
       borderStyle: 'solid',
       borderWidth: determineBorderWidth(size),
       color: mode('inherit', 'gray.100')(props),
+      borderColor: borderColor,
       _hover: {
         bg: mode('gray.100', 'gray.500')(props)
       },

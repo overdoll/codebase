@@ -1,5 +1,5 @@
 import { ClickableTile } from '@//:modules/content/ContentSelection'
-import { Box, BoxProps, Heading, HStack } from '@chakra-ui/react'
+import { Box, BoxProps, Heading, HStack, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { Random } from '@//:modules/utilities/random'
 import hash from '@//:modules/utilities/hash'
@@ -13,6 +13,7 @@ interface Props extends Omit<BoxProps, 'title'> {
   title: string
   id: string
   isActive: boolean
+  count?: number
 }
 
 export default function PostsFilterBox (props: Props): JSX.Element {
@@ -22,6 +23,7 @@ export default function PostsFilterBox (props: Props): JSX.Element {
     title,
     id,
     isActive,
+    count,
     ...rest
   } = props
 
@@ -59,6 +61,19 @@ export default function PostsFilterBox (props: Props): JSX.Element {
           >
             {title}
           </Heading>
+          {count != null && (
+            <Text
+              fontFamily='mono'
+              fontWeight='bold'
+              color='dimmers.500'
+              fontSize={{
+                base: 'xs',
+                md: 'sm'
+              }}
+            >
+              {count}
+            </Text>
+          )}
           {isActive && (
             <Icon
               icon={RemoveCross}
