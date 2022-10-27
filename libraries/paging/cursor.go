@@ -202,7 +202,7 @@ func (c *Cursor) BuildElasticsearchAggregate(aggregationBuckets []string, append
 	}
 
 	for i := 0; i < size; i++ {
-		if i == len(aggregationBuckets)-1 {
+		if i == len(aggregationBuckets)-1 || len(aggregationBuckets) == 0 {
 			break
 		}
 
