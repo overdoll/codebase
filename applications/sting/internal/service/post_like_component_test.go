@@ -98,7 +98,7 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 	testingAccountId := newFakeAccount(t)
 	clb := seedClub(t, uuid.New().String())
 	clubId := clb.ID()
-	mockAccountNormal(t, testingAccountId)
+	mockAccountDefault(t, testingAccountId)
 
 	publishedPost := seedPublishedPost(t, uuid.New().String(), clubId)
 	postId := publishedPost.ID()

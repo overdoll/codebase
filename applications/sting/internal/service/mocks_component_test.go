@@ -85,3 +85,13 @@ func mockAccountNormal(t *testing.T, accountId string) {
 		}
 	}, nil)
 }
+
+func mockAccountDefault(t *testing.T, accountId string) {
+	application.EvaClient.On("GetAccount", mock.Anything, &eva.GetAccountRequest{Id: accountId}).Return(func(c context.Context, req *eva.GetAccountRequest, g ...grpc.CallOption) *eva.Account {
+		return &eva.Account{
+			Id:     req.Id,
+			Roles:  []string{},
+			Secure: true,
+		}
+	}, nil)
+}
