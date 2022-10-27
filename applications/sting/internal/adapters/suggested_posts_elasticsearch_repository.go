@@ -107,11 +107,14 @@ func (r PostsCassandraElasticsearchRepository) newSuggestedPostsByPost(ctx conte
 	}
 
 	var postIds []string
-	sigTerms, _ := result.Aggregations.SignificantTerms("liked_post_ids")
+	sigTerms, ok := result.Aggregations.SignificantTerms("posts_like_post")
 
 	var buckets []string
-	for _, sigTerm := range sigTerms.Buckets {
-		buckets = append(buckets, sigTerm.Key)
+
+	if ok {
+		for _, sigTerm := range sigTerms.Buckets {
+			buckets = append(buckets, sigTerm.Key)
+		}
 	}
 
 	if err := cursor.BuildElasticsearchAggregate(buckets, func(index int, bucket string) {

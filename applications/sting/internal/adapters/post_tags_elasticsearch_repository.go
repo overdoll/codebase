@@ -36,26 +36,32 @@ func (r PostsCassandraElasticsearchRepository) getTags(ctx context.Context, curs
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed to aggregate tags")
 	}
 
-	characters, _ := response.Aggregations.Terms("character_ids")
-	series, _ := response.Aggregations.Terms("series_ids")
-	categories, _ := response.Aggregations.Terms("category_ids")
+	characters, okChars := response.Aggregations.Terms("character_ids")
+	series, okSeries := response.Aggregations.Terms("series_ids")
+	categories, okCategories := response.Aggregations.Terms("category_ids")
 
 	var aggregations []*elastic.AggregationBucketKeyItem
 	var metas map[string]map[string]interface{}
 
-	for _, bucket := range characters.Buckets {
-		metas[bucket.Key.(string)] = characters.Meta
-		aggregations = append(aggregations, bucket)
+	if okChars {
+		for _, bucket := range characters.Buckets {
+			metas[bucket.Key.(string)] = characters.Meta
+			aggregations = append(aggregations, bucket)
+		}
 	}
 
-	for _, bucket := range series.Buckets {
-		metas[bucket.Key.(string)] = series.Meta
-		aggregations = append(aggregations, bucket)
+	if okSeries {
+		for _, bucket := range series.Buckets {
+			metas[bucket.Key.(string)] = series.Meta
+			aggregations = append(aggregations, bucket)
+		}
 	}
 
-	for _, bucket := range categories.Buckets {
-		metas[bucket.Key.(string)] = categories.Meta
-		aggregations = append(aggregations, bucket)
+	if okCategories {
+		for _, bucket := range categories.Buckets {
+			metas[bucket.Key.(string)] = categories.Meta
+			aggregations = append(aggregations, bucket)
+		}
 	}
 
 	sort.SliceStable(aggregations, func(i, j int) bool {
