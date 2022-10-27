@@ -23,7 +23,8 @@ type Commands struct {
 	ArchivePost   command.ArchivePostHandler
 	UnArchivePost command.UnArchivePostHandler
 
-	SyncPosts command.SyncPostsHandler
+	SyncPosts         command.SyncPostsHandler
+	BackFillPostViews command.BackFillPostViewsHandler
 
 	NewCreatorLead command.NewCreatorLeadHandler
 

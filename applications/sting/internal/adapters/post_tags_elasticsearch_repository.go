@@ -139,7 +139,7 @@ func (r PostsCassandraElasticsearchRepository) getTags(ctx context.Context, curs
 	).
 		Must(elastic.NewTermQuery("_index", SeriesReaderIndex)))
 
-	builder.Query(query)
+	sourceBuilder.Query(query)
 
 	data, err := r.client.Search().SearchSource(sourceBuilder).Pretty(true).Do(ctx)
 

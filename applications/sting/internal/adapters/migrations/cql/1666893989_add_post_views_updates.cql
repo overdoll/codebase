@@ -5,16 +5,10 @@ CREATE TABLE IF NOT EXISTS post_views_counter
     primary key ( post_id )
 );
 
-CREATE TABLE IF NOT EXISTS post_updates_queue
+CREATE TABLE IF NOT EXISTS post_views_counter_bucketed
 (
     bucket  int,
     post_id text,
-    primary key ( bucket, post_id )
-);
-
-CREATE TABLE IF NOT EXISTS post_updates_queue_bucket
-(
-    id     int,
-    bucket int,
-    primary key ( id, bucket )
+    views   counter,
+    primary key ( (bucket, post_id) )
 );

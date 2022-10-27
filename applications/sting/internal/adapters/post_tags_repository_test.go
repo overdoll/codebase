@@ -93,5 +93,5 @@ func TestPostTagsSearch(t *testing.T) {
 	tags, err = postRepo.Tags(ctx, newCursor, &testClubId)
 	require.NoError(t, err, "should have no error searching tags")
 
-	require.Len(t, tags, 3, "should have found tags")
+	require.Len(t, tags, 2, "should have found tags")
 }

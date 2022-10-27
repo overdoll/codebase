@@ -21,6 +21,7 @@ type PostWithViewerLike struct {
 	Reference   string
 	ViewerLiked *PostLikeModified
 	Likes       int
+	Views       int
 	Categories  []struct {
 		TotalLikes int
 	}
@@ -183,6 +184,16 @@ func TestLikePost_and_undo_and_delete(t *testing.T) {
 	require.NoError(t, err, "failed to observe posts")
 
 	workflowExecution.FindAndExecuteWorkflow(t, getWorkflowEnvironment())
+
+	// execute sync posts to make sure we sync correctly
+	env := getWorkflowEnvironment()
+	env.RegisterWorkflow(workflows.SyncPosts)
+	env.ExecuteWorkflow(workflows.SyncPosts)
+	require.True(t, env.IsWorkflowCompleted())
+	require.Nil(t, env.GetWorkflowError())
+
+	postAfterLikeRemoved = getPostWithViewerLike(t, testingAccountId, postId)
+	require.Equal(t, 1, postAfterLikeRemoved.Post.Views, "post has 1 view")
 
 	workflowExecution = testing_tools.NewMockWorkflowWithArgs(application.TemporalClient, workflows.DeleteAccountData, workflows.DeleteAccountDataInput{AccountId: testingAccountId})
 

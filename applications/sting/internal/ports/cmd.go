@@ -403,7 +403,29 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	}
 
+	backfillPostViews := &cobra.Command{
+		Use: "backfill-post-views",
+		Run: func(cmd *cobra.Command, args []string) {
+			if err := app().Commands.BackFillPostViews.Handle(context.Background()); err != nil {
+				zap.S().Fatalw("failed to backfill post views", zap.Error(err))
+			}
+		},
+	}
+
 	generateSitemap.PersistentFlags().String("schedule", "", "Sync posts on a cron schedule.")
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources, remove, reprocess, accountStats, syncPosts}
+	return []*cobra.Command{
+		generateBannerRootCmd,
+		generateSitemap,
+		updateTotalLikesForPost,
+		updateTotalPostsForPost,
+		updateSlug,
+		reIndex,
+		migrateResources,
+		remove,
+		reprocess,
+		accountStats,
+		syncPosts,
+		backfillPostViews,
+	}
 }

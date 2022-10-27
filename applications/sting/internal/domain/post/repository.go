@@ -17,6 +17,7 @@ type Repository interface {
 	IndexPost(ctx context.Context, postId string) error
 
 	SyncPosts(ctx context.Context) error
+	BackFillPostViews(ctx context.Context) error
 
 	GetTopCharacterNames(ctx context.Context) ([]string, error)
 

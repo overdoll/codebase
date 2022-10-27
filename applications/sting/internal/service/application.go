@@ -87,7 +87,7 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 	curationRepo := adapters.NewCurationCassandraRepository(session)
 	gamesRepo := adapters.NewGamesCassandraRepository(session)
 
-	statsRepo := adapters.NewStatsCassandraRepository(session)
+	statsRepo := adapters.NewStatsCassandraRepository(session, cache)
 
 	return &app.Application{
 		Commands: app.Commands{
@@ -105,6 +105,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			GenerateClubBanner:    command.NewGenerateClubBannerHandler(postRepo, eventRepo),
 			IndexPost:             command.NewIndexPostHandler(postRepo),
 			NewCreatorLead:        command.NewNewCreatorLeadHandler(carrier),
+
+			BackFillPostViews: command.NewBackFillPostViewsHandler(postRepo),
 
 			GenerateSitemap: command.NewGenerateSitemapHandler(eventRepo),
 

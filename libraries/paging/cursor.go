@@ -195,9 +195,9 @@ func (c *Cursor) BuildElasticsearchAggregate(aggregationBuckets []string, append
 
 	var foundCursor bool
 
-	size := 0
+	size := c.GetLimit()
 
-	if c.GetLimit() == 0 {
+	if size == 0 {
 		size = 10
 	}
 
