@@ -102,6 +102,7 @@ func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, reque
 		return nil, nil
 	}
 
+	counterBatch := r.session.NewBatch(gocql.CounterBatch).WithContext(ctx)
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
 
 	observedAt := time.Now()
@@ -139,7 +140,7 @@ func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, reque
 
 		stmt, names = postViewsCounterTable.UpdateBuilder().Where(qb.Eq("post_id")).Add("views").ToCql()
 		support.BindStructToBatchStatement(
-			batch,
+			counterBatch,
 			stmt, names,
 			postViewsCounter{
 				PostId: postId,
@@ -149,7 +150,7 @@ func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, reque
 
 		stmt, names = postViewsCounterBucketedTable.UpdateBuilder().Where(qb.Eq("post_id"), qb.Eq("bucket")).Add("views").ToCql()
 		support.BindStructToBatchStatement(
-			batch,
+			counterBatch,
 			stmt, names,
 			postViewsCounterBucketed{
 				PostId: postId,
@@ -162,6 +163,11 @@ func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, reque
 	support.MarkBatchIdempotent(batch)
 	if err := r.session.ExecuteBatch(batch); err != nil {
 		return nil, errors.Wrap(support.NewGocqlError(err), "failed to create post observations")
+	}
+
+	support.MarkBatchIdempotent(counterBatch)
+	if err := r.session.ExecuteBatch(counterBatch); err != nil {
+		return nil, errors.Wrap(support.NewGocqlError(err), "failed to create post observations - counters")
 	}
 
 	_, err := r.cache.WithContext(ctx).SAdd(ctx, postSyncQueueKey, finalPostIdsAny...).Result()
