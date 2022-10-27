@@ -89,6 +89,28 @@ func (r EventTemporalRepository) TransferClubOwnership(ctx context.Context, requ
 	return nil
 }
 
+func (r EventTemporalRepository) SyncPosts(ctx context.Context, schedule string) error {
+
+	options := client.StartWorkflowOptions{
+		TaskQueue:                                viper.GetString("temporal.queue"),
+		ID:                                       "sting.SyncPosts",
+		WorkflowIDReusePolicy:                    enums.WORKFLOW_ID_REUSE_POLICY_TERMINATE_IF_RUNNING,
+		WorkflowExecutionErrorWhenAlreadyStarted: true,
+	}
+
+	if schedule != "" {
+		options.CronSchedule = schedule
+	}
+
+	_, err := r.client.ExecuteWorkflow(ctx, options, workflows.SyncPosts)
+
+	if err != nil {
+		return errors.Wrap(err, "failed to sync posts")
+	}
+
+	return nil
+}
+
 func (r EventTemporalRepository) GenerateSitemap(ctx context.Context, schedule string) error {
 
 	options := client.StartWorkflowOptions{

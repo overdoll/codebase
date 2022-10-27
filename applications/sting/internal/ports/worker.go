@@ -53,6 +53,7 @@ func NewWorker(app *app.Application) (worker.Worker, func()) {
 	w.RegisterWorkflow(workflows.TransferClubOwnership)
 
 	w.RegisterWorkflow(workflows.GenerateCuratedPostsFeed)
+	w.RegisterWorkflow(workflows.SyncPosts)
 
 	// register activities with our struct
 	w.RegisterActivity(app.Activities)

@@ -393,5 +393,17 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	}
 
-	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources, remove, reprocess, accountStats}
+	syncPosts := &cobra.Command{
+		Use: "sync-posts",
+		Run: func(cmd *cobra.Command, args []string) {
+			schedule, _ := cmd.Flags().GetString("schedule")
+			if err := app().Commands.SyncPosts.Handle(context.Background(), command.SyncPosts{Schedule: schedule}); err != nil {
+				zap.S().Fatalw("failed to sync posts", zap.Error(err))
+			}
+		},
+	}
+
+	generateSitemap.PersistentFlags().String("schedule", "", "Sync posts on a cron schedule.")
+
+	return []*cobra.Command{generateBannerRootCmd, generateSitemap, updateTotalLikesForPost, updateTotalPostsForPost, updateSlug, reIndex, migrateResources, remove, reprocess, accountStats, syncPosts}
 }

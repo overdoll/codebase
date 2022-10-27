@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/gocql/gocql"
 	"github.com/scylladb/gocqlx/v2"
+	"github.com/scylladb/gocqlx/v2/qb"
 	"github.com/scylladb/gocqlx/v2/table"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/bucket"
@@ -13,6 +14,36 @@ import (
 	"sort"
 	"time"
 )
+
+var postUpdatesQueueBucketTable = table.New(table.Metadata{
+	Name: "post_updates_queue_bucket",
+	Columns: []string{
+		"id",
+		"bucket",
+	},
+	PartKey: []string{"id"},
+	SortKey: []string{},
+})
+
+var postUpdatesQueueTable = table.New(table.Metadata{
+	Name: "post_updates_queue",
+	Columns: []string{
+		"bucket",
+		"post_id",
+	},
+	PartKey: []string{"bucket"},
+	SortKey: []string{"post_id"},
+})
+
+var postViewsCounterTable = table.New(table.Metadata{
+	Name: "post_views_counter",
+	Columns: []string{
+		"post_id",
+		"views",
+	},
+	PartKey: []string{"post_id"},
+	SortKey: []string{},
+})
 
 var accountPostObservationsBucketsTable = table.New(table.Metadata{
 	Name: "account_post_observations_buckets",
@@ -48,6 +79,21 @@ type accountPostObservationsBucket struct {
 	ObservedAccountId string `db:"observer_account_id"`
 }
 
+type postViewsCounter struct {
+	Views  int    `db:"views"`
+	PostId string `db:"post_id"`
+}
+
+type postUpdatesQueue struct {
+	Bucket int    `db:"bucket"`
+	PostId string `db:"post_id"`
+}
+
+type postUpdatesQueueBucket struct {
+	Bucket int `db:"bucket"`
+	Id     int `db:"id"`
+}
+
 type StatsCassandraRepository struct {
 	session gocqlx.Session
 }
@@ -56,10 +102,40 @@ func NewStatsCassandraRepository(session gocqlx.Session) StatsCassandraRepositor
 	return StatsCassandraRepository{session: session}
 }
 
+func (r StatsCassandraRepository) getPostUpdatesQueueBucket(ctx context.Context) (int, error) {
+
+	var postUpdates []postUpdatesQueueBucket
+
+	if err := r.session.
+		Query(postUpdatesQueueBucketTable.SelectBuilder().Where(qb.Eq("id")).ToCql()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postUpdatesQueueBucket{Id: 1}).
+		SelectRelease(&postUpdates); err != nil {
+
+		if err == gocql.ErrNotFound {
+			return 0, nil
+		}
+
+		return 0, errors.Wrap(support.NewGocqlError(err), "failed to get post updates queue bucket")
+	}
+
+	if len(postUpdates) == 0 {
+		return 0, nil
+	}
+
+	return postUpdates[len(postUpdates)-1].Bucket, nil
+}
+
 func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, requester *principal.Principal, posts []*post.Post) ([]string, error) {
 
 	if len(posts) == 0 {
 		return nil, nil
+	}
+
+	targetBucketForUpdates, err := r.getPostUpdatesQueueBucket(ctx)
+	if err != nil {
+		return nil, err
 	}
 
 	batch := r.session.NewBatch(gocql.LoggedBatch).WithContext(ctx)
@@ -92,6 +168,26 @@ func (r StatsCassandraRepository) AddPostObservations(ctx context.Context, reque
 				Bucket:            bucket,
 				ObservedAccountId: requester.AccountId(),
 				ObservedAt:        observedAt,
+			},
+		)
+
+		stmt, names = postViewsCounterTable.UpdateBuilder().Where(qb.Eq("post_id")).Add("views").ToCql()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			postViewsCounter{
+				PostId: postId,
+				Views:  1,
+			},
+		)
+
+		stmt, names = postUpdatesQueueTable.Insert()
+		support.BindStructToBatchStatement(
+			batch,
+			stmt, names,
+			postUpdatesQueue{
+				PostId: postId,
+				Bucket: targetBucketForUpdates,
 			},
 		)
 	}
@@ -151,4 +247,66 @@ func (r PostsCassandraElasticsearchRepository) getObservedPostsForBucket(ctx con
 	}
 
 	return postIds, nil
+}
+
+func (r PostsCassandraElasticsearchRepository) SyncPosts(ctx context.Context) error {
+
+	var postsUpdatesQueueList []postUpdatesQueue
+
+	if err := r.session.
+		Query(postUpdatesQueueTable.SelectBuilder().Where(qb.Eq("bucket")).ToCql()).
+		WithContext(ctx).
+		Consistency(gocql.LocalQuorum).
+		BindStruct(postUpdatesQueue{Bucket: 0}).
+		SelectRelease(&postsUpdatesQueueList); err != nil {
+		return errors.Wrap(support.NewGocqlError(err), "failed to get post updates queue")
+	}
+
+	for _, updates := range postsUpdatesQueueList {
+
+		postId := updates.PostId
+
+		var postViews postViewsCounter
+
+		if err := r.session.
+			Query(postViewsCounterTable.Get()).
+			WithContext(ctx).
+			Consistency(gocql.LocalQuorum).
+			BindStruct(postViewsCounter{PostId: postId}).
+			GetRelease(&postViews); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to get post updates")
+		}
+
+		viewsCount := postViews.Views
+
+		if err := r.session.
+			Query(postTable.Update("views")).
+			WithContext(ctx).
+			Idempotent(true).
+			Consistency(gocql.LocalQuorum).
+			BindMap(map[string]interface{}{
+				"id":    postId,
+				"views": viewsCount,
+			}).
+			ExecRelease(); err != nil {
+			return errors.Wrap(support.NewGocqlError(err), "failed to update post views")
+		}
+
+		updateDoc := make(map[string]interface{})
+		updateDoc["views"] = viewsCount
+
+		_, err := r.client.
+			Update().
+			Index(postWriterIndex).
+			Id(postId).
+			RetryOnConflict(20).
+			Doc(updateDoc).
+			Do(ctx)
+
+		if err != nil {
+			return errors.Wrap(support.ParseElasticError(err), "failed to partially update post views")
+		}
+	}
+
+	return nil
 }

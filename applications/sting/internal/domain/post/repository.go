@@ -16,6 +16,8 @@ type Repository interface {
 	CreatePost(ctx context.Context, post *Post) error
 	IndexPost(ctx context.Context, postId string) error
 
+	SyncPosts(ctx context.Context) error
+
 	GetTopCharacterNames(ctx context.Context) ([]string, error)
 
 	GetPostWithRandomSeed(ctx context.Context, passport *passport.Passport, seed int64, audienceIds []string) (*Post, error)
