@@ -40,13 +40,21 @@ export default function CharacterPostsFilter (props: Props): JSX.Element {
       loadQuery({
         characterSlugs: null,
         seriesSlugs: null,
-        categorySlugs: null
+        categorySlugs: null,
+        clubCharacterSlugs: null
       })
       return
     }
     loadQuery({
       characterSlugs: [data.slug],
-      seriesSlugs: [data?.club?.slug ?? data?.series?.slug],
+      ...(data?.club?.slug != null && ({
+        seriesSlugs: [data.club.slug],
+        clubCharacterSlugs: null
+      })),
+      ...(data?.series?.slug != null && ({
+        clubCharacterSlugs: [data.series.slug],
+        seriesSlugs: null
+      })),
       categorySlugs: null
     })
   }

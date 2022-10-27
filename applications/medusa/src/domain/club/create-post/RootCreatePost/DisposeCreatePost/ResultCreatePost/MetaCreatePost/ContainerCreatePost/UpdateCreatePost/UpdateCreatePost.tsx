@@ -43,6 +43,7 @@ const Fragment = graphql`
     ...UploadContentStepFragment
     ...UploadCategoryStepFragment
     ...UploadFlowStickyFooterFragment
+    ...UploadCharacterStepFragment
   }
 `
 
@@ -62,7 +63,7 @@ export default function UpdateCreatePost ({
     content: <UploadContentStep query={data} />,
     audience: <UploadAudienceStep />,
     category: <UploadCategoryStep query={data} />,
-    character: <UploadCharacterStep />,
+    character: <UploadCharacterStep query={data} />,
     review: <UploadReviewStep query={data} />
   }
   const headers = {

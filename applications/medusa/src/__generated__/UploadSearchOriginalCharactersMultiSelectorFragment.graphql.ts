@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<cf106f4949cb04c4f8b3e8d721051da2>>
+ * @generated SignedSource<<3709a2232a0f6fd1bb6b9d783ec987f8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,30 +9,29 @@
 // @ts-nocheck
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
-export type ClubPostsView = "CARD" | "GALLERY" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
-export type ScrollPublicClubPostsFragment$data = {
-  readonly id: string;
-  readonly posts: {
+export type UploadSearchOriginalCharactersMultiSelectorFragment$data = {
+  readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
+        readonly name: string;
+        readonly " $fragmentSpreads": FragmentRefs<"CharacterTileOverlayFragment">;
       };
     }>;
-    readonly " $fragmentSpreads": FragmentRefs<"SwapPaginationScrollerFragment">;
   };
-  readonly postsView: ClubPostsView;
-  readonly " $fragmentSpreads": FragmentRefs<"FilterPublicClubPostsFragment">;
-  readonly " $fragmentType": "ScrollPublicClubPostsFragment";
+  readonly id: string;
+  readonly slug: string;
+  readonly " $fragmentType": "UploadSearchOriginalCharactersMultiSelectorFragment";
 };
-export type ScrollPublicClubPostsFragment$key = {
-  readonly " $data"?: ScrollPublicClubPostsFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"ScrollPublicClubPostsFragment">;
+export type UploadSearchOriginalCharactersMultiSelectorFragment$key = {
+  readonly " $data"?: UploadSearchOriginalCharactersMultiSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchOriginalCharactersMultiSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
-  "posts"
+  "characters"
 ],
 v1 = {
   "alias": null,
@@ -49,37 +48,14 @@ return {
       "name": "after"
     },
     {
-      "kind": "RootArgument",
-      "name": "categorySlugs"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "characterSlugs"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "clubCharacterSlugs"
-    },
-    {
-      "defaultValue": 6,
+      "defaultValue": 14,
       "kind": "LocalArgument",
       "name": "first"
     },
     {
-      "kind": "RootArgument",
-      "name": "seed"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "seriesSlugs"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "sortBy"
-    },
-    {
-      "kind": "RootArgument",
-      "name": "supporterOnlyStatus"
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "name"
     }
   ],
   "kind": "Fragment",
@@ -104,60 +80,30 @@ return {
       "fragmentPathInResult": [
         "node"
       ],
-      "operation": require('./ClubPublicPostsPaginationQuery.graphql'),
+      "operation": require('./UploadSearchOriginalCharactersMultiSelectorPaginationFragment.graphql'),
       "identifierField": "id"
     }
   },
-  "name": "ScrollPublicClubPostsFragment",
+  "name": "UploadSearchOriginalCharactersMultiSelectorFragment",
   "selections": [
     {
-      "alias": "posts",
+      "alias": "characters",
       "args": [
         {
           "kind": "Variable",
-          "name": "categorySlugs",
-          "variableName": "categorySlugs"
-        },
-        {
-          "kind": "Variable",
-          "name": "characterSlugs",
-          "variableName": "characterSlugs"
-        },
-        {
-          "kind": "Variable",
-          "name": "clubCharacterSlugs",
-          "variableName": "clubCharacterSlugs"
-        },
-        {
-          "kind": "Variable",
-          "name": "seed",
-          "variableName": "seed"
-        },
-        {
-          "kind": "Variable",
-          "name": "seriesSlugs",
-          "variableName": "seriesSlugs"
-        },
-        {
-          "kind": "Variable",
-          "name": "sortBy",
-          "variableName": "sortBy"
-        },
-        {
-          "kind": "Variable",
-          "name": "supporterOnlyStatus",
-          "variableName": "supporterOnlyStatus"
+          "name": "name",
+          "variableName": "name"
         }
       ],
-      "concreteType": "PostConnection",
+      "concreteType": "CharacterConnection",
       "kind": "LinkedField",
-      "name": "__ClubPublicPosts_posts_connection",
+      "name": "__UploadSearchOriginalCharactersMultiSelector_characters_connection",
       "plural": false,
       "selections": [
         {
           "alias": null,
           "args": null,
-          "concreteType": "PostEdge",
+          "concreteType": "CharacterEdge",
           "kind": "LinkedField",
           "name": "edges",
           "plural": true,
@@ -165,12 +111,24 @@ return {
             {
               "alias": null,
               "args": null,
-              "concreteType": "Post",
+              "concreteType": "Character",
               "kind": "LinkedField",
               "name": "node",
               "plural": false,
               "selections": [
                 (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "name",
+                  "storageKey": null
+                },
+                {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "CharacterTileOverlayFragment"
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -190,11 +148,6 @@ return {
             }
           ],
           "storageKey": null
-        },
-        {
-          "args": null,
-          "kind": "FragmentSpread",
-          "name": "SwapPaginationScrollerFragment"
         },
         {
           "alias": null,
@@ -228,13 +181,8 @@ return {
       "alias": null,
       "args": null,
       "kind": "ScalarField",
-      "name": "postsView",
+      "name": "slug",
       "storageKey": null
-    },
-    {
-      "args": null,
-      "kind": "FragmentSpread",
-      "name": "FilterPublicClubPostsFragment"
     },
     (v1/*: any*/)
   ],
@@ -243,6 +191,6 @@ return {
 };
 })();
 
-(node as any).hash = "2e682762967b6b196aecb367b9966bb3";
+(node as any).hash = "25be45f00e7942e3d17d6a6403f73de9";
 
 export default node;

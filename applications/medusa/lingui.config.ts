@@ -221,7 +221,7 @@ const ClubsCatalog = [
     include: ['src/domain/slug/post/']
   },
   {
-    path: 'src/domain/slug/posts/__locale__/{locale}/index',
+    path: 'src/domain/slug/layout/__locale__/{locale}/index',
     include: ['src/domain/slug/layout/']
   },
   {

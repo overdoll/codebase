@@ -24,7 +24,7 @@ const PostContentFragment = graphql`
   }
 `
 
-const PostFragment = graphql`
+const PostFragment = graphql`  
   fragment SupporterLockedFragment on Post {
     club {
       slug

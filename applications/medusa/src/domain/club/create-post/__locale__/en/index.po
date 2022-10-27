@@ -97,6 +97,10 @@ msgstr ""
 msgid "Content Menu"
 msgstr ""
 
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadSearchClubCharacters/UploadSearchOriginalCharactersMultiSelector/UploadSearchOriginalCharactersMultiSelector.tsx:92
+msgid "Create an original character"
+msgstr ""
+
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/NewCreatePost/CreatePostFlow/CreatePostFlow.tsx:145
 msgid "Creating Your Post"
 msgstr ""
@@ -181,7 +185,7 @@ msgstr ""
 #~ msgid "Have a category suggestion? Send us an email at hello@overdoll.com!"
 #~ msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:89
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadSearchAllCharacters/UploadSearchCharactersMultiSelector/UploadSearchCharactersMultiSelector.tsx:87
 msgid "Have a character suggestion or want your character listed? Contact us!"
 msgstr ""
 
@@ -191,6 +195,10 @@ msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadContentStep/UploadContentModify/ContentModifyPreview/PostContentPreview/PostContentPreview.tsx:102
 msgid "Help"
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:89
+msgid "I'm posting content with my original character"
 msgstr ""
 
 #: src/domain/club/create-post/CreatePost/components/PostCreator/PostState/UpdatePostFlow/UploadFlowSteps/UploadArrangeStep/UploadArrangeStep.tsx:83
@@ -313,8 +321,12 @@ msgstr ""
 msgid "Search for a category"
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:88
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadSearchAllCharacters/UploadSearchAllCharacters.tsx:46
 msgid "Search for a character by name"
+msgstr ""
+
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadSearchClubCharacters/UploadSearchClubCharacters.tsx:61
+msgid "Search for an original character by name"
 msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCategoryStep/UploadRewindCategories/UploadRewindSingleSelector/UploadRewindSingleSelector.tsx:89
@@ -325,7 +337,7 @@ msgstr ""
 msgid "Select a topic to see the available categories you can add, or search for a category by name."
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:79
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:75
 msgid "Select one or more characters that appear in all of the content"
 msgstr ""
 
@@ -370,12 +382,12 @@ msgstr ""
 #~ msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:91
-msgid "Show all characters"
-msgstr ""
+#~ msgid "Show all characters"
+#~ msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:91
-msgid "Show only original characters"
-msgstr ""
+#~ msgid "Show only original characters"
+#~ msgstr ""
 
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowFooter/SubmitPostButton/SubmitPostButton.tsx:116
 msgid "Submit"
@@ -515,6 +527,10 @@ msgstr ""
 #~ msgid "Upstanding netizens will read the <0>Club Guidelines</0> carefully. Creating and submitting a post also means you agree to these guidelines."
 #~ msgstr ""
 
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:84
+msgid "Use a non-original character"
+msgstr ""
+
 #: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadReviewStep/PostReview/PostReview.tsx:63
 msgid "We ran into an error processing your content. Please remove it and try again before submitting your post."
 msgstr ""
@@ -531,7 +547,7 @@ msgstr ""
 msgid "When uploading any kind of supporter content, it's recommended that the first slide in your post is not supporter content and contains either a censored image or a reduced video to encourage your fans to become supporters."
 msgstr ""
 
-#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:74
+#: src/domain/club/create-post/RootCreatePost/DisposeCreatePost/ResultCreatePost/MetaCreatePost/ContainerCreatePost/UpdateCreatePost/UploadFlowSteps/UploadCharacterStep/UploadCharacterStep.tsx:70
 msgid "Who is in your post?"
 msgstr ""
 

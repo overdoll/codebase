@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e7990f1c0ecbf25e196dcaded02e8297>>
+ * @generated SignedSource<<e52fd45916a5ce0b586a5ab8449cc7b7>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -26,7 +26,7 @@ export type UpdateCreatePostFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadCharacterStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdateCreatePostFragment";
 };
 export type UpdateCreatePostFragment$key = {
@@ -133,6 +133,11 @@ return {
       "args": null,
       "kind": "FragmentSpread",
       "name": "UploadFlowStickyFooterFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "UploadCharacterStepFragment"
     }
   ],
   "type": "Post",
@@ -140,6 +145,6 @@ return {
 };
 })();
 
-(node as any).hash = "5383f1505c6ef7053a6b232a863762a2";
+(node as any).hash = "1a3bb37c1965747517e30bcf2edf9ffe";
 
 export default node;
