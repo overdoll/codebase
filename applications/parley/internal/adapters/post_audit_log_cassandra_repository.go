@@ -322,14 +322,15 @@ func (r PostAuditLogCassandraRepository) SearchPostAuditLogs(ctx context.Context
 
 	// iterate through all buckets starting from x bucket until we have enough values
 	for _, bucketId := range buckets {
+
 		if filter.From() != nil {
-			if bucketId > bucket.MakeWeeklyBucketFromTimestamp(*filter.From()) {
+			if bucketId < bucket.MakeWeeklyBucketFromTimestamp(*filter.From()) {
 				continue
 			}
 		}
 
 		if filter.To() != nil {
-			if bucketId < bucket.MakeWeeklyBucketFromTimestamp(*filter.To()) {
+			if bucketId > bucket.MakeWeeklyBucketFromTimestamp(*filter.To()) {
 				continue
 			}
 		}

@@ -11,6 +11,7 @@ go_library(
         "post.go",
         "resolvers.go",
         "series.go",
+        "tags.go",
         "topic.go",
     ],
     importpath = "overdoll/applications/sting/internal/ports/graphql/queries",

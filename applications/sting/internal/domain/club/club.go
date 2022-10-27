@@ -76,6 +76,8 @@ func NewMustClub(id, slug string, name string, ownerAccountId string) *Club {
 		ownerAccountId:              ownerAccountId,
 		hasCreatedSupporterOnlyPost: false,
 		terminated:                  false,
+		charactersEnabled:           true,
+		charactersLimit:             5,
 		supporterOnlyPostsDisabled:  false,
 		createdAt:                   time.Now(),
 		updatedAt:                   time.Now(),

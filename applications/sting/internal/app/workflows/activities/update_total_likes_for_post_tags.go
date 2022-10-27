@@ -4,6 +4,7 @@ import (
 	"context"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/apperror"
 )
 
 type UpdateTotalLikesForPostTagsInput struct {
@@ -15,6 +16,11 @@ func (h *Activities) UpdateTotalLikesForPostTags(ctx context.Context, input Upda
 	pendingPost, err := h.pr.GetPostByIdOperator(ctx, input.PostId)
 
 	if err != nil {
+
+		if apperror.IsNotFoundError(err) {
+			return nil
+		}
+
 		return err
 	}
 

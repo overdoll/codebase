@@ -181,6 +181,49 @@ func (c *Cursor) GetLimit() int {
 	return limit
 }
 
+func (c *Cursor) BuildElasticsearchAggregate(aggregationBuckets []string, append func(index int, bucket string)) error {
+
+	var curseAll []interface{}
+	var curse string
+
+	if c.After() != nil {
+		if err := c.After().Decode(&curseAll); err != nil {
+			return err
+		}
+		curse = curseAll[0].(string)
+	}
+
+	var foundCursor bool
+
+	size := 0
+
+	if c.GetLimit() == 0 {
+		size = 10
+	}
+
+	for i := 0; i < size; i++ {
+		if i == len(aggregationBuckets)-1 {
+			break
+		}
+
+		targetKey := aggregationBuckets[i]
+
+		// make sure we reach our cursor
+		if curse != "" {
+			if targetKey == curse {
+				foundCursor = true
+			}
+			if !foundCursor {
+				continue
+			}
+		}
+
+		append(i, aggregationBuckets[i])
+	}
+
+	return nil
+}
+
 func (c *Cursor) BuildElasticsearch(builder *elastic.SearchService, column, tieBreakerColumn string, ascending bool) error {
 
 	// add search_after parameters

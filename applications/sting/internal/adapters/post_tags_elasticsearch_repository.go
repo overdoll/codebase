@@ -40,83 +40,53 @@ func (r PostsCassandraElasticsearchRepository) getTags(ctx context.Context, curs
 	series, _ := response.Aggregations.Terms("series_ids")
 	categories, _ := response.Aggregations.Terms("category_ids")
 
-	type aggKey struct {
-		keyItem *elastic.AggregationBucketKeyItem
-		meta    map[string]interface{}
-	}
-
-	var aggregations []*aggKey
+	var aggregations []*elastic.AggregationBucketKeyItem
+	var metas map[string]map[string]interface{}
 
 	for _, bucket := range characters.Buckets {
-		aggregations = append(aggregations, &aggKey{
-			keyItem: bucket,
-			meta:    characters.Meta,
-		})
+		metas[bucket.Key.(string)] = characters.Meta
+		aggregations = append(aggregations, bucket)
 	}
 
 	for _, bucket := range series.Buckets {
-		aggregations = append(aggregations, &aggKey{
-			keyItem: bucket,
-			meta:    series.Meta,
-		})
+		metas[bucket.Key.(string)] = series.Meta
+		aggregations = append(aggregations, bucket)
 	}
 
 	for _, bucket := range categories.Buckets {
-		aggregations = append(aggregations, &aggKey{
-			keyItem: bucket,
-			meta:    categories.Meta,
-		})
+		metas[bucket.Key.(string)] = categories.Meta
+		aggregations = append(aggregations, bucket)
 	}
 
 	sort.SliceStable(aggregations, func(i, j int) bool {
-		return aggregations[i].keyItem.DocCount > aggregations[j].keyItem.DocCount
+		return aggregations[i].DocCount > aggregations[j].DocCount
 	})
 
 	var categoryIds []string
 	var seriesIds []string
 	var characterIds []string
 
-	var curseAll []interface{}
-	var curse string
-
-	if cursor.After() != nil {
-		if err := cursor.After().Decode(&curseAll); err != nil {
-			return nil, err
-		}
-		curse = curseAll[0].(string)
+	var buckets []string
+	for _, sigTerm := range aggregations {
+		buckets = append(buckets, sigTerm.Key.(string))
 	}
 
-	var foundCursor bool
-
-	for i := 0; i < size; i++ {
-		if i == len(aggregations)-1 {
-			break
-		}
-
-		metaType := aggregations[i].meta["type"].(string)
-		targetKey := aggregations[i].keyItem.Key.(string)
-
-		// make sure we reach our cursor
-		if curse != "" {
-			if targetKey == curse {
-				foundCursor = true
-			}
-			if !foundCursor {
-				continue
-			}
-		}
+	if err := cursor.BuildElasticsearchAggregate(buckets, func(index int, bucket string) {
+		metaType := metas[bucket]["type"].(string)
 
 		if metaType == "character_ids" {
-			characterIds = append(characterIds, targetKey)
+			characterIds = append(characterIds, bucket)
 		}
 
 		if metaType == "series_ids" {
-			seriesIds = append(seriesIds, targetKey)
+			seriesIds = append(seriesIds, bucket)
 		}
 
 		if metaType == "category_ids" {
-			categoryIds = append(categoryIds, targetKey)
+			categoryIds = append(categoryIds, bucket)
 		}
+	}); err != nil {
+		return nil, err
 	}
 
 	var results []interface{}

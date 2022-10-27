@@ -1957,6 +1957,9 @@ extend type Post {
   """The amount of likes on this post."""
   likes: Int!
 
+  """The amount of times the post has been viewed on the platform."""
+  views: Int!
+
   """Whether or not the viewer liked this post."""
   viewerLiked: PostLike @goField(forceResolver: true)
 }
@@ -2369,6 +2372,9 @@ extend type Account {
     """Search by series slugs."""
     seriesSlugs: [String!]
 
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
+
     """Search by a post state."""
     state: PostState = PUBLISHED
 
@@ -2470,6 +2476,21 @@ extend type Mutation {
 }
 
 extend type Query {
+  """Top tags to perform a search against, grabbing the most popular tags on the platform."""
+  tags(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): TagConnection!
+
   """Perform a search across multiple types."""
   search(
     """Returns the elements in the list that come after the specified cursor."""
@@ -2487,6 +2508,29 @@ extend type Query {
     """What you want to search."""
     query: String!
   ): SearchConnection!
+
+  """
+  Post recommendations.
+
+  Post recommendations always generate recommended posts.
+
+  For logged-in users, recommendations will be based on the user's preferences.
+
+  For non logged-in users, recommendations will be based off of global recommendations.
+  """
+  postsRecommendations(
+    """Returns the elements in the list that come after the specified cursor."""
+    after: String
+
+    """Returns the elements in the list that come before the specified cursor."""
+    before: String
+
+    """Returns the first _n_ elements from the list."""
+    first: Int
+
+    """Returns the last _n_ elements from the list."""
+    last: Int
+  ): PostConnection!
 
   """Posts feed. The default."""
   postsFeed(
@@ -2538,6 +2582,9 @@ extend type Query {
     """Search by series slugs."""
     seriesSlugs: [String!]
 
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
+
     """Search by a post state."""
     state: PostState = PUBLISHED
 
@@ -2575,6 +2622,9 @@ extend type Category {
 
     """Search by series slugs."""
     seriesSlugs: [String!]
+
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
 
     """Search by a post state."""
     state: PostState = PUBLISHED
@@ -2690,6 +2740,9 @@ extend type Club {
     """Search by series slugs."""
     seriesSlugs: [String!]
 
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
+
     """Search by a post state."""
     state: PostState = PUBLISHED
 
@@ -2727,6 +2780,9 @@ extend type Audience {
 
     """Search by series slugs."""
     seriesSlugs: [String!]
+
+    """Search by club slugs. When searching by a club character, this needs to be filled out."""
+    clubCharacterSlugs: [String!]
 
     """Search by a post state."""
     state: PostState = PUBLISHED

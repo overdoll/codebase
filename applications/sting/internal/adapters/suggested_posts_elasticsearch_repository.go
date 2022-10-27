@@ -3,8 +3,10 @@ package adapters
 import (
 	"context"
 	"github.com/olivere/elastic/v7"
+	"github.com/scylladb/gocqlx/v2"
 	"overdoll/applications/sting/internal/domain/post"
 	"overdoll/libraries/cache"
+	"overdoll/libraries/database"
 	"overdoll/libraries/errors"
 	"overdoll/libraries/paging"
 	"overdoll/libraries/principal"
@@ -14,11 +16,41 @@ import (
 const AccountActionsIndexName = "account_actions"
 
 var AccountActionsReaderIndex = cache.ReadAlias(CachePrefix, AccountActionsIndexName)
-var AccountActionsWriterIndex = cache.WriteAlias(CachePrefix, AccountActionsIndexName)
+var accountActionsWriterIndex = cache.WriteAlias(CachePrefix, AccountActionsIndexName)
+
+func (r PostsCassandraElasticsearchRepository) IndexAllActions(ctx context.Context) error {
+
+	scanner := database.NewScan(r.session,
+		database.ScanConfig{
+			NodesInCluster: 1,
+			CoresInNode:    2,
+			SmudgeFactor:   3,
+		},
+	)
+
+	err := scanner.RunIterator(ctx, postLikeTable, func(iter *gocqlx.Iterx) error {
+
+		var postLike postLike
+
+		for iter.StructScan(&postLike) {
+			if err := r.likePost(ctx, post.UnmarshalLikeFromDatabase(postLike.LikedAccountId, postLike.PostId, postLike.LikedAt)); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, like *post.Like) error {
 
-	_, err := r.client.UpdateByQuery(AccountActionsWriterIndex).
+	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
 		Query(elastic.NewTermsQuery("id", like.AccountId())).
 		Script(elastic.NewScript(`
 
@@ -42,11 +74,11 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 
 func (r PostsCassandraElasticsearchRepository) unLikePost(ctx context.Context, accountId, postId string) error {
 
-	_, err := r.client.UpdateByQuery(AccountActionsWriterIndex).
+	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
 		Query(elastic.NewTermsQuery("id", accountId)).
 		Script(elastic.NewScript(`
 
-		if (ctx._source.liked_post_ids != null && !ctx._source.liked_post_ids.contains(params.postId)) { 
+		if (ctx._source.liked_post_ids != null && ctx._source.liked_post_ids.contains(params.postId)) { 
 			ctx._source.liked_post_ids.remove(params.postId) 
 		} 
 
@@ -74,38 +106,18 @@ func (r PostsCassandraElasticsearchRepository) newSuggestedPostsByPost(ctx conte
 		return nil, errors.Wrap(support.ParseElasticError(err), "failed to get similar posts to post")
 	}
 
-	var curse string
+	var postIds []string
+	sigTerms, _ := result.Aggregations.SignificantTerms("liked_post_ids")
 
-	if cursor.After() != nil {
-		if err := cursor.After().Decode(&curse); err != nil {
-			return nil, err
-		}
+	var buckets []string
+	for _, sigTerm := range sigTerms.Buckets {
+		buckets = append(buckets, sigTerm.Key)
 	}
 
-	var postIds []string
-	var foundCursor bool
-
-	for i := 0; i < cursor.GetLimit(); i++ {
-		sigTerms, _ := result.Aggregations.SignificantTerms("liked_post_ids")
-
-		// if reached end of bucket
-		if i == len(sigTerms.Buckets)-1 {
-			break
-		}
-
-		targetPost := sigTerms.Buckets[i]
-
-		// make sure we reach our cursor
-		if curse != "" {
-			if targetPost.Key == curse {
-				foundCursor = true
-			}
-			if !foundCursor {
-				continue
-			}
-		}
-
-		postIds = append(postIds, targetPost.Key)
+	if err := cursor.BuildElasticsearchAggregate(buckets, func(index int, bucket string) {
+		postIds = append(postIds, bucket)
+	}); err != nil {
+		return nil, err
 	}
 
 	if len(postIds) == 0 {

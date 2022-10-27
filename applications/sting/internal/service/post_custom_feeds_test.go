@@ -83,6 +83,29 @@ func TestGetPostsFeed(t *testing.T) {
 	require.NoError(t, err, "no error grabbing posts feed")
 }
 
+type PostsRecommendations struct {
+	PostsRecommendations *struct {
+		Edges []*struct {
+			Node PostModified
+		}
+	} `graphql:"postsRecommendations()"`
+}
+
+func TestGetPostsRecommendations(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+
+	var postsRecommendations PostsRecommendations
+
+	err := client.Query(context.Background(), &postsRecommendations, nil)
+
+	require.NoError(t, err, "no error grabbing posts recommendations")
+}
+
 type AccountClubMembershipsPostsFeed struct {
 	Entities []struct {
 		Account struct {
