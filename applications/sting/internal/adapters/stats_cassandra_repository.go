@@ -340,10 +340,12 @@ func (r PostsCassandraElasticsearchRepository) SyncPosts(ctx context.Context) er
 		}
 	}
 
-	_, err = r.cache.WithContext(ctx).SRem(ctx, postSyncQueueKey, postIdsToRemove...).Result()
+	if len(postIdsToRemove) != 0 {
+		_, err = r.cache.WithContext(ctx).SRem(ctx, postSyncQueueKey, postIdsToRemove...).Result()
 
-	if err != nil {
-		return errors.Wrap(err, "failed to clear post sync queue")
+		if err != nil {
+			return errors.Wrap(err, "failed to clear post sync queue")
+		}
 	}
 
 	return nil
