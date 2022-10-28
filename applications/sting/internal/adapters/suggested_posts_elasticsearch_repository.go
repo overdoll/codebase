@@ -163,7 +163,6 @@ func (r PostsCassandraElasticsearchRepository) newSuggestedPostsByPost(ctx conte
 		if err != nil {
 			return nil, err
 		}
-		createdPost.Node = paging.NewNode(hit.Id)
 		allPosts = append(allPosts, createdPost)
 	}
 
