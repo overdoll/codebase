@@ -77,7 +77,7 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 	}
 
 	_, err = r.client.UpdateByQuery(accountActionsWriterIndex).
-		Query(elastic.NewTermsQuery("id", like.AccountId())).
+		Query(elastic.NewTermsQueryFromStrings("_id", like.AccountId())).
 		Script(elastic.NewScript(`
 
 		if (ctx._source.liked_post_ids == null) {
@@ -101,7 +101,7 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 func (r PostsCassandraElasticsearchRepository) unLikePost(ctx context.Context, accountId, postId string) error {
 
 	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
-		Query(elastic.NewTermsQuery("id", accountId)).
+		Query(elastic.NewTermsQuery("_id", accountId)).
 		Script(elastic.NewScript(`
 
 		if (ctx._source.liked_post_ids != null && ctx._source.liked_post_ids.contains(params.postId)) { 
