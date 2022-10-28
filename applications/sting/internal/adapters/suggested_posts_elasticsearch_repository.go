@@ -153,7 +153,7 @@ func (r PostsCassandraElasticsearchRepository) newSuggestedPostsByPost(ctx conte
 	response, err := builder.Pretty(true).Do(ctx)
 
 	if err != nil {
-		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts for suggested posts")
+		return nil, errors.Wrap(support.ParseElasticError(err), "failed to search posts for suggested post")
 	}
 
 	var allPosts []*post.Post
