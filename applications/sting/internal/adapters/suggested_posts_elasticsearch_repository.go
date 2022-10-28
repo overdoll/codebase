@@ -159,7 +159,7 @@ func (r PostsCassandraElasticsearchRepository) newSuggestedPostsByPost(ctx conte
 	var allPosts []*post.Post
 
 	for _, hit := range response.Hits.Hits {
-		createdPost, err := unmarshalPostDocument(ctx, hit.Source, hit.Sort)
+		createdPost, err := unmarshalPostDocument(ctx, hit.Source, []interface{}{hit.Id})
 		if err != nil {
 			return nil, err
 		}
