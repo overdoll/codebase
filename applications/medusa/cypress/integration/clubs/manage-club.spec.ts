@@ -30,7 +30,7 @@ describe('Manage Club', () => {
      */
     cy.visit(`/${clubName}`)
     cy.findByText(/You haven't posted/iu).should('be.visible')
-    clickOnButton(/Create Post/iu)
+    clickOnButton(/Create New Post/iu)
     cy.url().should('include', `/club/${clubName}/create-post`)
 
     /**

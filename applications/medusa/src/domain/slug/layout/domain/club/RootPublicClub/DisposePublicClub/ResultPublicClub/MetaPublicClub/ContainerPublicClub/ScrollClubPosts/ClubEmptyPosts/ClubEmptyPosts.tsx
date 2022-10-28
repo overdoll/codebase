@@ -47,7 +47,7 @@ export default function ClubEmptyPosts ({
             colorScheme='primary'
           >
             <Trans>
-              Create Post
+              Create New Post
             </Trans>
           </LinkButton>
         </Stack>
