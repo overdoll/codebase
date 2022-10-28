@@ -403,6 +403,8 @@ func InitializeCommands(app func() *app.Application) []*cobra.Command {
 		},
 	}
 
+	syncPosts.PersistentFlags().String("schedule", "", "Sync posts on a cron schedule.")
+
 	backfillPostViews := &cobra.Command{
 		Use: "backfill-post-views",
 		Run: func(cmd *cobra.Command, args []string) {
