@@ -37,6 +37,7 @@ const NavLink = ({
 
   return (
     <Link
+      legacyBehavior
       href={href}
       passHref
       {...rest}

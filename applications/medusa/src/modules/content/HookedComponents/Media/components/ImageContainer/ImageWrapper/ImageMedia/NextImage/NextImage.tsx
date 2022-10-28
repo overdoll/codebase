@@ -1,4 +1,4 @@
-import Image, { ImageProps } from 'next/future/image'
+import Image, { ImageProps } from 'next/image'
 import { forwardRef } from 'react'
 
 interface Props extends ImageProps {

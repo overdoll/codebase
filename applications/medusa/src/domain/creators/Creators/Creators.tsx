@@ -17,7 +17,7 @@ import Email from '@//:modules/validation/Email'
 import { useForm } from 'react-hook-form'
 import { joiResolver } from '@hookform/resolvers/joi/dist/joi'
 import { CreatorsQuery } from '@//:artifacts/CreatorsQuery.graphql'
-import Image from 'next/future/image'
+import Image from 'next/image'
 import VideoAction from './VideoAction/VideoAction'
 import CreatorsRichObject from '@//:common/rich-objects/artists/ArtistsRichObject/CreatorsRichObject'
 

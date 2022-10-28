@@ -2,7 +2,7 @@ import NextImage from './NextImage/NextImage'
 import { ReactNode, useState } from 'react'
 import ImageError from './ImageError/ImageError'
 import { Flex } from '@chakra-ui/react'
-import { ImageProps } from 'next/future/image'
+import { ImageProps } from 'next/image'
 
 export interface ImageMediaProps {
   url: string

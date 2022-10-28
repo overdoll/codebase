@@ -38,6 +38,7 @@
     }
   ],
   "extends": [
+    "plugin:@next/next/recommended",
     "standard-with-typescript",
     "standard-jsx",
     "standard-react"

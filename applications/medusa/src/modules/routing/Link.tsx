@@ -21,6 +21,7 @@ export default function Link ({
 
   return (
     <NextLink
+      legacyBehavior
       scroll
       {...rest}
     >
