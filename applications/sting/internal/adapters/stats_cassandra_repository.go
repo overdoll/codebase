@@ -44,8 +44,8 @@ var accountPostObservationsBucketsTable = table.New(table.Metadata{
 		"bucket",
 		"observer_account_id",
 	},
-	PartKey: []string{"observer_account_id", "bucket"},
-	SortKey: []string{},
+	PartKey: []string{"observer_account_id"},
+	SortKey: []string{"bucket"},
 })
 
 var accountPostObservationsTable = table.New(table.Metadata{
