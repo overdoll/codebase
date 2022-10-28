@@ -147,10 +147,27 @@ func (r CurationCassandraRepository) UpdateCuratedPostsFeedData(ctx context.Cont
 	return r.UpdateCuratedPostsFeedDataOperator(ctx, postsFeedData)
 }
 
-func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string, seed int64) ([]*post.Post, error) {
+func (r PostsCassandraElasticsearchRepository) GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*post.Post, error) {
 
 	if err := requester.BelongsToAccount(accountId); err != nil {
 		return nil, err
+	}
+
+	var seed int64
+	var err error
+
+	if cursor.After() != nil || cursor.Before() != nil {
+		seed, err = r.getRandomizerSeed(ctx, "curatedPosts:"+requester.AccountId())
+		if err != nil {
+			return nil, err
+		}
+
+	} else {
+		seed, err = r.newRandomizerSeed(ctx, "curatedPosts:"+requester.AccountId())
+		if err != nil {
+			return nil, err
+		}
+
 	}
 
 	var curatedPostsFeedPostsList []curatedPostsFeedPosts
@@ -276,7 +293,7 @@ func (r PostsCassandraElasticsearchRepository) GenerateCuratedPostIds(ctx contex
 
 	builder.Sort("_score", false)
 	builder.Sort("id", true)
-	builder.Size(50)
+	builder.Size(500)
 	builder.Query(query)
 
 	response, err := builder.Pretty(true).Do(ctx)

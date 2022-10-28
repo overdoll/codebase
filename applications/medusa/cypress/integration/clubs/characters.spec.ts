@@ -1,5 +1,5 @@
 import { generateClubName, generateUsernameAndEmail } from '../../support/generate'
-import { clickOnButton, clickOnTab, clickOnTile, typeIntoPlaceholder } from '../../support/user_actions'
+import { clickOnButton, clickOnTile, typeIntoPlaceholder } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 30000)
 
@@ -18,20 +18,20 @@ describe('Club Characters', () => {
     cy.joinWithNewAccount(username)
     cy.createClub(clubName)
 
-    /**
-     * Visit characters page as not enabled
-     */
-    cy.visit(`/club/${clubName}/characters`)
-    cy.findByText(/Custom Characters Disabled/iu).should('be.visible')
-
-    /**
-     * Enable characters as staff
-     */
-    cy.joinWithExistingAccount('0eclipse')
-    cy.visit(`/staff/club/${clubName}`)
-    clickOnTab('Posts')
-    clickOnButton('Enable Club Characters')
-    cy.findByText(/Successfully enabled characters/iu).should('be.visible')
+    // /**
+    //  * Visit characters page as not enabled
+    //  */
+    // cy.visit(`/club/${clubName}/characters`)
+    // cy.findByText(/Custom Characters Disabled/iu).should('be.visible')
+    //
+    // /**
+    //  * Enable characters as staff
+    //  */
+    // cy.joinWithExistingAccount('0eclipse')
+    // cy.visit(`/staff/club/${clubName}`)
+    // clickOnTab('Posts')
+    // clickOnButton('Enable Club Characters')
+    // cy.findByText(/Successfully enabled characters/iu).should('be.visible')
 
     /**
      * Create character as club owner

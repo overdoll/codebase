@@ -583,7 +583,7 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 }
 
 func (r PostsCassandraElasticsearchRepository) PostsRecommendations(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.Feed) ([]*post.Post, error) {
-	return nil, nil
+	panic("unused")
 }
 
 func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {

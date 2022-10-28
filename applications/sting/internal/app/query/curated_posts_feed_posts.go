@@ -66,14 +66,7 @@ func (h CuratedPostsFeedPostsHandler) Handle(ctx context.Context, query CuratedP
 		}
 	}
 
-	var seed int64
-	if result.GeneratedAt() == nil {
-		seed = 123456789
-	} else {
-		seed = result.GeneratedAt().UnixMilli()
-	}
-
-	posts, err := h.prr.GetCuratedPosts(ctx, query.Principal, query.Cursor, query.AccountId, seed)
+	posts, err := h.prr.GetCuratedPosts(ctx, query.Principal, query.Cursor, query.AccountId)
 
 	if err != nil {
 		return nil, err

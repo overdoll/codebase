@@ -18,6 +18,10 @@ const AccountActionsIndexName = "account_actions"
 var AccountActionsReaderIndex = cache.ReadAlias(CachePrefix, AccountActionsIndexName)
 var accountActionsWriterIndex = cache.WriteAlias(CachePrefix, AccountActionsIndexName)
 
+type accountActionsDocument struct {
+	LikedPostIds []string `json:"liked_post_ids"`
+}
+
 func (r PostsCassandraElasticsearchRepository) IndexAllActions(ctx context.Context) error {
 
 	scanner := database.NewScan(r.session,

@@ -37,7 +37,7 @@ func (p *PostsFeedData) MakeGenerated() error {
 }
 
 func (p *PostsFeedData) NextRegenerationTimeDuration() time.Duration {
-	return time.Hour * 24
+	return time.Hour
 }
 
 func (p *PostsFeedData) WasViewed(requester *principal.Principal) error {

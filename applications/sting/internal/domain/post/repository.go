@@ -164,7 +164,7 @@ type Repository interface {
 	GenerateSitemap(ctx context.Context) error
 
 	GenerateCuratedPostIds(ctx context.Context, accountId string, digest *club.AccountClubDigest, audienceIds []string) ([]string, error)
-	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string, seed int64) ([]*Post, error)
+	GetCuratedPosts(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, accountId string) ([]*Post, error)
 
 	Tags(ctx context.Context, cursor *paging.Cursor, clubId *string) ([]interface{}, error)
 }
