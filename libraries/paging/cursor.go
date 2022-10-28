@@ -190,7 +190,20 @@ func (c *Cursor) BuildElasticsearchAggregate(aggregationBuckets []string, append
 		if err := c.After().Decode(&curseAll); err != nil {
 			return err
 		}
-		curse = curseAll[0].(string)
+
+		// exit out
+		if len(curseAll) > 1 {
+			return nil
+		}
+
+		// if the first type isn't a string
+		switch curseAll[0].(type) {
+		case string:
+			curse = curseAll[0].(string)
+			break
+		default:
+			return nil
+		}
 	}
 
 	var foundCursor bool
