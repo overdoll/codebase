@@ -22,7 +22,11 @@ msgid "Club {0} was created successfully"
 msgstr ""
 
 #: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:182
-msgid "Create Club"
+#~ msgid "Create Club"
+#~ msgstr ""
+
+#: src/domain/clubs/create-club/RootCreateClub/CreateClub/CreateClubForm/CreateClubForm.tsx:182
+msgid "Create New Club"
 msgstr ""
 
 #: src/domain/clubs/create-club/RootCreateClub/RootCreateClub.tsx:30

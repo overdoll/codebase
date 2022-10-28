@@ -180,7 +180,7 @@ export default function CreateClubForm ({
           colorScheme='teal'
         >
           <Trans>
-            Create Club
+            Create New Club
           </Trans>
         </FormSubmitButton>
       </Stack>

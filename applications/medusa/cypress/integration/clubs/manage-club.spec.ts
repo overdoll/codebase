@@ -22,7 +22,7 @@ describe('Manage Club', () => {
     cy.visit('/clubs/create-club')
     cy.findByText('Your Club Name').should('be.visible')
     typeIntoPlaceholder('The best name you can come up with', clubName)
-    clickOnButton('Create Club')
+    clickOnButton('Create New Club')
     cy.url().should('include', `/club/${clubName}`)
 
     /**
