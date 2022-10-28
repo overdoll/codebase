@@ -64,7 +64,7 @@ func registerIndexes() cache.IndexRegistry {
 	})
 
 	reg.Add(adapters.AccountActionsIndexName, schema.AccoountActionsSchema, func(ctx context.Context) error {
-		return nil
+		return getPostRepository().IndexAllActions(ctx)
 	})
 
 	return reg

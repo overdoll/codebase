@@ -37,6 +37,7 @@ func (r PostsCassandraElasticsearchRepository) IndexAllActions(ctx context.Conte
 		var postLike postLike
 
 		for iter.StructScan(&postLike) {
+
 			if err := r.likePost(ctx, post.UnmarshalLikeFromDatabase(postLike.LikedAccountId, postLike.PostId, postLike.LikedAt)); err != nil {
 				return err
 			}

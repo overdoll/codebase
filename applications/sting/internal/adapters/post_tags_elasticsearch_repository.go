@@ -117,21 +117,22 @@ func (r PostsCassandraElasticsearchRepository) getTags(ctx context.Context, curs
 			},
 		)
 
+	sourceBuilder.Sort("_score", false)
 	sourceBuilder.Size(size)
 
 	query := elastic.NewBoolQuery()
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
-			NewTermsQueryFromStrings("id", categoryIds...),
-	).
-		Must(elastic.NewTermQuery("_index", CategoryReaderIndex)))
-
-	query.Should(elastic.NewBoolQuery().Must(
-		elastic.
 			NewTermsQueryFromStrings("id", characterIds...),
 	).
 		Must(elastic.NewTermQuery("_index", CharacterReaderIndex)))
+
+	query.Should(elastic.NewBoolQuery().Must(
+		elastic.
+			NewTermsQueryFromStrings("id", categoryIds...),
+	).
+		Must(elastic.NewTermQuery("_index", CategoryReaderIndex)))
 
 	query.Should(elastic.NewBoolQuery().Must(
 		elastic.
