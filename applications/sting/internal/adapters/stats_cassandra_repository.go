@@ -225,11 +225,13 @@ func (r PostsCassandraElasticsearchRepository) BackFillPostViews(ctx context.Con
 			}
 		}
 
-		// add to sync so it can be synced
-		_, err := r.cache.WithContext(ctx).SAdd(ctx, postSyncQueueKey, realPostIds...).Result()
+		if len(realPostIds) != 0 {
+			// add to sync so it can be synced
+			_, err := r.cache.WithContext(ctx).SAdd(ctx, postSyncQueueKey, realPostIds...).Result()
 
-		if err != nil {
-			return errors.Wrap(err, "failed to add to redis post sync")
+			if err != nil {
+				return errors.Wrap(err, "failed to add to redis post sync")
+			}
 		}
 
 		return nil

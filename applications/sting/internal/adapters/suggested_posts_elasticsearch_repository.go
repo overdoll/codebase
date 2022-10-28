@@ -55,7 +55,28 @@ func (r PostsCassandraElasticsearchRepository) IndexAllActions(ctx context.Conte
 
 func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, like *post.Like) error {
 
-	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
+	_, err := r.client.Get().Index(accountActionsWriterIndex).Id(like.AccountId()).Do(ctx)
+
+	isNotFound := err != nil && err.Error() == "elastic: Error 404 (Not Found)"
+
+	if err != nil && !isNotFound {
+		return errors.Wrap(support.ParseElasticError(err), "failed to get account actions writer index")
+	}
+
+	if isNotFound {
+		_, err := r.client.
+			Index().
+			Index(accountActionsWriterIndex).
+			Id(like.AccountId()).
+			OpType("create").
+			BodyJson(&accountActionsDocument{LikedPostIds: []string{}}).
+			Do(ctx)
+		if err != nil {
+			return errors.Wrap(support.ParseElasticError(err), "failed to insert account actions writer index")
+		}
+	}
+
+	_, err = r.client.UpdateByQuery(accountActionsWriterIndex).
 		Query(elastic.NewTermsQuery("id", like.AccountId())).
 		Script(elastic.NewScript(`
 
