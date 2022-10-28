@@ -188,8 +188,15 @@ func (c *Cursor) BuildElasticsearchAggregate(aggregationBuckets []string, append
 
 	if c.After() != nil {
 		if err := c.After().Decode(&curseAll); err != nil {
+			return errors.Wrap(err, "failed to decode aggregate")
+		}
+
+		// put back decode to how it was
+		dec, err := decodeBuffer(c.afterOriginal)
+		if err != nil {
 			return err
 		}
+		c.after = dec
 
 		// exit out
 		if len(curseAll) > 1 {
