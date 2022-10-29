@@ -58,7 +58,7 @@ export default function UploadSearchCharactersMultiSelector (props: Props): JSX.
 
   const updatedVariables = {
     ...searchArguments.variables,
-    ...(searchArguments.variables.name != null && searchArguments.variables.name !== '' && { clubCharacters: true })
+    ...(searchArguments.variables.name != null && searchArguments.variables.name !== '' && { clubCharacters: false })
   }
 
   const queryData = useLazyLoadQuery<UploadSearchCharactersMultiSelectorQuery>(
