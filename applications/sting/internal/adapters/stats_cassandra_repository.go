@@ -216,7 +216,7 @@ func (r PostsCassandraElasticsearchRepository) BackFillPostViews(ctx context.Con
 		for postId, count := range postIdsMap {
 			realPostIds = append(realPostIds, postId)
 			if err := r.session.
-				Query(postViewsCounterTable.Insert()).
+				Query(postViewsCounterTable.UpdateBuilder().Add("views").ToCql()).
 				WithContext(ctx).
 				Consistency(gocql.LocalQuorum).
 				BindStruct(postViewsCounter{PostId: postId, Views: count}).
