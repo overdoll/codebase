@@ -70,7 +70,7 @@ func (h SearchPostsHandler) Handle(ctx context.Context, query SearchPosts) ([]*p
 
 	if len(query.ClubCharacterSlugs) > 0 {
 		// not a series character, search by a club slug
-		clubCharacterIds, err = h.cr.GetClubIdsFromSlugs(ctx, query.SeriesSlugs)
+		clubCharacterIds, err = h.cr.GetClubIdsFromSlugs(ctx, query.ClubCharacterSlugs)
 
 		if err != nil {
 			return nil, err
