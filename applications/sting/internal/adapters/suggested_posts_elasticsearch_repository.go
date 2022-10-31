@@ -53,9 +53,8 @@ func (r PostsCassandraElasticsearchRepository) IndexAllActions(ctx context.Conte
 	return nil
 }
 
-func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, like *post.Like) error {
-
-	_, err := r.client.Get().Index(accountActionsWriterIndex).Id(like.AccountId()).Do(ctx)
+func (r PostsCassandraElasticsearchRepository) createPostLikeIfNeeded(ctx context.Context, accountId string) error {
+	_, err := r.client.Get().Index(accountActionsWriterIndex).Id(accountId).Do(ctx)
 
 	isNotFound := err != nil && err.Error() == "elastic: Error 404 (Not Found)"
 
@@ -67,7 +66,7 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 		_, err := r.client.
 			Index().
 			Index(accountActionsWriterIndex).
-			Id(like.AccountId()).
+			Id(accountId).
 			OpType("create").
 			BodyJson(&accountActionsDocument{LikedPostIds: []string{}}).
 			Do(ctx)
@@ -76,7 +75,16 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 		}
 	}
 
-	_, err = r.client.UpdateByQuery(accountActionsWriterIndex).
+	return nil
+}
+
+func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, like *post.Like) error {
+
+	if err := r.createPostLikeIfNeeded(ctx, like.AccountId()); err != nil {
+		return nil
+	}
+
+	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
 		Query(elastic.NewTermsQueryFromStrings("_id", like.AccountId())).
 		Script(elastic.NewScript(`
 
@@ -99,6 +107,10 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 }
 
 func (r PostsCassandraElasticsearchRepository) unLikePost(ctx context.Context, accountId, postId string) error {
+
+	if err := r.createPostLikeIfNeeded(ctx, accountId); err != nil {
+		return nil
+	}
 
 	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
 		Query(elastic.NewTermsQuery("_id", accountId)).
