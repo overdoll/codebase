@@ -15,4 +15,4 @@ docker push localhost:37393/orca-image:$1
 
 cd ../
 
-cat development/local/other/orca_manual.yaml | sed "s/{{ORCA_IMAGE}}/localhost:37393/orca-image:$1/g" | kubectl apply -f -
+cat development/local/other/orca_manual.yaml | sed "s|{{ORCA_IMAGE}}|localhost:37393/orca-image:$1|g" | kubectl apply -f -
