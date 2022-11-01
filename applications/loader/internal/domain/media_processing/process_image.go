@@ -153,11 +153,6 @@ func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*M
 
 		requiresHDOriginal := useHd && ((isPortrait && dimensions.Height <= 1600) || (!isPortrait && dimensions.Width <= 1600))
 
-		// don't make "large" mandatory if we have a dimension greater than 1600px, since the hd original will be this good quality
-		if !requiresHDOriginal && size.alternateOriginal && size.mandatory {
-			size.mandatory = false
-		}
-
 		if !shouldResizeWidth && !shouldResizeHeight && !size.mandatory {
 			continue
 		}
