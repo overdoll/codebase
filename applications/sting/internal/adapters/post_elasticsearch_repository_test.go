@@ -54,6 +54,7 @@ func TestPostsIndexElasticSearchRepository_SearchPosts_cursor(t *testing.T) {
 				time.Now(),
 				&postTime,
 				nil,
+				nil,
 			)
 
 		// create the new post

@@ -51,6 +51,7 @@ func TestPostTagsSearch(t *testing.T) {
 				time.Now(),
 				&postTime,
 				nil,
+				nil,
 			)
 
 		// create the new post
