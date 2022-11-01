@@ -72,6 +72,7 @@ func TestPostRepository_update_parallel_content(t *testing.T) {
 			time.Now(),
 			nil,
 			nil,
+			nil,
 		)
 
 	err := repo.CreatePost(context.Background(), newPost)
@@ -186,6 +187,7 @@ func TestPostRepository_failure(t *testing.T) {
 			nil,
 			time.Now(),
 			time.Now(),
+			nil,
 			nil,
 			nil,
 		)

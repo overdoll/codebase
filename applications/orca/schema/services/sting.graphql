@@ -449,6 +449,16 @@ type Mutation {
   removeCategoryAlternativeTitle(input: RemoveCategoryAlternativeTitleInput!): RemoveCategoryAlternativeTitlePayload
 }
 
+type CharacterRequest {
+  """An ID pointing to this character request."""
+  id: ID!
+
+  """
+  A name of this character request.
+  """
+  name: String!
+}
+
 type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
@@ -632,6 +642,9 @@ extend type Query {
 extend type Post {
   """Characters that belong to this post"""
   characters: [Character!]! @goField(forceResolver: true)
+
+  """Character requests that belong to this post"""
+  characterRequests: [CharacterRequest!]!
 }
 
 """Create a new character."""
@@ -2156,6 +2169,21 @@ input UpdatePostCharactersInput {
   characterIds: [ID!]!
 }
 
+"""Input for a character request."""
+input CharacterRequestInput {
+  """The name of the character."""
+  name: String!
+}
+
+"""Update post characters."""
+input UpdatePostCharacterRequestsInput {
+  """The post to update"""
+  id: ID!
+
+  """All of the character requests."""
+  characterRequests: [CharacterRequestInput!]!
+}
+
 """Publish post."""
 input SubmitPostInput {
   """The post to publish"""
@@ -2230,6 +2258,12 @@ type UpdatePostCategoriesPayload {
 
 """Payload for updating a post"""
 type UpdatePostCharactersPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostCharacterRequestsPayload {
   """The post after the update"""
   post: Post
 }
@@ -2443,6 +2477,11 @@ extend type Mutation {
   Update a post in draft status - characters
   """
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
+
+  """
+  Update a post in draft status - character requests
+  """
+  updatePostCharacterRequests(input: UpdatePostCharacterRequestsInput!): UpdatePostCharacterRequestsPayload
 
   """
   Update a post in draft status - categories

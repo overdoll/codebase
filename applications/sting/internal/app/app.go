@@ -130,6 +130,8 @@ type Commands struct {
 	ReprocessPostsMedia command.ReprocessPostsMediaHandler
 
 	ObservePosts command.ObservePostsHandler
+
+	UpdatePostCharacterRequests command.UpdatePostCharacterRequestsHandler
 }
 
 type Queries struct {

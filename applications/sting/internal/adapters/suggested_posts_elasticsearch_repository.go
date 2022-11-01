@@ -113,7 +113,7 @@ func (r PostsCassandraElasticsearchRepository) unLikePost(ctx context.Context, a
 	}
 
 	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
-		Query(elastic.NewTermsQuery("_id", accountId)).
+		Query(elastic.NewTermsQueryFromStrings("_id", accountId)).
 		Script(elastic.NewScript(`
 
 		if (ctx._source.liked_post_ids != null && ctx._source.liked_post_ids.contains(params.postId)) { 
@@ -312,14 +312,14 @@ func (r PostsCassandraElasticsearchRepository) SuggestedPostsByPost(ctx context.
 		return nil, paging.ErrCursorNotPresent
 	}
 
-	newSuggestions, err := r.newSuggestedPostsByPost(ctx, requester, cursor, pst, filters)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(newSuggestions) != 0 {
-		return newSuggestions, nil
-	}
+	//newSuggestions, err := r.newSuggestedPostsByPost(ctx, requester, cursor, pst, filters)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//if len(newSuggestions) != 0 {
+	//	return newSuggestions, nil
+	//}
 
 	return r.legacySuggestedPostsByPost(ctx, requester, cursor, pst, filters)
 }

@@ -45,6 +45,17 @@
       "character_ids": {
         "type": "keyword"
       },
+      "character_requests": {
+        "type": "nested",
+        "properties": {
+          "id": {
+            "type": "keyword"
+          },
+          "name": {
+            "type": "keyword"
+          }
+        }
+      },
       "series_ids": {
         "type": "keyword"
       },

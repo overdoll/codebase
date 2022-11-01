@@ -81,6 +81,7 @@ go_library(
         "update_media.go",
         "update_post_audience.go",
         "update_post_categories.go",
+        "update_post_character_requests.go",
         "update_post_characters.go",
         "update_post_content_is_supporter_only.go",
         "update_post_content_order.go",

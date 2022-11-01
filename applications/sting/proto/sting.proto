@@ -12,6 +12,7 @@ message PostRequest {
 message Post {
   string clubId = 1;
   string accountId = 2;
+  bool hasCharacterRequests = 3;
 }
 
 message DeleteAccountDataRequest {

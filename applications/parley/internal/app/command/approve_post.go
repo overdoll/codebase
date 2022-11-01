@@ -5,6 +5,7 @@ import (
 	"overdoll/applications/parley/internal/domain/event"
 	"overdoll/applications/parley/internal/domain/moderator"
 	"overdoll/applications/parley/internal/domain/post_audit_log"
+	"overdoll/libraries/errors/domainerror"
 
 	"overdoll/libraries/principal"
 )
@@ -27,7 +28,7 @@ func NewApprovePostHandler(pr post_audit_log.Repository, mr moderator.Repository
 
 func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) error {
 
-	_, err := h.sting.GetPost(ctx, cmd.PostId)
+	pst, err := h.sting.GetPost(ctx, cmd.PostId)
 
 	if err != nil {
 		return err
@@ -37,6 +38,10 @@ func (h ApprovePostHandler) Handle(ctx context.Context, cmd ApprovePost) error {
 
 	if err != nil {
 		return err
+	}
+
+	if pst.HasCharacterRequests() {
+		return domainerror.NewValidation("cannot approve post with character requests")
 	}
 
 	if err := h.event.ApprovePost(ctx, cmd.Principal, postModerator, cmd.PostId); err != nil {

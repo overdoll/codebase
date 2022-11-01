@@ -1,8 +1,9 @@
 package post
 
 type Post struct {
-	clubId    string
-	accountId string
+	clubId               string
+	accountId            string
+	hasCharacterRequests bool
 }
 
 func (p *Post) ClubId() string {
@@ -13,9 +14,14 @@ func (p *Post) AccountId() string {
 	return p.accountId
 }
 
-func UnmarshalPostFromDatabase(clubId, accountId string) *Post {
+func (p *Post) HasCharacterRequests() bool {
+	return p.hasCharacterRequests
+}
+
+func UnmarshalPostFromDatabase(clubId, accountId string, hasCharacterRequests bool) *Post {
 	return &Post{
-		clubId:    clubId,
-		accountId: accountId,
+		clubId:               clubId,
+		accountId:            accountId,
+		hasCharacterRequests: hasCharacterRequests,
 	}
 }

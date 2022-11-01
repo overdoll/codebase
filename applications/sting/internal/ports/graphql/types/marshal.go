@@ -158,6 +158,15 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Lik
 		viewerLiked = MarshalPostLikeToGraphQL(ctx, like)
 	}
 
+	var characterRequests []*CharacterRequest
+
+	for _, request := range result.CharacterRequests() {
+		characterRequests = append(characterRequests, &CharacterRequest{
+			ID:   relay.NewID(CharacterRequest{}, request.ID()),
+			Name: request.Name(),
+		})
+	}
+
 	return &Post{
 		ID:                      relay.NewID(Post{}, result.ID()),
 		SupporterOnlyStatus:     supporterOnlyStatus,
@@ -175,6 +184,7 @@ func MarshalPostToGraphQL(ctx context.Context, result *post.Post, like *post.Lik
 		PostedAt:                result.PostedAt(),
 		Likes:                   result.Likes(),
 		Views:                   result.Views(),
+		CharacterRequests:       characterRequests,
 	}
 }
 

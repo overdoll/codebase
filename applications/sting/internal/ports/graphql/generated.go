@@ -191,6 +191,11 @@ type ComplexityRoot struct {
 		Node   func(childComplexity int) int
 	}
 
+	CharacterRequest struct {
+		ID   func(childComplexity int) int
+		Name func(childComplexity int) int
+	}
+
 	Club struct {
 		Banner                      func(childComplexity int) int
 		BannerMedia                 func(childComplexity int) int
@@ -509,6 +514,7 @@ type ComplexityRoot struct {
 		UpdateCurationProfileDateOfBirth func(childComplexity int, input types.UpdateCurationProfileDateOfBirthInput) int
 		UpdatePostAudience               func(childComplexity int, input types.UpdatePostAudienceInput) int
 		UpdatePostCategories             func(childComplexity int, input types.UpdatePostCategoriesInput) int
+		UpdatePostCharacterRequests      func(childComplexity int, input types.UpdatePostCharacterRequestsInput) int
 		UpdatePostCharacters             func(childComplexity int, input types.UpdatePostCharactersInput) int
 		UpdatePostContentIsSupporterOnly func(childComplexity int, input types.UpdatePostContentIsSupporterOnlyInput) int
 		UpdatePostContentOrder           func(childComplexity int, input types.UpdatePostContentOrderInput) int
@@ -538,6 +544,7 @@ type ComplexityRoot struct {
 	Post struct {
 		Audience                func(childComplexity int) int
 		Categories              func(childComplexity int) int
+		CharacterRequests       func(childComplexity int) int
 		Characters              func(childComplexity int) int
 		Club                    func(childComplexity int) int
 		Content                 func(childComplexity int) int
@@ -838,6 +845,10 @@ type ComplexityRoot struct {
 		Post func(childComplexity int) int
 	}
 
+	UpdatePostCharacterRequestsPayload struct {
+		Post func(childComplexity int) int
+	}
+
 	UpdatePostCharactersPayload struct {
 		Post func(childComplexity int) int
 	}
@@ -1006,6 +1017,7 @@ type MutationResolver interface {
 	UpdatePostContentOrder(ctx context.Context, input types.UpdatePostContentOrderInput) (*types.UpdatePostContentOrderPayload, error)
 	UpdatePostContentIsSupporterOnly(ctx context.Context, input types.UpdatePostContentIsSupporterOnlyInput) (*types.UpdatePostContentIsSupporterOnlyPayload, error)
 	UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error)
+	UpdatePostCharacterRequests(ctx context.Context, input types.UpdatePostCharacterRequestsInput) (*types.UpdatePostCharacterRequestsPayload, error)
 	UpdatePostCategories(ctx context.Context, input types.UpdatePostCategoriesInput) (*types.UpdatePostCategoriesPayload, error)
 	UpdatePostDescription(ctx context.Context, input types.UpdatePostDescriptionInput) (*types.UpdatePostDescriptionPayload, error)
 	SubmitPost(ctx context.Context, input types.SubmitPostInput) (*types.SubmitPostPayload, error)
@@ -1692,6 +1704,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CharacterEdge.Node(childComplexity), true
+
+	case "CharacterRequest.id":
+		if e.complexity.CharacterRequest.ID == nil {
+			break
+		}
+
+		return e.complexity.CharacterRequest.ID(childComplexity), true
+
+	case "CharacterRequest.name":
+		if e.complexity.CharacterRequest.Name == nil {
+			break
+		}
+
+		return e.complexity.CharacterRequest.Name(childComplexity), true
 
 	case "Club.banner":
 		if e.complexity.Club.Banner == nil {
@@ -3329,6 +3355,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdatePostCategories(childComplexity, args["input"].(types.UpdatePostCategoriesInput)), true
 
+	case "Mutation.updatePostCharacterRequests":
+		if e.complexity.Mutation.UpdatePostCharacterRequests == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updatePostCharacterRequests_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdatePostCharacterRequests(childComplexity, args["input"].(types.UpdatePostCharacterRequestsInput)), true
+
 	case "Mutation.updatePostCharacters":
 		if e.complexity.Mutation.UpdatePostCharacters == nil {
 			break
@@ -3492,6 +3530,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Post.Categories(childComplexity), true
+
+	case "Post.characterRequests":
+		if e.complexity.Post.CharacterRequests == nil {
+			break
+		}
+
+		return e.complexity.Post.CharacterRequests(childComplexity), true
 
 	case "Post.characters":
 		if e.complexity.Post.Characters == nil {
@@ -4695,6 +4740,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdatePostCategoriesPayload.Post(childComplexity), true
 
+	case "UpdatePostCharacterRequestsPayload.post":
+		if e.complexity.UpdatePostCharacterRequestsPayload.Post == nil {
+			break
+		}
+
+		return e.complexity.UpdatePostCharacterRequestsPayload.Post(childComplexity), true
+
 	case "UpdatePostCharactersPayload.post":
 		if e.complexity.UpdatePostCharactersPayload.Post == nil {
 			break
@@ -4826,6 +4878,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputAddClubSlugAliasInput,
 		ec.unmarshalInputAddPostContentInput,
 		ec.unmarshalInputArchivePostInput,
+		ec.unmarshalInputCharacterRequestInput,
 		ec.unmarshalInputCreateAudienceInput,
 		ec.unmarshalInputCreateCategoryInput,
 		ec.unmarshalInputCreateCharacterInput,
@@ -4871,6 +4924,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateCurationProfileDateOfBirthInput,
 		ec.unmarshalInputUpdatePostAudienceInput,
 		ec.unmarshalInputUpdatePostCategoriesInput,
+		ec.unmarshalInputUpdatePostCharacterRequestsInput,
 		ec.unmarshalInputUpdatePostCharactersInput,
 		ec.unmarshalInputUpdatePostContentIsSupporterOnlyInput,
 		ec.unmarshalInputUpdatePostContentOrderInput,
@@ -5391,7 +5445,17 @@ type Mutation {
   removeCategoryAlternativeTitle(input: RemoveCategoryAlternativeTitleInput!): RemoveCategoryAlternativeTitlePayload
 }
 `, BuiltIn: false},
-	{Name: "../../../schema/character/schema.graphql", Input: `type Character implements Node @key(fields: "id") {
+	{Name: "../../../schema/character/schema.graphql", Input: `type CharacterRequest {
+  """An ID pointing to this character request."""
+  id: ID!
+
+  """
+  A name of this character request.
+  """
+  name: String!
+}
+
+type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
 
@@ -5574,6 +5638,9 @@ extend type Query {
 extend type Post {
   """Characters that belong to this post"""
   characters: [Character!]! @goField(forceResolver: true)
+
+  """Character requests that belong to this post"""
+  characterRequests: [CharacterRequest!]!
 }
 
 """Create a new character."""
@@ -7098,6 +7165,21 @@ input UpdatePostCharactersInput {
   characterIds: [ID!]!
 }
 
+"""Input for a character request."""
+input CharacterRequestInput {
+  """The name of the character."""
+  name: String!
+}
+
+"""Update post characters."""
+input UpdatePostCharacterRequestsInput {
+  """The post to update"""
+  id: ID!
+
+  """All of the character requests."""
+  characterRequests: [CharacterRequestInput!]!
+}
+
 """Publish post."""
 input SubmitPostInput {
   """The post to publish"""
@@ -7172,6 +7254,12 @@ type UpdatePostCategoriesPayload {
 
 """Payload for updating a post"""
 type UpdatePostCharactersPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Payload for updating a post"""
+type UpdatePostCharacterRequestsPayload {
   """The post after the update"""
   post: Post
 }
@@ -7385,6 +7473,11 @@ extend type Mutation {
   Update a post in draft status - characters
   """
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
+
+  """
+  Update a post in draft status - character requests
+  """
+  updatePostCharacterRequests(input: UpdatePostCharacterRequestsInput!): UpdatePostCharacterRequestsPayload
 
   """
   Update a post in draft status - categories
@@ -10482,6 +10575,21 @@ func (ec *executionContext) field_Mutation_updatePostCategories_args(ctx context
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updatePostCharacterRequests_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdatePostCharacterRequestsInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdatePostCharacterRequestsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharacterRequestsInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updatePostCharacters_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -13063,6 +13171,8 @@ func (ec *executionContext) fieldContext_AddPostContentPayload_post(ctx context.
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -13142,6 +13252,8 @@ func (ec *executionContext) fieldContext_ArchivePostPayload_post(ctx context.Con
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -16230,6 +16342,94 @@ func (ec *executionContext) fieldContext_CharacterEdge_node(ctx context.Context,
 				return ec.fieldContext_Character_posts(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Character", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CharacterRequest_id(ctx context.Context, field graphql.CollectedField, obj *types.CharacterRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CharacterRequest_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(relay.ID)
+	fc.Result = res
+	return ec.marshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CharacterRequest_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CharacterRequest",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CharacterRequest_name(ctx context.Context, field graphql.CollectedField, obj *types.CharacterRequest) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CharacterRequest_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CharacterRequest_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CharacterRequest",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -20139,6 +20339,8 @@ func (ec *executionContext) fieldContext_CreatePostPayload_post(ctx context.Cont
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -21968,6 +22170,8 @@ func (ec *executionContext) fieldContext_Entity_findPostByID(ctx context.Context
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -26317,6 +26521,62 @@ func (ec *executionContext) fieldContext_Mutation_updatePostCharacters(ctx conte
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updatePostCharacterRequests(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updatePostCharacterRequests(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdatePostCharacterRequests(rctx, fc.Args["input"].(types.UpdatePostCharacterRequestsInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdatePostCharacterRequestsPayload)
+	fc.Result = res
+	return ec.marshalOUpdatePostCharacterRequestsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharacterRequestsPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updatePostCharacterRequests(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "post":
+				return ec.fieldContext_UpdatePostCharacterRequestsPayload_post(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdatePostCharacterRequestsPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updatePostCharacterRequests_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_updatePostCategories(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updatePostCategories(ctx, field)
 	if err != nil {
@@ -27215,6 +27475,8 @@ func (ec *executionContext) fieldContext_ObservePostsPayload_posts(ctx context.C
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -28284,6 +28546,56 @@ func (ec *executionContext) fieldContext_Post_characters(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _Post_characterRequests(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Post_characterRequests(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.CharacterRequests, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*types.CharacterRequest)
+	fc.Result = res
+	return ec.marshalNCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequestᚄ(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Post_characterRequests(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Post",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_CharacterRequest_id(ctx, field)
+			case "name":
+				return ec.fieldContext_CharacterRequest_name(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CharacterRequest", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Post_likes(ctx context.Context, field graphql.CollectedField, obj *types.Post) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Post_likes(ctx, field)
 	if err != nil {
@@ -29035,6 +29347,8 @@ func (ec *executionContext) fieldContext_PostEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -29205,6 +29519,8 @@ func (ec *executionContext) fieldContext_PostLike_post(ctx context.Context, fiel
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -30424,6 +30740,8 @@ func (ec *executionContext) fieldContext_Query_post(ctx context.Context, field g
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -31436,6 +31754,8 @@ func (ec *executionContext) fieldContext_RemovePostContentPayload_post(ctx conte
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -32364,6 +32684,8 @@ func (ec *executionContext) fieldContext_RouletteGameState_post(ctx context.Cont
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -33771,6 +34093,8 @@ func (ec *executionContext) fieldContext_SubmitPostPayload_post(ctx context.Cont
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -35228,6 +35552,8 @@ func (ec *executionContext) fieldContext_UnArchivePostPayload_post(ctx context.C
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36450,6 +36776,8 @@ func (ec *executionContext) fieldContext_UpdatePostAudiencePayload_post(ctx cont
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36529,6 +36857,89 @@ func (ec *executionContext) fieldContext_UpdatePostCategoriesPayload_post(ctx co
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
+			case "likes":
+				return ec.fieldContext_Post_likes(ctx, field)
+			case "views":
+				return ec.fieldContext_Post_views(ctx, field)
+			case "viewerLiked":
+				return ec.fieldContext_Post_viewerLiked(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Post", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdatePostCharacterRequestsPayload_post(ctx context.Context, field graphql.CollectedField, obj *types.UpdatePostCharacterRequestsPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdatePostCharacterRequestsPayload_post(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Post, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Post)
+	fc.Result = res
+	return ec.marshalOPost2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐPost(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdatePostCharacterRequestsPayload_post(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdatePostCharacterRequestsPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Post_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Post_reference(ctx, field)
+			case "state":
+				return ec.fieldContext_Post_state(ctx, field)
+			case "supporterOnlyStatus":
+				return ec.fieldContext_Post_supporterOnlyStatus(ctx, field)
+			case "contributor":
+				return ec.fieldContext_Post_contributor(ctx, field)
+			case "club":
+				return ec.fieldContext_Post_club(ctx, field)
+			case "content":
+				return ec.fieldContext_Post_content(ctx, field)
+			case "description":
+				return ec.fieldContext_Post_description(ctx, field)
+			case "descriptionTranslations":
+				return ec.fieldContext_Post_descriptionTranslations(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Post_createdAt(ctx, field)
+			case "postedAt":
+				return ec.fieldContext_Post_postedAt(ctx, field)
+			case "suggestedPosts":
+				return ec.fieldContext_Post_suggestedPosts(ctx, field)
+			case "audience":
+				return ec.fieldContext_Post_audience(ctx, field)
+			case "categories":
+				return ec.fieldContext_Post_categories(ctx, field)
+			case "characters":
+				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36608,6 +37019,8 @@ func (ec *executionContext) fieldContext_UpdatePostCharactersPayload_post(ctx co
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36687,6 +37100,8 @@ func (ec *executionContext) fieldContext_UpdatePostClubPayload_post(ctx context.
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36766,6 +37181,8 @@ func (ec *executionContext) fieldContext_UpdatePostContentIsSupporterOnlyPayload
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36845,6 +37262,8 @@ func (ec *executionContext) fieldContext_UpdatePostContentOrderPayload_post(ctx 
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -36924,6 +37343,8 @@ func (ec *executionContext) fieldContext_UpdatePostDescriptionPayload_post(ctx c
 				return ec.fieldContext_Post_categories(ctx, field)
 			case "characters":
 				return ec.fieldContext_Post_characters(ctx, field)
+			case "characterRequests":
+				return ec.fieldContext_Post_characterRequests(ctx, field)
 			case "likes":
 				return ec.fieldContext_Post_likes(ctx, field)
 			case "views":
@@ -39480,6 +39901,29 @@ func (ec *executionContext) unmarshalInputArchivePostInput(ctx context.Context, 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCharacterRequestInput(ctx context.Context, obj interface{}) (types.CharacterRequestInput, error) {
+	var it types.CharacterRequestInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCreateAudienceInput(ctx context.Context, obj interface{}) (types.CreateAudienceInput, error) {
 	var it types.CreateAudienceInput
 	asMap := map[string]interface{}{}
@@ -40826,6 +41270,37 @@ func (ec *executionContext) unmarshalInputUpdatePostCategoriesInput(ctx context.
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categoryIds"))
 			it.CategoryIds, err = ec.unmarshalNID2ᚕoverdollᚋlibrariesᚋgraphqlᚋrelayᚐIDᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdatePostCharacterRequestsInput(ctx context.Context, obj interface{}) (types.UpdatePostCharacterRequestsInput, error) {
+	var it types.UpdatePostCharacterRequestsInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "characterRequests":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("characterRequests"))
+			it.CharacterRequests, err = ec.unmarshalNCharacterRequestInput2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequestInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -42635,6 +43110,41 @@ func (ec *executionContext) _CharacterEdge(ctx context.Context, sel ast.Selectio
 		case "node":
 
 			out.Values[i] = ec._CharacterEdge_node(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var characterRequestImplementors = []string{"CharacterRequest"}
+
+func (ec *executionContext) _CharacterRequest(ctx context.Context, sel ast.SelectionSet, obj *types.CharacterRequest) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, characterRequestImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CharacterRequest")
+		case "id":
+
+			out.Values[i] = ec._CharacterRequest_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "name":
+
+			out.Values[i] = ec._CharacterRequest_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -45003,6 +45513,12 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updatePostCharacters(ctx, field)
 			})
 
+		case "updatePostCharacterRequests":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updatePostCharacterRequests(ctx, field)
+			})
+
 		case "updatePostCategories":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
@@ -45381,6 +45897,13 @@ func (ec *executionContext) _Post(ctx context.Context, sel ast.SelectionSet, obj
 				return innerFunc(ctx)
 
 			})
+		case "characterRequests":
+
+			out.Values[i] = ec._Post_characterRequests(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "likes":
 
 			out.Values[i] = ec._Post_likes(ctx, field, obj)
@@ -47720,6 +48243,31 @@ func (ec *executionContext) _UpdatePostCategoriesPayload(ctx context.Context, se
 	return out
 }
 
+var updatePostCharacterRequestsPayloadImplementors = []string{"UpdatePostCharacterRequestsPayload"}
+
+func (ec *executionContext) _UpdatePostCharacterRequestsPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostCharacterRequestsPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updatePostCharacterRequestsPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdatePostCharacterRequestsPayload")
+		case "post":
+
+			out.Values[i] = ec._UpdatePostCharacterRequestsPayload_post(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updatePostCharactersPayloadImplementors = []string{"UpdatePostCharactersPayload"}
 
 func (ec *executionContext) _UpdatePostCharactersPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdatePostCharactersPayload) graphql.Marshaler {
@@ -48866,6 +49414,82 @@ func (ec *executionContext) marshalNCharacterEdge2ᚖoverdollᚋapplicationsᚋs
 		return graphql.Null
 	}
 	return ec._CharacterEdge(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNCharacterRequest2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequestᚄ(ctx context.Context, sel ast.SelectionSet, v []*types.CharacterRequest) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequest(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNCharacterRequest2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequest(ctx context.Context, sel ast.SelectionSet, v *types.CharacterRequest) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CharacterRequest(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNCharacterRequestInput2ᚕᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequestInputᚄ(ctx context.Context, v interface{}) ([]*types.CharacterRequestInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*types.CharacterRequestInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNCharacterRequestInput2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequestInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNCharacterRequestInput2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharacterRequestInput(ctx context.Context, v interface{}) (*types.CharacterRequestInput, error) {
+	res, err := ec.unmarshalInputCharacterRequestInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNCharactersSort2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐCharactersSort(ctx context.Context, v interface{}) (types.CharactersSort, error) {
@@ -50491,6 +51115,11 @@ func (ec *executionContext) unmarshalNUpdatePostCategoriesInput2overdollᚋappli
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdatePostCharacterRequestsInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharacterRequestsInput(ctx context.Context, v interface{}) (types.UpdatePostCharacterRequestsInput, error) {
+	res, err := ec.unmarshalInputUpdatePostCharacterRequestsInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdatePostCharactersInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersInput(ctx context.Context, v interface{}) (types.UpdatePostCharactersInput, error) {
 	res, err := ec.unmarshalInputUpdatePostCharactersInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -51806,6 +52435,13 @@ func (ec *executionContext) marshalOUpdatePostCategoriesPayload2ᚖoverdollᚋap
 		return graphql.Null
 	}
 	return ec._UpdatePostCategoriesPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdatePostCharacterRequestsPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharacterRequestsPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostCharacterRequestsPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdatePostCharacterRequestsPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdatePostCharactersPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdatePostCharactersPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdatePostCharactersPayload) graphql.Marshaler {

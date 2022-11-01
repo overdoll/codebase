@@ -284,6 +284,19 @@ type CharacterEdge struct {
 	Node   *Character `json:"node"`
 }
 
+type CharacterRequest struct {
+	// An ID pointing to this character request.
+	ID relay.ID `json:"id"`
+	// A name of this character request.
+	Name string `json:"name"`
+}
+
+// Input for a character request.
+type CharacterRequestInput struct {
+	// The name of the character.
+	Name string `json:"name"`
+}
+
 type Club struct {
 	// An ID pointing to this club.
 	ID relay.ID `json:"id"`
@@ -835,6 +848,8 @@ type Post struct {
 	Categories []*Category `json:"categories"`
 	// Characters that belong to this post
 	Characters []*Character `json:"characters"`
+	// Character requests that belong to this post
+	CharacterRequests []*CharacterRequest `json:"characterRequests"`
 	// The amount of likes on this post.
 	Likes int `json:"likes"`
 	// The amount of times the post has been viewed on the platform.
@@ -1408,6 +1423,20 @@ type UpdatePostCategoriesInput struct {
 
 // Payload for updating a post
 type UpdatePostCategoriesPayload struct {
+	// The post after the update
+	Post *Post `json:"post"`
+}
+
+// Update post characters.
+type UpdatePostCharacterRequestsInput struct {
+	// The post to update
+	ID relay.ID `json:"id"`
+	// All of the character requests.
+	CharacterRequests []*CharacterRequestInput `json:"characterRequests"`
+}
+
+// Payload for updating a post
+type UpdatePostCharacterRequestsPayload struct {
 	// The post after the update
 	Post *Post `json:"post"`
 }

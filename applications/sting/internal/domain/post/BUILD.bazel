@@ -9,6 +9,7 @@ go_library(
         "category_filters.go",
         "character.go",
         "character_filters.go",
+        "character_request.go",
         "character_series.go",
         "liked_post.go",
         "object_filters.go",

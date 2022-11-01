@@ -39,6 +39,7 @@ type Repository interface {
 	UpdatePostCategoriesOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharactersOperator(ctx context.Context, id string, updateFn func(pending *Post) error) (*Post, error)
 
+	UpdatePostCharacterRequests(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostAudience(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)
 	UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *Post) error) (*Post, error)

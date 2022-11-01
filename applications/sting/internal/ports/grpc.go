@@ -47,8 +47,9 @@ func (s Server) GetPost(ctx context.Context, request *sting.PostRequest) (*sting
 	}
 
 	return &sting.Post{
-		ClubId:    post.ClubId(),
-		AccountId: post.ContributorId(),
+		ClubId:               post.ClubId(),
+		AccountId:            post.ContributorId(),
+		HasCharacterRequests: len(post.CharacterRequests()) > 0,
 	}, nil
 }
 

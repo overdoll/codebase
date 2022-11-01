@@ -39,6 +39,7 @@ type PostModified struct {
 	}
 	State               types.PostState
 	Description         string
+	CharacterRequests   []*types.CharacterRequest
 	Characters          []CharacterModified
 	Audience            *AudienceModified
 	Categories          []CategoryModified
@@ -117,6 +118,12 @@ type UpdatePostCharacters struct {
 	UpdatePostCharacters *struct {
 		Post *PostModified
 	} `graphql:"updatePostCharacters(input: $input)"`
+}
+
+type UpdatePostCharacterRequests struct {
+	UpdatePostCharacterRequests *struct {
+		Post *PostModified
+	} `graphql:"updatePostCharacterRequests(input: $input)"`
 }
 
 type UpdatePostAudience struct {
@@ -336,6 +343,32 @@ func TestCreatePost_Submit_and_publish(t *testing.T) {
 	require.Equal(t, "Transmit", updatePostCategories.UpdatePostCategories.Post.Categories[0].Title)
 	require.Equal(t, "Alter", updatePostCategories.UpdatePostCategories.Post.Categories[1].Title)
 	require.Equal(t, "Convict", updatePostCategories.UpdatePostCategories.Post.Categories[2].Title)
+
+	// update with character requests
+	var updatePostCharacterRequests UpdatePostCharacterRequests
+
+	err = client.Mutate(context.Background(), &updatePostCharacterRequests, map[string]interface{}{
+		"input": types.UpdatePostCharacterRequestsInput{
+			ID:                newPostId,
+			CharacterRequests: []*types.CharacterRequestInput{{Name: "test"}},
+		},
+	})
+
+	require.NoError(t, err)
+
+	require.Equal(t, 1, len(updatePostCharacterRequests.UpdatePostCharacterRequests.Post.CharacterRequests))
+	require.Equal(t, "test", updatePostCharacterRequests.UpdatePostCharacterRequests.Post.CharacterRequests[0].Name)
+
+	err = client.Mutate(context.Background(), &updatePostCharacterRequests, map[string]interface{}{
+		"input": types.UpdatePostCharacterRequestsInput{
+			ID:                newPostId,
+			CharacterRequests: []*types.CharacterRequestInput{},
+		},
+	})
+
+	require.NoError(t, err)
+
+	require.Equal(t, 0, len(updatePostCharacterRequests.UpdatePostCharacterRequests.Post.CharacterRequests))
 
 	// update with new characters
 	var updatePostCharacters UpdatePostCharacters

@@ -2,6 +2,7 @@ package adapters
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/go-redis/redis/v8"
 	"github.com/olivere/elastic/v7"
@@ -79,10 +80,16 @@ var postTable = table.New(table.Metadata{
 		"created_at",
 		"updated_at",
 		"posted_at",
+		"character_requests",
 	},
 	PartKey: []string{"id"},
 	SortKey: []string{},
 })
+
+type characterRequest struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
+}
 
 type posts struct {
 	Id                           string            `db:"id"`
@@ -102,6 +109,7 @@ type posts struct {
 	AudienceId                   *string           `db:"audience_id"`
 	CategoryIds                  []string          `db:"category_ids"`
 	CharacterIds                 []string          `db:"character_ids"`
+	CharacterRequests            []string          `db:"character_requests"`
 	SeriesIds                    []string          `db:"series_ids"`
 	CreatedAt                    time.Time         `db:"created_at"`
 	UpdatedAt                    time.Time         `db:"updated_at"`
@@ -176,6 +184,18 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 
 			contentMedia[cont.Media().ID()] = *marshalled
 		}
+	}
+
+	var characterRequests []string
+
+	for _, request := range pending.CharacterRequests() {
+
+		data, err := json.Marshal(&characterRequest{Name: request.Name(), Id: request.ID()})
+		if err != nil {
+			return nil, err
+		}
+
+		characterRequests = append(characterRequests, string(data))
 	}
 
 	return &posts{
@@ -296,6 +316,19 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		}
 	}
 
+	var characterRequests []*post.CharacterRequest
+
+	for _, request := range postPending.CharacterRequests {
+
+		var cRequest characterRequest
+
+		if err := json.Unmarshal([]byte(request), &cRequest); err != nil {
+			return nil, err
+		}
+
+		characterRequests = append(characterRequests, post.UnmarshalCharacterRequestFromDatabase(cRequest.Id, cRequest.Name))
+	}
+
 	return post.UnmarshalPostFromDatabase(
 		postPending.Id,
 		postPending.State,
@@ -316,6 +349,7 @@ func (r *PostsCassandraElasticsearchRepository) unmarshalPost(ctx context.Contex
 		postPending.UpdatedAt,
 		postPending.PostedAt,
 		postPending.Description,
+		characterRequests,
 	), nil
 }
 
@@ -812,6 +846,10 @@ func (r PostsCassandraElasticsearchRepository) UpdatePostAudience(ctx context.Co
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostDescription(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
 	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"description"})
+}
+
+func (r PostsCassandraElasticsearchRepository) UpdatePostCharacterRequests(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {
+	return r.updatePostRequest(ctx, requester, id, updateFn, []string{"character_requests"})
 }
 
 func (r PostsCassandraElasticsearchRepository) UpdatePostCharacters(ctx context.Context, requester *principal.Principal, id string, updateFn func(pending *post.Post) error) (*post.Post, error) {

@@ -1,3 +1,13 @@
+type CharacterRequest {
+  """An ID pointing to this character request."""
+  id: ID!
+
+  """
+  A name of this character request.
+  """
+  name: String!
+}
+
 type Character implements Node @key(fields: "id") {
   """An ID pointing to this character."""
   id: ID!
@@ -181,6 +191,9 @@ extend type Query {
 extend type Post {
   """Characters that belong to this post"""
   characters: [Character!]! @goField(forceResolver: true)
+
+  """Character requests that belong to this post"""
+  characterRequests: [CharacterRequest!]!
 }
 
 """Create a new character."""

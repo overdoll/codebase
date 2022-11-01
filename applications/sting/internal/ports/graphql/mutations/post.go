@@ -298,6 +298,37 @@ func (r *MutationResolver) UpdatePostContentIsSupporterOnly(ctx context.Context,
 	}, nil
 }
 
+func (r *MutationResolver) UpdatePostCharacterRequests(ctx context.Context, input types.UpdatePostCharacterRequestsInput) (*types.UpdatePostCharacterRequestsPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	var characters []string
+
+	for _, id := range input.CharacterRequests {
+		characters = append(characters, id.Name)
+	}
+
+	pst, err := r.App.Commands.UpdatePostCharacterRequests.
+		Handle(
+			ctx,
+			command.UpdatePostCharacterRequests{
+				Principal:         principal.FromContext(ctx),
+				PostId:            input.ID.GetID(),
+				CharacterRequests: characters,
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdatePostCharacterRequestsPayload{
+		Post: types.MarshalPostToGraphQL(ctx, pst, nil),
+	}, nil
+}
+
 func (r *MutationResolver) UpdatePostCharacters(ctx context.Context, input types.UpdatePostCharactersInput) (*types.UpdatePostCharactersPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {

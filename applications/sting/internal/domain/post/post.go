@@ -37,8 +37,11 @@ type Post struct {
 	audienceId *string
 
 	characterIds []string
-	seriesIds    []string
-	categoryIds  []string
+
+	characterRequests []*CharacterRequest
+
+	seriesIds   []string
+	categoryIds []string
 
 	content []*Content
 
@@ -74,7 +77,7 @@ func NewPost(requester *principal.Principal, club *club.Club) (*Post, error) {
 	}, nil
 }
 
-func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes, views int, contributorId string, contentResourceIds []string, contentMedia []*media.Media, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string) *Post {
+func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes, views int, contributorId string, contentResourceIds []string, contentMedia []*media.Media, contentSupporterOnly map[string]bool, contentSupporterOnlyResourceIds map[string]string, clubId string, audienceId *string, characterIds []string, seriesIds []string, categoryIds []string, createdAt, updatedAt time.Time, postedAt *time.Time, description map[string]string, characterRequests []*CharacterRequest) *Post {
 
 	ps, _ := StateFromString(state)
 	so, _ := SupporterOnlyStatusFromString(supporterOnlyStatus)
@@ -134,6 +137,7 @@ func UnmarshalPostFromDatabase(id, state, supporterOnlyStatus string, likes, vie
 		createdAt:           createdAt,
 		updatedAt:           updatedAt,
 		postedAt:            postedAt,
+		characterRequests:   characterRequests,
 	}
 }
 
@@ -183,6 +187,10 @@ func (p *Post) CategoryIds() []string {
 
 func (p *Post) CharacterIds() []string {
 	return p.characterIds
+}
+
+func (p *Post) CharacterRequests() []*CharacterRequest {
+	return p.characterRequests
 }
 
 func (p *Post) SeriesIds() []string {
@@ -356,8 +364,8 @@ func (p *Post) SubmitPostRequest(clb *club.Club, requester *principal.Principal)
 		return domainerror.NewValidation("cannot submit post without at least 3 categories")
 	}
 
-	if len(p.characterIds) < 1 {
-		return domainerror.NewValidation("cannot submit post without at least 1 character")
+	if len(p.characterIds) < 1 && len(p.characterRequests) < 1 {
+		return domainerror.NewValidation("cannot submit post without at least 1 character or character request")
 	}
 
 	p.update()
@@ -576,6 +584,18 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 	p.update()
 
 	return removedMedia, nil
+}
+
+func (p *Post) UpdateCharactersRequests(requester *principal.Principal, characters []*CharacterRequest) error {
+
+	if err := p.CanUpdate(requester); err != nil {
+		return err
+	}
+
+	p.characterRequests = characters
+	p.update()
+
+	return nil
 }
 
 func (p *Post) UpdateCharacters(characters []*Character) error {

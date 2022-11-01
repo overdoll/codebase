@@ -24,26 +24,32 @@ import (
 )
 
 type postDocument struct {
-	Id                           string            `json:"id"`
-	State                        string            `json:"state"`
-	Description                  map[string]string `json:"description"`
-	SupporterOnlyStatus          string            `json:"supporter_only_status"`
-	ContentMediaIds              []string          `json:"content_resource_ids"`
-	ContentResources             map[string]string `json:"content_resources"`
-	ContentMedia                 map[string]string `json:"content_media"`
-	ContentSupporterOnly         map[string]bool   `json:"content_supporter_only"`
-	ContentSupporterOnlyMediaIds map[string]string `json:"content_supporter_only_resource_ids"`
-	Likes                        int               `json:"likes"`
-	Views                        int               `json:"views"`
-	ContributorId                string            `json:"contributor_id"`
-	ClubId                       string            `json:"club_id"`
-	AudienceId                   string            `json:"audience_id"`
-	CategoryIds                  []string          `json:"category_ids"`
-	CharacterIds                 []string          `json:"character_ids"`
-	SeriesIds                    []string          `json:"series_ids"`
-	CreatedAt                    time.Time         `json:"created_at"`
-	UpdatedAt                    time.Time         `json:"updated_at"`
-	PostedAt                     *time.Time        `json:"posted_at"`
+	Id                           string                     `json:"id"`
+	State                        string                     `json:"state"`
+	Description                  map[string]string          `json:"description"`
+	SupporterOnlyStatus          string                     `json:"supporter_only_status"`
+	ContentMediaIds              []string                   `json:"content_resource_ids"`
+	ContentResources             map[string]string          `json:"content_resources"`
+	ContentMedia                 map[string]string          `json:"content_media"`
+	ContentSupporterOnly         map[string]bool            `json:"content_supporter_only"`
+	ContentSupporterOnlyMediaIds map[string]string          `json:"content_supporter_only_resource_ids"`
+	Likes                        int                        `json:"likes"`
+	Views                        int                        `json:"views"`
+	ContributorId                string                     `json:"contributor_id"`
+	ClubId                       string                     `json:"club_id"`
+	AudienceId                   string                     `json:"audience_id"`
+	CategoryIds                  []string                   `json:"category_ids"`
+	CharacterIds                 []string                   `json:"character_ids"`
+	SeriesIds                    []string                   `json:"series_ids"`
+	CreatedAt                    time.Time                  `json:"created_at"`
+	UpdatedAt                    time.Time                  `json:"updated_at"`
+	PostedAt                     *time.Time                 `json:"posted_at"`
+	CharacterRequests            []characterRequestDocument `json:"character_requests"`
+}
+
+type characterRequestDocument struct {
+	Id   string `json:"id"`
+	Name string `json:"name"`
 }
 
 const PostIndexName = "posts"
@@ -113,6 +119,12 @@ func unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []i
 		}
 	}
 
+	var characterRequests []*post.CharacterRequest
+
+	for _, request := range pst.CharacterRequests {
+		characterRequests = append(characterRequests, post.UnmarshalCharacterRequestFromDatabase(request.Id, request.Name))
+	}
+
 	createdPost := post.UnmarshalPostFromDatabase(
 		pst.Id,
 		pst.State,
@@ -133,6 +145,7 @@ func unmarshalPostDocument(ctx context.Context, source json.RawMessage, sort []i
 		pst.UpdatedAt,
 		pst.PostedAt,
 		pst.Description,
+		characterRequests,
 	)
 
 	if sort != nil {
@@ -192,6 +205,12 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		}
 	}
 
+	var characterRequests []characterRequestDocument
+
+	for _, request := range pst.CharacterRequests() {
+		characterRequests = append(characterRequests, characterRequestDocument{Name: request.Name(), Id: request.ID()})
+	}
+
 	return &postDocument{
 		Id:                           pst.ID(),
 		Likes:                        pst.Likes(),
@@ -212,6 +231,7 @@ func marshalPostToDocument(pst *post.Post) (*postDocument, error) {
 		UpdatedAt:                    pst.UpdatedAt(),
 		PostedAt:                     pst.PostedAt(),
 		Description:                  localization.MarshalTranslationToDatabase(pst.Description()),
+		CharacterRequests:            characterRequests,
 	}, nil
 }
 
