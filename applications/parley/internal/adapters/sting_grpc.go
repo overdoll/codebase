@@ -61,7 +61,7 @@ func (s StingGrpc) GetPost(ctx context.Context, id string) (*post.Post, error) {
 		return nil, errors.Wrap(err, "sting - GetPost")
 	}
 
-	return post.UnmarshalPostFromDatabase(md.ClubId, md.AccountId), nil
+	return post.UnmarshalPostFromDatabase(md.ClubId, md.AccountId, md.HasCharacterRequests), nil
 }
 
 func (s StingGrpc) PublishPost(ctx context.Context, id string) error {
