@@ -1,5 +1,6 @@
 import { Flex, Heading, Stack } from '@chakra-ui/react'
-import PostStaticAudience from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticAudience/PostStaticAudience'
+import PostStaticAudience
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticAudience/PostStaticAudience'
 import PostStaticCharacters
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticCharacters/PostStaticCharacters'
 import PostStaticCategories
@@ -7,6 +8,8 @@ import PostStaticCategories
 import { graphql, useFragment } from 'react-relay'
 import type { PostTagsPreviewFragment$key } from '@//:artifacts/PostTagsPreviewFragment.graphql'
 import { Trans } from '@lingui/macro'
+import PostStaticRequestCharacters
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticRequestCharacters/PostStaticRequestCharacters'
 
 interface Props {
   query: PostTagsPreviewFragment$key
@@ -17,6 +20,7 @@ const Fragment = graphql`
     ...PostStaticAudienceFragment
     ...PostStaticCharactersFragment
     ...PostStaticCategoriesFragment
+    ...PostStaticRequestCharactersFragment
   }
 `
 
@@ -39,7 +43,10 @@ export default function PostTagsPreview ({ query }: Props): JSX.Element {
             Characters
           </Trans>
         </Heading>
-        <PostStaticCharacters query={data} />
+        <Stack spacing={1}>
+          <PostStaticCharacters query={data} />
+          <PostStaticRequestCharacters query={data} />
+        </Stack>
       </Flex>
       <Flex direction='column'>
         <Heading mb={1} fontSize='md' color='gray.300'>

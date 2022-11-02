@@ -18,7 +18,7 @@ interface Props extends ComponentSearchArguments<any> {
 
 const Query = graphql`
   query SearchRecommendationsQuery {
-    characters(first: 17) {
+    characters(first: 17, clubCharacters: false, excludeEmpty: true) {
       edges {
         node {
           id
@@ -26,7 +26,7 @@ const Query = graphql`
         }
       }
     }
-    categories(first: 17) {
+    categories(first: 17, excludeEmpty: true) {
       edges {
         node {
           id
@@ -34,7 +34,7 @@ const Query = graphql`
         }
       }
     }
-    series(first: 17) {
+    series(first: 17, excludeEmpty: true) {
       edges {
         node {
           id
@@ -85,6 +85,22 @@ export default function SearchRecommendations ({
               <SearchResultsCharacter query={item.node} />
             </SwiperSlide>
           ))}
+          <SwiperSlide
+            style={{
+              height: slideHeight,
+              width: slideWidth
+            }}
+          >
+            <LinkTile href='/search/characters'>
+              <Center px={2} bg='gray.800' w='100%' h='100%' borderRadius='md'>
+                <Heading fontSize='md' textAlign='center'>
+                  <Trans>
+                    Browse all characters
+                  </Trans>
+                </Heading>
+              </Center>
+            </LinkTile>
+          </SwiperSlide>
         </Swiper>
       </Stack>
       <Stack spacing={2}>
@@ -105,6 +121,22 @@ export default function SearchRecommendations ({
               <SearchResultsCategory query={item.node} />
             </SwiperSlide>
           ))}
+          <SwiperSlide
+            style={{
+              height: slideHeight,
+              width: slideWidth
+            }}
+          >
+            <LinkTile href='/search/categories'>
+              <Center px={2} bg='gray.800' w='100%' h='100%' borderRadius='md'>
+                <Heading fontSize='md' textAlign='center'>
+                  <Trans>
+                    Browse all categories
+                  </Trans>
+                </Heading>
+              </Center>
+            </LinkTile>
+          </SwiperSlide>
         </Swiper>
       </Stack>
       <Stack spacing={2}>
@@ -125,6 +157,22 @@ export default function SearchRecommendations ({
               <SearchResultsSeries query={item.node} />
             </SwiperSlide>
           ))}
+          <SwiperSlide
+            style={{
+              height: slideHeight,
+              width: slideWidth
+            }}
+          >
+            <LinkTile href='/search/series'>
+              <Center px={2} bg='gray.800' w='100%' h='100%' borderRadius='md'>
+                <Heading fontSize='md' textAlign='center'>
+                  <Trans>
+                    Browse all series
+                  </Trans>
+                </Heading>
+              </Center>
+            </LinkTile>
+          </SwiperSlide>
         </Swiper>
       </Stack>
       {queryData.discoverClubs.edges.length > 0 && (

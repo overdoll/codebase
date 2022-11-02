@@ -240,12 +240,24 @@ const SearchCatalog = [
     include: ['src/domain/search/character/']
   },
   {
-    path: 'src/domain/search/series/__locale__/{locale}/index',
-    include: ['src/domain/search/series/']
+    path: 'src/domain/search/characters/__locale__/{locale}/index',
+    include: ['src/domain/search/characters/']
+  },
+  {
+    path: 'src/domain/search/series/root/__locale__/{locale}/index',
+    include: ['src/domain/search/series/root']
+  },
+  {
+    path: 'src/domain/search/series/slug/__locale__/{locale}/index',
+    include: ['src/domain/search/series/slug']
   },
   {
     path: 'src/domain/search/category/__locale__/{locale}/index',
     include: ['src/domain/search/category/']
+  },
+  {
+    path: 'src/domain/search/categories/__locale__/{locale}/index',
+    include: ['src/domain/search/categories/']
   }
 ]
 

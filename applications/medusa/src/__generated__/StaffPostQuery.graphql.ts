@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<da65a3b62d79174421d9eb732ff1c41b>>
- * @relayHash d36df6b697f48d41a8a0bd9009c6aefd
+ * @generated SignedSource<<70b46561a705714840bc502cdb376084>>
+ * @relayHash 2d4c62c22a327d604611a9acf084491e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID d36df6b697f48d41a8a0bd9009c6aefd
+// @relayRequestID 2d4c62c22a327d604611a9acf084491e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -706,6 +706,19 @@ return {
               (v18/*: any*/)
             ],
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "CharacterRequest",
+            "kind": "LinkedField",
+            "name": "characterRequests",
+            "plural": true,
+            "selections": [
+              (v6/*: any*/),
+              (v7/*: any*/)
+            ],
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -713,7 +726,7 @@ return {
     ]
   },
   "params": {
-    "id": "d36df6b697f48d41a8a0bd9009c6aefd",
+    "id": "2d4c62c22a327d604611a9acf084491e",
     "metadata": {},
     "name": "StaffPostQuery",
     "operationKind": "query",

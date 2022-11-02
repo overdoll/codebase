@@ -1821,6 +1821,20 @@ type CharacterEdge {
   node: Character!
 }
 
+type CharacterRequest {
+  """An ID pointing to this character request."""
+  id: ID!
+
+  """A name of this character request."""
+  name: String!
+}
+
+"""Input for a character request."""
+input CharacterRequestInput {
+  """The name of the character."""
+  name: String!
+}
+
 """Properties by which character connections can be sorted."""
 enum CharactersSort {
   """Characters by newest first"""
@@ -4392,6 +4406,9 @@ type Mutation {
   """Update a post in draft status - categories"""
   updatePostCategories(input: UpdatePostCategoriesInput!): UpdatePostCategoriesPayload
 
+  """Update a post in draft status - character requests"""
+  updatePostCharacterRequests(input: UpdatePostCharacterRequestsInput!): UpdatePostCharacterRequestsPayload
+
   """Update a post in draft status - characters"""
   updatePostCharacters(input: UpdatePostCharactersInput!): UpdatePostCharactersPayload
 
@@ -4534,6 +4551,9 @@ type Post implements Node {
 
   """Categories that belong to this post"""
   categories: [Category!]!
+
+  """Character requests that belong to this post"""
+  characterRequests: [CharacterRequest!]!
 
   """Characters that belong to this post"""
   characters: [Character!]!
@@ -6657,6 +6677,21 @@ input UpdatePostCategoriesInput {
 
 """Payload for updating a post"""
 type UpdatePostCategoriesPayload {
+  """The post after the update"""
+  post: Post
+}
+
+"""Update post characters."""
+input UpdatePostCharacterRequestsInput {
+  """All of the character requests."""
+  characterRequests: [CharacterRequestInput!]!
+
+  """The post to update"""
+  id: ID!
+}
+
+"""Payload for updating a post"""
+type UpdatePostCharacterRequestsPayload {
   """The post after the update"""
   post: Post
 }

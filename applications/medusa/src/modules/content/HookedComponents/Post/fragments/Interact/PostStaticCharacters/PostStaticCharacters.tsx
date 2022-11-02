@@ -22,7 +22,6 @@ export default function PostStaticCharacters ({ query }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   return (
-
     <Wrap>
       {data.characters.map((item) =>
         <WrapItem key={item.id}>

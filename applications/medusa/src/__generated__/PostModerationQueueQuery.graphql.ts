@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cb338e40c7a2855578700643b86cac06>>
- * @relayHash 207d531e473df0512d24b364cb0cad4f
+ * @generated SignedSource<<33ddd4e7fe4e69d23f90e0d88bd5afe5>>
+ * @relayHash 90e2a89b68f62f4388098be3412c73cf
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 207d531e473df0512d24b364cb0cad4f
+// @relayRequestID 90e2a89b68f62f4388098be3412c73cf
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -619,7 +619,8 @@ return {
                                 "plural": false,
                                 "selections": (v15/*: any*/),
                                 "storageKey": null
-                              }
+                              },
+                              (v3/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -633,6 +634,20 @@ return {
                             "selections": [
                               (v1/*: any*/),
                               (v14/*: any*/)
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "CharacterRequest",
+                            "kind": "LinkedField",
+                            "name": "characterRequests",
+                            "plural": true,
+                            "selections": [
+                              (v1/*: any*/),
+                              (v2/*: any*/),
+                              (v3/*: any*/)
                             ],
                             "storageKey": null
                           }
@@ -739,7 +754,7 @@ return {
     ]
   },
   "params": {
-    "id": "207d531e473df0512d24b364cb0cad4f",
+    "id": "90e2a89b68f62f4388098be3412c73cf",
     "metadata": {},
     "name": "PostModerationQueueQuery",
     "operationKind": "query",

@@ -12,8 +12,8 @@ import SkeletonUploadCharacterGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { UploadSearchClubCharactersFragment$key } from '@//:artifacts/UploadSearchClubCharactersFragment.graphql'
-import UploadSearchOriginalCharactersMultiSelector
-  from './UploadSearchOriginalCharactersMultiSelector/UploadSearchOriginalCharactersMultiSelector'
+import UploadSearchClubCharactersMultiSelector
+  from './UploadSearchClubCharactersMultiSelector/UploadSearchClubCharactersMultiSelector'
 
 export interface UploadCharacterSearchProps {
   name: string | null
@@ -58,13 +58,13 @@ export default function UploadSearchClubCharacters (props: Props): JSX.Element {
       <SearchInput
         nullifyOnClear
         {...registerSearch('name', 'change')}
-        placeholder={i18n._(t`Search for an original character by name`)}
+        placeholder={i18n._(t`Search for your original character by name`)}
       />
       <QueryErrorBoundary
         loadQuery={loadQuery}
       >
         <Suspense fallback={<SkeletonUploadCharacterGrid />}>
-          <UploadSearchOriginalCharactersMultiSelector
+          <UploadSearchClubCharactersMultiSelector
             searchArguments={searchArguments}
             register={register}
           />

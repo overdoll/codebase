@@ -8,12 +8,12 @@ export default function EmptyCharacters ({ hint }: HintProp): JSX.Element {
       {hint == null
         ? (
           <Trans>
-            No characters were found
+            We couldn't find any characters
           </Trans>
           )
         : (
           <Trans>
-            No characters were found with the name {hint}
+            We couldn't find any characters with the name {hint}
           </Trans>
           )}
     </EmptyBackground>

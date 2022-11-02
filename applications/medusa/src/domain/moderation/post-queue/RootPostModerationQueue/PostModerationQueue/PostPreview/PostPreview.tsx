@@ -25,7 +25,7 @@ export default function PostPreview ({ query }: Props): JSX.Element {
 
   return (
     <Stack spacing={2} direction='column'>
-      <HStack justify='center'>
+      <HStack>
         <ClubIcon size='md' clubQuery={data.club} />
         <Flex justify='center' direction='column'>
           <Heading noOfLines={1} fontSize='md' color='gray.100'>

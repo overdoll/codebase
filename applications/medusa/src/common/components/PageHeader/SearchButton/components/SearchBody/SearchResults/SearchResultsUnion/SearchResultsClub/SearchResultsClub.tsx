@@ -1,11 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { SearchResultsClubFragment$key } from '@//:artifacts/SearchResultsClubFragment.graphql'
 import { ClubTileOverlay, LinkTile } from '@//:modules/content/ContentSelection'
-import useHistoryDisclosureContext
-  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 
 interface Props {
   query: SearchResultsClubFragment$key
+  onClick?: () => void
 }
 
 const Fragment = graphql`
@@ -15,16 +14,17 @@ const Fragment = graphql`
   }
 `
 
-export default function SearchResultsClub ({
-  query
-}: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
+export default function SearchResultsClub (props: Props): JSX.Element {
+  const {
+    query,
+    onClick
+  } = props
 
-  const { onClose } = useHistoryDisclosureContext()
+  const data = useFragment(Fragment, query)
 
   return (
     <LinkTile
-      onClick={onClose}
+      onClick={onClick}
       href={{
         pathname: '/[slug]',
         query: {

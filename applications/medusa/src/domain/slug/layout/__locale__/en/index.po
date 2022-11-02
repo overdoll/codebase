@@ -81,8 +81,12 @@ msgid "Copy Link"
 msgstr ""
 
 #: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ScrollClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:49
-msgid "Create Post"
+msgid "Create New Post"
 msgstr ""
+
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ScrollClubPosts/ClubEmptyPosts/ClubEmptyPosts.tsx:49
+#~ msgid "Create Post"
+#~ msgstr ""
 
 #: src/domain/slug/root/RootPublicClub/PublicClub/ClubConditionalPostDisplay/SupportClubButton/SupportClubButton.tsx:146
 #~ msgid "Create an account and become a supporter to get access to this club's exclusive content!"

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ccf68e1f0dcde4118b4fc61d984316d1>>
+ * @generated SignedSource<<bc8a37dd3dd840e20540d8caeded726b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -13,10 +13,17 @@ import { FragmentRefs } from "relay-runtime";
 export type ModeratePostFragment$data = {
   readonly id: string;
   readonly post: {
+    readonly characterRequests: ReadonlyArray<{
+      readonly __typename: "CharacterRequest";
+    }>;
+    readonly characters: ReadonlyArray<{
+      readonly __typename: "Character";
+    }>;
     readonly club: {
       readonly name: string;
     };
     readonly id: string;
+    readonly " $fragmentSpreads": FragmentRefs<"UpdatePostCharactersModalFragment">;
   };
   readonly " $fragmentType": "ModeratePostFragment";
 };
@@ -32,7 +39,16 @@ var v0 = {
   "kind": "ScalarField",
   "name": "id",
   "storageKey": null
-};
+},
+v1 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "__typename",
+    "storageKey": null
+  }
+];
 return {
   "argumentDefinitions": [],
   "kind": "Fragment",
@@ -66,6 +82,31 @@ return {
             }
           ],
           "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "CharacterRequest",
+          "kind": "LinkedField",
+          "name": "characterRequests",
+          "plural": true,
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "concreteType": "Character",
+          "kind": "LinkedField",
+          "name": "characters",
+          "plural": true,
+          "selections": (v1/*: any*/),
+          "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "UpdatePostCharactersModalFragment"
         }
       ],
       "storageKey": null
@@ -76,6 +117,6 @@ return {
 };
 })();
 
-(node as any).hash = "4508fdab7f79e2e29525d427f948e270";
+(node as any).hash = "6994a45538a586e8520b2274b7dc5a1b";
 
 export default node;
