@@ -47,10 +47,10 @@ const gotoClubCreatePost = (clubName): void => {
 
 const waitForProcessing = (): void => {
   cy.findByText(/Processing Post Content/iu).should('exist')
-  cy.findByText(/Processing Post Content/iu, { timeout: 30000 }).should('not.exist')
+  cy.findByText(/Processing Post Content/iu, { timeout: 60000 }).should('not.exist')
 }
 
-Cypress.config('defaultCommandTimeout', 30000)
+Cypress.config('defaultCommandTimeout', 60000)
 
 describe('Create & Manage Posts', () => {
   it('create post, manage posts, approve post', () => {
@@ -147,7 +147,6 @@ describe('Create & Manage Posts', () => {
     searchForTerm('Search for any character by name', 'RandomRandomRandom')
     clickOnButton('Request Character')
     typeIntoPlaceholder(/Your requested character name/iu, 'Test Character')
-    cy.findByText('Test Character').should('be.visible')
     clickOnButton('Submit')
     saveCurrentStep()
 
