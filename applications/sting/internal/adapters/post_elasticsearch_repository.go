@@ -603,7 +603,12 @@ func (r PostsCassandraElasticsearchRepository) ClubMembersPostsFeed(ctx context.
 }
 
 func (r PostsCassandraElasticsearchRepository) PostsRecommendations(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filters *post.Feed) ([]*post.Post, error) {
-	panic("unused")
+
+	if requester == nil {
+		return r.PostsFeed(ctx, requester, cursor, filters)
+	}
+
+	return r.GetCuratedPosts(ctx, requester, cursor, requester.AccountId())
 }
 
 func (r PostsCassandraElasticsearchRepository) PostsFeed(ctx context.Context, requester *principal.Principal, cursor *paging.Cursor, filter *post.Feed) ([]*post.Post, error) {
