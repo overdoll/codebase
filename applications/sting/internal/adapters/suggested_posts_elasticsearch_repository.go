@@ -93,7 +93,7 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 		}
 
 		if (!ctx._source.liked_post_ids.contains(params.postId)) { 
-			ctx._source.liked_post_ids.add(params.postId) 
+			ctx._source.liked_post_ids.add(params.postId);
 		} 
 
 	`).Param("postId", like.PostId()).Lang("painless")).
@@ -108,17 +108,19 @@ func (r PostsCassandraElasticsearchRepository) likePost(ctx context.Context, lik
 
 func (r PostsCassandraElasticsearchRepository) unLikePost(ctx context.Context, accountId, postId string) error {
 
-	if err := r.createPostLikeIfNeeded(ctx, accountId); err != nil {
-		return nil
-	}
-
 	_, err := r.client.UpdateByQuery(accountActionsWriterIndex).
 		Query(elastic.NewTermsQueryFromStrings("_id", accountId)).
 		Script(elastic.NewScript(`
 
-		if (ctx._source.liked_post_ids != null && ctx._source.liked_post_ids.contains(params.postId)) { 
-			ctx._source.liked_post_ids.remove(params.postId) 
-		} 
+		if (ctx._source.liked_post_ids == null) {
+			ctx._source.liked_post_ids = new ArrayList();
+		}
+
+		for (int i=ctx._source.liked_post_ids.length-1; i>=0; i--) {
+			 if (ctx._source.liked_post_ids[i] == params.postId) {
+				ctx._source.liked_post_ids.remove(i);
+			 }
+		}
 
 	`).Param("postId", postId).Lang("painless")).
 		Do(ctx)
