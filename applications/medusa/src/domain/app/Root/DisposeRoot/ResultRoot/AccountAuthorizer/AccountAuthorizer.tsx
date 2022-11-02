@@ -110,8 +110,6 @@ export default function AccountAuthorizer ({
       })
     }
 
-    // posthog.feature_flags.override({ 'post-suggested': 'grid' })
-
     function onRouteChangeComplete (): void {
       if (trackingCode !== '') {
         posthog?.capture('$pageview', {
@@ -120,6 +118,10 @@ export default function AccountAuthorizer ({
         })
       }
     }
+
+    // posthog.feature_flags.override({ 'grid-post': 'one-image' })
+    // posthog.feature_flags.override({ 'home-suggested': 'suggested' })
+    // posthog.feature_flags.override({ 'club-preview': 'tile' })
 
     // Record a pageview when route changes
     router.events.on('routeChangeComplete', onRouteChangeComplete)
