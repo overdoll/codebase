@@ -203,6 +203,7 @@ func marshalPostToDatabase(pending *post.Post) (*posts, error) {
 		State:                        pending.State().String(),
 		SupporterOnlyStatus:          pending.SupporterOnlyStatus().String(),
 		Likes:                        pending.Likes(),
+		CharacterRequests:            characterRequests,
 		Description:                  localization.MarshalTranslationToDatabase(pending.Description()),
 		LikesLastUpdateId:            gocql.TimeUUID(),
 		ClubId:                       pending.ClubId(),
