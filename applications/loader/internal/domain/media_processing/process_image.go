@@ -66,18 +66,21 @@ var thumbnailSizes = []*processImageSizes{
 		constraint: 400,
 		resize:     true,
 		mandatory:  true,
+		quality:    "85",
 	},
 	{
 		name:       "icon",
 		constraint: 200,
 		resize:     true,
 		mandatory:  true,
+		quality:    "85",
 	},
 	{
 		name:       "mini",
 		constraint: 100,
 		resize:     true,
 		mandatory:  true,
+		quality:    "85",
 	},
 }
 
@@ -86,16 +89,19 @@ var banner = []*processImageSizes{
 		name:       "large-banner",
 		constraint: 1080,
 		mandatory:  true,
+		quality:    "85",
 	},
 	{
 		name:       "banner",
 		constraint: 720,
 		mandatory:  true,
+		quality:    "85",
 	},
 	{
 		name:       "small-banner",
 		constraint: 360,
 		mandatory:  true,
+		quality:    "85",
 	},
 }
 
