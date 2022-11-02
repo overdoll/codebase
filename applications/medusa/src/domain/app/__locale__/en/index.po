@@ -79,6 +79,18 @@ msgstr ""
 msgid "Browse More Content"
 msgstr ""
 
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:133
+msgid "Browse all categories"
+msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:97
+msgid "Browse all characters"
+msgstr ""
+
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:169
+msgid "Browse all series"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostDeleteButton/PostDeleteButton.tsx:117
 msgid "Cancel"
 msgstr ""
@@ -87,7 +99,7 @@ msgstr ""
 msgid "Cannot drop while uploading"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:92
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:108
 msgid "Categories"
 msgstr ""
 
@@ -151,7 +163,7 @@ msgstr ""
 #~ msgid "Club was terminated by {0}. Goodbye."
 #~ msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:133
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:181
 msgid "Clubs"
 msgstr ""
 
@@ -220,7 +232,7 @@ msgstr ""
 #~ msgid "Discover Clubs"
 #~ msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:158
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:206
 msgid "Discover all clubs"
 msgstr ""
 
@@ -853,7 +865,7 @@ msgstr ""
 msgid "Select a topic"
 msgstr ""
 
-#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:112
+#: src/common/components/PageHeader/SearchButton/components/SearchBody/SearchRecommendations/SearchRecommendations.tsx:144
 msgid "Series"
 msgstr ""
 

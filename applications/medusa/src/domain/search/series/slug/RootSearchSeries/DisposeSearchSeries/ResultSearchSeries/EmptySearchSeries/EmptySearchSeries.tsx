@@ -3,7 +3,7 @@ import { MobileContainer } from '@//:modules/content/PageLayout'
 import RootSearchRichObject from '@//:common/rich-objects/RootSearchRichObject/RootSearchRichObject'
 import { Center, Heading, Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
-import NotFoundFooter from '../../../../../../../modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter'
+import NotFoundFooter from '@//:modules/content/Placeholder/NotFound/NotFoundFooter/NotFoundFooter'
 
 export default function EmptySearchSeries (): JSX.Element {
   return (

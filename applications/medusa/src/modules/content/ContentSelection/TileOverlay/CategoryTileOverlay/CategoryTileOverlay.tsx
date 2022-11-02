@@ -1,4 +1,4 @@
-import { Stack, Text } from '@chakra-ui/react'
+import { Center, Text } from '@chakra-ui/react'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { CategoryTileOverlayFragment$key } from '@//:artifacts/CategoryTileOverlayFragment.graphql'
 import { TileOverlay } from '../../index'
@@ -22,12 +22,13 @@ export default function CategoryTileOverlay ({
 
   return (
     <TileOverlay backdrop={<CategoryBanner categoryQuery={data} />}>
-      <Stack whiteSpace='pre' p={2} w='100%' h='100%' align='center' justify='center' spacing={0}>
+      <Center bg='dimmers.200' overflow='visible' whiteSpace='pre' p={2} w='100%' h='100%'>
         <Text
           fontSize={{
             base: 'sm',
             md: 'lg'
           }}
+          overflow='visible'
           color='gray.00'
           textAlign='center'
           whiteSpace='normal'
@@ -36,7 +37,7 @@ export default function CategoryTileOverlay ({
         >
           {data.title}
         </Text>
-      </Stack>
+      </Center>
     </TileOverlay>
   )
 }

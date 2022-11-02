@@ -1,11 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { SearchResultsCategoryFragment$key } from '@//:artifacts/SearchResultsCategoryFragment.graphql'
 import { CategoryTileOverlay, LinkTile } from '@//:modules/content/ContentSelection'
-import useHistoryDisclosureContext
-  from '@//:modules/content/HookedComponents/HistoryDisclosure/hooks/useHistoryDisclosureContext'
 
 interface Props {
   query: SearchResultsCategoryFragment$key
+  onClick?: () => void
 }
 
 const Fragment = graphql`
@@ -15,16 +14,17 @@ const Fragment = graphql`
   }
 `
 
-export default function SearchResultsCategory ({
-  query
-}: Props): JSX.Element {
-  const data = useFragment(Fragment, query)
+export default function SearchResultsCategory (props: Props): JSX.Element {
+  const {
+    query,
+    onClick
+  } = props
 
-  const { onClose } = useHistoryDisclosureContext()
+  const data = useFragment(Fragment, query)
 
   return (
     <LinkTile
-      onClick={onClose}
+      onClick={onClick}
       href={{
         pathname: '/search/category/[categorySlug]',
         query: {

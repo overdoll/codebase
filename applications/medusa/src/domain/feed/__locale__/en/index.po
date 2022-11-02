@@ -38,14 +38,14 @@ msgid "Set up your curation profile so we can tailor your feed"
 msgstr ""
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/CuratedDataFeed/CuratedDataFeed.tsx:42
-msgid "Starting from today, we'll give you a new feed every {0} hours"
-msgstr ""
+#~ msgid "Starting from today, we'll give you a new feed every {0} hours"
+#~ msgstr ""
 
-#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/CuratedDataFeed/CuratedDataFeed.tsx:71
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/CuratedDataFeed/CuratedDataFeed.tsx:50
 msgid "We've added some fresh content to your feed"
 msgstr ""
 
-#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/CuratedDataFeed/CuratedDataFeed.tsx:37
+#: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/CuratedDataFeed/CuratedDataFeed.tsx:36
 msgid "Welcome to your first feed!"
 msgstr ""
 
@@ -54,5 +54,5 @@ msgid "Your feed"
 msgstr ""
 
 #: src/domain/feed/RootFeed/DisposeFeed/ResultFeed/ContainerFeed/HeaderFeed/CuratedDataFeed/CuratedDataFeed.tsx:62
-msgid "{hoursDiff, plural, one {New feed in # hour} other {New feed in # hours}}"
-msgstr ""
+#~ msgid "{hoursDiff, plural, one {New feed in # hour} other {New feed in # hours}}"
+#~ msgstr ""
