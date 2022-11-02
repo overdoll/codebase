@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<dee309e5dd54e31600b98bfd39d35550>>
- * @relayHash b3dc1d6ecc0f6ab313456b3ba38d7cf3
+ * @generated SignedSource<<0751d74a7e4162fc8a99a1409509a84a>>
+ * @relayHash 2082ffd026728b404da2cb5321543ff4
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b3dc1d6ecc0f6ab313456b3ba38d7cf3
+// @relayRequestID 2082ffd026728b404da2cb5321543ff4
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -651,7 +651,8 @@ return {
                                     "plural": false,
                                     "selections": (v17/*: any*/),
                                     "storageKey": null
-                                  }
+                                  },
+                                  (v3/*: any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -665,6 +666,20 @@ return {
                                 "selections": [
                                   (v4/*: any*/),
                                   (v16/*: any*/)
+                                ],
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "concreteType": "CharacterRequest",
+                                "kind": "LinkedField",
+                                "name": "characterRequests",
+                                "plural": true,
+                                "selections": [
+                                  (v4/*: any*/),
+                                  (v5/*: any*/),
+                                  (v3/*: any*/)
                                 ],
                                 "storageKey": null
                               }
@@ -732,7 +747,7 @@ return {
     ]
   },
   "params": {
-    "id": "b3dc1d6ecc0f6ab313456b3ba38d7cf3",
+    "id": "2082ffd026728b404da2cb5321543ff4",
     "metadata": {},
     "name": "PostsPaginationQuery",
     "operationKind": "query",

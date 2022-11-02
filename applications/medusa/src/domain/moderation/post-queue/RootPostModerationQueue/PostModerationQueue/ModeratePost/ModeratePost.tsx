@@ -26,6 +26,12 @@ const PostIDGQL = graphql`
       club {
         name
       }
+      characterRequests {
+        __typename
+      }
+      characters {
+        __typename
+      }
     }
   }
 `
@@ -157,6 +163,7 @@ export default function ModeratePost (props: Props): JSX.Element {
           </Trans>
         </Button>
         <Button
+          isDisabled={data.post.characters.length < 1}
           size='md'
           leftIcon={<Icon icon={CheckMark} w={3} h={3} fill='green.900' />}
           isLoading={isApprovingPost}
