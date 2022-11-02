@@ -7,15 +7,13 @@ import SearchInput
 import { t } from '@lingui/macro'
 import QueryErrorBoundary
   from '../../../../../../../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Suspense, useContext } from 'react'
+import { Suspense } from 'react'
 import SkeletonUploadCharacterGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 import { graphql, useFragment } from 'react-relay/hooks'
 import { UploadSearchClubCharactersFragment$key } from '@//:artifacts/UploadSearchClubCharactersFragment.graphql'
 import UploadSearchClubCharactersMultiSelector
   from './UploadSearchClubCharactersMultiSelector/UploadSearchClubCharactersMultiSelector'
-import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuilder'
 
 export interface UploadCharacterSearchProps {
   name: string | null

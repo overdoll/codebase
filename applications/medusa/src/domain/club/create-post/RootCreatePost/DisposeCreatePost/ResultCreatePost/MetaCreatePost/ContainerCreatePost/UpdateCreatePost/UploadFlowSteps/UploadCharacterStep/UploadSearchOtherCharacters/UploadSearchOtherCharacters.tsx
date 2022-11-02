@@ -6,15 +6,12 @@ import SearchInput
   from '../../../../../../../../../../../../modules/content/HookedComponents/Search/components/SearchInput/SearchInput'
 import QueryErrorBoundary
   from '../../../../../../../../../../../../modules/content/Placeholder/Fallback/QueryErrorBoundary/QueryErrorBoundary'
-import { Suspense, useContext, useEffect } from 'react'
+import { Suspense } from 'react'
 import SkeletonUploadCharacterGrid
   from '@//:modules/content/Placeholder/Loading/SkeletonUploadCharacterGrid/SkeletonUploadCharacterGrid'
 import UploadSearchOtherCharactersMultiSelector
   from './UploadSearchOtherCharactersMultiSelector/UploadSearchOtherCharactersMultiSelector'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
-import { useUpdateEffect } from 'usehooks-ts'
-import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuilder'
 
 export interface UploadCharacterSearchProps {
   name: string | null

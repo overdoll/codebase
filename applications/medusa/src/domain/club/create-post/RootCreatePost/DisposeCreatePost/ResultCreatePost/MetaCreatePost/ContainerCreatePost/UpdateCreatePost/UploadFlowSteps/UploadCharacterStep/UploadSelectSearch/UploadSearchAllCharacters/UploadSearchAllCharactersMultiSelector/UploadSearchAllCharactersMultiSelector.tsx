@@ -8,10 +8,8 @@ import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
 import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/Search/types'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
-import { Trans } from '@lingui/macro'
-import { Heading, HStack, Stack } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
-import ContactButton from '@//:common/components/Contact/ContactButton'
 import UploadAddCharacterRequest from '../../../UploadAddCharacterRequest/UploadAddCharacterRequest'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {

@@ -12,8 +12,6 @@ import { Heading, Stack, Text } from '@chakra-ui/react'
 import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import LoadMoreShortGridTile
   from '@//:modules/content/ContentSelection/ShortGridTile/LoadMoreShortGridTile/LoadMoreShortGridTile'
-import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
-import { useEffect } from 'react'
 
 interface Props extends ComponentChoiceArguments<any> {
   query: UploadSearchTopicCategoriesFragment$key
