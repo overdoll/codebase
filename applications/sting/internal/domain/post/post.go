@@ -719,7 +719,7 @@ func (p *Post) CanAddContent(requester *principal.Principal) error {
 func (p *Post) CanUpdate(requester *principal.Principal) error {
 
 	// staff && workers can update posts that are published
-	if (requester.IsStaff() || requester.IsWorker()) && p.state == Published {
+	if (requester.IsStaff() || requester.IsWorker() || requester.IsModerator()) && (p.state == Published || p.state == Review) {
 		return nil
 	}
 
