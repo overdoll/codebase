@@ -592,7 +592,6 @@ func (m *Club) UpdateThumbnailExisting(thumbnail *media.Media) error {
 
 	if m.thumbnailMedia == nil {
 		return media.ErrMediaNotPresent
-
 	}
 
 	if m.thumbnailMedia.ID() != thumbnail.ID() {
