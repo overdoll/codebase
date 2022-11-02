@@ -38,7 +38,7 @@ const RootPostModerationQueue: PageProps<Props> = (props: Props) => {
           Posts Queue - overdoll
         </title>
       </Head>
-      <PageContainer>
+      <PageContainer pt={2}>
         <ContentContainer>
           <PageSectionWrap>
             <PageSectionTitle colorScheme='purple'>

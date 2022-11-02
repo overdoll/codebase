@@ -23,7 +23,7 @@ export default function PostStaticRequestCharacters ({ query }: Props): JSX.Elem
     <Wrap>
       {data.characterRequests.map((item) =>
         <WrapItem key={item.id}>
-          <Tag size='lg' variant='solid' colorScheme='gray' borderRadius='full'>
+          <Tag size='lg' variant='subtle' colorScheme='teal' borderRadius='full'>
             <TagLabel>
               <Trans>
                 {item.name} (Requested)

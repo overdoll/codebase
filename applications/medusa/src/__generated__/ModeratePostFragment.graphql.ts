@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<668ca3bce3e7a19f0398099e57ca94aa>>
+ * @generated SignedSource<<bc8a37dd3dd840e20540d8caeded726b>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -23,6 +23,7 @@ export type ModeratePostFragment$data = {
       readonly name: string;
     };
     readonly id: string;
+    readonly " $fragmentSpreads": FragmentRefs<"UpdatePostCharactersModalFragment">;
   };
   readonly " $fragmentType": "ModeratePostFragment";
 };
@@ -101,6 +102,11 @@ return {
           "plural": true,
           "selections": (v1/*: any*/),
           "storageKey": null
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "UpdatePostCharactersModalFragment"
         }
       ],
       "storageKey": null
@@ -111,6 +117,6 @@ return {
 };
 })();
 
-(node as any).hash = "54c1540d843d35ca6d768c21ac30339e";
+(node as any).hash = "6994a45538a586e8520b2274b7dc5a1b";
 
 export default node;

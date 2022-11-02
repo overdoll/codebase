@@ -43,8 +43,10 @@ export default function PostTagsPreview ({ query }: Props): JSX.Element {
             Characters
           </Trans>
         </Heading>
-        <PostStaticCharacters query={data} />
-        <PostStaticRequestCharacters query={data} />
+        <Stack spacing={1}>
+          <PostStaticCharacters query={data} />
+          <PostStaticRequestCharacters query={data} />
+        </Stack>
       </Flex>
       <Flex direction='column'>
         <Heading mb={1} fontSize='md' color='gray.300'>

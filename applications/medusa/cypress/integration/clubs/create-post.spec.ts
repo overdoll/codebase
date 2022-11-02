@@ -126,7 +126,7 @@ describe('Create & Manage Posts', () => {
     cy.findByText(postTopicDescription).should('be.visible')
     clickOnTile(postCategories[1])
     // go back to topic
-    clickOnTile('Back To Topics')
+    clickOnButton('Back')
     cy.findByText(postTopicDescription).should('not.exist')
     // add third category
     clickOnTile(postTopic)
@@ -139,8 +139,16 @@ describe('Create & Manage Posts', () => {
      */
     isOnStep('character')
     cy.findByRole('button', { name: '0 / 1' }).should('be.disabled')
-    searchForTerm('Search for a character by name', 'Haider Woodley')
+    clickOnTile(/an existing series/iu)
+    searchForTerm('Search for a series character by name', 'Haider Woodley')
     clickOnTile(postCharacter)
+    clickOnButton('Back')
+    cy.findByText(/Select a character type/).should('be.visible')
+    searchForTerm('Search for any character by name', 'RandomRandomRandom')
+    clickOnButton('Request Character')
+    typeIntoPlaceholder(/Your requested character name/iu, 'Test Character')
+    cy.findByText('Test Character').should('be.visible')
+    clickOnButton('Submit')
     saveCurrentStep()
 
     /**
@@ -270,6 +278,10 @@ describe('Create & Manage Posts', () => {
      */
     cy.joinWithExistingAccount('poisonminion')
     cy.visit('/moderation/post-queue')
+    clickOnButton('Add Characters')
+    searchForTerm(/search for any character/iu, 'Aarush Hills')
+    clickOnTile('Aarush Hills')
+    clickOnButton(/Save & Remove/iu)
     clickOnButton('Approve')
     cy.findByText(/Post created by/iu).should('be.visible')
 

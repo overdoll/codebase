@@ -529,12 +529,12 @@ msgid "No categories, characters, or series were found from the text {hint}"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:10
-msgid "No characters were found"
-msgstr ""
+#~ msgid "No characters were found"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:15
-msgid "No characters were found with the name {hint}"
-msgstr ""
+#~ msgid "No characters were found with the name {hint}"
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyClubs/EmptyClubs.tsx:10
 msgid "No clubs were found"
@@ -545,12 +545,12 @@ msgid "No clubs were found with the name {hint}"
 msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:16
-msgid "No original characters were found with the name {hint}. Turn off the filter if you would like to search for all characters instead."
-msgstr ""
+#~ msgid "No original characters were found with the name {hint}. Turn off the filter if you would like to search for all characters instead."
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:10
-msgid "No original characters were found. Turn off the filter if you would like to search for all characters instead."
-msgstr ""
+#~ msgid "No original characters were found. Turn off the filter if you would like to search for all characters instead."
+#~ msgstr ""
 
 #: src/modules/content/Placeholder/Empty/EmptyPaymentMethods/EmptyPaymentMethods.tsx:8
 msgid "No payment methods found"
@@ -1217,6 +1217,22 @@ msgstr ""
 msgid "We couldn't find a club, category, character, or series with the name {1}"
 msgstr ""
 
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:10
+msgid "We couldn't find any characters"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCharacters/EmptyCharacters.tsx:15
+msgid "We couldn't find any characters with the name {hint}"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:10
+msgid "We couldn't find any of your club characters"
+msgstr ""
+
+#: src/modules/content/Placeholder/Empty/EmptyCustomCharacters/EmptyCustomCharacters.tsx:15
+msgid "We couldn't find any of your club characters with the name {hint}"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/components/PaginationScroller/EmptyPaginationScroller/EmptyPaginationScroller.tsx:17
 #: src/modules/content/Placeholder/Empty/EmptyPosts/EmptyPosts.tsx:8
 msgid "We couldn't find any posts"
@@ -1367,6 +1383,10 @@ msgstr ""
 #: src/modules/content/HookedComponents/Search/components/SearchDateRange/SearchDateRange.tsx:78
 #~ msgid "{0}"
 #~ msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostStaticRequestCharacters/PostStaticRequestCharacters.tsx:28
+msgid "{0} (Requested)"
+msgstr ""
 
 #: src/common/components/AccountInformationBanner/LockedAccount/LockedAccountModal/LockedAccountModal.tsx:117
 #: src/common/components/ClubInformationBanner/SuspendedClubBanner/SuspendedClubModal/SuspendedClubModal.tsx:111

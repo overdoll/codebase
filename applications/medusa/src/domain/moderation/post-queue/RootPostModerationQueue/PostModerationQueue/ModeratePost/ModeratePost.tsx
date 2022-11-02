@@ -2,7 +2,7 @@ import type { ModeratePostApproveMutation } from '@//:artifacts/ModeratePostAppr
 import type { ModeratePostRejectMutation } from '@//:artifacts/ModeratePostRejectMutation.graphql'
 import { ConnectionHandler, graphql, useFragment } from 'react-relay'
 import { useMutation } from 'react-relay/hooks'
-import { Fade, Flex, HStack, Text, useDisclosure } from '@chakra-ui/react'
+import { Fade, Flex, HStack, Stack, Text, useDisclosure } from '@chakra-ui/react'
 import RejectionReasons from './RejectionReasons/RejectionReasons'
 import type { ModeratePostFragment$key } from '@//:artifacts/ModeratePostFragment.graphql'
 import Button from '@//:modules/form/Button/Button'
@@ -12,6 +12,7 @@ import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseBu
 import { useToast } from '@//:modules/content/ThemeComponents'
 import { Icon } from '@//:modules/content/PageLayout'
 import { CheckMark, RemoveCross } from '@//:assets/icons'
+import UpdatePostCharactersModal from './UpdatePostCharactersModal/UpdatePostCharactersModal'
 
 interface Props {
   infractions: RejectionReasonsFragment$key
@@ -32,6 +33,7 @@ const PostIDGQL = graphql`
       characters {
         __typename
       }
+      ...UpdatePostCharactersModalFragment
     }
   }
 `
@@ -149,33 +151,38 @@ export default function ModeratePost (props: Props): JSX.Element {
 
   return (
     <>
-      <HStack w='100%' justify='flex-end' spacing={4}>
-        <Button
-          leftIcon={<Icon icon={RemoveCross} w={3} h={3} fill='orange.900' />}
-          size='md'
-          isDisabled={isApprovingPost}
-          onClick={onOpen}
-          colorScheme='orange'
-          variant='solid'
-        >
-          <Trans>
-            Reject
-          </Trans>
-        </Button>
-        <Button
-          isDisabled={data.post.characters.length < 1}
-          size='md'
-          leftIcon={<Icon icon={CheckMark} w={3} h={3} fill='green.900' />}
-          isLoading={isApprovingPost}
-          onClick={onApprovePost}
-          colorScheme='green'
-          variant='solid'
-        >
-          <Trans>
-            Approve
-          </Trans>
-        </Button>
-      </HStack>
+      <Stack w='100%' align='flex-end' spacing={2}>
+        {data.post.characterRequests.length > 0 && (
+          <UpdatePostCharactersModal query={data.post} />
+        )}
+        <HStack w='100%' justify='flex-end' spacing={4}>
+          <Button
+            leftIcon={<Icon icon={RemoveCross} w={3} h={3} fill='orange.900' />}
+            size='md'
+            isDisabled={isApprovingPost}
+            onClick={onOpen}
+            colorScheme='orange'
+            variant='solid'
+          >
+            <Trans>
+              Reject
+            </Trans>
+          </Button>
+          <Button
+            isDisabled={data.post.characterRequests.length > 0}
+            size='md'
+            leftIcon={<Icon icon={CheckMark} w={3} h={3} fill='green.900' />}
+            isLoading={isApprovingPost}
+            onClick={onApprovePost}
+            colorScheme='green'
+            variant='solid'
+          >
+            <Trans>
+              Approve
+            </Trans>
+          </Button>
+        </HStack>
+      </Stack>
       <Flex
         position='absolute'
         w='100%'
