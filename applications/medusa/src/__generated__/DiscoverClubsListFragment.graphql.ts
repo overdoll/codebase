@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<41533affa49ecc7386d2044de41192ee>>
+ * @generated SignedSource<<c7a5f54d0f99c8e18eb9f852ea472efd>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,12 +15,12 @@ export type DiscoverClubsListFragment$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileFragment">;
+        readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileFragment" | "DiscoverClubPreviewFragment">;
       };
     }>;
   };
   readonly viewer: {
-    readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileViewerFragment">;
+    readonly " $fragmentSpreads": FragmentRefs<"ClubJoinTileViewerFragment" | "DiscoverClubPreviewViewerFragment">;
   } | null;
   readonly " $fragmentType": "DiscoverClubsListFragment";
 };
@@ -41,7 +41,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 11,
+      "defaultValue": 12,
       "kind": "LocalArgument",
       "name": "first"
     }
@@ -108,6 +108,11 @@ return {
                   "name": "ClubJoinTileFragment"
                 },
                 {
+                  "args": null,
+                  "kind": "FragmentSpread",
+                  "name": "DiscoverClubPreviewFragment"
+                },
+                {
                   "alias": null,
                   "args": null,
                   "kind": "ScalarField",
@@ -167,6 +172,11 @@ return {
           "args": null,
           "kind": "FragmentSpread",
           "name": "ClubJoinTileViewerFragment"
+        },
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "DiscoverClubPreviewViewerFragment"
         }
       ],
       "storageKey": null
@@ -177,6 +187,6 @@ return {
 };
 })();
 
-(node as any).hash = "d20ab4ae13ca0b006ae26d34718ceb6e";
+(node as any).hash = "bda4db5e2db8b9d9a62edabcc478bb07";
 
 export default node;

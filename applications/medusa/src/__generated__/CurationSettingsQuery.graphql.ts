@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<32edbb537d1e30288438bbac14079065>>
- * @relayHash 7acd1fe68652e13ad8511abafa6ba169
+ * @generated SignedSource<<f0d98713797ae326ebc8375970658eff>>
+ * @relayHash 244f0eb1bbab9af828446029bbb48f8e
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 7acd1fe68652e13ad8511abafa6ba169
+// @relayRequestID 244f0eb1bbab9af828446029bbb48f8e
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -37,7 +37,7 @@ v1 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 11
+    "value": 12
   }
 ],
 v2 = {
@@ -453,7 +453,7 @@ return {
             "storageKey": null
           }
         ],
-        "storageKey": "discoverClubs(first:11)"
+        "storageKey": "discoverClubs(first:12)"
       },
       {
         "alias": null,
@@ -467,7 +467,7 @@ return {
     ]
   },
   "params": {
-    "id": "7acd1fe68652e13ad8511abafa6ba169",
+    "id": "244f0eb1bbab9af828446029bbb48f8e",
     "metadata": {},
     "name": "CurationSettingsQuery",
     "operationKind": "query",

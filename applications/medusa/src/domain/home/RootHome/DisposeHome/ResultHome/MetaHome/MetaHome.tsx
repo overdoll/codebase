@@ -1,32 +1,32 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
-import { MetaHomeViewerFragment$key } from '@//:artifacts/MetaHomeViewerFragment.graphql'
+import { MetaHomeFragment$key } from '@//:artifacts/MetaHomeFragment.graphql'
 import RootStructuredData from '@//:common/structured-data/RootStructuredData/RootStructuredData'
 import RootHomeRichObject from './RootHomeRichObject/RootHomeRichObject'
 import ContainerHome from './ContainerHome/ContainerHome'
 
 interface Props {
-  viewerQuery: MetaHomeViewerFragment$key | null
+  rootQuery: MetaHomeFragment$key
 }
 
-const ViewerFragment = graphql`
-  fragment MetaHomeViewerFragment on Account {
-    ...ContainerHomeViewerFragment
+const Fragment = graphql`
+  fragment MetaHomeFragment on Query {
+    ...ContainerHomeFragment
   }
 `
 
 export default function MetaHome (props: Props): JSX.Element {
   const {
-    viewerQuery
+    rootQuery
   } = props
 
-  const viewerData = useFragment(ViewerFragment, viewerQuery)
+  const data = useFragment(Fragment, rootQuery)
 
   return (
     <>
       <RootHomeRichObject />
       <RootStructuredData />
-      <ContainerHome viewerQuery={viewerData} />
+      <ContainerHome rootQuery={data} />
     </>
   )
 }

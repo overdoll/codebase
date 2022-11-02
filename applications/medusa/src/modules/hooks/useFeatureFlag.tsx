@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import posthog from 'posthog-js'
 
 type FeatureFlag = string | boolean | undefined
@@ -12,5 +12,5 @@ export default function useFeatureFlag (flag: string): FeatureFlag {
     })
   }, [])
 
-  return featureFlag
+  return useMemo(() => featureFlag, [featureFlag])
 }
