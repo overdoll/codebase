@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<9211c07eb7d53e63d31c9dae2d2c7176>>
+ * @generated SignedSource<<82d318d4a4201fe645bea506c592f285>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,10 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type UpdateCharacterButtonFragment$data = {
+  readonly characterRequests: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
+  }>;
   readonly characters: ReadonlyArray<{
     readonly id: string;
   }>;
@@ -48,6 +52,25 @@ return {
         (v0/*: any*/)
       ],
       "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CharacterRequest",
+      "kind": "LinkedField",
+      "name": "characterRequests",
+      "plural": true,
+      "selections": [
+        (v0/*: any*/),
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "name",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Post",
@@ -55,6 +78,6 @@ return {
 };
 })();
 
-(node as any).hash = "1660c4ad3a45b27c61077ff7107034b8";
+(node as any).hash = "fb06f790271e63cafcd4a0afaf4d05ec";
 
 export default node;

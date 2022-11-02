@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3709a2232a0f6fd1bb6b9d783ec987f8>>
+ * @generated SignedSource<<410e09e1cd7376bb89b998f77b88e779>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchOriginalCharactersMultiSelectorFragment$data = {
+export type UploadSearchAllCharactersMultiSelectorFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -20,26 +20,17 @@ export type UploadSearchOriginalCharactersMultiSelectorFragment$data = {
       };
     }>;
   };
-  readonly id: string;
-  readonly slug: string;
-  readonly " $fragmentType": "UploadSearchOriginalCharactersMultiSelectorFragment";
+  readonly " $fragmentType": "UploadSearchAllCharactersMultiSelectorFragment";
 };
-export type UploadSearchOriginalCharactersMultiSelectorFragment$key = {
-  readonly " $data"?: UploadSearchOriginalCharactersMultiSelectorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchOriginalCharactersMultiSelectorFragment">;
+export type UploadSearchAllCharactersMultiSelectorFragment$key = {
+  readonly " $data"?: UploadSearchAllCharactersMultiSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchAllCharactersMultiSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
   "characters"
-],
-v1 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
+];
 return {
   "argumentDefinitions": [
     {
@@ -48,7 +39,7 @@ return {
       "name": "after"
     },
     {
-      "defaultValue": 14,
+      "defaultValue": 7,
       "kind": "LocalArgument",
       "name": "first"
     },
@@ -77,14 +68,11 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [
-        "node"
-      ],
-      "operation": require('./UploadSearchOriginalCharactersMultiSelectorPaginationFragment.graphql'),
-      "identifierField": "id"
+      "fragmentPathInResult": [],
+      "operation": require('./UploadSearchAllCharactersMultiSelectorPaginationFragment.graphql')
     }
   },
-  "name": "UploadSearchOriginalCharactersMultiSelectorFragment",
+  "name": "UploadSearchAllCharactersMultiSelectorFragment",
   "selections": [
     {
       "alias": "characters",
@@ -97,7 +85,7 @@ return {
       ],
       "concreteType": "CharacterConnection",
       "kind": "LinkedField",
-      "name": "__UploadSearchOriginalCharactersMultiSelector_characters_connection",
+      "name": "__UploadSearchAllCharactersMultiSelector_characters_connection",
       "plural": false,
       "selections": [
         {
@@ -116,7 +104,13 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                (v1/*: any*/),
+                {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "id",
+                  "storageKey": null
+                },
                 {
                   "alias": null,
                   "args": null,
@@ -176,21 +170,13 @@ return {
         }
       ],
       "storageKey": null
-    },
-    {
-      "alias": null,
-      "args": null,
-      "kind": "ScalarField",
-      "name": "slug",
-      "storageKey": null
-    },
-    (v1/*: any*/)
+    }
   ],
-  "type": "Club",
+  "type": "Query",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "25be45f00e7942e3d17d6a6403f73de9";
+(node as any).hash = "3e284b576220da2023f4a46ba5d09db7";
 
 export default node;

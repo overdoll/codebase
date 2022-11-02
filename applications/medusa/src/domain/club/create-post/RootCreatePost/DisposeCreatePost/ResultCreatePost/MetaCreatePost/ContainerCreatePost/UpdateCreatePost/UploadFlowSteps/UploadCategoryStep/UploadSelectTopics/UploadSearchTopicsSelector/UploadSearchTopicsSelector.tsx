@@ -12,6 +12,8 @@ import { Choice, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import UploadSearchTopicCategories from './UploadSearchTopicCategories/UploadSearchTopicCategories'
 import LoadMoreShortGridTile
   from '@//:modules/content/ContentSelection/ShortGridTile/LoadMoreShortGridTile/LoadMoreShortGridTile'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { useUpdateEffect } from '@chakra-ui/react'
 
 interface Props extends ComponentSearchArguments<any>, ComponentChoiceArguments<any> {
 }
@@ -61,6 +63,11 @@ export default function UploadSearchTopicsSelector ({
   )
 
   const {
+    dispatch,
+    state
+  } = useSequenceContext()
+
+  const {
     data,
     loadNext,
     isLoadingNext,
@@ -75,8 +82,21 @@ export default function UploadSearchTopicsSelector ({
     clearValues: clearTopics,
     values: topicValues
   } = useChoice<ChoiceProps>({
-    max: 1
+    max: 1,
+    onChange: () => {
+      dispatch({
+        type: 'deepValue',
+        value: 'topic',
+        transform: 'SET'
+      })
+    }
   })
+
+  useUpdateEffect(() => {
+    if (state.deepValue == null) {
+      clearTopics()
+    }
+  }, [state.deepValue])
 
   if (Object.values(topicValues).length > 0) {
     return (

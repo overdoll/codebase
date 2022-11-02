@@ -1,22 +1,28 @@
 import {
+  FlowBuilder,
+  FlowBuilderBody,
   MobileContainer,
   PageSectionDescription,
   PageSectionTitle,
   PageSectionWrap
 } from '@//:modules/content/PageLayout'
-import { Flex, Stack, useDisclosure } from '@chakra-ui/react'
+import { Stack } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 import Head from 'next/head'
-import UploadSearchAllCharacters from './UploadSearchAllCharacters/UploadSearchAllCharacters'
 import { UploadCharacterStepFragment$key } from '@//:artifacts/UploadCharacterStepFragment.graphql'
 import { graphql, useFragment } from 'react-relay/hooks'
 import UploadSearchClubCharacters from './UploadSearchClubCharacters/UploadSearchClubCharacters'
-import Button from '@//:modules/form/Button/Button'
+import UploadSearchOtherCharacters from './UploadSearchOtherCharacters/UploadSearchOtherCharacters'
+import { ClubPeopleGroup } from '@//:assets/icons'
+import UploadSelectSearch from './UploadSelectSearch/UploadSelectSearch'
+import UploadSearchSeriesCharacters from './UploadSearchSeriesCharacters/UploadSearchSeriesCharacters'
+import UploadSelectFooter from './UploadSelectSearch/UploadSelectFooter/UploadSelectFooter'
 
 interface ChoiceProps {
   name: string
+  isRequested: boolean
 }
 
 interface Props {
@@ -35,11 +41,6 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
   const {
-    isOpen,
-    onToggle
-  } = useDisclosure()
-
-  const {
     state,
     dispatch
   } = useSequenceContext()
@@ -56,6 +57,48 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
       transform: 'SET'
     })
   })
+
+  const steps = ['select_search', 'search_series', 'search_club', 'search_other']
+  const components = {
+    select_search: (
+      <UploadSelectSearch
+        register={register}
+      />),
+    search_series: (
+      <UploadSearchSeriesCharacters
+        register={register}
+      />
+    ),
+    search_club: (
+      <UploadSearchClubCharacters
+        query={data}
+        register={register}
+      />
+    ),
+    search_other: (
+      <UploadSearchOtherCharacters
+        register={register}
+      />
+    )
+  }
+  const headers = {
+    select_search: {
+      title: '',
+      icon: ClubPeopleGroup
+    },
+    search_series: {
+      title: '',
+      icon: ClubPeopleGroup
+    },
+    search_club: {
+      title: '',
+      icon: ClubPeopleGroup
+    },
+    search_other: {
+      title: '',
+      icon: ClubPeopleGroup
+    }
+  }
 
   return (
     <MobileContainer>
@@ -77,35 +120,19 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
             </Trans>
           </PageSectionDescription>
         </PageSectionWrap>
-        <Flex>
-          <Button colorScheme='teal' onClick={onToggle} size='sm' variant='link'>
-            {isOpen
-              ? (
-                <Trans>
-                  Use a non-original character
-                </Trans>
-                )
-              : (
-                <Trans>
-                  I'm posting content with my original character
-                </Trans>
-                )}
-          </Button>
-        </Flex>
         <ChoiceRemovableTags
           values={values}
           removeValue={removeValue}
           titleKey='name'
         />
-        {isOpen
-          ? (
-            <UploadSearchClubCharacters query={data} register={register} />
-            )
-          : (
-            <UploadSearchAllCharacters
-              register={register}
-            />
-            )}
+        <FlowBuilder
+          stepsArray={steps}
+          stepsComponents={components}
+          stepsHeaders={headers}
+        >
+          <UploadSelectFooter />
+          <FlowBuilderBody minH={undefined} />
+        </FlowBuilder>
       </Stack>
     </MobileContainer>
   )

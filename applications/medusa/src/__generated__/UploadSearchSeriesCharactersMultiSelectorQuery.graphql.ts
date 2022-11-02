@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7be4d877e727e4420abe374c5bed0711>>
- * @relayHash 306e8f21a1dd4edbc1ae65e6fdffa3a2
+ * @generated SignedSource<<e0bb5a46644f9448448376b50afe64b0>>
+ * @relayHash 2695c250af27593a297436a66e09a5bd
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,20 +9,20 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 306e8f21a1dd4edbc1ae65e6fdffa3a2
+// @relayRequestID 2695c250af27593a297436a66e09a5bd
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCharactersMultiSelectorQuery$variables = {
+export type UploadSearchSeriesCharactersMultiSelectorQuery$variables = {
   clubCharacters?: boolean | null;
   name?: string | null;
 };
-export type UploadSearchCharactersMultiSelectorQuery$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
+export type UploadSearchSeriesCharactersMultiSelectorQuery$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchSeriesCharactersMultiSelectorFragment">;
 };
-export type UploadSearchCharactersMultiSelectorQuery = {
-  response: UploadSearchCharactersMultiSelectorQuery$data;
-  variables: UploadSearchCharactersMultiSelectorQuery$variables;
+export type UploadSearchSeriesCharactersMultiSelectorQuery = {
+  response: UploadSearchSeriesCharactersMultiSelectorQuery$data;
+  variables: UploadSearchSeriesCharactersMultiSelectorQuery$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -162,7 +162,7 @@ return {
     ],
     "kind": "Fragment",
     "metadata": null,
-    "name": "UploadSearchCharactersMultiSelectorQuery",
+    "name": "UploadSearchSeriesCharactersMultiSelectorQuery",
     "selections": [
       {
         "args": [
@@ -170,7 +170,7 @@ return {
           (v3/*: any*/)
         ],
         "kind": "FragmentSpread",
-        "name": "UploadSearchCharactersMultiSelectorFragment"
+        "name": "UploadSearchSeriesCharactersMultiSelectorFragment"
       }
     ],
     "type": "Query",
@@ -183,7 +183,7 @@ return {
       (v0/*: any*/)
     ],
     "kind": "Operation",
-    "name": "UploadSearchCharactersMultiSelectorQuery",
+    "name": "UploadSearchSeriesCharactersMultiSelectorQuery",
     "selections": [
       {
         "alias": null,
@@ -348,15 +348,15 @@ return {
     ]
   },
   "params": {
-    "id": "306e8f21a1dd4edbc1ae65e6fdffa3a2",
+    "id": "2695c250af27593a297436a66e09a5bd",
     "metadata": {},
-    "name": "UploadSearchCharactersMultiSelectorQuery",
+    "name": "UploadSearchSeriesCharactersMultiSelectorQuery",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "342da6a8611062a8b9e770473f74a485";
+(node as any).hash = "a16bd53f33c14ad98561cf0e64b5c5f2";
 
 export default node;

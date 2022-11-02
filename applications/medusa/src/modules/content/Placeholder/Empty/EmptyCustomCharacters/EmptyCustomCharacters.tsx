@@ -8,14 +8,12 @@ export default function EmptyCustomCharacters ({ hint }: HintProp): JSX.Element 
       {hint == null
         ? (
           <Trans>
-            No original characters were found. Turn off the filter if you would like to search for all characters
-            instead.
+            We couldn't find any of your club characters
           </Trans>
           )
         : (
           <Trans>
-            No original characters were found with the name {hint}. Turn off the filter if you would like to
-            search for all characters instead.
+            We couldn't find any of your club characters with the name {hint}
           </Trans>
           )}
     </EmptyBackground>

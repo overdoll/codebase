@@ -15,6 +15,8 @@ import PostStaticCharacters
 import PostStaticCategories
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticCategories/PostStaticCategories'
 import { CategoryIdentifier, CharacterIdentifier, SecurityShield } from '@//:assets/icons'
+import PostStaticRequestCharacters
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostStaticRequestCharacters/PostStaticRequestCharacters'
 
 interface Props {
   query: PostReviewFragment$key
@@ -28,6 +30,7 @@ const Fragment = graphql`
     ...PostStaticAudienceFragment
     ...PostStaticCharactersFragment
     ...PostStaticCategoriesFragment
+    ...PostStaticRequestCharactersFragment
   }
 `
 
@@ -78,6 +81,7 @@ export default function PostReview (props: Props): JSX.Element {
         <Stack spacing={1}>
           <PageHeader icon={CharacterIdentifier} title={<Trans>Contains the following characters</Trans>} />
           <PostStaticCharacters query={data} />
+          <PostStaticRequestCharacters query={data} />
         </Stack>
         <Stack spacing={1}>
           <PageHeader icon={CategoryIdentifier} title={<Trans>Is relevant to the following categories</Trans>} />

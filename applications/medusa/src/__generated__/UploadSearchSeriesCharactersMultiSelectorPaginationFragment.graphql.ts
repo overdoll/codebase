@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<82c34c4307638f2d28d451a332942d52>>
- * @relayHash f73571279bfbd4f7d94c1c2562604aa2
+ * @generated SignedSource<<9458c6fcb27ae29a00e6606862d4a8d2>>
+ * @relayHash 82411370fc38b7e5b9d42fa20c76b3d0
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,22 +9,22 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f73571279bfbd4f7d94c1c2562604aa2
+// @relayRequestID 82411370fc38b7e5b9d42fa20c76b3d0
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCharactersMultiSelectorPaginationFragment$variables = {
+export type UploadSearchSeriesCharactersMultiSelectorPaginationFragment$variables = {
   after?: string | null;
   clubCharacters?: boolean | null;
   first?: number | null;
   name?: string | null;
 };
-export type UploadSearchCharactersMultiSelectorPaginationFragment$data = {
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
+export type UploadSearchSeriesCharactersMultiSelectorPaginationFragment$data = {
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchSeriesCharactersMultiSelectorFragment">;
 };
-export type UploadSearchCharactersMultiSelectorPaginationFragment = {
-  response: UploadSearchCharactersMultiSelectorPaginationFragment$data;
-  variables: UploadSearchCharactersMultiSelectorPaginationFragment$variables;
+export type UploadSearchSeriesCharactersMultiSelectorPaginationFragment = {
+  response: UploadSearchSeriesCharactersMultiSelectorPaginationFragment$data;
+  variables: UploadSearchSeriesCharactersMultiSelectorPaginationFragment$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -176,12 +176,12 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "UploadSearchCharactersMultiSelectorPaginationFragment",
+    "name": "UploadSearchSeriesCharactersMultiSelectorPaginationFragment",
     "selections": [
       {
         "args": (v1/*: any*/),
         "kind": "FragmentSpread",
-        "name": "UploadSearchCharactersMultiSelectorFragment"
+        "name": "UploadSearchSeriesCharactersMultiSelectorFragment"
       }
     ],
     "type": "Query",
@@ -191,7 +191,7 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "UploadSearchCharactersMultiSelectorPaginationFragment",
+    "name": "UploadSearchSeriesCharactersMultiSelectorPaginationFragment",
     "selections": [
       {
         "alias": null,
@@ -356,15 +356,15 @@ return {
     ]
   },
   "params": {
-    "id": "f73571279bfbd4f7d94c1c2562604aa2",
+    "id": "82411370fc38b7e5b9d42fa20c76b3d0",
     "metadata": {},
-    "name": "UploadSearchCharactersMultiSelectorPaginationFragment",
+    "name": "UploadSearchSeriesCharactersMultiSelectorPaginationFragment",
     "operationKind": "query",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "2d444fe4121f0f8d5f865bd491335f54";
+(node as any).hash = "5ebeac5dd5a449fb0bec6230ae0896fa";
 
 export default node;

@@ -8,13 +8,12 @@ import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/C
 import ShortGridTile from '@//:modules/content/ContentSelection/ShortGridTile/ShortGridTile'
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import ShortGridWrap from '@//:modules/content/ContentSelection/ShortGridWrap/ShortGridWrap'
-import ClickableTile from '@//:modules/content/ContentSelection/ClickableTile/ClickableTile'
 import { Heading, Stack, Text } from '@chakra-ui/react'
-import { Trans } from '@lingui/macro'
-import { Icon, LargeBackgroundBox } from '@//:modules/content/PageLayout'
-import { ArrowButtonLeft } from '@//:assets/icons'
+import { LargeBackgroundBox } from '@//:modules/content/PageLayout'
 import LoadMoreShortGridTile
   from '@//:modules/content/ContentSelection/ShortGridTile/LoadMoreShortGridTile/LoadMoreShortGridTile'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { useEffect } from 'react'
 
 interface Props extends ComponentChoiceArguments<any> {
   query: UploadSearchTopicCategoriesFragment$key
@@ -77,25 +76,25 @@ export default function UploadSearchTopicCategories ({
         condition={data.categories.edges.length < 1}
       >
         <ShortGridWrap templateColumns='repeat(auto-fill, minmax(100px, 1fr))'>
-          <ShortGridTile>
-            <ClickableTile bg='gray.800' onClick={clearValues}>
-              <Stack p={2} spacing={2}>
-                <Icon icon={ArrowButtonLeft} w={3} h={3} color='gray.100' />
-                <Heading
-                  fontSize={{
-                    base: 'sm',
-                    md: 'md'
-                  }}
-                  textAlign='center'
-                  color='gray.100'
-                >
-                  <Trans>
-                    Back To Topics
-                  </Trans>
-                </Heading>
-              </Stack>
-            </ClickableTile>
-          </ShortGridTile>
+          {/* <ShortGridTile> */}
+          {/*   <ClickableTile bg='gray.800' onClick={clearValues}> */}
+          {/*     <Stack p={2} spacing={2}> */}
+          {/*       <Icon icon={ArrowButtonLeft} w={3} h={3} color='gray.100' /> */}
+          {/*       <Heading */}
+          {/*         fontSize={{ */}
+          {/*           base: 'sm', */}
+          {/*           md: 'md' */}
+          {/*         }} */}
+          {/*         textAlign='center' */}
+          {/*         color='gray.100' */}
+          {/*       > */}
+          {/*         <Trans> */}
+          {/*           Back To Topics */}
+          {/*         </Trans> */}
+          {/*       </Heading> */}
+          {/*     </Stack> */}
+          {/*   </ClickableTile> */}
+          {/* </ShortGridTile> */}
           {data.categories.edges.map((item) => (
             <ShortGridTile key={item.node.id}>
               <Choice

@@ -67,6 +67,7 @@ interface SequenceProps {
   }
   isInReview: boolean
   isSubmitted: boolean
+  deepValue: string | null
 }
 
 const defaultValue: SequenceProps = {
@@ -77,7 +78,8 @@ const defaultValue: SequenceProps = {
   categories: {},
   errors: {},
   isInReview: false,
-  isSubmitted: false
+  isSubmitted: false,
+  deepValue: null
 }
 
 const resolver: SequenceResolver<SequenceProps> = {
@@ -88,7 +90,8 @@ const resolver: SequenceResolver<SequenceProps> = {
   characters: ObjectResolver(),
   categories: ObjectResolver(),
   isInReview: ValueResolver(),
-  isSubmitted: ValueResolver()
+  isSubmitted: ValueResolver(),
+  deepValue: ValueResolver()
 }
 
 export default function MetaCreatePost ({

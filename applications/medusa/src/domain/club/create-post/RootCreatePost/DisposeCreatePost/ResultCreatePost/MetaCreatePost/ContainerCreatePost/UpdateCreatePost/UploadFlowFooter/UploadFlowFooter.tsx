@@ -8,6 +8,10 @@ import UpdateAudienceButton from './UpdateAudienceButton/UpdateAudienceButton'
 import UpdateCategoryButton from './UpdateCategoryButton/UpdateCategoryButton'
 import UpdateCharacterButton from './UpdateCharacterButton/UpdateCharacterButton'
 import SubmitPostButton from './SubmitPostButton/SubmitPostButton'
+import { useContext } from 'react'
+import { FlowContext } from '@//:modules/content/PageLayout/FlowBuilder/FlowBuilder'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { useUpdateEffect } from 'usehooks-ts'
 
 interface Props {
   query: UploadFlowFooterFragment$key
@@ -33,6 +37,28 @@ export default function UploadFlowFooter ({
   nextStep
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
+
+  const {
+    previousStep,
+    currentStep
+  } = useContext(FlowContext)
+
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
+
+  const onPrevious = (): void => {
+    if (state.deepValue != null) {
+      dispatch({
+        type: 'deepValue',
+        value: null,
+        transform: 'SET'
+      })
+      return
+    }
+    previousStep()
+  }
 
   const NextButton = (): JSX.Element => {
     switch (step) {
@@ -72,9 +98,17 @@ export default function UploadFlowFooter ({
     }
   }
 
+  useUpdateEffect(() => {
+    dispatch({
+      type: 'deepValue',
+      value: null,
+      transform: 'SET'
+    })
+  }, [currentStep])
+
   return (
     <HStack w='100%' justify='space-between' spacing={2}>
-      {isAtStart ? <Box /> : <FlowBuilderPreviousButton />}
+      {isAtStart ? <Box /> : <FlowBuilderPreviousButton onClick={onPrevious} />}
       <NextButton />
     </HStack>
   )

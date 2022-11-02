@@ -19,12 +19,16 @@ const Fragment = graphql`
     characters {
       id
     }
+    characterRequests {
+      id
+      name
+    }
   }
 `
 
 const Mutation = graphql`
-  mutation UpdateCharacterButtonMutation ($input: UpdatePostCharactersInput!) {
-    updatePostCharacters(input: $input) {
+  mutation UpdateCharacterButtonMutation ($charactersInput: UpdatePostCharactersInput!, $characterRequestsInput: UpdatePostCharacterRequestsInput!) {
+    updatePostCharacters(input: $charactersInput) {
       post {
         id
         characters {
@@ -34,6 +38,15 @@ const Mutation = graphql`
             title
           }
           slug
+        }
+      }
+    }
+    updatePostCharacterRequests(input: $characterRequestsInput) {
+      post {
+        id
+        characterRequests {
+          id
+          name
         }
       }
     }
@@ -53,21 +66,29 @@ export default function UpdateCharacterButton ({
 
   const buttonDisabled = (Object.keys(state.characters)).length < 1
 
-  const hasUpdate = (): boolean => {
-    const currentCharacters = data?.characters.map((item) => item.id)
-    const stateCharacters = Object.keys(state.characters)
+  const stateCharacters = Object.keys(state.characters).filter((key) => state.characters[key].isRequest === false)
+  const currentCharacters = data?.characters.map((item) => item.id)
 
-    return compareTwoArrays(currentCharacters, stateCharacters) === false
+  const stateRequestCharacters = Object.keys(state.characters).filter((key) => state.characters[key].isRequest === true)
+  const currentRequestCharacters = data?.characterRequests.map((item) => item.name)
+
+  const hasUpdate = (): boolean => {
+    const doCharactersNeedUpdate = compareTwoArrays(currentCharacters, stateCharacters) === false
+    const doRequestCharactersNeedUpdate = compareTwoArrays(currentRequestCharacters, stateRequestCharacters) === false
+
+    return doCharactersNeedUpdate || doRequestCharactersNeedUpdate
   }
 
   const onUpdateCharacter = (): void => {
-    const currentCharacters = Object.keys(state.characters)
-
     updateCharacter({
       variables: {
-        input: {
+        charactersInput: {
           id: data.id,
-          characterIds: currentCharacters
+          characterIds: stateCharacters
+        },
+        characterRequestsInput: {
+          id: data.id,
+          characterRequests: stateRequestCharacters.map((item) => ({ name: item }))
         }
       },
       onCompleted () {

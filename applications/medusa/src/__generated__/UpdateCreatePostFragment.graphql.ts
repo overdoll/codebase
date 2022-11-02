@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e52fd45916a5ce0b586a5ab8449cc7b7>>
+ * @generated SignedSource<<ed0473bf45b37e07349bd8ea92d3ea42>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -18,6 +18,10 @@ export type UpdateCreatePostFragment$data = {
   readonly categories: ReadonlyArray<{
     readonly id: string;
     readonly title: string;
+  }>;
+  readonly characterRequests: ReadonlyArray<{
+    readonly id: string;
+    readonly name: string;
   }>;
   readonly characters: ReadonlyArray<{
     readonly id: string;
@@ -51,6 +55,16 @@ v1 = [
     "name": "title",
     "storageKey": null
   }
+],
+v2 = [
+  (v0/*: any*/),
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "name",
+    "storageKey": null
+  }
 ];
 return {
   "argumentDefinitions": [],
@@ -75,16 +89,17 @@ return {
       "kind": "LinkedField",
       "name": "characters",
       "plural": true,
-      "selections": [
-        (v0/*: any*/),
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "name",
-          "storageKey": null
-        }
-      ],
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "CharacterRequest",
+      "kind": "LinkedField",
+      "name": "characterRequests",
+      "plural": true,
+      "selections": (v2/*: any*/),
       "storageKey": null
     },
     {
@@ -145,6 +160,6 @@ return {
 };
 })();
 
-(node as any).hash = "1a3bb37c1965747517e30bcf2edf9ffe";
+(node as any).hash = "5b5422ebd6c2e32ec610a1aefa298b23";
 
 export default node;

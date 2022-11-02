@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<c2e473007920d5f801ac6fe8ed00bb40>>
+ * @generated SignedSource<<2fbdea38fe908dd9a416d2c61faea44d>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,7 +10,7 @@
 
 import { ReaderFragment, RefetchableFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type UploadSearchCharactersMultiSelectorFragment$data = {
+export type UploadSearchClubCharactersMultiSelectorFragment$data = {
   readonly characters: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -20,28 +20,32 @@ export type UploadSearchCharactersMultiSelectorFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentType": "UploadSearchCharactersMultiSelectorFragment";
+  readonly id: string;
+  readonly slug: string;
+  readonly " $fragmentType": "UploadSearchClubCharactersMultiSelectorFragment";
 };
-export type UploadSearchCharactersMultiSelectorFragment$key = {
-  readonly " $data"?: UploadSearchCharactersMultiSelectorFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchCharactersMultiSelectorFragment">;
+export type UploadSearchClubCharactersMultiSelectorFragment$key = {
+  readonly " $data"?: UploadSearchClubCharactersMultiSelectorFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"UploadSearchClubCharactersMultiSelectorFragment">;
 };
 
 const node: ReaderFragment = (function(){
 var v0 = [
   "characters"
-];
+],
+v1 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+};
 return {
   "argumentDefinitions": [
     {
       "defaultValue": null,
       "kind": "LocalArgument",
       "name": "after"
-    },
-    {
-      "defaultValue": false,
-      "kind": "LocalArgument",
-      "name": "clubCharacters"
     },
     {
       "defaultValue": 14,
@@ -73,20 +77,18 @@ return {
         "backward": null,
         "path": (v0/*: any*/)
       },
-      "fragmentPathInResult": [],
-      "operation": require('./UploadSearchCharactersMultiSelectorPaginationFragment.graphql')
+      "fragmentPathInResult": [
+        "node"
+      ],
+      "operation": require('./UploadSearchOriginalCharactersMultiSelectorPaginationFragment.graphql'),
+      "identifierField": "id"
     }
   },
-  "name": "UploadSearchCharactersMultiSelectorFragment",
+  "name": "UploadSearchClubCharactersMultiSelectorFragment",
   "selections": [
     {
       "alias": "characters",
       "args": [
-        {
-          "kind": "Variable",
-          "name": "clubCharacters",
-          "variableName": "clubCharacters"
-        },
         {
           "kind": "Variable",
           "name": "name",
@@ -95,7 +97,7 @@ return {
       ],
       "concreteType": "CharacterConnection",
       "kind": "LinkedField",
-      "name": "__UploadSearchCharactersMultiSelector_characters_connection",
+      "name": "__UploadSearchOriginalCharactersMultiSelector_characters_connection",
       "plural": false,
       "selections": [
         {
@@ -114,13 +116,7 @@ return {
               "name": "node",
               "plural": false,
               "selections": [
-                {
-                  "alias": null,
-                  "args": null,
-                  "kind": "ScalarField",
-                  "name": "id",
-                  "storageKey": null
-                },
+                (v1/*: any*/),
                 {
                   "alias": null,
                   "args": null,
@@ -180,13 +176,21 @@ return {
         }
       ],
       "storageKey": null
-    }
+    },
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "slug",
+      "storageKey": null
+    },
+    (v1/*: any*/)
   ],
-  "type": "Query",
+  "type": "Club",
   "abstractKey": null
 };
 })();
 
-(node as any).hash = "2d444fe4121f0f8d5f865bd491335f54";
+(node as any).hash = "2f37199990a0758c1d2a579e91921f05";
 
 export default node;

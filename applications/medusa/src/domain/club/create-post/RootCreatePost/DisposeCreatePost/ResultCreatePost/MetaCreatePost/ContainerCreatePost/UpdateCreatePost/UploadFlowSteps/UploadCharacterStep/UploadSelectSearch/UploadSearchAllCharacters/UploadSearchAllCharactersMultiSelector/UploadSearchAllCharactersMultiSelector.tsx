@@ -1,7 +1,7 @@
 import { graphql, useLazyLoadQuery } from 'react-relay/hooks'
 import type {
-  UploadSearchCharactersMultiSelectorQuery
-} from '@//:artifacts/UploadSearchCharactersMultiSelectorQuery.graphql'
+  UploadSearchAllCharactersMultiSelectorQuery
+} from '@//:artifacts/UploadSearchAllCharactersMultiSelectorQuery.graphql'
 import { usePaginationFragment } from 'react-relay'
 import { CharacterTileOverlay, GridTile, LoadMoreGridTile } from '@//:modules/content/ContentSelection'
 import { EmptyBoundary, EmptyCharacters } from '@//:modules/content/Placeholder'
@@ -12,32 +12,31 @@ import { Trans } from '@lingui/macro'
 import { Heading, HStack, Stack } from '@chakra-ui/react'
 import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
 import ContactButton from '@//:common/components/Contact/ContactButton'
+import UploadAddCharacterRequest from '../../../UploadAddCharacterRequest/UploadAddCharacterRequest'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
 }
 
 const Query = graphql`
-  query UploadSearchCharactersMultiSelectorQuery($name: String, $clubCharacters: Boolean) {
-    ...UploadSearchCharactersMultiSelectorFragment @arguments(name: $name, clubCharacters: $clubCharacters)
+  query UploadSearchAllCharactersMultiSelectorQuery($name: String) {
+    ...UploadSearchAllCharactersMultiSelectorFragment @arguments(name: $name)
   }
 `
 
 const Fragment = graphql`
-  fragment UploadSearchCharactersMultiSelectorFragment on Query
+  fragment UploadSearchAllCharactersMultiSelectorFragment on Query
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 14}
+    first: {type: Int, defaultValue: 7}
     after: {type: String},
     name: {type: String}
-    clubCharacters: {type: Boolean, defaultValue: false}
   )
-  @refetchable(queryName: "UploadSearchCharactersMultiSelectorPaginationFragment" )
+  @refetchable(queryName: "UploadSearchAllCharactersMultiSelectorPaginationFragment" )
   {
     characters (
       first: $first,
       after: $after,
-      name: $name,
-      clubCharacters: $clubCharacters
-    ) @connection(key: "UploadSearchCharactersMultiSelector_characters")
+      name: $name
+    ) @connection(key: "UploadSearchAllCharactersMultiSelector_characters")
     {
       edges {
         node {
@@ -50,20 +49,15 @@ const Fragment = graphql`
   }
 `
 
-export default function UploadSearchCharactersMultiSelector (props: Props): JSX.Element {
+export default function UploadSearchAllCharactersMultiSelector (props: Props): JSX.Element {
   const {
     searchArguments,
     register
   } = props
 
-  const updatedVariables = {
-    ...searchArguments.variables,
-    ...(searchArguments.variables.name != null && searchArguments.variables.name !== '' && { clubCharacters: false })
-  }
-
-  const queryData = useLazyLoadQuery<UploadSearchCharactersMultiSelectorQuery>(
+  const queryData = useLazyLoadQuery<UploadSearchAllCharactersMultiSelectorQuery>(
     Query,
-    updatedVariables,
+    searchArguments.variables,
     searchArguments.options
   )
 
@@ -72,24 +66,21 @@ export default function UploadSearchCharactersMultiSelector (props: Props): JSX.
     loadNext,
     isLoadingNext,
     hasNext
-  } = usePaginationFragment<UploadSearchCharactersMultiSelectorQuery, any>(
+  } = usePaginationFragment<UploadSearchAllCharactersMultiSelectorQuery, any>(
     Fragment,
     queryData
   )
+
+  if (searchArguments.variables.name == null || searchArguments.variables.name === '') {
+    return <></>
+  }
 
   return (
     <EmptyBoundary
       fallback={(
         <Stack spacing={2}>
           <EmptyCharacters hint={searchArguments.variables.name} />
-          <HStack p={4} bg='gray.800' borderRadius='md' spacing={2}>
-            <Heading color='gray.200' fontSize='sm'>
-              <Trans>
-                Have a character suggestion or want your character listed? Contact us!
-              </Trans>
-            </Heading>
-            <ContactButton variant='link' />
-          </HStack>
+          <UploadAddCharacterRequest register={register} />
         </Stack>
       )}
       condition={data.characters.edges.length < 1}
@@ -97,7 +88,11 @@ export default function UploadSearchCharactersMultiSelector (props: Props): JSX.
       <MediumGridWrap>
         {data.characters.edges.map((item) => (
           <GridTile key={item.node.id}>
-            <Choice {...register(item.node.id, { name: item.node.name })}>
+            <Choice {...register(item.node.id, {
+              name: item.node.name,
+              isRequest: false
+            })}
+            >
               <CharacterTileOverlay query={item.node} />
             </Choice>
           </GridTile>

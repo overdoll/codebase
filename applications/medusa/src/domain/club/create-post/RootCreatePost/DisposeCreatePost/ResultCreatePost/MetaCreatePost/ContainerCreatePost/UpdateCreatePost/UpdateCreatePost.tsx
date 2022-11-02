@@ -31,6 +31,10 @@ const Fragment = graphql`
       id
       name
     }
+    characterRequests {
+      id
+      name
+    }
     categories {
       id
       title
@@ -100,12 +104,24 @@ export default function UpdateCreatePost ({
         : {},
       transform: 'SET'
     })
+    const reducedCharacters = data?.characters.reduce((accum, item) => ({
+      ...accum,
+      [item.id]: {
+        name: item.name,
+        isRequest: false
+      }
+    }), {})
+    const reducedCharacterRequests = data?.characterRequests.reduce((accum, item) => ({
+      ...accum,
+      [item.name]: {
+        name: item.name,
+        isRequest: true
+      }
+    }), {})
+
     dispatch({
       type: 'characters',
-      value: data?.characters.reduce((accum, item) => ({
-        ...accum,
-        [item.id]: { name: item.name }
-      }), {}),
+      value: { ...reducedCharacters, ...reducedCharacterRequests },
       transform: 'SET'
     })
     dispatch({
