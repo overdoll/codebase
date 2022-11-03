@@ -2,10 +2,10 @@ package command
 
 import (
 	"context"
-	"github.com/pingcap/errors"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/event"
 	"overdoll/applications/sting/internal/domain/post"
+	"overdoll/libraries/errors/apperror"
 	"overdoll/libraries/media"
 	"overdoll/libraries/media/proto"
 )
@@ -96,7 +96,7 @@ func (h UpdateMediaHandler) Handle(ctx context.Context, cmd UpdateMedia) error {
 		if err := h.pr.UpdatePostContentOperatorMedia(ctx, sourceId, []*media.Media{cmd.Media}); err != nil {
 
 			// ignore not found errors
-			if errors.IsNotFound(err) {
+			if apperror.IsNotFoundError(err) {
 				return nil
 			}
 

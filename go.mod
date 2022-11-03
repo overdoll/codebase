@@ -33,7 +33,6 @@ require (
 	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/olivere/elastic/v7 v7.0.31
 	github.com/oschwald/geoip2-golang v1.5.0
-	github.com/pingcap/errors v0.11.4
 	github.com/pkg/errors v0.9.1
 	github.com/posthog/posthog-go v0.0.0-20220817142604-0b0bbf0f9c0f
 	github.com/pquerna/otp v1.3.0

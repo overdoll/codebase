@@ -111,7 +111,6 @@ go_library(
         "//libraries/media/proto:libraries_go_proto",
         "//libraries/passport",
         "//libraries/principal",
-        "@com_github_pingcap_errors//:errors",
         "@org_uber_go_zap//:zap",
     ],
 )
