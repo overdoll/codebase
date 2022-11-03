@@ -2,6 +2,7 @@ package command
 
 import (
 	"context"
+	"github.com/pingcap/errors"
 	"overdoll/applications/sting/internal/domain/club"
 	"overdoll/applications/sting/internal/domain/event"
 	"overdoll/applications/sting/internal/domain/post"
@@ -93,6 +94,12 @@ func (h UpdateMediaHandler) Handle(ctx context.Context, cmd UpdateMedia) error {
 		break
 	case proto.MediaLinkType_POST_CONTENT:
 		if err := h.pr.UpdatePostContentOperatorMedia(ctx, sourceId, []*media.Media{cmd.Media}); err != nil {
+
+			// ignore not found errors
+			if errors.IsNotFound(err) {
+				return nil
+			}
+
 			return err
 		}
 
