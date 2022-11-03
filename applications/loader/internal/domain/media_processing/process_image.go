@@ -105,6 +105,10 @@ var banner = []*processImageSizes{
 	},
 }
 
+const (
+	maxDimensionForHdCompression = 2048
+)
+
 func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*Move, error) {
 
 	sourceFileName := file.Name()
@@ -157,7 +161,7 @@ func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*M
 		shouldResizeHeight := isPortrait && dimensions.Height > size.constraint
 		shouldResizeWidth := !isPortrait && dimensions.Width > size.constraint
 
-		requiresHDOriginal := useHd && ((isPortrait && dimensions.Height <= 1600) || (!isPortrait && dimensions.Width <= 1600))
+		requiresHDOriginal := useHd && ((isPortrait && dimensions.Height <= maxDimensionForHdCompression) || (!isPortrait && dimensions.Width <= maxDimensionForHdCompression))
 
 		isMandatory := size.mandatory
 
