@@ -512,7 +512,7 @@ func (p *Post) UpdateContentSupporterOnly(clb *club.Club, requester *principal.P
 		return err
 	}
 
-	if requester.IsStaff() && p.state == Published && supporterOnly {
+	if p.state == Published && supporterOnly {
 		return domainerror.NewValidation("cannot mark supporter content only as true when already published")
 	}
 
@@ -548,7 +548,7 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		return nil, err
 	}
 
-	if p.state != Draft {
+	if p.state != Draft && !requester.IsStaff() {
 		return nil, domainerror.NewValidation("cannot remove content from a published post")
 	}
 
@@ -708,6 +708,10 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 }
 
 func (p *Post) CanAddContent(requester *principal.Principal) error {
+
+	if p.state == Published && requester.IsStaff() {
+		return nil
+	}
 
 	if p.state != Draft {
 		return domainerror.NewValidation("can only add content to draft posts")
