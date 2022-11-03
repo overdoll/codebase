@@ -106,7 +106,7 @@ var banner = []*processImageSizes{
 }
 
 const (
-	maxDimensionForHdCompression = 1600
+	maxDimensionForHdCompression = 2048
 )
 
 func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*Move, error) {
