@@ -205,6 +205,7 @@ type ComplexityRoot struct {
 		CharactersCount             func(childComplexity int) int
 		CharactersEnabled           func(childComplexity int) int
 		CharactersLimit             func(childComplexity int) int
+		Header                      func(childComplexity int) int
 		ID                          func(childComplexity int) int
 		Links                       func(childComplexity int) int
 		Members                     func(childComplexity int, after *string, before *string, first *int, last *int, supporter bool, sortBy types.ClubMembersSort) int
@@ -506,7 +507,9 @@ type ComplexityRoot struct {
 		UpdateCategoryTitle              func(childComplexity int, input types.UpdateCategoryTitleInput) int
 		UpdateCategoryTopic              func(childComplexity int, input types.UpdateCategoryTopicInput) int
 		UpdateCharacterName              func(childComplexity int, input types.UpdateCharacterNameInput) int
+		UpdateClubBlurb                  func(childComplexity int, input types.UpdateClubBlurbInput) int
 		UpdateClubCharactersLimit        func(childComplexity int, input types.UpdateClubCharactersLimitInput) int
+		UpdateClubHeader                 func(childComplexity int, input types.UpdateClubHeaderInput) int
 		UpdateClubName                   func(childComplexity int, input types.UpdateClubNameInput) int
 		UpdateClubThumbnail              func(childComplexity int, input types.UpdateClubThumbnailInput) int
 		UpdateCurationProfileAudience    func(childComplexity int, input types.UpdateCurationProfileAudienceInput) int
@@ -813,7 +816,15 @@ type ComplexityRoot struct {
 		Character func(childComplexity int) int
 	}
 
+	UpdateClubBlurbPayload struct {
+		Club func(childComplexity int) int
+	}
+
 	UpdateClubCharactersLimitPayload struct {
+		Club func(childComplexity int) int
+	}
+
+	UpdateClubHeaderPayload struct {
 		Club func(childComplexity int) int
 	}
 
@@ -991,7 +1002,9 @@ type MutationResolver interface {
 	RemoveClubSlugAlias(ctx context.Context, input types.RemoveClubSlugAliasInput) (*types.RemoveClubSlugAliasPayload, error)
 	PromoteClubSlugAliasToDefault(ctx context.Context, input types.PromoteClubSlugAliasToDefaultInput) (*types.PromoteClubSlugAliasToDefaultPayload, error)
 	UpdateClubName(ctx context.Context, input types.UpdateClubNameInput) (*types.UpdateClubNamePayload, error)
+	UpdateClubBlurb(ctx context.Context, input types.UpdateClubBlurbInput) (*types.UpdateClubBlurbPayload, error)
 	UpdateClubThumbnail(ctx context.Context, input types.UpdateClubThumbnailInput) (*types.UpdateClubThumbnailPayload, error)
+	UpdateClubHeader(ctx context.Context, input types.UpdateClubHeaderInput) (*types.UpdateClubHeaderPayload, error)
 	SuspendClub(ctx context.Context, input types.SuspendClubInput) (*types.SuspendClubPayload, error)
 	UnSuspendClub(ctx context.Context, input types.UnSuspendClubInput) (*types.UnSuspendClubPayload, error)
 	TerminateClub(ctx context.Context, input types.TerminateClubInput) (*types.TerminateClubPayload, error)
@@ -1779,6 +1792,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.CharactersLimit(childComplexity), true
+
+	case "Club.header":
+		if e.complexity.Club.Header == nil {
+			break
+		}
+
+		return e.complexity.Club.Header(childComplexity), true
 
 	case "Club.id":
 		if e.complexity.Club.ID == nil {
@@ -3259,6 +3279,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.UpdateCharacterName(childComplexity, args["input"].(types.UpdateCharacterNameInput)), true
 
+	case "Mutation.updateClubBlurb":
+		if e.complexity.Mutation.UpdateClubBlurb == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateClubBlurb_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateClubBlurb(childComplexity, args["input"].(types.UpdateClubBlurbInput)), true
+
 	case "Mutation.updateClubCharactersLimit":
 		if e.complexity.Mutation.UpdateClubCharactersLimit == nil {
 			break
@@ -3270,6 +3302,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.UpdateClubCharactersLimit(childComplexity, args["input"].(types.UpdateClubCharactersLimitInput)), true
+
+	case "Mutation.updateClubHeader":
+		if e.complexity.Mutation.UpdateClubHeader == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateClubHeader_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateClubHeader(childComplexity, args["input"].(types.UpdateClubHeaderInput)), true
 
 	case "Mutation.updateClubName":
 		if e.complexity.Mutation.UpdateClubName == nil {
@@ -4684,12 +4728,26 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.UpdateCharacterNamePayload.Character(childComplexity), true
 
+	case "UpdateClubBlurbPayload.club":
+		if e.complexity.UpdateClubBlurbPayload.Club == nil {
+			break
+		}
+
+		return e.complexity.UpdateClubBlurbPayload.Club(childComplexity), true
+
 	case "UpdateClubCharactersLimitPayload.club":
 		if e.complexity.UpdateClubCharactersLimitPayload.Club == nil {
 			break
 		}
 
 		return e.complexity.UpdateClubCharactersLimitPayload.Club(childComplexity), true
+
+	case "UpdateClubHeaderPayload.club":
+		if e.complexity.UpdateClubHeaderPayload.Club == nil {
+			break
+		}
+
+		return e.complexity.UpdateClubHeaderPayload.Club(childComplexity), true
 
 	case "UpdateClubNamePayload.club":
 		if e.complexity.UpdateClubNamePayload.Club == nil {
@@ -4916,7 +4974,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputUpdateCategoryTitleInput,
 		ec.unmarshalInputUpdateCategoryTopicInput,
 		ec.unmarshalInputUpdateCharacterNameInput,
+		ec.unmarshalInputUpdateClubBlurbInput,
 		ec.unmarshalInputUpdateClubCharactersLimitInput,
+		ec.unmarshalInputUpdateClubHeaderInput,
 		ec.unmarshalInputUpdateClubNameInput,
 		ec.unmarshalInputUpdateClubThumbnailInput,
 		ec.unmarshalInputUpdateCurationProfileAudienceInput,
@@ -5779,6 +5839,9 @@ type Club implements Node @key(fields: "id") {
   """A URL pointing to the object's banner."""
   bannerMedia: Media
 
+  """A URL pointing to the object's header."""
+  header: Media
+
   """A name for this club."""
   name: String!
 
@@ -6085,6 +6148,19 @@ input UpdateClubNameInput {
   name: String!
 }
 
+"""Update club blurb."""
+input UpdateClubBlurbInput {
+  """The club to update"""
+  id: ID!
+
+  """
+  The chosen blurb for the club.
+
+  Validation: Max 1000 characters.
+  """
+  blurb: String!
+}
+
 """Update club thumbnail."""
 input UpdateClubThumbnailInput {
   """The club to update"""
@@ -6092,6 +6168,15 @@ input UpdateClubThumbnailInput {
 
   """The thumbnail for the club."""
   thumbnail: String!
+}
+
+"""Update club banner."""
+input UpdateClubHeaderInput {
+  """The club to update"""
+  id: ID!
+
+  """The header for the club."""
+  header: String!
 }
 
 """Update alias slug to default."""
@@ -6161,8 +6246,20 @@ type UpdateClubNamePayload {
   club: Club
 }
 
+"""Payload for updating the blurb"""
+type UpdateClubBlurbPayload {
+  """The club after update"""
+  club: Club
+}
+
 """Payload for updating the thumbnail"""
 type UpdateClubThumbnailPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for updating the header"""
+type UpdateClubHeaderPayload {
   """The club after update"""
   club: Club
 }
@@ -6352,9 +6449,19 @@ extend type Mutation {
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 
   """
+  Update the club's blurb (english-only for now).
+  """
+  updateClubBlurb(input: UpdateClubBlurbInput!): UpdateClubBlurbPayload
+
+  """
   Update the club thumbnail
   """
   updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """
+  Update the club header
+  """
+  updateClubHeader(input: UpdateClubHeaderInput!): UpdateClubHeaderPayload
 
   """
   Suspend the club.
@@ -7296,7 +7403,7 @@ input UpdatePostDescriptionInput {
   """
   The description to update.
 
-  Validation: Max 280 characters. No links allowed.
+  Validation: Max 280 characters.
   """
   description: String!
 
@@ -10455,6 +10562,21 @@ func (ec *executionContext) field_Mutation_updateCharacterName_args(ctx context.
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_updateClubBlurb_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateClubBlurbInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateClubBlurbInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubBlurbInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_updateClubCharactersLimit_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -10462,6 +10584,21 @@ func (ec *executionContext) field_Mutation_updateClubCharactersLimit_args(ctx co
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
 		arg0, err = ec.unmarshalNUpdateClubCharactersLimitInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubCharactersLimitInput(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateClubHeader_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 types.UpdateClubHeaderInput
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNUpdateClubHeaderInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubHeaderInput(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -13019,6 +13156,8 @@ func (ec *executionContext) fieldContext_AddClubSlugAliasPayload_club(ctx contex
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -16021,6 +16160,8 @@ func (ec *executionContext) fieldContext_Character_club(ctx context.Context, fie
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -17043,6 +17184,47 @@ func (ec *executionContext) _Club_bannerMedia(ctx context.Context, field graphql
 }
 
 func (ec *executionContext) fieldContext_Club_bannerMedia(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Media does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_header(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_header(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Header, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(graphql1.Media)
+	fc.Result = res
+	return ec.marshalOMedia2overdollᚋlibrariesᚋgraphqlᚐMedia(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_header(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Club",
 		Field:      field,
@@ -18231,6 +18413,8 @@ func (ec *executionContext) fieldContext_ClubEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -18678,6 +18862,8 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -20132,6 +20318,8 @@ func (ec *executionContext) fieldContext_CreateClubPayload_club(ctx context.Cont
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -21211,6 +21399,8 @@ func (ec *executionContext) fieldContext_DisableClubCharactersPayload_club(ctx c
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -21318,6 +21508,8 @@ func (ec *executionContext) fieldContext_DisableClubSupporterOnlyPostsPayload_cl
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -21425,6 +21617,8 @@ func (ec *executionContext) fieldContext_EnableClubCharactersPayload_club(ctx co
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -21532,6 +21726,8 @@ func (ec *executionContext) fieldContext_EnableClubSupporterOnlyPostsPayload_clu
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -21976,6 +22172,8 @@ func (ec *executionContext) fieldContext_Entity_findClubByID(ctx context.Context
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -25065,6 +25263,62 @@ func (ec *executionContext) fieldContext_Mutation_updateClubName(ctx context.Con
 	return fc, nil
 }
 
+func (ec *executionContext) _Mutation_updateClubBlurb(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateClubBlurb(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateClubBlurb(rctx, fc.Args["input"].(types.UpdateClubBlurbInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateClubBlurbPayload)
+	fc.Result = res
+	return ec.marshalOUpdateClubBlurbPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubBlurbPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateClubBlurb(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "club":
+				return ec.fieldContext_UpdateClubBlurbPayload_club(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateClubBlurbPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateClubBlurb_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Mutation_updateClubThumbnail(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Mutation_updateClubThumbnail(ctx, field)
 	if err != nil {
@@ -25115,6 +25369,62 @@ func (ec *executionContext) fieldContext_Mutation_updateClubThumbnail(ctx contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_updateClubThumbnail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateClubHeader(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateClubHeader(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateClubHeader(rctx, fc.Args["input"].(types.UpdateClubHeaderInput))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.UpdateClubHeaderPayload)
+	fc.Result = res
+	return ec.marshalOUpdateClubHeaderPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubHeaderPayload(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateClubHeader(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "club":
+				return ec.fieldContext_UpdateClubHeaderPayload_club(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateClubHeaderPayload", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateClubHeader_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -27977,6 +28287,8 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -29672,6 +29984,8 @@ func (ec *executionContext) fieldContext_PromoteClubSlugAliasToDefaultPayload_cl
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -30322,6 +30636,8 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -31643,6 +31959,8 @@ func (ec *executionContext) fieldContext_RemoveClubSlugAliasPayload_club(ctx con
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -34170,6 +34488,8 @@ func (ec *executionContext) fieldContext_SuspendClubPayload_club(ctx context.Con
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -34469,6 +34789,8 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -35347,6 +35669,8 @@ func (ec *executionContext) fieldContext_TransferClubOwnershipPayload_club(ctx c
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -35629,6 +35953,8 @@ func (ec *executionContext) fieldContext_UnSuspendClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -35736,6 +36062,8 @@ func (ec *executionContext) fieldContext_UnTerminateClubPayload_club(ctx context
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -36230,6 +36558,115 @@ func (ec *executionContext) fieldContext_UpdateCharacterNamePayload_character(ct
 	return fc, nil
 }
 
+func (ec *executionContext) _UpdateClubBlurbPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubBlurbPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateClubBlurbPayload_club(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateClubBlurbPayload_club(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateClubBlurbPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Club_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Club_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Club_slug(ctx, field)
+			case "postsView":
+				return ec.fieldContext_Club_postsView(ctx, field)
+			case "slugAliasesLimit":
+				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
+			case "slugAliases":
+				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "thumbnailMedia":
+				return ec.fieldContext_Club_thumbnailMedia(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
+			case "bannerMedia":
+				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
+			case "name":
+				return ec.fieldContext_Club_name(ctx, field)
+			case "owner":
+				return ec.fieldContext_Club_owner(ctx, field)
+			case "termination":
+				return ec.fieldContext_Club_termination(ctx, field)
+			case "suspension":
+				return ec.fieldContext_Club_suspension(ctx, field)
+			case "tags":
+				return ec.fieldContext_Club_tags(ctx, field)
+			case "suspensionLogs":
+				return ec.fieldContext_Club_suspensionLogs(ctx, field)
+			case "viewerIsOwner":
+				return ec.fieldContext_Club_viewerIsOwner(ctx, field)
+			case "canCreateSupporterOnlyPosts":
+				return ec.fieldContext_Club_canCreateSupporterOnlyPosts(ctx, field)
+			case "canSupport":
+				return ec.fieldContext_Club_canSupport(ctx, field)
+			case "nextSupporterPostTime":
+				return ec.fieldContext_Club_nextSupporterPostTime(ctx, field)
+			case "viewerMember":
+				return ec.fieldContext_Club_viewerMember(ctx, field)
+			case "membersIsSupporterCount":
+				return ec.fieldContext_Club_membersIsSupporterCount(ctx, field)
+			case "membersCount":
+				return ec.fieldContext_Club_membersCount(ctx, field)
+			case "members":
+				return ec.fieldContext_Club_members(ctx, field)
+			case "charactersEnabled":
+				return ec.fieldContext_Club_charactersEnabled(ctx, field)
+			case "charactersLimit":
+				return ec.fieldContext_Club_charactersLimit(ctx, field)
+			case "charactersCount":
+				return ec.fieldContext_Club_charactersCount(ctx, field)
+			case "characters":
+				return ec.fieldContext_Club_characters(ctx, field)
+			case "posts":
+				return ec.fieldContext_Club_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Club", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _UpdateClubCharactersLimitPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubCharactersLimitPayload) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_UpdateClubCharactersLimitPayload_club(ctx, field)
 	if err != nil {
@@ -36292,6 +36729,117 @@ func (ec *executionContext) fieldContext_UpdateClubCharactersLimitPayload_club(c
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
+			case "name":
+				return ec.fieldContext_Club_name(ctx, field)
+			case "owner":
+				return ec.fieldContext_Club_owner(ctx, field)
+			case "termination":
+				return ec.fieldContext_Club_termination(ctx, field)
+			case "suspension":
+				return ec.fieldContext_Club_suspension(ctx, field)
+			case "tags":
+				return ec.fieldContext_Club_tags(ctx, field)
+			case "suspensionLogs":
+				return ec.fieldContext_Club_suspensionLogs(ctx, field)
+			case "viewerIsOwner":
+				return ec.fieldContext_Club_viewerIsOwner(ctx, field)
+			case "canCreateSupporterOnlyPosts":
+				return ec.fieldContext_Club_canCreateSupporterOnlyPosts(ctx, field)
+			case "canSupport":
+				return ec.fieldContext_Club_canSupport(ctx, field)
+			case "nextSupporterPostTime":
+				return ec.fieldContext_Club_nextSupporterPostTime(ctx, field)
+			case "viewerMember":
+				return ec.fieldContext_Club_viewerMember(ctx, field)
+			case "membersIsSupporterCount":
+				return ec.fieldContext_Club_membersIsSupporterCount(ctx, field)
+			case "membersCount":
+				return ec.fieldContext_Club_membersCount(ctx, field)
+			case "members":
+				return ec.fieldContext_Club_members(ctx, field)
+			case "charactersEnabled":
+				return ec.fieldContext_Club_charactersEnabled(ctx, field)
+			case "charactersLimit":
+				return ec.fieldContext_Club_charactersLimit(ctx, field)
+			case "charactersCount":
+				return ec.fieldContext_Club_charactersCount(ctx, field)
+			case "characters":
+				return ec.fieldContext_Club_characters(ctx, field)
+			case "posts":
+				return ec.fieldContext_Club_posts(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Club", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _UpdateClubHeaderPayload_club(ctx context.Context, field graphql.CollectedField, obj *types.UpdateClubHeaderPayload) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateClubHeaderPayload_club(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Club, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*types.Club)
+	fc.Result = res
+	return ec.marshalOClub2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐClub(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateClubHeaderPayload_club(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateClubHeaderPayload",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Club_id(ctx, field)
+			case "reference":
+				return ec.fieldContext_Club_reference(ctx, field)
+			case "slug":
+				return ec.fieldContext_Club_slug(ctx, field)
+			case "postsView":
+				return ec.fieldContext_Club_postsView(ctx, field)
+			case "slugAliasesLimit":
+				return ec.fieldContext_Club_slugAliasesLimit(ctx, field)
+			case "totalPosts":
+				return ec.fieldContext_Club_totalPosts(ctx, field)
+			case "totalLikes":
+				return ec.fieldContext_Club_totalLikes(ctx, field)
+			case "slugAliases":
+				return ec.fieldContext_Club_slugAliases(ctx, field)
+			case "links":
+				return ec.fieldContext_Club_links(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Club_thumbnail(ctx, field)
+			case "thumbnailMedia":
+				return ec.fieldContext_Club_thumbnailMedia(ctx, field)
+			case "banner":
+				return ec.fieldContext_Club_banner(ctx, field)
+			case "bannerMedia":
+				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -36399,6 +36947,8 @@ func (ec *executionContext) fieldContext_UpdateClubNamePayload_club(ctx context.
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -36506,6 +37056,8 @@ func (ec *executionContext) fieldContext_UpdateClubThumbnailPayload_club(ctx con
 				return ec.fieldContext_Club_banner(ctx, field)
 			case "bannerMedia":
 				return ec.fieldContext_Club_bannerMedia(ctx, field)
+			case "header":
+				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
 			case "owner":
@@ -41031,6 +41583,37 @@ func (ec *executionContext) unmarshalInputUpdateCharacterNameInput(ctx context.C
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateClubBlurbInput(ctx context.Context, obj interface{}) (types.UpdateClubBlurbInput, error) {
+	var it types.UpdateClubBlurbInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "blurb":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("blurb"))
+			it.Blurb, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputUpdateClubCharactersLimitInput(ctx context.Context, obj interface{}) (types.UpdateClubCharactersLimitInput, error) {
 	var it types.UpdateClubCharactersLimitInput
 	asMap := map[string]interface{}{}
@@ -41053,6 +41636,37 @@ func (ec *executionContext) unmarshalInputUpdateClubCharactersLimitInput(ctx con
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("charactersLimit"))
 			it.CharactersLimit, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputUpdateClubHeaderInput(ctx context.Context, obj interface{}) (types.UpdateClubHeaderInput, error) {
+	var it types.UpdateClubHeaderInput
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	for k, v := range asMap {
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNID2overdollᚋlibrariesᚋgraphqlᚋrelayᚐID(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "header":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("header"))
+			it.Header, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -43262,6 +43876,10 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 
 			out.Values[i] = ec._Club_bannerMedia(ctx, field, obj)
 
+		case "header":
+
+			out.Values[i] = ec._Club_header(ctx, field, obj)
+
 		case "name":
 
 			out.Values[i] = ec._Club_name(ctx, field, obj)
@@ -45357,10 +45975,22 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_updateClubName(ctx, field)
 			})
 
+		case "updateClubBlurb":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateClubBlurb(ctx, field)
+			})
+
 		case "updateClubThumbnail":
 
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_updateClubThumbnail(ctx, field)
+			})
+
+		case "updateClubHeader":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateClubHeader(ctx, field)
 			})
 
 		case "suspendClub":
@@ -48043,6 +48673,31 @@ func (ec *executionContext) _UpdateCharacterNamePayload(ctx context.Context, sel
 	return out
 }
 
+var updateClubBlurbPayloadImplementors = []string{"UpdateClubBlurbPayload"}
+
+func (ec *executionContext) _UpdateClubBlurbPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubBlurbPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubBlurbPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateClubBlurbPayload")
+		case "club":
+
+			out.Values[i] = ec._UpdateClubBlurbPayload_club(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var updateClubCharactersLimitPayloadImplementors = []string{"UpdateClubCharactersLimitPayload"}
 
 func (ec *executionContext) _UpdateClubCharactersLimitPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubCharactersLimitPayload) graphql.Marshaler {
@@ -48056,6 +48711,31 @@ func (ec *executionContext) _UpdateClubCharactersLimitPayload(ctx context.Contex
 		case "club":
 
 			out.Values[i] = ec._UpdateClubCharactersLimitPayload_club(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var updateClubHeaderPayloadImplementors = []string{"UpdateClubHeaderPayload"}
+
+func (ec *executionContext) _UpdateClubHeaderPayload(ctx context.Context, sel ast.SelectionSet, obj *types.UpdateClubHeaderPayload) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateClubHeaderPayloadImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateClubHeaderPayload")
+		case "club":
+
+			out.Values[i] = ec._UpdateClubHeaderPayload_club(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -51075,8 +51755,18 @@ func (ec *executionContext) unmarshalNUpdateCharacterNameInput2overdollᚋapplic
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) unmarshalNUpdateClubBlurbInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubBlurbInput(ctx context.Context, v interface{}) (types.UpdateClubBlurbInput, error) {
+	res, err := ec.unmarshalInputUpdateClubBlurbInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNUpdateClubCharactersLimitInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubCharactersLimitInput(ctx context.Context, v interface{}) (types.UpdateClubCharactersLimitInput, error) {
 	res, err := ec.unmarshalInputUpdateClubCharactersLimitInput(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateClubHeaderInput2overdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubHeaderInput(ctx context.Context, v interface{}) (types.UpdateClubHeaderInput, error) {
+	res, err := ec.unmarshalInputUpdateClubHeaderInput(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
@@ -52381,11 +53071,25 @@ func (ec *executionContext) marshalOUpdateCharacterNamePayload2ᚖoverdollᚋapp
 	return ec._UpdateCharacterNamePayload(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOUpdateClubBlurbPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubBlurbPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubBlurbPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateClubBlurbPayload(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOUpdateClubCharactersLimitPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubCharactersLimitPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubCharactersLimitPayload) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._UpdateClubCharactersLimitPayload(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOUpdateClubHeaderPayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubHeaderPayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubHeaderPayload) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._UpdateClubHeaderPayload(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOUpdateClubNamePayload2ᚖoverdollᚋapplicationsᚋstingᚋinternalᚋportsᚋgraphqlᚋtypesᚐUpdateClubNamePayload(ctx context.Context, sel ast.SelectionSet, v *types.UpdateClubNamePayload) graphql.Marshaler {

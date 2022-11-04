@@ -54,6 +54,9 @@ type Club implements Node @key(fields: "id") {
   """A URL pointing to the object's banner."""
   bannerMedia: Media
 
+  """A URL pointing to the object's header."""
+  header: Media
+
   """A name for this club."""
   name: String!
 
@@ -360,6 +363,19 @@ input UpdateClubNameInput {
   name: String!
 }
 
+"""Update club blurb."""
+input UpdateClubBlurbInput {
+  """The club to update"""
+  id: ID!
+
+  """
+  The chosen blurb for the club.
+
+  Validation: Max 1000 characters.
+  """
+  blurb: String!
+}
+
 """Update club thumbnail."""
 input UpdateClubThumbnailInput {
   """The club to update"""
@@ -367,6 +383,15 @@ input UpdateClubThumbnailInput {
 
   """The thumbnail for the club."""
   thumbnail: String!
+}
+
+"""Update club banner."""
+input UpdateClubHeaderInput {
+  """The club to update"""
+  id: ID!
+
+  """The header for the club."""
+  header: String!
 }
 
 """Update alias slug to default."""
@@ -436,8 +461,20 @@ type UpdateClubNamePayload {
   club: Club
 }
 
+"""Payload for updating the blurb"""
+type UpdateClubBlurbPayload {
+  """The club after update"""
+  club: Club
+}
+
 """Payload for updating the thumbnail"""
 type UpdateClubThumbnailPayload {
+  """The club after update"""
+  club: Club
+}
+
+"""Payload for updating the header"""
+type UpdateClubHeaderPayload {
   """The club after update"""
   club: Club
 }
@@ -627,9 +664,19 @@ extend type Mutation {
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
 
   """
+  Update the club's blurb (english-only for now).
+  """
+  updateClubBlurb(input: UpdateClubBlurbInput!): UpdateClubBlurbPayload
+
+  """
   Update the club thumbnail
   """
   updateClubThumbnail(input: UpdateClubThumbnailInput!): UpdateClubThumbnailPayload
+
+  """
+  Update the club header
+  """
+  updateClubHeader(input: UpdateClubHeaderInput!): UpdateClubHeaderPayload
 
   """
   Suspend the club.

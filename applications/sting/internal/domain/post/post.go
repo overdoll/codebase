@@ -7,7 +7,6 @@ import (
 	"overdoll/libraries/errors/domainerror"
 	"overdoll/libraries/localization"
 	"overdoll/libraries/media"
-	"regexp"
 	"time"
 
 	"overdoll/libraries/paging"
@@ -670,7 +669,7 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 
 func (p *Post) CanDelete(requester *principal.Principal) error {
 
-	if p.state != Published && p.state != Removed && p.state != Rejected && p.state != Discarded && p.state != Draft {
+	if p.state != Removed && p.state != Rejected && p.state != Discarded && p.state != Draft {
 		return domainerror.NewValidation("invalid deletion state for post: post must be draft, removed, rejected, discarded")
 	}
 
@@ -687,7 +686,7 @@ func (p *Post) CanArchive(requester *principal.Principal) error {
 		return domainerror.NewValidation("only published posts can be archived")
 	}
 
-	if err := requester.CheckClubOwner(p.clubId); err != nil {
+	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
@@ -700,7 +699,7 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 		return domainerror.NewValidation("only archived posts can be unarchived")
 	}
 
-	if err := requester.CheckClubOwner(p.clubId); err != nil {
+	if err := p.CanUpdate(requester); err != nil {
 		return err
 	}
 
@@ -708,31 +707,29 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 }
 
 func (p *Post) CanAddContent(requester *principal.Principal) error {
-
-	if p.state == Published && requester.IsStaff() {
-		return nil
-	}
-
-	if p.state != Draft {
-		return domainerror.NewValidation("can only add content to draft posts")
-	}
-
 	return p.CanUpdate(requester)
 }
 
 func (p *Post) CanUpdate(requester *principal.Principal) error {
+
+	if requester.IsLocked() {
+		return principal.ErrLocked
+	}
 
 	// staff && workers can update posts that are published
 	if (requester.IsStaff() || requester.IsWorker() || requester.IsModerator()) && (p.state == Published || p.state == Review) {
 		return nil
 	}
 
-	if p.state != Draft {
-		return domainerror.NewValidation("can only update posts that are in draft")
+	// artists who are club owners can also update the post
+	if err := requester.CheckClubOwner(p.clubId); err == nil {
+		if requester.IsArtist() && p.state == Published {
+			return nil
+		}
 	}
 
-	if requester.IsLocked() {
-		return principal.ErrLocked
+	if p.state != Draft {
+		return domainerror.NewValidation("can only update posts that are in draft")
 	}
 
 	if !requester.IsWorker() {
@@ -808,21 +805,12 @@ func validateExistingResource(current *media.Media, new *media.Media) error {
 	return nil
 }
 
-// checking for links within a post description
-var aRx = regexp.MustCompile(`(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])`)
-
 func validatePostDescription(name string) error {
 
 	err := validator.New().Var(name, "max=280")
 
 	if err != nil {
 		return domainerror.NewValidation(err.Error())
-	}
-
-	mv := aRx.FindAllStringSubmatch(name, -1)
-
-	if len(mv) != 0 {
-		return domainerror.NewValidation("no links are allowed within a description")
 	}
 
 	return nil

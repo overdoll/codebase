@@ -22,6 +22,7 @@ go_library(
         "1666820966_add_post_views.cql",
         "1666893989_add_post_views_updates.cql",
         "1667335435_add_post_characters_requests.cql",
+        "1667571959_add_club_header_blurb.cql",
     ],
     importpath = "overdoll/applications/sting/internal/adapters/migrations/cql",
     visibility = ["//applications/sting:__subpackages__"],

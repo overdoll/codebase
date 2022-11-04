@@ -62,8 +62,22 @@ func (r *QueryResolver) PostsRecommendations(ctx context.Context, after *string,
 		return nil, gqlerror.Errorf(err.Error())
 	}
 
-	results, err := r.App.Queries.PostsRecommendations.Handle(ctx, query.PostsRecommendations{
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		results, err := r.App.Queries.PostsFeed.Handle(ctx, query.PostsFeed{
+			Principal: principal.FromContext(ctx),
+			Cursor:    cursor,
+		})
+
+		if err != nil {
+			return nil, err
+		}
+
+		return types.MarshalPostToGraphQLConnection(ctx, results, cursor), nil
+	}
+
+	results, err := r.App.Queries.CuratedPostsFeedPosts.Handle(ctx, query.CuratedPostsFeedPosts{
 		Principal: principal.FromContext(ctx),
+		AccountId: passport.FromContext(ctx).AccountID(),
 		Cursor:    cursor,
 	})
 

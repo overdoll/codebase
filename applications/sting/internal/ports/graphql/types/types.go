@@ -324,6 +324,8 @@ type Club struct {
 	Banner *graphql1.Resource `json:"banner"`
 	// A URL pointing to the object's banner.
 	BannerMedia graphql1.Media `json:"bannerMedia"`
+	// A URL pointing to the object's header.
+	Header graphql1.Media `json:"header"`
 	// A name for this club.
 	Name string `json:"name"`
 	// The account that owns this club.
@@ -1311,6 +1313,22 @@ type UpdateCharacterNamePayload struct {
 	Character *Character `json:"character"`
 }
 
+// Update club blurb.
+type UpdateClubBlurbInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The chosen blurb for the club.
+	//
+	// Validation: Max 1000 characters.
+	Blurb string `json:"blurb"`
+}
+
+// Payload for updating the blurb
+type UpdateClubBlurbPayload struct {
+	// The club after update
+	Club *Club `json:"club"`
+}
+
 // Update club characters limit.
 type UpdateClubCharactersLimitInput struct {
 	// The club to update club characters limit for.
@@ -1324,6 +1342,20 @@ type UpdateClubCharactersLimitInput struct {
 // Update club characters limit payload.
 type UpdateClubCharactersLimitPayload struct {
 	// The club after updating the characters limit.
+	Club *Club `json:"club"`
+}
+
+// Update club banner.
+type UpdateClubHeaderInput struct {
+	// The club to update
+	ID relay.ID `json:"id"`
+	// The header for the club.
+	Header string `json:"header"`
+}
+
+// Payload for updating the header
+type UpdateClubHeaderPayload struct {
+	// The club after update
 	Club *Club `json:"club"`
 }
 
@@ -1497,7 +1529,7 @@ type UpdatePostDescriptionInput struct {
 	ID relay.ID `json:"id"`
 	// The description to update.
 	//
-	// Validation: Max 280 characters. No links allowed.
+	// Validation: Max 280 characters.
 	Description string `json:"description"`
 	// The localization for this description.
 	//

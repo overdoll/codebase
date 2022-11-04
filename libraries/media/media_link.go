@@ -24,6 +24,15 @@ func NewClubBannerMediaLink(clubId string) *Link {
 	}
 }
 
+func NewClubHeaderMediaLink(clubId string) *Link {
+	return &Link{
+		proto: &proto.MediaLink{
+			Id:   clubId,
+			Type: proto.MediaLinkType_CLUB_HEADER,
+		},
+	}
+}
+
 func NewClubThumbnailMediaLink(clubId string) *Link {
 	return &Link{
 		proto: &proto.MediaLink{

@@ -22,11 +22,13 @@ type Repository interface {
 
 	UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubBanner(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubHeader(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubMembersCount(ctx context.Context, clubId string, updateFn func(cl *Club) error) error
 
 	UpdateClubOwner(ctx context.Context, clubId, accountId string) error
 
 	UpdateClubName(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
+	UpdateClubBlurb(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 	UpdateClubSupporterOnlyPostsDisabled(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)
 
 	UpdateClubCharacters(ctx context.Context, clubId string, updateFn func(cl *Club) error) (*Club, error)

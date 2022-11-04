@@ -23,6 +23,7 @@ type ClubModified struct {
 	Reference   string
 	Slug        string
 	Name        string
+	Blurb       string
 	Termination *struct {
 		Account struct {
 			Id string
@@ -37,6 +38,11 @@ type ClubModified struct {
 		} `graphql:"... on ImageMedia"`
 	}
 	BannerMedia *struct {
+		ImageMedia struct {
+			Id relay.ID
+		} `graphql:"... on ImageMedia"`
+	}
+	HeaderMedia *struct {
 		ImageMedia struct {
 			Id relay.ID
 		} `graphql:"... on ImageMedia"`
@@ -398,6 +404,44 @@ func TestCreateClub_edit_name(t *testing.T) {
 	require.Equal(t, newName, updatedClb.Club.Name)
 }
 
+type UpdateClubBlurb struct {
+	UpdateClubBlurb *struct {
+		Club *ClubModified
+	} `graphql:"updateClubBlurb(input: $input)"`
+}
+
+// TestCreateClub_edit_blurb - create a club and edit the name
+func TestCreateClub_edit_blurb(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
+
+	// create a test name
+	fake := TestClub{}
+	err := faker.FakeData(&fake)
+	require.NoError(t, err, "no error creating fake data for club")
+
+	newName := fake.Name
+
+	var updateClubBlurb UpdateClubBlurb
+	err = client.Mutate(context.Background(), &updateClubBlurb, map[string]interface{}{
+		"input": types.UpdateClubBlurbInput{
+			ID:    relayId,
+			Blurb: newName,
+		},
+	})
+	require.NoError(t, err, "no error updating blurb")
+
+	// make sure blurb is updated
+	updatedClb := getClub(t, client, clb.Slug())
+	require.Equal(t, newName, updatedClb.Club.Blurb)
+}
+
 type UpdateClubThumbnail struct {
 	UpdateClubName *struct {
 		Club *ClubModified
@@ -455,6 +499,65 @@ func TestCreateClub_edit_thumbnail(t *testing.T) {
 
 	updatedClb = getClub(t, client, clb.Slug())
 	require.NotEmpty(t, updatedClb.Club.ThumbnailMedia.ImageMedia.Id, "thumbnail is should be processed now")
+}
+
+type UpdateClubHeader struct {
+	UpdateClubHeader *struct {
+		Club *ClubModified
+	} `graphql:"updateClubHeader(input: $input)"`
+}
+
+// TestCreateClub_edit_header - create a club and edit the header
+func TestCreateClub_edit_header(t *testing.T) {
+	t.Parallel()
+
+	testingAccountId := newFakeAccount(t)
+	mockAccountNormal(t, testingAccountId)
+
+	client := getGraphqlClientWithAuthenticatedAccount(t, testingAccountId)
+	clb := seedClub(t, testingAccountId)
+	relayId := convertClubIdToRelayId(clb.ID())
+
+	thumbnailId := "test-header"
+
+	var updateClubHeader UpdateClubHeader
+	err := client.Mutate(context.Background(), &updateClubHeader, map[string]interface{}{
+		"input": types.UpdateClubHeaderInput{
+			ID:     relayId,
+			Header: thumbnailId,
+		},
+	})
+
+	require.NoError(t, err, "no error updating header")
+
+	// make sure thumbnail is set
+	updatedClb := getClub(t, client, clb.Slug())
+	require.Empty(t, updatedClb.Club.HeaderMedia.ImageMedia.Id, "thumbnail is not nil")
+
+	grpcClient := getGrpcCallbackClient(t)
+
+	_, err = grpcClient.UpdateMedia(context.Background(), &proto.UpdateMediaRequest{Media: &proto.Media{
+		Id: thumbnailId,
+		Link: &proto.MediaLink{
+			Id:   clb.ID(),
+			Type: proto.MediaLinkType_CLUB_HEADER,
+		},
+		ImageData: &proto.ImageData{Id: uuid.New().String(), Sizes: []*proto.ImageDataSize{
+			{
+				Width:  0,
+				Height: 0,
+			},
+		}},
+		State: &proto.MediaState{
+			Processed: true,
+			Failed:    false,
+		},
+	}})
+
+	require.NoError(t, err, "no error updating resource")
+
+	updatedClb = getClub(t, client, clb.Slug())
+	require.NotEmpty(t, updatedClb.Club.HeaderMedia.ImageMedia.Id, "header should be processed now")
 }
 
 // TestCreateClub_edit_banner - create a club and edit the banner

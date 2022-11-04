@@ -95,7 +95,9 @@ type Commands struct {
 
 	CreateClub                    command.CreateClubHandler
 	UpdateClubName                command.UpdateClubNameHandler
+	UpdateClubBlurb               command.UpdateClubBlurbHandler
 	UpdateClubThumbnail           command.UpdateClubThumbnailHandler
+	UpdateClubHeader              command.UpdateClubHeaderHandler
 	RemoveClubSlugAlias           command.RemoveClubSlugAliasHandler
 	AddClubSlugAlias              command.AddClubSlugAliasHandler
 	PromoteClubSlugAliasToDefault command.PromoteClubSlugAliasToDefaultHandler
@@ -173,8 +175,6 @@ type Queries struct {
 	PostLikeById query.PostLikeByIdHandler
 
 	CurationProfileByAccountId query.CurationProfileByAccountIdHandler
-
-	PostsRecommendations query.PostsRecommendationsHandler
 
 	PostsFeed             query.PostsFeedHandler
 	SuggestedPostsForPost query.SuggestedPostsForPostHandler

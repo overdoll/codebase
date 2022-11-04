@@ -29,12 +29,14 @@ type clubDocument struct {
 	ThumbnailMedia              *string           `json:"thumbnail_media"`
 	BannerResource              string            `json:"banner_resource"`
 	BannerMedia                 *string           `json:"banner_media"`
+	HeaderMedia                 *string           `json:"header_media"`
 	SupporterOnlyPostsDisabled  bool              `json:"supporter_only_posts_disabled"`
 	CharactersEnabled           bool              `json:"characters_enabled"`
 	CharactersLimit             int               `json:"characters_limit"`
 	TotalLikes                  int               `json:"total_likes"`
 	TotalPosts                  int               `json:"total_posts"`
 	Name                        map[string]string `json:"name"`
+	Blurb                       map[string]string `json:"blurb"`
 	CreatedAt                   time.Time         `json:"created_at"`
 	MembersCount                int               `json:"members_count"`
 	OwnerAccountId              string            `json:"owner_account_id"`
@@ -66,6 +68,12 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		return nil, err
 	}
 
+	marshalledHeader, err := media.MarshalMediaToDatabase(cat.HeaderMedia())
+
+	if err != nil {
+		return nil, err
+	}
+
 	var bannerResource string
 
 	if cat.BannerMedia() != nil {
@@ -86,8 +94,10 @@ func marshalClubToDocument(cat *club.Club) (*clubDocument, error) {
 		BannerResource:              bannerResource,
 		BannerMedia:                 marshalledBanner,
 		ThumbnailMedia:              marshalledThumbnail,
+		HeaderMedia:                 marshalledHeader,
 		SupporterOnlyPostsDisabled:  cat.SupporterOnlyPostsDisabled(),
 		Name:                        localization.MarshalTranslationToDatabase(cat.Name()),
+		Blurb:                       localization.MarshalTranslationToDatabase(cat.Blurb()),
 		CreatedAt:                   cat.CreatedAt(),
 		UpdatedAt:                   cat.UpdatedAt(),
 		MembersCount:                cat.MembersCount(),
@@ -127,13 +137,21 @@ func unmarshalClubDocument(ctx context.Context, source json.RawMessage, sort []i
 		return nil, err
 	}
 
+	unmarshalledHeader, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, "", bd.HeaderMedia)
+
+	if err != nil {
+		return nil, err
+	}
+
 	newBrand := club.UnmarshalClubFromDatabase(
 		bd.Id,
 		bd.Slug,
 		bd.SlugAliases,
 		bd.Name,
+		bd.Blurb,
 		unmarshalledThumbnail,
 		unmarshalledBanner,
+		unmarshalledHeader,
 		bd.MembersCount,
 		bd.OwnerAccountId,
 		bd.Suspended,

@@ -11,6 +11,7 @@ enum MediaLinkType {
   CHARACTER_BANNER = 5;
   AUDIENCE_BANNER = 6;
   TOPIC_BANNER = 7;
+  CLUB_HEADER = 8;
 }
 
 enum MediaMimeType {

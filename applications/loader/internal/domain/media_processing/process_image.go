@@ -25,6 +25,25 @@ type processImageSizes struct {
 	alternateOriginal bool
 }
 
+var headerSizes = []*processImageSizes{
+	{
+		name:       "large",
+		constraint: 2048,
+		mandatory:  true,
+		quality:    "85",
+	},
+	{
+		name:       "medium",
+		constraint: 1200,
+		quality:    "85",
+	},
+	{
+		name:       "small",
+		constraint: 720,
+		quality:    "85",
+	},
+}
+
 var postContentSizes = []*processImageSizes{
 	{
 		name:            "hd",
@@ -138,6 +157,9 @@ func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*M
 		break
 	case proto.MediaLinkType_CLUB_BANNER:
 		contentSizes = banner
+		break
+	case proto.MediaLinkType_CLUB_HEADER:
+		contentSizes = headerSizes
 		break
 	case proto.MediaLinkType_SERIES_BANNER:
 		contentSizes = banner

@@ -65,6 +65,15 @@ func (h UpdateMediaHandler) Handle(ctx context.Context, cmd UpdateMedia) error {
 			return err
 		}
 		break
+	case proto.MediaLinkType_CLUB_HEADER:
+		_, err := h.cr.UpdateClubHeader(ctx, sourceId, func(aud *club.Club) error {
+			return aud.UpdateHeaderExisting(cmd.Media)
+		})
+
+		if err != nil {
+			return err
+		}
+		break
 	case proto.MediaLinkType_CLUB_THUMBNAIL:
 		_, err := h.cr.UpdateClubThumbnail(ctx, sourceId, func(aud *club.Club) error {
 			return aud.UpdateThumbnailExisting(cmd.Media)

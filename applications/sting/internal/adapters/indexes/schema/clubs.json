@@ -55,6 +55,19 @@
           }
         }
       },
+      "blurb": {
+        "properties": {
+          "language": {
+            "type": "keyword"
+          },
+          "supported": {
+            "type": "boolean"
+          },
+          "en": {
+            "type": "text"
+          }
+        }
+      },
       "links": {
         "type": "keyword"
       },
@@ -80,6 +93,11 @@
         "type": "keyword"
       },
       "thumbnail_media": {
+        "type": "text",
+        "index": false,
+        "store": true
+      },
+      "header_media": {
         "type": "text",
         "index": false,
         "store": true

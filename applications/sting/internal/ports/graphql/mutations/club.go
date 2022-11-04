@@ -219,6 +219,31 @@ func (r *MutationResolver) UpdateClubName(ctx context.Context, input types.Updat
 	}, nil
 }
 
+func (r *MutationResolver) UpdateClubBlurb(ctx context.Context, input types.UpdateClubBlurbInput) (*types.UpdateClubBlurbPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.UpdateClubBlurb.
+		Handle(
+			ctx,
+			command.UpdateClubBlurb{
+				Principal: principal.FromContext(ctx),
+				Blurb:     input.Blurb,
+				ClubId:    input.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdateClubBlurbPayload{
+		Club: types.MarshalClubToGraphQL(ctx, pst),
+	}, nil
+}
+
 func (r *MutationResolver) UpdateClubThumbnail(ctx context.Context, input types.UpdateClubThumbnailInput) (*types.UpdateClubThumbnailPayload, error) {
 
 	if err := passport.FromContext(ctx).Authenticated(); err != nil {
@@ -240,6 +265,31 @@ func (r *MutationResolver) UpdateClubThumbnail(ctx context.Context, input types.
 	}
 
 	return &types.UpdateClubThumbnailPayload{
+		Club: types.MarshalClubToGraphQL(ctx, pst),
+	}, nil
+}
+
+func (r *MutationResolver) UpdateClubHeader(ctx context.Context, input types.UpdateClubHeaderInput) (*types.UpdateClubHeaderPayload, error) {
+
+	if err := passport.FromContext(ctx).Authenticated(); err != nil {
+		return nil, err
+	}
+
+	pst, err := r.App.Commands.UpdateClubHeader.
+		Handle(
+			ctx,
+			command.UpdateClubHeader{
+				Principal: principal.FromContext(ctx),
+				Header:    input.Header,
+				ClubId:    input.ID.GetID(),
+			},
+		)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &types.UpdateClubHeaderPayload{
 		Club: types.MarshalClubToGraphQL(ctx, pst),
 	}, nil
 }

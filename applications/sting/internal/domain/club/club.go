@@ -31,9 +31,11 @@ type Club struct {
 	slugAliases []string
 	links       []string
 	name        *localization.Translation
+	blurb       *localization.Translation
 
 	thumbnailMedia *media.Media
 	bannerMedia    *media.Media
+	headerMedia    *media.Media
 
 	suspended      bool
 	suspendedUntil *time.Time
@@ -138,12 +140,13 @@ func NewClub(requester *principal.Principal, slug, name string, currentClubCount
 	}, nil
 }
 
-func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, thumbnail *media.Media, banner *media.Media, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int, links []string) *Club {
+func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name map[string]string, about map[string]string, thumbnail *media.Media, banner *media.Media, header *media.Media, membersCount int, ownerAccountId string, suspended bool, suspendedUntil, nextSupporterPostTime *time.Time, hasCreatedSupporterOnlyPost bool, terminated bool, terminatedByAccountId *string, supporterOnlyPostsDisabled bool, createdAt, updatedAt time.Time, charactersEnabled bool, charactersLimit, totalLikes, totalPosts int, links []string) *Club {
 	return &Club{
 		id:                          id,
 		slug:                        slug,
 		slugAliases:                 alternativeSlugs,
 		name:                        localization.UnmarshalTranslationFromDatabase(name),
+		blurb:                       localization.UnmarshalTranslationFromDatabase(about),
 		thumbnailMedia:              thumbnail,
 		bannerMedia:                 banner,
 		ownerAccountId:              ownerAccountId,
@@ -162,6 +165,7 @@ func UnmarshalClubFromDatabase(id, slug string, alternativeSlugs []string, name 
 		totalLikes:                  totalLikes,
 		totalPosts:                  totalPosts,
 		links:                       links,
+		headerMedia:                 header,
 	}
 }
 
@@ -185,12 +189,20 @@ func (m *Club) Name() *localization.Translation {
 	return m.name
 }
 
+func (m *Club) Blurb() *localization.Translation {
+	return m.blurb
+}
+
 func (m *Club) ThumbnailMedia() *media.Media {
 	return m.thumbnailMedia
 }
 
 func (m *Club) BannerMedia() *media.Media {
 	return m.bannerMedia
+}
+
+func (m *Club) HeaderMedia() *media.Media {
+	return m.headerMedia
 }
 
 func (m *Club) MembersCount() int {
@@ -549,14 +561,23 @@ func (m *Club) RemoveSlugAlias(requester *principal.Principal, slug string) erro
 	return nil
 }
 
+func (m *Club) UpdateHeader(requester *principal.Principal, thumbnail *media.Media) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+	m.headerMedia = thumbnail
+	m.update()
+
+	return nil
+}
+
 func (m *Club) UpdateThumbnail(requester *principal.Principal, thumbnail *media.Media) error {
 
 	if err := m.canUpdate(requester); err != nil {
 		return err
 	}
-
 	m.thumbnailMedia = thumbnail
-
 	m.update()
 
 	return nil
@@ -571,16 +592,29 @@ func (m *Club) UpdateBanner(thumbnail *media.Media) error {
 	return nil
 }
 
+func (m *Club) UpdateHeaderExisting(thumbnail *media.Media) error {
+
+	if m.headerMedia == nil {
+		return media.ErrMediaNotPresent
+	}
+	if m.headerMedia.ID() != thumbnail.ID() {
+		return media.ErrMediaNotPresent
+	}
+	m.headerMedia = thumbnail
+
+	m.update()
+
+	return nil
+}
+
 func (m *Club) UpdateBannerExisting(thumbnail *media.Media) error {
 
 	if m.bannerMedia == nil {
 		return media.ErrMediaNotPresent
 	}
-
 	if m.bannerMedia.ID() != thumbnail.ID() {
 		return media.ErrMediaNotPresent
 	}
-
 	m.bannerMedia = thumbnail
 
 	m.update()
@@ -614,6 +648,25 @@ func (m *Club) AddMember() error {
 func (m *Club) SubtractMember() error {
 	m.update()
 	m.membersCount -= 1
+	return nil
+}
+
+func (m *Club) UpdateBlurb(requester *principal.Principal, blurb string) error {
+
+	if err := m.canUpdate(requester); err != nil {
+		return err
+	}
+
+	if err := validateClubBlurb(blurb); err != nil {
+		return err
+	}
+
+	if err := m.blurb.UpdateDefaultTranslation(blurb); err != nil {
+		return err
+	}
+
+	m.update()
+
 	return nil
 }
 
@@ -754,6 +807,17 @@ func validateName(name string) error {
 func validateSlug(slug string) error {
 
 	err := validator.New().Var(slug, "required,max=25,excludesall= ,alphanum")
+
+	if err != nil {
+		return domainerror.NewValidation(err.Error())
+	}
+
+	return nil
+}
+
+func validateClubBlurb(name string) error {
+
+	err := validator.New().Var(name, "max=1000")
 
 	if err != nil {
 		return domainerror.NewValidation(err.Error())

@@ -28,10 +28,12 @@ var clubTable = table.New(table.Metadata{
 		"slug",
 		"slug_aliases",
 		"name",
+		"blurb",
 		"thumbnail_resource",
 		"banner_resource",
 		"thumbnail_media",
 		"banner_media",
+		"header_media",
 		"characters_enabled",
 		"characters_limit",
 		"members_count",
@@ -60,8 +62,10 @@ type clubs struct {
 	SlugAliases                 []string          `db:"slug_aliases"`
 	Links                       []string          `db:"links"`
 	Name                        map[string]string `db:"name"`
+	Blurb                       map[string]string `db:"blurb"`
 	ThumbnailResource           string            `db:"thumbnail_resource"`
 	ThumbnailMedia              *string           `db:"thumbnail_media"`
+	HeaderMedia                 *string           `db:"header_media"`
 	BannerResource              string            `db:"banner_resource"`
 	BannerMedia                 *string           `db:"banner_media"`
 	CharactersEnabled           bool              `db:"characters_enabled"`
@@ -174,6 +178,12 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		return nil, err
 	}
 
+	marshalledHeader, err := media.MarshalMediaToDatabase(cl.HeaderMedia())
+
+	if err != nil {
+		return nil, err
+	}
+
 	var bannerResource string
 
 	if cl.BannerMedia() != nil {
@@ -191,10 +201,12 @@ func marshalClubToDatabase(cl *club.Club) (*clubs, error) {
 		Slug:                        cl.Slug(),
 		SlugAliases:                 cl.SlugAliases(),
 		Name:                        localization.MarshalTranslationToDatabase(cl.Name()),
+		Blurb:                       localization.MarshalTranslationToDatabase(cl.Blurb()),
 		ThumbnailResource:           thumbnailResource,
 		BannerResource:              bannerResource,
 		ThumbnailMedia:              marshalledThumbnail,
 		BannerMedia:                 marshalledBanner,
+		HeaderMedia:                 marshalledHeader,
 		SupporterOnlyPostsDisabled:  cl.SupporterOnlyPostsDisabled(),
 		MembersCount:                cl.MembersCount(),
 		CharactersLimit:             cl.CharactersLimit(),
@@ -229,13 +241,21 @@ func (r ClubCassandraElasticsearchRepository) unmarshalClubFromDatabase(ctx cont
 		return nil, errors.Wrap(err, "failed to unmarshal media from club")
 	}
 
+	unmarshalledHeader, err := media.UnmarshalMediaWithLegacyResourceFromDatabase(ctx, "", b.HeaderMedia)
+
+	if err != nil {
+		return nil, errors.Wrap(err, "failed to unmarshal media from club")
+	}
+
 	return club.UnmarshalClubFromDatabase(
 		b.Id,
 		b.Slug,
 		b.SlugAliases,
 		b.Name,
+		b.Blurb,
 		unmarshalled,
 		unmarshalledBanner,
+		unmarshalledHeader,
 		b.MembersCount,
 		b.OwnerAccountId,
 		b.Suspended,
@@ -628,8 +648,16 @@ func (r ClubCassandraElasticsearchRepository) UpdateClubName(ctx context.Context
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"name"})
 }
 
+func (r ClubCassandraElasticsearchRepository) UpdateClubBlurb(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"blurb"})
+}
+
 func (r ClubCassandraElasticsearchRepository) UpdateClubThumbnail(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
 	return r.updateClubRequest(ctx, clubId, updateFn, []string{"thumbnail_media"})
+}
+
+func (r ClubCassandraElasticsearchRepository) UpdateClubHeader(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {
+	return r.updateClubRequest(ctx, clubId, updateFn, []string{"header_media"})
 }
 
 func (r ClubCassandraElasticsearchRepository) UpdateClubBanner(ctx context.Context, clubId string, updateFn func(cl *club.Club) error) (*club.Club, error) {

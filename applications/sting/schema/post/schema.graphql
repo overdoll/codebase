@@ -309,7 +309,7 @@ input UpdatePostDescriptionInput {
   """
   The description to update.
 
-  Validation: Max 280 characters. No links allowed.
+  Validation: Max 280 characters.
   """
   description: String!
 

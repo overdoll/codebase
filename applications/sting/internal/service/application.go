@@ -173,6 +173,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			AddClubSlugAlias:              command.NewAddClubSlugAliasHandler(clubRepo),
 			RemoveClubSlugAlias:           command.NewRemoveClubSlugAliasHandler(clubRepo),
 			UpdateClubName:                command.NewUpdateClubNameHandler(clubRepo),
+			UpdateClubBlurb:               command.NewUpdateClubBlurbHandler(clubRepo),
+			UpdateClubHeader:              command.NewUpdateClubHeaderHandler(clubRepo, loader),
 			PromoteClubSlugAliasToDefault: command.NewPromoteClubSlugAliasToDefaultHandler(clubRepo),
 			JoinClub:                      command.NewJoinClubHandler(clubRepo, eventRepo),
 			LeaveClub:                     command.NewLeaveClubHandler(clubRepo, eventRepo),
@@ -241,7 +243,6 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 
 			CurationProfileByAccountId: query.NewPersonalizationProfileByAccountIdHandler(curationRepo),
 
-			PostsRecommendations:  query.NewPostsRecommendationsHandler(curationRepo, postRepo),
 			PostsFeed:             query.NewPostsFeedHandler(curationRepo, postRepo),
 			SuggestedPostsForPost: query.NewSuggestedPostsForPostHandler(postRepo, curationRepo),
 			ClubMembersPostsFeed:  query.NewClubMembersPostsFeedHandler(postRepo),
