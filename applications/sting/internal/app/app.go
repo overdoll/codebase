@@ -214,4 +214,6 @@ type Queries struct {
 
 	Tags          query.TagsHandler
 	ClubPostsView query.ClubPostsViewHandler
+
+	EcchiSearch query.EcchiSearchHandler
 }

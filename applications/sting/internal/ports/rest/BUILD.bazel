@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "rest",
+    srcs = ["ecchi_bot_search.go"],
+    importpath = "overdoll/applications/sting/internal/ports/rest",
+    visibility = ["//applications/sting:__subpackages__"],
+    deps = [
+        "//applications/sting/internal/app",
+        "//applications/sting/internal/app/query",
+        "//applications/sting/internal/domain/club",
+        "//libraries/links",
+        "//libraries/sentry_support",
+        "@com_github_gin_gonic_gin//:gin",
+    ],
+)

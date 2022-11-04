@@ -272,6 +272,8 @@ func createApplication(ctx context.Context, eva command.EvaService, parley activ
 			HasClubSupporterSubscription: query.NewHasClubSupporterSubscriptionHandler(clubRepo),
 			Tags:                         query.NewTagsHandler(postRepo),
 			ClubPostsView:                query.NewClubPostsViewHandler(clubRepo),
+
+			EcchiSearch: query.NewEcchiSearchHandler(postRepo),
 		},
 		Activities: activities.NewActivitiesHandler(postRepo, clubRepo, curationRepo, eventRepo, parley, loader, carrier),
 	}

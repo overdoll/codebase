@@ -4,9 +4,11 @@ import (
 	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"overdoll/applications/sting/internal/app"
 	gen "overdoll/applications/sting/internal/ports/graphql"
 	"overdoll/applications/sting/internal/ports/graphql/dataloader"
+	"overdoll/applications/sting/internal/ports/rest"
 	"overdoll/libraries/graphql"
 	"overdoll/libraries/principal"
 	"overdoll/libraries/router"
@@ -35,6 +37,18 @@ func dataLoaderToContext(app *app.Application) gin.HandlerFunc {
 	}
 }
 
+func secureSearchRequest() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		if c.Request.Header.Get("X-overdoll-Search-Authorization") != os.Getenv("SEARCH_AUTHORIZATION_KEY") {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func NewHttpServer(app *app.Application) http.Handler {
 
 	rtr := router.NewGinRouter(GraphQLServer{app: app})
@@ -46,6 +60,12 @@ func NewHttpServer(app *app.Application) http.Handler {
 		graphql.HandleGraphQL(gen.NewExecutableSchema(gen.Config{
 			Resolvers: gen.NewResolver(app),
 		})),
+	)
+
+	// ecchi bot search
+	rtr.GET("/api/search/v1/ecchi-bot",
+		secureSearchRequest(),
+		rest.GetEcchiSearch(app),
 	)
 
 	return rtr

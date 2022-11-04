@@ -33,6 +33,13 @@ spec:
                 name: puppy
                 port:
                   number: 8000
+          - path: /api/search/
+            pathType: Prefix
+            backend:
+              service:
+                name: sting
+                port:
+                  number: 8000
           - path: /api/ccbill/
             pathType: Prefix
             backend:
@@ -55,6 +62,13 @@ spec:
             backend:
               service:
                 name: loader
+                port:
+                  number: 8000
+          - path: /api/search/
+            pathType: Prefix
+            backend:
+              service:
+                name: sting
                 port:
                   number: 8000
           - path: /api/graphql
@@ -85,6 +99,13 @@ spec:
             backend:
               service:
                 name: loader
+                port:
+                  number: 8000
+          - path: /api/search/
+            pathType: Prefix
+            backend:
+              service:
+                name: sting
                 port:
                   number: 8000
           - path: /api/graphql
