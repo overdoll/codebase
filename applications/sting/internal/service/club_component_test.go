@@ -42,7 +42,7 @@ type ClubModified struct {
 			Id relay.ID
 		} `graphql:"... on ImageMedia"`
 	}
-	HeaderMedia *struct {
+	Header *struct {
 		ImageMedia struct {
 			Id relay.ID
 		} `graphql:"... on ImageMedia"`
@@ -532,7 +532,7 @@ func TestCreateClub_edit_header(t *testing.T) {
 
 	// make sure thumbnail is set
 	updatedClb := getClub(t, client, clb.Slug())
-	require.Empty(t, updatedClb.Club.HeaderMedia.ImageMedia.Id, "thumbnail is not nil")
+	require.Empty(t, updatedClb.Club.Header.ImageMedia.Id, "thumbnail is not nil")
 
 	grpcClient := getGrpcCallbackClient(t)
 
@@ -557,7 +557,7 @@ func TestCreateClub_edit_header(t *testing.T) {
 	require.NoError(t, err, "no error updating resource")
 
 	updatedClb = getClub(t, client, clb.Slug())
-	require.NotEmpty(t, updatedClb.Club.HeaderMedia.ImageMedia.Id, "header should be processed now")
+	require.NotEmpty(t, updatedClb.Club.Header.ImageMedia.Id, "header should be processed now")
 }
 
 // TestCreateClub_edit_banner - create a club and edit the banner
