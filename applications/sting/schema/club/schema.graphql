@@ -60,6 +60,9 @@ type Club implements Node @key(fields: "id") {
   """A name for this club."""
   name: String!
 
+  """A blurb for this club."""
+  blurb: String!
+
   """The account that owns this club."""
   owner: Account!
 

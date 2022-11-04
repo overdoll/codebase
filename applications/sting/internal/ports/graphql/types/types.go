@@ -328,6 +328,8 @@ type Club struct {
 	Header graphql1.Media `json:"header"`
 	// A name for this club.
 	Name string `json:"name"`
+	// A blurb for this club.
+	Blurb string `json:"blurb"`
 	// The account that owns this club.
 	Owner *Account `json:"owner"`
 	// Whether or not this club is terminated.

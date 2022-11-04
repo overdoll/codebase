@@ -199,6 +199,7 @@ type ComplexityRoot struct {
 	Club struct {
 		Banner                      func(childComplexity int) int
 		BannerMedia                 func(childComplexity int) int
+		Blurb                       func(childComplexity int) int
 		CanCreateSupporterOnlyPosts func(childComplexity int) int
 		CanSupport                  func(childComplexity int) int
 		Characters                  func(childComplexity int, after *string, before *string, first *int, last *int, slugs []string, name *string, sortBy types.CharactersSort) int
@@ -1745,6 +1746,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Club.BannerMedia(childComplexity), true
+
+	case "Club.blurb":
+		if e.complexity.Club.Blurb == nil {
+			break
+		}
+
+		return e.complexity.Club.Blurb(childComplexity), true
 
 	case "Club.canCreateSupporterOnlyPosts":
 		if e.complexity.Club.CanCreateSupporterOnlyPosts == nil {
@@ -5844,6 +5852,9 @@ type Club implements Node @key(fields: "id") {
 
   """A name for this club."""
   name: String!
+
+  """A blurb for this club."""
+  blurb: String!
 
   """The account that owns this club."""
   owner: Account!
@@ -13160,6 +13171,8 @@ func (ec *executionContext) fieldContext_AddClubSlugAliasPayload_club(ctx contex
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -16164,6 +16177,8 @@ func (ec *executionContext) fieldContext_Character_club(ctx context.Context, fie
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -17269,6 +17284,50 @@ func (ec *executionContext) _Club_name(ctx context.Context, field graphql.Collec
 }
 
 func (ec *executionContext) fieldContext_Club_name(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Club",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Club_blurb(ctx context.Context, field graphql.CollectedField, obj *types.Club) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Club_blurb(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Blurb, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Club_blurb(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Club",
 		Field:      field,
@@ -18417,6 +18476,8 @@ func (ec *executionContext) fieldContext_ClubEdge_node(ctx context.Context, fiel
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -18866,6 +18927,8 @@ func (ec *executionContext) fieldContext_ClubMember_club(ctx context.Context, fi
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -20322,6 +20385,8 @@ func (ec *executionContext) fieldContext_CreateClubPayload_club(ctx context.Cont
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -21403,6 +21468,8 @@ func (ec *executionContext) fieldContext_DisableClubCharactersPayload_club(ctx c
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -21512,6 +21579,8 @@ func (ec *executionContext) fieldContext_DisableClubSupporterOnlyPostsPayload_cl
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -21621,6 +21690,8 @@ func (ec *executionContext) fieldContext_EnableClubCharactersPayload_club(ctx co
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -21730,6 +21801,8 @@ func (ec *executionContext) fieldContext_EnableClubSupporterOnlyPostsPayload_clu
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -22176,6 +22249,8 @@ func (ec *executionContext) fieldContext_Entity_findClubByID(ctx context.Context
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -28291,6 +28366,8 @@ func (ec *executionContext) fieldContext_Post_club(ctx context.Context, field gr
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -29988,6 +30065,8 @@ func (ec *executionContext) fieldContext_PromoteClubSlugAliasToDefaultPayload_cl
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -30640,6 +30719,8 @@ func (ec *executionContext) fieldContext_Query_club(ctx context.Context, field g
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -31963,6 +32044,8 @@ func (ec *executionContext) fieldContext_RemoveClubSlugAliasPayload_club(ctx con
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -34492,6 +34575,8 @@ func (ec *executionContext) fieldContext_SuspendClubPayload_club(ctx context.Con
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -34793,6 +34878,8 @@ func (ec *executionContext) fieldContext_TerminateClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -35673,6 +35760,8 @@ func (ec *executionContext) fieldContext_TransferClubOwnershipPayload_club(ctx c
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -35957,6 +36046,8 @@ func (ec *executionContext) fieldContext_UnSuspendClubPayload_club(ctx context.C
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -36066,6 +36157,8 @@ func (ec *executionContext) fieldContext_UnTerminateClubPayload_club(ctx context
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -36624,6 +36717,8 @@ func (ec *executionContext) fieldContext_UpdateClubBlurbPayload_club(ctx context
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -36733,6 +36828,8 @@ func (ec *executionContext) fieldContext_UpdateClubCharactersLimitPayload_club(c
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -36842,6 +36939,8 @@ func (ec *executionContext) fieldContext_UpdateClubHeaderPayload_club(ctx contex
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -36951,6 +37050,8 @@ func (ec *executionContext) fieldContext_UpdateClubNamePayload_club(ctx context.
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -37060,6 +37161,8 @@ func (ec *executionContext) fieldContext_UpdateClubThumbnailPayload_club(ctx con
 				return ec.fieldContext_Club_header(ctx, field)
 			case "name":
 				return ec.fieldContext_Club_name(ctx, field)
+			case "blurb":
+				return ec.fieldContext_Club_blurb(ctx, field)
 			case "owner":
 				return ec.fieldContext_Club_owner(ctx, field)
 			case "termination":
@@ -43883,6 +43986,13 @@ func (ec *executionContext) _Club(ctx context.Context, sel ast.SelectionSet, obj
 		case "name":
 
 			out.Values[i] = ec._Club_name(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
+		case "blurb":
+
+			out.Values[i] = ec._Club_blurb(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)

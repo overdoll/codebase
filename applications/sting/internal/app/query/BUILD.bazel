@@ -38,7 +38,6 @@ go_library(
         "post_like_by_id.go",
         "posts_by_ids.go",
         "posts_feed.go",
-        "posts_recommendations.go",
         "principal_by_id.go",
         "search.go",
         "search_audience.go",
