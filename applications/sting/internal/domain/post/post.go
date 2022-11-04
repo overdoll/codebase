@@ -686,7 +686,7 @@ func (p *Post) CanArchive(requester *principal.Principal) error {
 		return domainerror.NewValidation("only published posts can be archived")
 	}
 
-	if err := p.CanUpdate(requester); err != nil {
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
 		return err
 	}
 
@@ -699,7 +699,7 @@ func (p *Post) CanUnArchive(requester *principal.Principal) error {
 		return domainerror.NewValidation("only archived posts can be unarchived")
 	}
 
-	if err := p.CanUpdate(requester); err != nil {
+	if err := requester.CheckClubOwner(p.clubId); err != nil {
 		return err
 	}
 

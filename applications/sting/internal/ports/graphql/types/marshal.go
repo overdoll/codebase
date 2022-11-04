@@ -931,6 +931,12 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		links = append(links, &ClubLink{URL: graphql.URI(link)})
 	}
 
+	var blurb string
+
+	if result.Blurb() != nil {
+		blurb = result.Blurb().TranslateDefault("")
+	}
+
 	return &Club{
 		ID:                          relay.NewID(Club{}, result.ID()),
 		Reference:                   result.ID(),
@@ -941,7 +947,7 @@ func MarshalClubToGraphQL(ctx context.Context, result *club.Club) *Club {
 		TotalPosts:                  result.TotalPosts(),
 		TotalLikes:                  result.TotalLikes(),
 		Name:                        result.Name().TranslateDefault(""),
-		Blurb:                       result.Blurb().TranslateDefault(""),
+		Blurb:                       blurb,
 		Slug:                        result.Slug(),
 		SlugAliases:                 slugAliases,
 		NextSupporterPostTime:       result.NextSupporterPostTime(),
