@@ -1,8 +1,4 @@
---------
-overdoll
---------
-
-Home ( https://overdoll.com/ ) Discover Clubs ( https://overdoll.com/clubs/discover )
+( https://overdoll.com )
 
 ----------------
 New Subscription
@@ -26,6 +22,5 @@ Manage Subscription ( https://ci.overdoll.dev/settings/billing/subscription/25Wq
 
 Please contact hello@overdoll.com if you have any questions or concerns.
 
-Terms of Service ( https://www.corpodoll.com/tos/ )
-
-Privacy Policy ( https://www.corpodoll.com/privacy/ )
+overdoll is a platform for 18+ creators.
+Help ( https://overdoll.com/help ) | I'm a creator ( https://overdoll.com/creators )

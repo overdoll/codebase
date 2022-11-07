@@ -1,5 +1,18 @@
 body {
+    background-color: hsla(0, 0%, 7.5%, 1) !important;
+}
+
+.main-body {
     background-color: hsla(0, 0%, 10%, 1) !important;
+    max-width: 600px;
+    height: 100%;
+    align-self: center;
+    justify-content: center;
+    margin: auto;
+    border-radius: 4px;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 }
 
 h1 {

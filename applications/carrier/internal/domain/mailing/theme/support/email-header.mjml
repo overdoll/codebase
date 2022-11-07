@@ -1,22 +1,8 @@
 <mj-section>
-    <mj-group width="50%" vertical-align="middle">
-        <mj-column vertical-align="middle">
-            <mj-image align="center" src="https://static.dollycdn.net/email/android-chrome-512x512.png" width="100px"/>
-        </mj-column>
-        <mj-column vertical-align="middle">
-            <mj-text align="left" color="#ff2969">
-                <h2>
-                    overdoll
-                </h2>
-            </mj-text>
-        </mj-column>
-    </mj-group>
-    <mj-group width="50%" vertical-align="middle">
-        <mj-column vertical-align="middle">
-            <mj-navbar base-url="https://overdoll.com" ico-color="#ffffff">
-                <mj-navbar-link href="/" color="#ffffff">Home</mj-navbar-link>
-                <mj-navbar-link href="/clubs/discover" color="#ffffff">Discover Clubs</mj-navbar-link>
-            </mj-navbar>
-        </mj-column>
-    </mj-group>
+    <mj-column>
+        <mj-image align="left" height="40px"
+                  href="https://overdoll.com"
+                  src="https://static.dollycdn.net/email/android-chrome-512x512-large3.png"
+                  width="120px"/>
+    </mj-column>
 </mj-section>

@@ -1,18 +1,19 @@
 <mj-section>
-    <mj-group width="100%">
-        <mj-column>
-            <mj-text align="center" color="#bfbfbf">
-                <a style="color: #bfbfbf;text-decoration: none" href="https://www.corpodoll.com/tos/">
-                    Terms of Service
-                </a>
-            </mj-text>
-        </mj-column>
-        <mj-column>
-            <mj-text align="center" color="#bfbfbf">
-                <a style="color: #bfbfbf;text-decoration: none" href="https://www.corpodoll.com/privacy/">
-                    Privacy Policy
-                </a>
-            </mj-text>
-        </mj-column>
-    </mj-group>
+    <mj-column>
+
+        <mj-text align="center" color="#595959">
+            overdoll is a platform for 18+ creators.
+        </mj-text>
+        <mj-text align="center" font-weight="600" color="#595959">
+            <a style="color: #595959;text-decoration: none; margin: 5px"
+               href="https://overdoll.com/help">
+                Help
+            </a>
+            |
+            <a style="color: #595959;text-decoration: none; margin: 5px"
+               href="https://overdoll.com/creators">
+                I'm a creator
+            </a>
+        </mj-text>
+    </mj-column>
 </mj-section>

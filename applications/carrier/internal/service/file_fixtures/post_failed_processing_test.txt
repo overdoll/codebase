@@ -1,8 +1,4 @@
---------
-overdoll
---------
-
-Home ( https://overdoll.com/ ) Discover Clubs ( https://overdoll.com/clubs/discover )
+( https://overdoll.com )
 
 ----------------------
 Post Failed Processing
@@ -16,6 +12,5 @@ Please click the button below to fix your post, by re-uploading the broken file.
 
 Fix Post ( https://ci.overdoll.dev/club/test-club/create-post?post=2DrcfzDIGh5WEtrmjOMuBCKWrjc )
 
-Terms of Service ( https://www.corpodoll.com/tos/ )
-
-Privacy Policy ( https://www.corpodoll.com/privacy/ )
+overdoll is a platform for 18+ creators.
+Help ( https://overdoll.com/help ) | I'm a creator ( https://overdoll.com/creators )

@@ -1,6 +1,6 @@
 <mjml>
     <mj-include path="../../support/head.mjml"/>
-    <mj-body>
+    <mj-body css-class="main-body">
         <mj-include path="../../support/email-header.mjml"/>
         <mj-section>
             <!--{{ if .Link }}-->

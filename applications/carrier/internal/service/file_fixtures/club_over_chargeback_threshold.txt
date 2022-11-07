@@ -1,8 +1,4 @@
---------
-overdoll
---------
-
-Home ( https://overdoll.com/ ) Discover Clubs ( https://overdoll.com/clubs/discover )
+( https://overdoll.com )
 
 ------------------------------
 Club Over Chargeback Threshold
@@ -12,6 +8,5 @@ The club *test a club* (https://ci.overdoll.dev/test-club) has reached the charg
 
 Current chargeback ratio: *0.005000*
 
-Terms of Service ( https://www.corpodoll.com/tos/ )
-
-Privacy Policy ( https://www.corpodoll.com/privacy/ )
+overdoll is a platform for 18+ creators.
+Help ( https://overdoll.com/help ) | I'm a creator ( https://overdoll.com/creators )
