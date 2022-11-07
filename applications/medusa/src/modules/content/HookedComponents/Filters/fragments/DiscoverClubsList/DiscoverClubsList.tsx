@@ -55,7 +55,7 @@ export default function DiscoverClubsList (props: Props): JSX.Element {
 
   const flag = useFeatureFlag('club-preview')
 
-  if (flag === 'tile') {
+  if (true) {
     return (
       <>
         <EmptyBoundary

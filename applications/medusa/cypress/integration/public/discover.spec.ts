@@ -9,7 +9,7 @@ describe('Discover', () => {
     cy.visit('/discover')
 
     // click on a club and see club page
-    cy.findByText('Second Test Club').should('be.visible').click({ force: true })
+    cy.findByText('Second Test Club').parent().should('be.visible').click({ force: true })
     clickOnButton('Join')
     cy.findByText('Join this club').should('be.visible')
 

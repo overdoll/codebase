@@ -227,7 +227,7 @@ describe('Create & Manage Posts', () => {
     cy.findByText('Add Content').should('be.visible').should('not.be.disabled').parent().parent().get('input[type="file"]').attachFile(['test-post.png', 'test-post2.png'], { force: true })
     waitForProcessing()
     // test rearrange
-    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findAllByRole('button', { name: 'Set Supporter Only' }).should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('be.visible')
 
     cy.get('button[aria-label="Content Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
