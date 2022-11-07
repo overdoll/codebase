@@ -18,6 +18,7 @@ interface Props {
   step: string
   isAtStart: boolean
   nextStep: () => void
+  isAtEnd: boolean
 }
 
 const Fragment = graphql`
@@ -34,7 +35,8 @@ export default function UploadFlowFooter ({
   query,
   step,
   isAtStart,
-  nextStep
+  nextStep,
+  isAtEnd
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -84,6 +86,7 @@ export default function UploadFlowFooter ({
         return (
           <UpdateCharacterButton
             nextStep={nextStep}
+            isAtEnd={isAtEnd}
             query={data}
           />
         )

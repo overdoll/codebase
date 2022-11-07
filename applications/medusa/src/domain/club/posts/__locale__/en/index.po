@@ -13,7 +13,7 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:40
+#: src/domain/club/posts/RootClubPosts/ClubPosts/ArchivedPost/ArchivedPost.tsx:45
 msgid "ARCHIVED"
 msgstr ""
 
@@ -41,7 +41,7 @@ msgstr ""
 #~ msgid "No posts found"
 #~ msgstr ""
 
-#: src/domain/club/posts/RootClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:40
+#: src/domain/club/posts/RootClubPosts/ClubPosts/PublishedPost/PublishedPost.tsx:45
 msgid "PUBLISHED"
 msgstr ""
 

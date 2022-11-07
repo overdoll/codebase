@@ -11,11 +11,11 @@ import SearchHeader from '@//:common/components/PageHeader/SearchButton/componen
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
 
 interface Props extends ComponentChoiceArguments<any> {
-
+  onOpen: () => void
 }
 
 export default function UploadSelectSearch (props: Props): JSX.Element {
-  const { register } = props
+  const { register, onOpen } = props
 
   const { skipToStep } = useContext(FlowContext)
 
@@ -25,7 +25,7 @@ export default function UploadSelectSearch (props: Props): JSX.Element {
 
   return (
     <Stack spacing={4}>
-      <UploadSearchAllCharacters register={register} />
+      <UploadSearchAllCharacters onOpen={onOpen} register={register} />
       <Stack spacing={2}>
         <SearchHeader icon={CharacterIdentifier}>
           <Trans>

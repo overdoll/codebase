@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<3ffba22bd54bde6a0882dfdc32bc07ae>>
- * @relayHash f154623280181c07440aa5420b4d8ddc
+ * @generated SignedSource<<9e0b8695fcaec486834bea18fef6454b>>
+ * @relayHash fd52172bf81c56a0ee46957562f411db
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f154623280181c07440aa5420b4d8ddc
+// @relayRequestID fd52172bf81c56a0ee46957562f411db
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -264,8 +264,22 @@ return {
                             "name": "slug",
                             "storageKey": null
                           },
-                          (v4/*: any*/)
+                          (v4/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "viewerIsOwner",
+                            "storageKey": null
+                          }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "state",
                         "storageKey": null
                       }
                     ],
@@ -337,7 +351,7 @@ return {
     ]
   },
   "params": {
-    "id": "f154623280181c07440aa5420b4d8ddc",
+    "id": "fd52172bf81c56a0ee46957562f411db",
     "metadata": {},
     "name": "LazyGridSuggestedPostsQuery",
     "operationKind": "query",

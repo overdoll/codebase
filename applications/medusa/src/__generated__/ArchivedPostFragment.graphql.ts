@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a4137231b5285893db5ba9eef268e56c>>
+ * @generated SignedSource<<7abfefbc6aba64292d4d2d388df1c2ac>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type ArchivedPostFragment$data = {
     readonly slug: string;
   };
   readonly reference: string;
-  readonly " $fragmentSpreads": FragmentRefs<"PostModerateButtonFragment" | "PostPreviewContentFragment" | "PostUnArchiveButtonFragment" | "PostViewButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostEditButtonFragment" | "PostModerateButtonFragment" | "PostPreviewContentFragment" | "PostUnArchiveButtonFragment" | "PostViewButtonFragment">;
   readonly " $fragmentType": "ArchivedPostFragment";
 };
 export type ArchivedPostFragment$key = {
@@ -73,12 +73,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostViewButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostEditButtonFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "6cd73661a5da5654cb2e3d3979d54fce";
+(node as any).hash = "2e066a5354b8fe606dac7ef32912bcfd";
 
 export default node;

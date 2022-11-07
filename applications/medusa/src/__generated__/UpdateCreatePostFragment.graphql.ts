@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<ed0473bf45b37e07349bd8ea92d3ea42>>
+ * @generated SignedSource<<6ca00cc2960cc792192f73d17325d4b5>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,6 +9,7 @@
 // @ts-nocheck
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
+export type PostState = "ARCHIVED" | "DISCARDED" | "DRAFT" | "PUBLISHED" | "REJECTED" | "REMOVED" | "REVIEW" | "SUBMITTED" | "%future added value";
 import { FragmentRefs } from "relay-runtime";
 export type UpdateCreatePostFragment$data = {
   readonly audience: {
@@ -30,6 +31,7 @@ export type UpdateCreatePostFragment$data = {
   readonly content: ReadonlyArray<{
     readonly id: string;
   }>;
+  readonly state: PostState;
   readonly " $fragmentSpreads": FragmentRefs<"UploadCategoryStepFragment" | "UploadCharacterStepFragment" | "UploadContentStepFragment" | "UploadFlowHeaderFragment" | "UploadFlowStickyFooterFragment" | "UploadReviewStepFragment">;
   readonly " $fragmentType": "UpdateCreatePostFragment";
 };
@@ -72,6 +74,13 @@ return {
   "metadata": null,
   "name": "UpdateCreatePostFragment",
   "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "state",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -160,6 +169,6 @@ return {
 };
 })();
 
-(node as any).hash = "5b5422ebd6c2e32ec610a1aefa298b23";
+(node as any).hash = "ad267b8de6c1fd1bf3268e5653c6dc17";
 
 export default node;

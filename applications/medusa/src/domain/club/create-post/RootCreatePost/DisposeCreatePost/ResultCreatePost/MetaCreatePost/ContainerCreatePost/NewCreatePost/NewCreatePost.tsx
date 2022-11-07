@@ -1,11 +1,10 @@
 import { graphql, useFragment } from 'react-relay/hooks'
 import type { NewCreatePostClubFragment$key } from '@//:artifacts/NewCreatePostClubFragment.graphql'
 import { Stack } from '@chakra-ui/react'
-import ClubDraftPostsAlert
-  from './ClubDraftPostsAlert/ClubDraftPostsAlert'
-import PostSubmitted from './PostSubmitted/PostSubmitted'
+import ClubDraftPostsAlert from './ClubDraftPostsAlert/ClubDraftPostsAlert'
 import CreatePostFlow from './CreatePostFlow/CreatePostFlow'
 import CreatePostFooter from './CreatePostFooter/CreatePostFooter'
+import SubmittedCreatePost from '../SubmittedCreatePost/SubmittedCreatePost'
 
 interface Props {
   clubQuery: NewCreatePostClubFragment$key
@@ -26,7 +25,7 @@ export default function NewCreatePost ({
   return (
     <Stack spacing={4}>
       <ClubDraftPostsAlert query={clubData} />
-      <PostSubmitted />
+      <SubmittedCreatePost />
       <CreatePostFlow query={clubData} />
       <CreatePostFooter />
     </Stack>

@@ -38,18 +38,19 @@ export default function UploadFlowStickyFooter ({
             {({
               currentStep,
               isAtStart,
-              nextStep
+              nextStep,
+              isAtEnd
             }) => (
               <UploadFlowFooter
                 step={currentStep}
                 isAtStart={isAtStart}
+                isAtEnd={isAtEnd}
                 nextStep={nextStep}
                 query={data}
               />
             )}
           </FlowBuilderFooter>
         </Flex>
-
       </MobileContainer>
     </Flex>
   )

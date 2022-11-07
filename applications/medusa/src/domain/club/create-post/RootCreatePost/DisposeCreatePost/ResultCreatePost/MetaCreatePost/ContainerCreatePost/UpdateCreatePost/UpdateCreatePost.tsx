@@ -23,6 +23,7 @@ interface Props {
 
 const Fragment = graphql`
   fragment UpdateCreatePostFragment on Post {
+    state
     audience {
       id
       title
@@ -60,9 +61,12 @@ export default function UpdateCreatePost ({
 
   const [loaded, setLoaded] = useState(false)
 
-  const { dispatch } = useSequenceContext()
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
-  const steps = ['content', 'audience', 'category', 'character', 'review']
+  const steps = ['content', 'audience', 'category', 'character', ...(state.isEditing as boolean ? [] : ['review'])]
   const components = {
     content: <UploadContentStep query={data} />,
     audience: <UploadAudienceStep />,
@@ -132,6 +136,13 @@ export default function UpdateCreatePost ({
       }), {}),
       transform: 'SET'
     })
+    if (data?.state !== 'DRAFT') {
+      dispatch({
+        type: 'isEditing',
+        value: true,
+        transform: 'SET'
+      })
+    }
     // push all content into uppy on post load
     addContentToUppy(uppy, data.content)
 

@@ -16,11 +16,13 @@ export default function DesktopHorizontalNavigationCenter (props: Props): JSX.El
       w='100%'
     >
       <HStack
-        spacing={{
-          base: 2,
-          md: 12,
-          lg: 28
+        maxW={{
+          base: 'container.xs',
+          lg: 'container.md'
         }}
+        px={2}
+        w='100%'
+        justify='space-evenly'
       >
         {children}
       </HStack>

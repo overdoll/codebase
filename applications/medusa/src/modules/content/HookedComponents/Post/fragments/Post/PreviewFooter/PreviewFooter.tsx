@@ -6,6 +6,7 @@ import PostLikeButton from '../../Interact/PostLike/PostLikeButton/PostLikeButto
 import { Trans } from '@lingui/macro'
 import { Icon } from '../../../../../PageLayout'
 import { MagicBall } from '@//:assets/icons'
+import MenuSimplePublicPost from '../../Interact/MenuSimplePublicPost/MenuSimplePublicPost'
 
 interface Props extends StackProps {
   postQuery: PreviewFooterFragment$key
@@ -14,6 +15,7 @@ interface Props extends StackProps {
 const PostFragment = graphql`
   fragment PreviewFooterFragment on Post {
     ...PostLikeButtonFragment
+    ...MenuSimplePublicPostFragment
   }
 `
 export default function PreviewFooter (props: Props): JSX.Element {
@@ -43,7 +45,10 @@ export default function PreviewFooter (props: Props): JSX.Element {
           </Box>
         </HStack>
       </Box>
-      <PostLikeButton postQuery={postData} />
+      <HStack spacing={2}>
+        <MenuSimplePublicPost postQuery={postData} />
+        <PostLikeButton postQuery={postData} />
+      </HStack>
     </HStack>
   )
 }

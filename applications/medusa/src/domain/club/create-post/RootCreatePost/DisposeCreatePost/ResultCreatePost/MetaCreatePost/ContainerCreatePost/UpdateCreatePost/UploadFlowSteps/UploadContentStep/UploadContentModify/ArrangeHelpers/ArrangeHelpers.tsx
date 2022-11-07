@@ -66,3 +66,19 @@ export function onArrangeDown (
   },
   content)
 }
+
+export function onArrangeIndex (
+  source: ArrangeIndexType,
+  destination: ArrangeIndexType,
+  content):
+  typeof content {
+  return onArrange({
+    source: {
+      index: source
+    },
+    destination: {
+      index: destination
+    }
+  },
+  content)
+}

@@ -10,9 +10,11 @@ import { ComponentSearchArguments } from '@//:modules/content/HookedComponents/S
 import { Choice } from '@//:modules/content/HookedComponents/Choice'
 import { Stack } from '@chakra-ui/react'
 import MediumGridWrap from '@//:modules/content/ContentSelection/MediumGridWrap/MediumGridWrap'
-import UploadAddCharacterRequest from '../../UploadAddCharacterRequest/UploadAddCharacterRequest'
+import CharacterRequestTile from '../../UploadAddCharacterRequest/CharacterRequestTile/CharacterRequestTile'
+import CharacterRequestButton from '../../UploadAddCharacterRequest/CharacterRequestButton/CharacterRequestButton'
 
 interface Props extends ComponentChoiceArguments<any>, ComponentSearchArguments<any> {
+  onOpen: () => void
 }
 
 const Query = graphql`
@@ -52,7 +54,8 @@ const Fragment = graphql`
 export default function UploadSearchSeriesCharactersMultiSelector (props: Props): JSX.Element {
   const {
     searchArguments,
-    register
+    register,
+    onOpen
   } = props
 
   const queryData = useLazyLoadQuery<UploadSearchSeriesCharactersMultiSelectorQuery>(
@@ -72,34 +75,42 @@ export default function UploadSearchSeriesCharactersMultiSelector (props: Props)
   )
 
   return (
-    <EmptyBoundary
-      fallback={(
-        <Stack spacing={2}>
-          <EmptyCharacters hint={searchArguments.variables.name} />
-          <UploadAddCharacterRequest register={register} />
-        </Stack>
-      )}
-      condition={data.characters.edges.length < 1}
-    >
-      <MediumGridWrap>
-        {data.characters.edges.map((item) => (
-          <GridTile key={item.node.id}>
-            <Choice {...register(item.node.id, {
-              name: item.node.name,
-              isRequest: false
-            })}
-            >
-              <CharacterTileOverlay query={item.node} />
-            </Choice>
-          </GridTile>
-        )
+    <Stack spacing={2}>
+      <EmptyBoundary
+        fallback={(
+          <Stack>
+            <EmptyCharacters hint={searchArguments.variables.name} />
+            <CharacterRequestButton onOpen={onOpen} />
+          </Stack>
         )}
-        <LoadMoreGridTile
-          hasNext={hasNext}
-          onLoadNext={() => loadNext(5)}
-          isLoadingNext={isLoadingNext}
-        />
-      </MediumGridWrap>
-    </EmptyBoundary>
+        condition={data.characters.edges.length < 1}
+      >
+        <MediumGridWrap>
+          {data.characters.edges.map((item) => (
+            <GridTile key={item.node.id}>
+              <Choice {...register(item.node.id, {
+                name: item.node.name,
+                isRequest: false
+              })}
+              >
+                <CharacterTileOverlay query={item.node} />
+              </Choice>
+            </GridTile>
+          )
+          )}
+          {(searchArguments.variables.name != null && searchArguments.variables.name !== '') && (
+            <GridTile>
+              <CharacterRequestTile onOpen={onOpen} />
+            </GridTile>
+          )}
+          <LoadMoreGridTile
+            hasNext={hasNext}
+            onLoadNext={() => loadNext(5)}
+            isLoadingNext={isLoadingNext}
+          />
+        </MediumGridWrap>
+      </EmptyBoundary>
+    </Stack>
+
   )
 }

@@ -18,11 +18,11 @@ export interface UploadCharacterSearchProps {
 }
 
 interface Props extends ComponentChoiceArguments<any> {
-
+  onOpen: () => void
 }
 
 export default function UploadSearchOtherCharacters (props: Props): JSX.Element {
-  const { register } = props
+  const { register, onOpen } = props
 
   const { i18n } = useLingui()
 
@@ -48,6 +48,7 @@ export default function UploadSearchOtherCharacters (props: Props): JSX.Element 
       >
         <Suspense fallback={<SkeletonUploadCharacterGrid />}>
           <UploadSearchOtherCharactersMultiSelector
+            onOpen={onOpen}
             searchArguments={searchArguments}
             register={register}
           />

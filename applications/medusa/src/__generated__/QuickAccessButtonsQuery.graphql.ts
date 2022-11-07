@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<916e79d3ccdde406cf89bc3c39fec86a>>
- * @relayHash 9f448b97d858bac56147fc0ffddb3fc8
+ * @generated SignedSource<<9ad2578e2a7ce9b4f83cc4d3fcbd3aa3>>
+ * @relayHash b16a07d86b041e975f7557abedd4c8d6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 9f448b97d858bac56147fc0ffddb3fc8
+// @relayRequestID b16a07d86b041e975f7557abedd4c8d6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 export type QuickAccessButtonsQuery$variables = {};
@@ -24,6 +24,7 @@ export type QuickAccessButtonsQuery$data = {
     };
     readonly clubsCount: number;
     readonly hasClubSupporterSubscription: boolean;
+    readonly isArtist: boolean;
   } | null;
 };
 export type QuickAccessButtonsQuery = {
@@ -92,14 +93,21 @@ v5 = {
   "name": "hasClubSupporterSubscription",
   "storageKey": null
 },
-v6 = [
+v6 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
+  "name": "isArtist",
+  "storageKey": null
+},
+v7 = [
   {
     "kind": "Literal",
     "name": "first",
     "value": 1
   }
 ],
-v7 = {
+v8 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
@@ -159,7 +167,8 @@ return {
             ],
             "storageKey": null
           },
-          (v5/*: any*/)
+          (v5/*: any*/),
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -184,7 +193,7 @@ return {
           (v0/*: any*/),
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v7/*: any*/),
             "concreteType": "ClubConnection",
             "kind": "LinkedField",
             "name": "clubs",
@@ -207,7 +216,7 @@ return {
                     "plural": false,
                     "selections": [
                       (v1/*: any*/),
-                      (v7/*: any*/),
+                      (v8/*: any*/),
                       (v2/*: any*/)
                     ],
                     "storageKey": null
@@ -222,7 +231,7 @@ return {
           },
           {
             "alias": null,
-            "args": (v6/*: any*/),
+            "args": (v7/*: any*/),
             "filters": null,
             "handle": "connection",
             "key": "CreateClubListener_clubs",
@@ -230,14 +239,15 @@ return {
             "name": "clubs"
           },
           (v5/*: any*/),
-          (v7/*: any*/)
+          (v6/*: any*/),
+          (v8/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "9f448b97d858bac56147fc0ffddb3fc8",
+    "id": "b16a07d86b041e975f7557abedd4c8d6",
     "metadata": {
       "connection": [
         {
@@ -258,6 +268,6 @@ return {
 };
 })();
 
-(node as any).hash = "f5fd29cbf55ea2c1d8b6a1a8755e708f";
+(node as any).hash = "7032c80346fbd41326df0b5436bfacde";
 
 export default node;

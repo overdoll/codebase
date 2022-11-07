@@ -24,7 +24,7 @@ interface Supporter {
   kind: 'Supporter'
 }
 
-type Abilities = ['create' | 'moderate' | 'interact', InferSubjects<Post> | InferSubjects<Club>] |
+type Abilities = ['create' | 'moderate' | 'interact' | 'edit', InferSubjects<Post> | InferSubjects<Club>] |
 ['configure', InferSubjects<Account> | InferSubjects<Club> | InferSubjects<Supporter>] |
 ['staff', InferSubjects<Account> | InferSubjects<Entity> | InferSubjects<Club> | InferSubjects<Post> | InferSubjects<Billing>]
 

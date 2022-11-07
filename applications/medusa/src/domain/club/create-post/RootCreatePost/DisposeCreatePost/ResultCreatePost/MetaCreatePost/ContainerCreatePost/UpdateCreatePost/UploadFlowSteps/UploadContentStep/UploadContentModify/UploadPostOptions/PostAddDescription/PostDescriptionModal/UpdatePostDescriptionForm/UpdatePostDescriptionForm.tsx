@@ -20,7 +20,6 @@ import { CheckMark, DeleteBin } from '@//:assets/icons'
 import { Icon } from '@//:modules/content/PageLayout'
 import { useEffect, useState } from 'react'
 import IconButton from '@//:modules/form/IconButton/IconButton'
-import { DETECT_LINKS } from '@//:modules/constants/regex'
 
 interface Props {
   query: UpdatePostDescriptionFormFragment$key
@@ -68,12 +67,10 @@ export default function UpdatePostDescriptionForm ({
   const schema = Joi.object({
     description: Joi
       .string()
-      .regex(DETECT_LINKS, { invert: true })
       .max(MAXIMUM_CHARACTER_COUNT)
       .allow('')
       .messages({
-        'string.max': i18n._(t`The description length cannot exceed ${MAXIMUM_CHARACTER_COUNT} characters`),
-        'string.pattern.invert.base': i18n._(t`The description cannot contain links `)
+        'string.max': i18n._(t`The description length cannot exceed ${MAXIMUM_CHARACTER_COUNT} characters`)
       })
   })
 

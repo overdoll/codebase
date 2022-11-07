@@ -2,14 +2,18 @@ import { graphql, useFragment } from 'react-relay'
 import type { PublishedPostFragment$key } from '@//:artifacts/PublishedPostFragment.graphql'
 import { Badge, HStack, Stack } from '@chakra-ui/react'
 import { GridTile, LinkTile } from '@//:modules/content/ContentSelection'
-import PostPreviewContent from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
+import PostPreviewContent
+  from '@//:modules/content/HookedComponents/Post/fragments/PostContent/PostPreviewContent/PostPreviewContent'
 import PostMenu from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostMenu'
 import { Trans } from '@lingui/macro'
 import PostModerateButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostModerateButton/PostModerateButton'
 import PostArchiveButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostArchiveButton/PostArchiveButton'
-import PostViewButton from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostViewButton/PostViewButton'
+import PostViewButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostViewButton/PostViewButton'
+import PostEditButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostEditButton/PostEditButton'
 
 interface Props {
   query: PublishedPostFragment$key
@@ -22,6 +26,7 @@ const Fragment = graphql`
     ...PostModerateButtonFragment
     ...PostArchiveButtonFragment
     ...PostViewButtonFragment
+    ...PostEditButtonFragment
     club {
       slug
     }
@@ -43,6 +48,7 @@ export default function PublishedPost ({
         </Badge>
         <PostMenu size='xs'>
           <PostViewButton query={data} />
+          <PostEditButton query={data} />
           <PostArchiveButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>

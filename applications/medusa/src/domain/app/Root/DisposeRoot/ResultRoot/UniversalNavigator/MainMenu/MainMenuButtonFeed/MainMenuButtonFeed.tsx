@@ -38,9 +38,9 @@ export default function MainMenuButtonFeed (): JSX.Element {
       hasBadge={data?.viewer == null ||
         data.viewer?.clubMembershipsCount < 1 ||
         !data.viewer?.curationProfile?.audience?.completed ||
-        data.viewer.curatedPostsFeedData.viewedAt == null ||
-        data.viewer.curatedPostsFeedData.generatedAt == null ||
-        isBefore(new Date(data.viewer.curatedPostsFeedData.nextRegenerationTime), new Date())}
+        data.viewer?.curatedPostsFeedData?.viewedAt == null ||
+        data.viewer?.curatedPostsFeedData?.generatedAt == null ||
+        isBefore(new Date(data.viewer.curatedPostsFeedData?.nextRegenerationTime), new Date())}
       href='/feed'
       icon={FeedMenu}
       label={i18n._(t`Your Feed`)}

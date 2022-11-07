@@ -6,7 +6,7 @@ import {
   PageSectionTitle,
   PageSectionWrap
 } from '@//:modules/content/PageLayout'
-import { Stack } from '@chakra-ui/react'
+import { Stack, useDisclosure } from '@chakra-ui/react'
 import { Trans } from '@lingui/macro'
 import { ChoiceRemovableTags, useChoice } from '@//:modules/content/HookedComponents/Choice'
 import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
@@ -19,6 +19,7 @@ import { ClubPeopleGroup } from '@//:assets/icons'
 import UploadSelectSearch from './UploadSelectSearch/UploadSelectSearch'
 import UploadSearchSeriesCharacters from './UploadSearchSeriesCharacters/UploadSearchSeriesCharacters'
 import UploadSelectFooter from './UploadSelectSearch/UploadSelectFooter/UploadSelectFooter'
+import UploadAddCharacterRequest from './UploadAddCharacterRequest/UploadAddCharacterRequest'
 
 interface ChoiceProps {
   name: string
@@ -45,6 +46,8 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
     dispatch
   } = useSequenceContext()
 
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   const {
     values,
     register,
@@ -62,10 +65,12 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
   const components = {
     select_search: (
       <UploadSelectSearch
+        onOpen={onOpen}
         register={register}
       />),
     search_series: (
       <UploadSearchSeriesCharacters
+        onOpen={onOpen}
         register={register}
       />
     ),
@@ -77,6 +82,7 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
     ),
     search_other: (
       <UploadSearchOtherCharacters
+        onOpen={onOpen}
         register={register}
       />
     )
@@ -134,6 +140,7 @@ export default function UploadCharacterStep (props: Props): JSX.Element {
           <FlowBuilderBody minH={undefined} />
         </FlowBuilder>
       </Stack>
+      <UploadAddCharacterRequest isOpen={isOpen} onClose={onClose} register={register} />
     </MobileContainer>
   )
 }

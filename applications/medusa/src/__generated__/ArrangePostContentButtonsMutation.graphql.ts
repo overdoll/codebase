@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<cf2cbc45e3cf910e008f62a6c1348459>>
- * @relayHash 580cb088851f0d83a7752cf1753c7f72
+ * @generated SignedSource<<5f5dcd48a7280908939e866d32a42762>>
+ * @relayHash 286ba16232353420fbea1e9b0d97e057
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,17 +9,17 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 580cb088851f0d83a7752cf1753c7f72
+// @relayRequestID 286ba16232353420fbea1e9b0d97e057
 
 import { ConcreteRequest, Mutation } from 'relay-runtime';
 export type UpdatePostContentOrderInput = {
   contentIds: ReadonlyArray<string>;
   id: string;
 };
-export type ArrangeDownPostContentButtonMutation$variables = {
+export type ArrangePostContentButtonsMutation$variables = {
   input: UpdatePostContentOrderInput;
 };
-export type ArrangeDownPostContentButtonMutation$data = {
+export type ArrangePostContentButtonsMutation$data = {
   readonly updatePostContentOrder: {
     readonly post: {
       readonly content: ReadonlyArray<{
@@ -30,9 +30,9 @@ export type ArrangeDownPostContentButtonMutation$data = {
     } | null;
   } | null;
 };
-export type ArrangeDownPostContentButtonMutation = {
-  response: ArrangeDownPostContentButtonMutation$data;
-  variables: ArrangeDownPostContentButtonMutation$variables;
+export type ArrangePostContentButtonsMutation = {
+  response: ArrangePostContentButtonsMutation$data;
+  variables: ArrangePostContentButtonsMutation$variables;
 };
 
 const node: ConcreteRequest = (function(){
@@ -105,7 +105,7 @@ return {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
-    "name": "ArrangeDownPostContentButtonMutation",
+    "name": "ArrangePostContentButtonsMutation",
     "selections": (v2/*: any*/),
     "type": "Mutation",
     "abstractKey": null
@@ -114,19 +114,19 @@ return {
   "operation": {
     "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
-    "name": "ArrangeDownPostContentButtonMutation",
+    "name": "ArrangePostContentButtonsMutation",
     "selections": (v2/*: any*/)
   },
   "params": {
-    "id": "580cb088851f0d83a7752cf1753c7f72",
+    "id": "286ba16232353420fbea1e9b0d97e057",
     "metadata": {},
-    "name": "ArrangeDownPostContentButtonMutation",
+    "name": "ArrangePostContentButtonsMutation",
     "operationKind": "mutation",
     "text": null
   }
 };
 })();
 
-(node as any).hash = "6379c05a0cc6bc2f2dd0e91e7019ec7a";
+(node as any).hash = "8fa56314e90b702ee0ba85ac99ff2a47";
 
 export default node;

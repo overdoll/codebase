@@ -91,8 +91,7 @@ export default function UploadFlowHeader ({
           />
           <AlertDialogBody>
             <Trans>
-              Are you sure you'd like to exit the post creator? Your progress will save and you can resume it at any
-              time.
+              Are you sure you'd like to exit the post editor?
             </Trans>
           </AlertDialogBody>
           <AlertDialogFooter>

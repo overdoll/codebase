@@ -7,7 +7,8 @@ import RepostPublicPost from './RepostPublicPost/RepostPublicPost'
 import ClubPublicPost from './ClubPublicPost/ClubPublicPost'
 import SavePublicPost from './SavePublicPost/SavePublicPost'
 import TagsPublicPost from './TagsPublicPost/TagsPublicPost'
-import MenuPublicPost from './MenuPublicPost/MenuPublicPost'
+import MenuPublicPost
+  from './MenuPublicPost/MenuPublicPost'
 
 interface Props {
   postQuery: DescriptionPublicPostFragment$key

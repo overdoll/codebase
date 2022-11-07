@@ -19,6 +19,7 @@ import RemovePostContentButton from './PostContentPreviewMenu/RemovePostContentB
 import Button from '@//:modules/form/Button/Button'
 import SupporterPostContentButton from './SupporterPostContentButton/SupporterPostContentButton'
 import ExpandableResourceInfo from './ExpandableResourceInfo/ExpandableResourceInfo'
+import useRandomColorPalette from '@//:modules/hooks/useRandomColorPalette'
 
 interface Props {
   query: PostContentPreviewFragment$key
@@ -62,6 +63,8 @@ export default function PostContentPreview ({
   const postData = useFragment(PostFragment, postQuery)
 
   const index = postData.content.findIndex(item => item.id === data.id)
+
+  const color = useRandomColorPalette(data.id)
 
   const getHeight = (): number => {
     if (postData.content.length <= 1) {
@@ -133,7 +136,7 @@ export default function PostContentPreview ({
       borderWidth={2}
       borderColor={data.isSupporterOnly ? 'green.300' : 'gray.800'}
     >
-      <Flex align='center' w='12%' justify='center'>
+      <Flex position='relative' align='center' w='12%' justify='center'>
         <Flex
           borderRadius='lg'
           bg={data.isSupporterOnly ? 'green.300' : 'gray.600'}
@@ -155,7 +158,10 @@ export default function PostContentPreview ({
       <Flex align='center' justify='center' w='38%'>
         <SupporterPostContentButton query={data} postQuery={postData} />
       </Flex>
-      <Flex align='center' bg='gray.700' w='12%' justify='center'>
+      <Flex position='relative' align='center' bg='gray.700' w='12%' justify='center'>
+        {postData.content.length > 9 && (
+          <Box position='absolute' w={2} h={2} borderRadius='full' top={2} right={2} bg={color} />
+        )}
         <PostContentPreviewMenu query={data} postQuery={postData} />
       </Flex>
     </Flex>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<71882dd0e81034e941104ddb3684005a>>
- * @relayHash 8bd2f8680296472efb94f528b6048288
+ * @generated SignedSource<<00ed248cc37f0618e899a7fdcd4324dc>>
+ * @relayHash 75fc4e38d8cc16ec4119c83373ae9f65
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 8bd2f8680296472efb94f528b6048288
+// @relayRequestID 75fc4e38d8cc16ec4119c83373ae9f65
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -286,8 +286,22 @@ return {
                                 "name": "slug",
                                 "storageKey": null
                               },
-                              (v4/*: any*/)
+                              (v4/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerIsOwner",
+                                "storageKey": null
+                              }
                             ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "state",
                             "storageKey": null
                           }
                         ],
@@ -362,7 +376,7 @@ return {
     ]
   },
   "params": {
-    "id": "8bd2f8680296472efb94f528b6048288",
+    "id": "75fc4e38d8cc16ec4119c83373ae9f65",
     "metadata": {},
     "name": "SuggestedPostsGridPaginationQuery",
     "operationKind": "query",

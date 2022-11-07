@@ -161,6 +161,8 @@ export default function UpdatePostCharactersModal (props: Props): JSX.Element {
                     titleKey='name'
                   />
                   <UploadSearchOtherCharacters
+                    onOpen={() => {
+                    }}
                     register={register}
                   />
                 </Stack>

@@ -42,7 +42,10 @@ export default function UpdateCategoryButton ({
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
-  const { state } = useSequenceContext()
+  const {
+    state,
+    dispatch
+  } = useSequenceContext()
 
   const [updateCategory, isUpdatingCategory] = useMutation<UpdateCategoryButtonMutation>(Mutation)
 
@@ -55,6 +58,18 @@ export default function UpdateCategoryButton ({
     const stateCategories = Object.keys(state.categories)
 
     return compareTwoArrays(currentCategories, stateCategories) === false
+  }
+
+  const onNextStep = (): void => {
+    if (state.deepValue != null) {
+      dispatch({
+        type: 'deepValue',
+        value: null,
+        transform: 'SET'
+      })
+      return
+    }
+    nextStep()
   }
 
   const onUpdateCategory = (): void => {
@@ -70,7 +85,7 @@ export default function UpdateCategoryButton ({
         }
       },
       onCompleted () {
-        nextStep()
+        onNextStep()
       },
       onError () {
         notify({
@@ -92,7 +107,7 @@ export default function UpdateCategoryButton ({
   }
 
   return (
-    <FlowBuilderNextButton isDisabled={buttonDisabled}>
+    <FlowBuilderNextButton onClick={onNextStep} isDisabled={buttonDisabled}>
       {buttonDisabled ? `${(Object.keys(state.categories)).length} / 3` : undefined}
     </FlowBuilderNextButton>
   )

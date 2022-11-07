@@ -72,11 +72,11 @@ describe('Create & Manage Posts', () => {
     cy.findByText(/Upload Files/iu).should('be.visible').should('not.be.disabled').parent().parent().parent().get('input[type="file"]').should('not.be.disabled').attachFile(['test-post.png', 'test-post2.png'], { force: true })
     isOnStep('content')
     waitForProcessing()
-    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findAllByRole('button', { name: 'Set Supporter Only' }).should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('be.visible')
-    cy.get('button[aria-label="Set Free"]').should('not.be.disabled').first().click({ force: true })
+    cy.findAllByRole('button', { name: 'Set Free' }).should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('not.exist')
-    cy.get('button[aria-label="Set Supporter Only"]').should('not.be.disabled').first().click({ force: true })
+    cy.findAllByRole('button', { name: 'Set Supporter Only' }).should('not.be.disabled').first().click({ force: true })
     cy.findByText(/Free content should be/).should('be.visible').click({ force: true })
     clickOnButton('Got it')
 
@@ -133,6 +133,7 @@ describe('Create & Manage Posts', () => {
     clickOnTile(postCategories[2])
     // button is enabled after 3 categories added
     saveCurrentStep()
+    gotoNextStep()
 
     /**
      * Add character, save character
@@ -145,7 +146,7 @@ describe('Create & Manage Posts', () => {
     clickOnButton('Back')
     cy.findByText(/Select a character type/).should('be.visible')
     searchForTerm('Search for any character by name', 'RandomRandomRandom')
-    clickOnButton('Request Character')
+    clickOnButton('Request Missing Character')
     typeIntoPlaceholder(/Your requested character name/iu, 'Test Character')
     clickOnButton('Submit')
     saveCurrentStep()

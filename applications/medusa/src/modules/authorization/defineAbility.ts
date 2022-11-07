@@ -17,7 +17,10 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
     }
 
     if (data.isWorker) {
-      can('create', ['Club', 'Post'])
+      if (!data.isLocked) {
+        can('create', ['Club', 'Post'])
+        can('edit', 'Post')
+      }
     }
 
     if (data.isArtist) {
@@ -36,6 +39,7 @@ const defineAbility = (data: Authenticated | null): AppAbility => {
     if (data.isStaff) {
       if (!data.isLocked) {
         can('staff', ['Entity', 'Club', 'Account', 'Post', 'Billing'])
+        can('edit', 'Post')
       }
     }
   }
