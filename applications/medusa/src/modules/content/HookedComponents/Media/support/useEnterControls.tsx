@@ -39,13 +39,19 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
     timeout.current = setTimeout(onCloseControls, 2500)
   }
 
-  const onMouseEnter = (): void => {
+  const onMouseEnter = (e): void => {
+    if (e.target.dataset.ignore === 'tap' || e.target.parentNode.dataset.ignore === 'tap') {
+      return
+    }
     setShowCursor(true)
     setOpen(true)
     refreshControlTimeout()
   }
 
-  const onMouseOver = (): void => {
+  const onMouseOver = (e): void => {
+    if (e.target.dataset.ignore === 'tap' || e.target.parentNode.dataset.ignore === 'tap') {
+      return
+    }
     setShowCursor(true)
     setOpen(true)
     refreshControlTimeout()
@@ -58,8 +64,11 @@ export default function useEnterControls (props: UseEnterControlsProps): UseEnte
   }
 
   const onClick = (e): void => {
+    if (e.target.dataset.ignore === 'tap' || e.target.parentNode.dataset.ignore === 'tap') {
+      return
+    }
     if (!isOpen) {
-      onMouseEnter()
+      onMouseEnter(e)
     } else if (isOpen && (e.target.dataset.ignore !== 'controls' || e.target.parentNode.dataset.ignore !== 'controls')) {
       onMouseLeave()
     }

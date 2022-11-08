@@ -33,6 +33,10 @@ msgstr ""
 msgid "Add Content"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:54
+msgid "Analytics"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostArchiveButton/PostArchiveButton.tsx:66
 msgid "Archive Post"
 msgstr ""
@@ -426,6 +430,10 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostLike/PostLikeButton/PostLikeButton.tsx:55
 msgid "Liked"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:101
+msgid "Likes"
 msgstr ""
 
 #: src/modules/content/ContentSelection/LoadMore/LoadMore.tsx:41
@@ -1222,6 +1230,10 @@ msgstr ""
 msgid "View Translations"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:92
+msgid "Views"
+msgstr ""
+
 #: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:39
 msgid "Want more content?"
 msgstr ""
@@ -1253,6 +1265,10 @@ msgstr ""
 #: src/modules/content/HookedComponents/Post/components/PaginationScroller/EmptyPaginationScroller/EmptyPaginationScroller.tsx:17
 #: src/modules/content/Placeholder/Empty/EmptyPosts/EmptyPosts.tsx:8
 msgid "We couldn't find any posts"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:82
+msgid "We don't have enough data about this post yet"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/fragments/DateOfBirthPreference/DateOfBirthPreference.tsx:79

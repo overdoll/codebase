@@ -13,6 +13,10 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ClubBlurb/ClubBlurb.tsx:30
+msgid "About {0}"
+msgstr ""
+
 #: src/domain/slug/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ButtonsPublicClub/ButtonsPublicClub.tsx:56
 #~ msgid "All Posts"
 #~ msgstr ""
