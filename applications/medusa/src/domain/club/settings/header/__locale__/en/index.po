@@ -1,0 +1,46 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2022-04-13 16:39-0400\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/RootThumbnailClubSettings.tsx:43
+msgid "Back to Club Settings"
+msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:49
+#~ msgid "Change Club Thumbnail"
+#~ msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/RootThumbnailClubSettings.tsx:49
+msgid "Club Thumbnail"
+msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:114
+#~ msgid "Submit"
+#~ msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailForm/ChangeClubThumbnailForm.tsx:114
+#~ msgid "Submit Thumbnail"
+#~ msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:51
+msgid "Successfully updated your club thumbnail"
+msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ChangeClubThumbnailUpload/ChangeClubThumbnailUpload.tsx:57
+msgid "There was an error updating your club thumbnail"
+msgstr ""
+
+#: src/domain/club/settings/thumbnail/RootThumbnailClubSettings/ThumbnailClubSettings/ThumbnailClubSettings.tsx:48
+msgid "Your club thumbnail is currently processing. We'll update it shortly."
+msgstr ""

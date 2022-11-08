@@ -101,7 +101,7 @@ msgstr ""
 msgid "Reject Post"
 msgstr ""
 
-#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/UpdatePostCharactersModal/UpdatePostCharactersModal.tsx:169
+#: src/domain/moderation/post-queue/RootPostModerationQueue/PostModerationQueue/ModeratePost/UpdatePostCharactersModal/UpdatePostCharactersModal.tsx:171
 msgid "Save & Remove Requests"
 msgstr ""
 

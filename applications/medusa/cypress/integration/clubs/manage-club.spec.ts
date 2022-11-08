@@ -46,6 +46,18 @@ describe('Manage Club', () => {
     clickOnButton(/Change Club Name/i)
 
     /**
+     * Update club blurb
+     */
+    cy.visit(`/club/${clubName}/settings`)
+    clickOnPanel('Update Blurb')
+    cy.url().should('include', '/settings/blurb')
+    typeIntoPlaceholder(/Enter your club blurb/, 'my club blurb')
+    clickOnButton(/Submit/i)
+    cy.findByText(/updated your club blurb/iu).should('be.visible')
+    cy.visit(`/${clubName}`)
+    cy.findByText('my club blurb').should('be.visible')
+
+    /**
      * Add and remove aliases
      */
     cy.visit(`/club/${clubName}/settings`)
@@ -72,6 +84,15 @@ describe('Manage Club', () => {
     cy.url().should('include', '/settings/thumbnail')
     cy.findByText('Drop').should('be.visible').parent().parent().get('input[type="file"]').attachFile('test-post.png')
     cy.findByText(/updated your club thumbnail/iu, { timeout: 300000 }).should('be.visible')
+
+    /**
+     * Upload new header
+     */
+    cy.visit(`/club/${newClubName}/settings`)
+    clickOnPanel('Club Header')
+    cy.url().should('include', '/settings/header')
+    cy.findByText('Drop').should('be.visible').parent().parent().get('input[type="file"]').attachFile('test-post.png')
+    cy.findByText(/updated your club header/iu, { timeout: 300000 }).should('be.visible')
 
     /**
      * Visit club home page

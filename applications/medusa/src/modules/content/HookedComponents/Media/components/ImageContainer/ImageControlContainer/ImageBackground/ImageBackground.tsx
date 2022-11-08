@@ -1,13 +1,14 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex, FlexProps } from '@chakra-ui/react'
 import CoverImage from '../../ImageWrapper/CoverImage/CoverImage'
 import { ImageBackgroundProps } from '../ImageControlContainer'
 
-interface Props extends Pick<ImageBackgroundProps, 'backgroundPoster'> {
+interface Props extends Pick<ImageBackgroundProps, 'backgroundPoster'>, FlexProps {
 }
 
 export default function ImageBackground (props: Props): JSX.Element {
   const {
-    backgroundPoster
+    backgroundPoster,
+    ...rest
   } = props
 
   return (
@@ -23,6 +24,7 @@ export default function ImageBackground (props: Props): JSX.Element {
         align='center'
         justify='center'
         objectFit='cover'
+        {...rest}
       >
         <CoverImage>
           {backgroundPoster}

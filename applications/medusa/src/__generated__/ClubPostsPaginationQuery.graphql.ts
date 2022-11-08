@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7385249e1e583e5fb9fa1f36a90953ee>>
- * @relayHash 1fba5edcb892bc667d34a1b022de962b
+ * @generated SignedSource<<5acf53c462bf86d3574649607f6c3bd2>>
+ * @relayHash 14bc4c1dfe549985c6dc2027110dec0a
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1fba5edcb892bc667d34a1b022de962b
+// @relayRequestID 14bc4c1dfe549985c6dc2027110dec0a
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -135,7 +135,30 @@ v11 = {
   ],
   "storageKey": null
 },
-v12 = {
+v12 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  }
+],
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaVariants",
@@ -150,29 +173,17 @@ v12 = {
       "kind": "LinkedField",
       "name": "banner",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "width",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "height",
-          "storageKey": null
-        }
-      ],
+      "selections": (v12/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "smallBanner",
+      "plural": false,
+      "selections": (v12/*: any*/),
       "storageKey": null
     }
   ],
@@ -299,7 +310,7 @@ return {
                                         "plural": false,
                                         "selections": [
                                           (v11/*: any*/),
-                                          (v12/*: any*/),
+                                          (v13/*: any*/),
                                           (v8/*: any*/)
                                         ],
                                         "storageKey": null
@@ -328,7 +339,7 @@ return {
                                     "selections": [
                                       (v8/*: any*/),
                                       (v11/*: any*/),
-                                      (v12/*: any*/)
+                                      (v13/*: any*/)
                                     ],
                                     "type": "ImageMedia",
                                     "abstractKey": null
@@ -431,6 +442,20 @@ return {
                             ],
                             "storageKey": null
                           },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "likes",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "views",
+                            "storageKey": null
+                          },
                           (v7/*: any*/)
                         ],
                         "storageKey": null
@@ -507,7 +532,7 @@ return {
     ]
   },
   "params": {
-    "id": "1fba5edcb892bc667d34a1b022de962b",
+    "id": "14bc4c1dfe549985c6dc2027110dec0a",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",

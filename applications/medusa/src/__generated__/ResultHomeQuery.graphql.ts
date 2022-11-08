@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<9a02faacc907c801c16783e2ee10dbb6>>
- * @relayHash b2b09ebbd238474bd353c8fd13f9f3a8
+ * @generated SignedSource<<dcd7c1b66b34c0032042584684b89b12>>
+ * @relayHash 5d0cab6ef74f5fa2c8d4291a63928c15
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID b2b09ebbd238474bd353c8fd13f9f3a8
+// @relayRequestID 5d0cab6ef74f5fa2c8d4291a63928c15
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -291,6 +291,67 @@ v16 = {
       "abstractKey": null
     },
     (v6/*: any*/)
+  ],
+  "storageKey": null
+},
+v17 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaVariants",
+  "kind": "LinkedField",
+  "name": "variants",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "small",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "medium",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "large",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "thumbnail",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "hd",
+      "plural": false,
+      "selections": (v2/*: any*/),
+      "storageKey": null
+    }
   ],
   "storageKey": null
 };
@@ -674,6 +735,52 @@ return {
                     ],
                     "storageKey": null
                   },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": null,
+                    "kind": "LinkedField",
+                    "name": "header",
+                    "plural": false,
+                    "selections": [
+                      (v0/*: any*/),
+                      {
+                        "kind": "InlineFragment",
+                        "selections": [
+                          (v1/*: any*/),
+                          (v11/*: any*/),
+                          (v17/*: any*/)
+                        ],
+                        "type": "ImageMedia",
+                        "abstractKey": null
+                      },
+                      (v6/*: any*/),
+                      {
+                        "kind": "InlineFragment",
+                        "selections": [
+                          (v1/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ImageMedia",
+                            "kind": "LinkedField",
+                            "name": "cover",
+                            "plural": false,
+                            "selections": [
+                              (v11/*: any*/),
+                              (v17/*: any*/),
+                              (v1/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "type": "VideoMedia",
+                        "abstractKey": null
+                      },
+                      (v10/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
                   (v13/*: any*/),
                   (v16/*: any*/)
                 ],
@@ -688,7 +795,7 @@ return {
     ]
   },
   "params": {
-    "id": "b2b09ebbd238474bd353c8fd13f9f3a8",
+    "id": "5d0cab6ef74f5fa2c8d4291a63928c15",
     "metadata": {},
     "name": "ResultHomeQuery",
     "operationKind": "query",
