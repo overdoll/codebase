@@ -2,9 +2,7 @@ import { graphql } from 'react-relay'
 import { ImageMediaProps } from '../../../components/ImageContainer/ImageWrapper/ImageMedia/ImageMedia'
 import { HeaderImageMediaFragment$key } from '@//:artifacts/HeaderImageMediaFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
-import ImageControlContainer from '../../../components/ImageContainer/ImageControlContainer/ImageControlContainer'
 import BackgroundPosterImageMedia from '../BackgroundPosterImageMedia/BackgroundPosterImageMedia'
-import HdImageMedia from '../HdImageMedia/HdImageMedia'
 import ImageHeaderContainer from '../../../components/ImageContainer/ImageHeaderContainer/ImageHeaderContainer'
 
 const Fragment = graphql`

@@ -47,7 +47,6 @@ export default function ClubLayout ({ children }: Props): JSX.Element {
 
   return (
     <>
-
       <VerticalNavigation>
         <VerticalNavigation.Content
           title={

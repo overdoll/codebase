@@ -58,11 +58,13 @@ export default function ClubCharacters ({ query }: Props): JSX.Element {
     return <RestrictedClubCharacters query={queryData.club} />
   }
 
+  const title = `${queryData.club.name}'s Characters - overdoll`
+
   return (
     <>
       <Head>
         <title>
-          {queryData.club.name}'s Characters - overdoll
+          {title}
         </title>
       </Head>
       <PageSectionWrap>
