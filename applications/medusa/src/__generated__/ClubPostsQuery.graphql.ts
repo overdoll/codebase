@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ff57002b989eed642a1b9cd2a2aec6b0>>
- * @relayHash 66f8282a1d3022b7b0600c77022f3f0b
+ * @generated SignedSource<<e15ff1e688f5b4d448f34b2c47106a0f>>
+ * @relayHash 1bab94196d610ae138c8ff4fbd1774f6
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 66f8282a1d3022b7b0600c77022f3f0b
+// @relayRequestID 1bab94196d610ae138c8ff4fbd1774f6
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -449,8 +449,7 @@ return {
                             "name": "slug",
                             "storageKey": null
                           },
-                          (v6/*: any*/),
-                          (v2/*: any*/)
+                          (v6/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -586,7 +585,7 @@ return {
     ]
   },
   "params": {
-    "id": "66f8282a1d3022b7b0600c77022f3f0b",
+    "id": "1bab94196d610ae138c8ff4fbd1774f6",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

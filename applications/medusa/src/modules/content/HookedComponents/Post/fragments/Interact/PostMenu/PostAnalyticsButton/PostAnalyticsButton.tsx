@@ -3,11 +3,10 @@ import { graphql } from 'react-relay'
 import { PostAnalyticsButtonFragment$key } from '@//:artifacts/PostAnalyticsButtonFragment.graphql'
 import { useFragment } from 'react-relay/hooks'
 import { MenuItem } from '../../../../../../ThemeComponents/Menu/Menu'
-import { RisingGraph } from '@//:assets/icons'
+import { EditView, HeartFull, RisingGraph } from '@//:assets/icons'
 import {
   Box,
   Heading,
-  HStack,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -17,8 +16,10 @@ import {
   useDisclosure
 } from '@chakra-ui/react'
 import CloseButton from '../../../../../../ThemeComponents/CloseButton/CloseButton'
-import GridPaginationPost
-  from '../../../../components/PaginationScroller/GridPaginationScroller/GridPaginationPost/GridPaginationPost'
+import GridPaginationPostContent
+  from '../../../../components/PaginationScroller/GridPaginationScroller/GridPaginationPost/GridPaginationPostContent/GridPaginationPostContent'
+import React from 'react'
+import StatisticHeader from '@//:common/components/StatisticHeader/StatisticHeader'
 
 interface Props {
   query: PostAnalyticsButtonFragment$key
@@ -28,7 +29,9 @@ const Fragment = graphql`
   fragment PostAnalyticsButtonFragment on Post {
     likes
     views
-    ...GridPaginationPostFragment
+    content {
+      ...GridPaginationPostContentFragment
+    }
   }
 `
 
@@ -68,37 +71,41 @@ export default function PostAnalyticsButton ({
             size='lg'
             as={CloseButton}
           />
-          <ModalBody p={3}>
+          <ModalBody p={4}>
             <Stack spacing={8}>
-              <Box w={200} h={200}>
-                <GridPaginationPost query={data} />
+              <Box borderRadius='md' w={200} h={200}>
+                <GridPaginationPostContent isSmall={false} postContentQuery={data.content[0]} />
               </Box>
-              <HStack spacing={4}>
-                <Stack spacing={1}>
-                  <Heading fontSize='sm' color='gray.200'>
+              {data.views === 0 && data.likes === 0
+                ? (
+                  <Heading fontSize='md' color='gray.200'>
                     <Trans>
-                      Views
+                      We don't have enough data about this post yet
                     </Trans>
                   </Heading>
-                  <Heading fontSize='xl' color='gray.00'>
-                    <Trans>
-                      {data.views}
-                    </Trans>
-                  </Heading>
-                </Stack>
-                <Stack spacing={1}>
-                  <Heading fontSize='sm' color='gray.200'>
-                    <Trans>
-                      Likes
-                    </Trans>
-                  </Heading>
-                  <Heading fontSize='xl' color='gray.00'>
-                    <Trans>
-                      {data.likes}
-                    </Trans>
-                  </Heading>
-                </Stack>
-              </HStack>
+                  )
+                : (
+                  <Stack spacing={4}>
+                    <StatisticHeader
+                      icon={EditView}
+                      title={(
+                        <Trans>
+                          Views
+                        </Trans>)}
+                    >
+                      {data.views.toLocaleString()}
+                    </StatisticHeader>
+                    <StatisticHeader
+                      icon={HeartFull}
+                      title={(
+                        <Trans>
+                          Likes
+                        </Trans>)}
+                    >
+                      {data.likes.toLocaleString()}
+                    </StatisticHeader>
+                  </Stack>
+                  )}
             </Stack>
           </ModalBody>
         </ModalContent>

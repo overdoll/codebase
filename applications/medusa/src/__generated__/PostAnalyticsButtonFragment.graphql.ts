@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2dc84edf2b31615c12f34f3d2ccd3482>>
+ * @generated SignedSource<<7f5188ad8021298d4e86cb22651bfaf8>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,9 +11,11 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type PostAnalyticsButtonFragment$data = {
+  readonly content: ReadonlyArray<{
+    readonly " $fragmentSpreads": FragmentRefs<"GridPaginationPostContentFragment">;
+  }>;
   readonly likes: number;
   readonly views: number;
-  readonly " $fragmentSpreads": FragmentRefs<"GridPaginationPostFragment">;
   readonly " $fragmentType": "PostAnalyticsButtonFragment";
 };
 export type PostAnalyticsButtonFragment$key = {
@@ -42,15 +44,26 @@ const node: ReaderFragment = {
       "storageKey": null
     },
     {
+      "alias": null,
       "args": null,
-      "kind": "FragmentSpread",
-      "name": "GridPaginationPostFragment"
+      "concreteType": "PostContent",
+      "kind": "LinkedField",
+      "name": "content",
+      "plural": true,
+      "selections": [
+        {
+          "args": null,
+          "kind": "FragmentSpread",
+          "name": "GridPaginationPostContentFragment"
+        }
+      ],
+      "storageKey": null
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "ae2605d0dbde3f3e8dd5a767e0e8ecf5";
+(node as any).hash = "3eaf33faee3c731d98c7d1c4e72ae832";
 
 export default node;
