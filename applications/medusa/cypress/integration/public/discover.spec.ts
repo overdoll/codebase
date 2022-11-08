@@ -3,10 +3,8 @@ import { clickOnButton } from '../../support/user_actions'
 
 Cypress.config('defaultCommandTimeout', 20000)
 
-// TODO unskip once the a/b test is done
-
 describe('Discover', () => {
-  it.skip('go to the discover page as logged out', () => {
+  it('go to the discover page as logged out', () => {
     cy.viewport('iphone-xr')
     cy.visit('/discover')
 
@@ -21,7 +19,7 @@ describe('Discover', () => {
     cy.findByText('Join this club').should('be.visible')
   })
 
-  it.skip('join club from discover page as logged in', () => {
+  it('join club from discover page as logged in', () => {
     const [newUsername] = generateUsernameAndEmail()
     cy.joinWithNewAccount(newUsername)
     cy.viewport('iphone-xr')
