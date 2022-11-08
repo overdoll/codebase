@@ -13,31 +13,47 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/domain/club/settings/name/RootNameClubSettings/RootNameClubSettings.tsx:43
+#: src/domain/club/settings/blurb/RootBlurbClubSettings/RootBlurbClubSettings.tsx:43
 msgid "Back to Club Settings"
 msgstr ""
 
 #: src/domain/club/settings/name/RootNameClubSettings/NameClubSettings/NameClubSettings.tsx:40
-msgid "Change Club Name"
+#~ msgid "Change Club Name"
+#~ msgstr ""
+
+#: src/domain/club/settings/blurb/RootBlurbClubSettings/RootBlurbClubSettings.tsx:49
+msgid "Club Blurb"
 msgstr ""
 
 #: src/domain/club/settings/name/RootNameClubSettings/RootNameClubSettings.tsx:49
-msgid "Club Name"
-msgstr ""
+#~ msgid "Club Name"
+#~ msgstr ""
 
 #: src/domain/club/settings/name/RootNameClubSettings/NameClubSettings/ChangeClubNameForm/ChangeClubNameForm.tsx:101
 #: src/domain/club/settings/name/RootNameClubSettings/NameClubSettings/ChangeClubNameForm/ChangeClubNameForm.tsx:107
-msgid "Enter a new club name"
+#~ msgid "Enter a new club name"
+#~ msgstr ""
+
+#: src/domain/club/settings/blurb/RootBlurbClubSettings/BlurbClubSettings/ChangeClubBlurbForm/ChangeClubBlurbForm.tsx:103
+msgid "Enter your club blurb here, up to 1000 characters."
 msgstr ""
 
-#: src/domain/club/settings/name/RootNameClubSettings/NameClubSettings/ChangeClubNameForm/ChangeClubNameForm.tsx:116
+#: src/domain/club/settings/blurb/RootBlurbClubSettings/BlurbClubSettings/ChangeClubBlurbForm/ChangeClubBlurbForm.tsx:112
 msgid "Submit"
 msgstr ""
 
+#: src/domain/club/settings/blurb/RootBlurbClubSettings/BlurbClubSettings/ChangeClubBlurbForm/ChangeClubBlurbForm.tsx:81
+msgid "Successfully updated your club blurb"
+msgstr ""
+
 #: src/domain/club/settings/name/RootNameClubSettings/NameClubSettings/ChangeClubNameForm/ChangeClubNameForm.tsx:80
-msgid "Successfully updated your club name to {0}"
+#~ msgid "Successfully updated your club name to {0}"
+#~ msgstr ""
+
+#: src/domain/club/settings/blurb/RootBlurbClubSettings/BlurbClubSettings/ChangeClubBlurbForm/ChangeClubBlurbForm.tsx:87
+msgid "There was an error updating your club blurb"
 msgstr ""
 
 #: src/domain/club/settings/name/RootNameClubSettings/NameClubSettings/ChangeClubNameForm/ChangeClubNameForm.tsx:86
-msgid "There was an error updating your club name"
-msgstr ""
+#~ msgid "There was an error updating your club name"
+#~ msgstr ""

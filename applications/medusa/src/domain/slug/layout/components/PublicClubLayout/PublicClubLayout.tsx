@@ -3,8 +3,7 @@ import { PageContainer } from '@//:modules/content/PageLayout'
 import useLazyArguments from '@//:modules/content/HookedComponents/Post/support/useLazyArguments'
 import { useRouter } from 'next/router'
 import LazyPublicClubLayout from './LazyPublicClubLayout/LazyPublicClubLayout'
-import SuspenseLazyPosts
-  from '@//:modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
+import SuspenseLazyPosts from '@//:modules/content/HookedComponents/Post/components/SuspenseLazyPosts/SuspenseLazyPosts'
 import { LazyPostsErrorBoundary } from '@//:modules/content/HookedComponents/Post'
 
 export interface PublicClubLayoutLazyProps {
@@ -30,7 +29,7 @@ export default function PublicClubLayout (props: Props): JSX.Element {
 
   const memoContent = useMemo(() => (
     <>
-      <PageContainer>
+      <PageContainer pb={6}>
         <LazyPostsErrorBoundary loadQuery={loadQuery}>
           <SuspenseLazyPosts>
             <LazyPublicClubLayout lazyArguments={lazyArguments} />

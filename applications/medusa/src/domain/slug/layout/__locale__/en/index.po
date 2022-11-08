@@ -189,7 +189,7 @@ msgstr ""
 #~ msgid "Members"
 #~ msgstr ""
 
-#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:34
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:43
 msgid "New Posts"
 msgstr ""
 
@@ -247,7 +247,7 @@ msgstr ""
 #~ msgid "See All"
 #~ msgstr ""
 
-#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:53
+#: src/domain/slug/layout/domain/club/RootPublicClub/DisposePublicClub/ResultPublicClub/MetaPublicClub/ContainerPublicClub/ContainerPublicClub.tsx:62
 msgid "See all"
 msgstr ""
 

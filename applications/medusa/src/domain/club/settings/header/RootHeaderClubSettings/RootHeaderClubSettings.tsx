@@ -45,13 +45,13 @@ const RootHeaderClubSettings: PageProps<Props> = (props: Props) => {
           </Trans>
         </BackButton>
         <PageSectionWrap>
-          <PageSectionTitle colorScheme='teal'>
+          <PageSectionTitle>
             <Trans>
-              Club Thumbnail
+              Club Header
             </Trans>
           </PageSectionTitle>
           <PageSectionDescription>
-            A square image is recommended for best fit across the platform.
+            A rectangular image is recommended for best fit across the platform.
           </PageSectionDescription>
         </PageSectionWrap>
         <QueryErrorBoundary loadQuery={() => loadQuery({ slug: slug as string })}>

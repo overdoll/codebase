@@ -48,13 +48,13 @@ export default function ChangeClubHeaderUpload ({
       onCompleted () {
         notify({
           status: 'success',
-          title: t`Successfully updated your club thumbnail`
+          title: t`Successfully updated your club header`
         })
       },
       onError () {
         notify({
           status: 'error',
-          title: t`There was an error updating your club thumbnail`
+          title: t`There was an error updating your club header`
         })
       }
     }

@@ -17,7 +17,11 @@ msgstr ""
 msgid "Club Guidelines"
 msgstr ""
 
-#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:85
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:110
+msgid "Club Header"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:97
 msgid "Club Thumbnail"
 msgstr ""
 
@@ -29,7 +33,7 @@ msgstr ""
 msgid "Help"
 msgstr ""
 
-#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:72
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:84
 msgid "Manage Aliases"
 msgstr ""
 
@@ -37,10 +41,22 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:59
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:71
+msgid "Update Blurb"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:58
 msgid "Update Name"
 msgstr ""
 
-#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:87
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:73
+msgid "Update your club description"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:112
+msgid "Update your club header"
+msgstr ""
+
+#: src/domain/club/settings/root/RootClubSettings/ClubSettings/ClubSettings.tsx:99
 msgid "Update your club thumbnail"
 msgstr ""

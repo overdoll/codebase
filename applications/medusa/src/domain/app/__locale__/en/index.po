@@ -642,6 +642,10 @@ msgstr ""
 msgid "Please enter a 6-digit authentication code"
 msgstr ""
 
+#: src/modules/validation/ClubBlurb.ts:13
+msgid "Please enter a blurb"
+msgstr ""
+
 #: src/modules/validation/ClubSlug.ts:36
 msgid "Please enter a club link"
 msgstr ""
@@ -963,6 +967,14 @@ msgstr ""
 
 #: src/modules/content/HookedComponents/Media/components/ImageContainer/ImageControlContainer/ImageControls/ImageFooterControls/Controls/ImageExpandModal/ImageExpandModal.tsx:95
 msgid "Tap anywhere or hit <0>ESC</0> to close"
+msgstr ""
+
+#: src/modules/validation/ClubBlurb.ts:15
+msgid "The blurb cannot exceed 1000 characters"
+msgstr ""
+
+#: src/modules/validation/ClubBlurb.ts:14
+msgid "The blurb must be at least 10 characters"
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:39

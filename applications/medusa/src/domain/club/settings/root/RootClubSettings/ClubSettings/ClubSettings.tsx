@@ -61,7 +61,7 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
         />
       </PagePanelWrap>
       <PagePanelWrap href={{
-        pathname: '/club/[slug]/settings/name',
+        pathname: '/club/[slug]/settings/blurb',
         query: { slug: slug as string }
       }}
       >

@@ -7,6 +7,7 @@ import ClubJoinLoggedOutButton from '../Interact/ClubJoinLoggedOutButton/ClubJoi
 import ClubJoinButton from '../Interact/ClubJoinButton/ClubJoinButton'
 import ClubIcon from '../../../../PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 import ClubBanner from '../../../../PageLayout/Display/fragments/Banner/ClubBanner/ClubBanner'
+import ClubHeader from '../ClubHeader/ClubHeader'
 
 interface Props {
   clubQuery: DiscoverClubPreviewFragment$key
@@ -20,7 +21,11 @@ const ClubFragment = graphql`
     viewerMember {
       __typename
     }
+    header {
+      __typename
+    }
     ...ClubJoinButtonFragment
+    ...ClubHeaderFragment
     ...ClubBannerFragment
     ...ClubJoinLoggedOutButtonFragment
     ...ClubIconFragment
@@ -51,7 +56,7 @@ export default function DiscoverClubPreview (props: Props): JSX.Element {
         }}
       >
         <Box h='100%' w='100%' position='relative'>
-          <ClubBanner clubQuery={clubData} />
+          {clubData.header != null ? <ClubHeader clubQuery={clubData} /> : <ClubBanner clubQuery={clubData} />}
           <Box borderBottomRadius='md' bg='gray.800' p={2} right={0} bottom={0} left={0} position='absolute'>
             <HStack spacing={2}>
               <ClubIcon size='md' clubQuery={clubData} />

@@ -7,6 +7,7 @@ import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/Club
 import { ContentContainer } from '@//:modules/content/PageLayout'
 import MenuPublicClub from './MenuPublicClub/MenuPublicClub'
 import SharePublicClub from './SharePublicClub/SharePublicClub'
+import ClubHeader from '@//:modules/content/HookedComponents/Club/fragments/ClubHeader/ClubHeader'
 
 interface Props {
   clubQuery: BannerPublicClubFragment$key
@@ -26,6 +27,10 @@ const ClubFragment = graphql`
         }
       }
     }
+    header {
+      __typename
+    }
+    ...ClubHeaderFragment
     ...ClubIconFragment
     ...MenuPublicClubFragment
     ...SharePublicClubFragment
@@ -41,27 +46,44 @@ export default function BannerPublicClub (props: Props): JSX.Element {
 
   return (
     <Box position='relative'>
-      <Grid
+      <Flex
+        h='100%'
+        w='100%'
+        align='center'
+        justify='center'
         minH='200px'
         maxH='30vh'
         overflow='hidden'
-        h='100%'
-        w='100%'
-        templateColumns='1fr 1fr 1fr'
-        templateRows='1fr'
       >
-        {clubData.posts.edges.map((item) => (
-          <GridItem
-            h='100%'
-            w='100%'
-            overflow='hidden'
-            key={item.node.id}
-          >
-            <BannerPublicClubMedia mediaQuery={item.node.content[0].media} />
-          </GridItem>
-        ))}
-      </Grid>
-      <Box bg='dimmers.500' position='absolute' bottom={0} left={0} right={0} top={0}>
+        {clubData.header != null
+          ? (
+            <ClubHeader clubQuery={clubData} />
+            )
+          : (
+            <Grid
+              overflow='hidden'
+              h='100%'
+              w='100%'
+              minH='inherit'
+              maxH='inherit'
+              templateColumns='1fr 1fr 1fr'
+              templateRows='100%'
+            >
+              {clubData.posts.edges.map((item) => (
+                <GridItem
+                  h='100%'
+                  w='100%'
+                  overflow='hidden'
+                  key={item.node.id}
+                >
+                  <BannerPublicClubMedia mediaQuery={item.node.content[0].media} />
+                </GridItem>
+              ))}
+            </Grid>
+            )}
+      </Flex>
+
+      <Box bg='dimmers.200' position='absolute' bottom={0} left={0} right={0} top={0}>
         <ContentContainer h='100%'>
           <Flex align='flex-end' h='100%' w='100%'>
             <Flex w='100%' align='flex-end' justify='space-between'>

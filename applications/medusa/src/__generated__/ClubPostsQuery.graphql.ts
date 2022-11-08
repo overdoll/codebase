@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<ebb9fed94d3f4e2665efa992cc596fe5>>
- * @relayHash f4a8844f0b4f581d53d460db148a482e
+ * @generated SignedSource<<ff57002b989eed642a1b9cd2a2aec6b0>>
+ * @relayHash 66f8282a1d3022b7b0600c77022f3f0b
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID f4a8844f0b4f581d53d460db148a482e
+// @relayRequestID 66f8282a1d3022b7b0600c77022f3f0b
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -144,7 +144,30 @@ v9 = {
   ],
   "storageKey": null
 },
-v10 = {
+v10 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  }
+],
+v11 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaVariants",
@@ -159,29 +182,17 @@ v10 = {
       "kind": "LinkedField",
       "name": "banner",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "width",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "height",
-          "storageKey": null
-        }
-      ],
+      "selections": (v10/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "smallBanner",
+      "plural": false,
+      "selections": (v10/*: any*/),
       "storageKey": null
     }
   ],
@@ -310,7 +321,7 @@ return {
                                     "plural": false,
                                     "selections": [
                                       (v9/*: any*/),
-                                      (v10/*: any*/),
+                                      (v11/*: any*/),
                                       (v6/*: any*/)
                                     ],
                                     "storageKey": null
@@ -339,7 +350,7 @@ return {
                                 "selections": [
                                   (v6/*: any*/),
                                   (v9/*: any*/),
-                                  (v10/*: any*/)
+                                  (v11/*: any*/)
                                 ],
                                 "type": "ImageMedia",
                                 "abstractKey": null
@@ -438,8 +449,23 @@ return {
                             "name": "slug",
                             "storageKey": null
                           },
-                          (v6/*: any*/)
+                          (v6/*: any*/),
+                          (v2/*: any*/)
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "likes",
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "views",
                         "storageKey": null
                       },
                       (v8/*: any*/)
@@ -560,7 +586,7 @@ return {
     ]
   },
   "params": {
-    "id": "f4a8844f0b4f581d53d460db148a482e",
+    "id": "66f8282a1d3022b7b0600c77022f3f0b",
     "metadata": {},
     "name": "ClubPostsQuery",
     "operationKind": "query",

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<7385249e1e583e5fb9fa1f36a90953ee>>
- * @relayHash 1fba5edcb892bc667d34a1b022de962b
+ * @generated SignedSource<<281fb067bf73033a655f4cd306c05303>>
+ * @relayHash 3292586d70bd58a779bba90311b47265
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 1fba5edcb892bc667d34a1b022de962b
+// @relayRequestID 3292586d70bd58a779bba90311b47265
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -135,7 +135,30 @@ v11 = {
   ],
   "storageKey": null
 },
-v12 = {
+v12 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "url",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "width",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "height",
+    "storageKey": null
+  }
+],
+v13 = {
   "alias": null,
   "args": null,
   "concreteType": "ImageMediaVariants",
@@ -150,29 +173,17 @@ v12 = {
       "kind": "LinkedField",
       "name": "banner",
       "plural": false,
-      "selections": [
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "url",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "width",
-          "storageKey": null
-        },
-        {
-          "alias": null,
-          "args": null,
-          "kind": "ScalarField",
-          "name": "height",
-          "storageKey": null
-        }
-      ],
+      "selections": (v12/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "smallBanner",
+      "plural": false,
+      "selections": (v12/*: any*/),
       "storageKey": null
     }
   ],
@@ -299,7 +310,7 @@ return {
                                         "plural": false,
                                         "selections": [
                                           (v11/*: any*/),
-                                          (v12/*: any*/),
+                                          (v13/*: any*/),
                                           (v8/*: any*/)
                                         ],
                                         "storageKey": null
@@ -328,7 +339,7 @@ return {
                                     "selections": [
                                       (v8/*: any*/),
                                       (v11/*: any*/),
-                                      (v12/*: any*/)
+                                      (v13/*: any*/)
                                     ],
                                     "type": "ImageMedia",
                                     "abstractKey": null
@@ -427,8 +438,29 @@ return {
                                 "name": "slug",
                                 "storageKey": null
                               },
-                              (v8/*: any*/)
+                              (v8/*: any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerIsOwner",
+                                "storageKey": null
+                              }
                             ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "likes",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "views",
                             "storageKey": null
                           },
                           (v7/*: any*/)
@@ -507,7 +539,7 @@ return {
     ]
   },
   "params": {
-    "id": "1fba5edcb892bc667d34a1b022de962b",
+    "id": "3292586d70bd58a779bba90311b47265",
     "metadata": {},
     "name": "ClubPostsPaginationQuery",
     "operationKind": "query",

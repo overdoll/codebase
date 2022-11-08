@@ -14,6 +14,8 @@ import PostViewButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostViewButton/PostViewButton'
 import PostEditButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostEditButton/PostEditButton'
+import PostAnalyticsButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton'
 
 interface Props {
   query: ArchivedPostFragment$key
@@ -29,6 +31,7 @@ const Fragment = graphql`
     ...PostModerateButtonFragment
     ...PostUnArchiveButtonFragment
     ...PostViewButtonFragment
+    ...PostAnalyticsButtonFragment
     ...PostEditButtonFragment
   }
 `
@@ -49,6 +52,7 @@ export default function ArchivedPost ({
         <PostMenu size='xs'>
           <PostViewButton query={data} />
           <PostEditButton query={data} />
+          <PostAnalyticsButton query={data} />
           <PostUnArchiveButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>

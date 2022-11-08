@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<f0d98713797ae326ebc8375970658eff>>
- * @relayHash 244f0eb1bbab9af828446029bbb48f8e
+ * @generated SignedSource<<66c6ebb2db6f7f318f32415eb82d244d>>
+ * @relayHash 6286e6e754d398f5ff179485b784fb49
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 244f0eb1bbab9af828446029bbb48f8e
+// @relayRequestID 6286e6e754d398f5ff179485b784fb49
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -173,7 +173,68 @@ v8 = [
     "storageKey": null
   },
   (v0/*: any*/)
-];
+],
+v9 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaVariants",
+  "kind": "LinkedField",
+  "name": "variants",
+  "plural": false,
+  "selections": [
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "small",
+      "plural": false,
+      "selections": (v5/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "medium",
+      "plural": false,
+      "selections": (v5/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "large",
+      "plural": false,
+      "selections": (v5/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "thumbnail",
+      "plural": false,
+      "selections": (v5/*: any*/),
+      "storageKey": null
+    },
+    {
+      "alias": null,
+      "args": null,
+      "concreteType": "ImageMediaAccess",
+      "kind": "LinkedField",
+      "name": "hd",
+      "plural": false,
+      "selections": (v5/*: any*/),
+      "storageKey": null
+    }
+  ],
+  "storageKey": null
+};
 return {
   "fragment": {
     "argumentDefinitions": [],
@@ -413,6 +474,52 @@ return {
                     ],
                     "storageKey": null
                   },
+                  {
+                    "alias": null,
+                    "args": null,
+                    "concreteType": null,
+                    "kind": "LinkedField",
+                    "name": "header",
+                    "plural": false,
+                    "selections": [
+                      (v2/*: any*/),
+                      {
+                        "kind": "InlineFragment",
+                        "selections": [
+                          (v0/*: any*/),
+                          (v4/*: any*/),
+                          (v9/*: any*/)
+                        ],
+                        "type": "ImageMedia",
+                        "abstractKey": null
+                      },
+                      (v7/*: any*/),
+                      {
+                        "kind": "InlineFragment",
+                        "selections": [
+                          (v0/*: any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "concreteType": "ImageMedia",
+                            "kind": "LinkedField",
+                            "name": "cover",
+                            "plural": false,
+                            "selections": [
+                              (v4/*: any*/),
+                              (v9/*: any*/),
+                              (v0/*: any*/)
+                            ],
+                            "storageKey": null
+                          }
+                        ],
+                        "type": "VideoMedia",
+                        "abstractKey": null
+                      },
+                      (v3/*: any*/)
+                    ],
+                    "storageKey": null
+                  },
                   (v2/*: any*/)
                 ],
                 "storageKey": null
@@ -467,7 +574,7 @@ return {
     ]
   },
   "params": {
-    "id": "244f0eb1bbab9af828446029bbb48f8e",
+    "id": "6286e6e754d398f5ff179485b784fb49",
     "metadata": {},
     "name": "CurationSettingsQuery",
     "operationKind": "query",
