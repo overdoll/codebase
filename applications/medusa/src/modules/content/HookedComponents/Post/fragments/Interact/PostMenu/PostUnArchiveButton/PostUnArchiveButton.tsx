@@ -65,7 +65,6 @@ export default function PostUnArchiveButton ({
       isLoading={isInFlight}
       text={<Trans>Un-Archive Post</Trans>}
       icon={ArchiveFile}
-      colorScheme='green'
     />
   )
 }

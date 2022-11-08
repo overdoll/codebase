@@ -68,7 +68,7 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
           {(canLoadNext && hasNext && !hasError && data.edges.length - 2 === index) &&
             <LoadMoreObserver isLoadingNext={isPending || isLoadingNext} onObserve={onLoadNext} />}
           <MemoKey memoKey={item.node.id}>
-            <Box mb={index === data.edges.length - 1 ? 0 : 16}>
+            <Box mb={16}>
               <PreviewPost
                 postQuery={item.node}
               />

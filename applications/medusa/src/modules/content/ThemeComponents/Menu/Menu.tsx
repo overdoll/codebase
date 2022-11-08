@@ -7,6 +7,7 @@ import {
   MenuButton,
   MenuItem as ChakraMenuItem,
   MenuList,
+  Portal,
   Spinner,
   Text
 } from '@chakra-ui/react'
@@ -68,9 +69,11 @@ const Menu = forwardRef<MenuProps, any>(({
           ref={forwardRef}
           {...rest}
         />
-        <MenuList minW='230px' boxShadow='outline'>
-          {children}
-        </MenuList>
+        <Portal>
+          <MenuList minW='230px' boxShadow='outline'>
+            {children}
+          </MenuList>
+        </Portal>
       </ChakraMenu>
     </Box>
   )

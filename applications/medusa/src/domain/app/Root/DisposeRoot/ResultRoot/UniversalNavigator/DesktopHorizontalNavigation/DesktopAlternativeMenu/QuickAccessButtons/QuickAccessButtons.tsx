@@ -17,6 +17,7 @@ const Query = graphql`
         }
       }
       hasClubSupporterSubscription
+      isArtist
     }
   }
 `
@@ -26,7 +27,7 @@ export default function QuickAccessButtons (): JSX.Element {
 
   if (data.viewer == null) return <></>
 
-  if (data.viewer?.clubs?.edges != null) {
+  if (data.viewer?.clubs?.edges != null && data.viewer.isArtist) {
     if (data.viewer.clubsCount < 1 || data?.viewer?.clubs?.edges.length < 1 || data?.viewer?.clubs == null) {
       return (
         <LinkButton

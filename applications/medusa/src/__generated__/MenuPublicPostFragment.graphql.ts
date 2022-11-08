@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e38e2364faf4452e21aa9154d1f80192>>
+ * @generated SignedSource<<15d999db219fcc45fb0f88d98a22cfa9>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -16,7 +16,7 @@ export type MenuPublicPostFragment$data = {
     readonly viewerIsOwner: boolean;
   };
   readonly state: PostState;
-  readonly " $fragmentSpreads": FragmentRefs<"PostArchiveButtonFragment" | "PostModerateButtonFragment" | "PostReportButtonFragment" | "PostUnArchiveButtonFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"PostArchiveButtonFragment" | "PostEditButtonFragment" | "PostModerateButtonFragment" | "PostReportButtonFragment" | "PostUnArchiveButtonFragment">;
   readonly " $fragmentType": "MenuPublicPostFragment";
 };
 export type MenuPublicPostFragment$key = {
@@ -74,12 +74,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostReportButtonFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "PostEditButtonFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "31c56f037255c28f106a557a7d2fee46";
+(node as any).hash = "5c9edfc49657ab82b043756fa8a09de2";
 
 export default node;

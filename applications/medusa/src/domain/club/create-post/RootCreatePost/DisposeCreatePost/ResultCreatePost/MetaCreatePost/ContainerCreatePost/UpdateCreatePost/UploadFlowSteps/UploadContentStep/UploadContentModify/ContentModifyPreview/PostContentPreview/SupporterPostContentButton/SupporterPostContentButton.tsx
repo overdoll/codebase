@@ -4,12 +4,13 @@ import type {
   SupporterPostContentButtonPostFragment$key
 } from '@//:artifacts/SupporterPostContentButtonPostFragment.graphql'
 import type { SupporterPostContentButtonMutation } from '@//:artifacts/SupporterPostContentButtonMutation.graphql'
-import { t } from '@lingui/macro'
-import { PremiumStar, PremiumStarHollow } from '@//:assets/icons'
+import { t, Trans } from '@lingui/macro'
+import { PremiumStar } from '@//:assets/icons'
 import { useToast } from '@//:modules/content/ThemeComponents'
-import IconButton from '@//:modules/form/IconButton/IconButton'
-import { useLingui } from '@lingui/react'
 import { Icon } from '@//:modules/content/PageLayout'
+import Button from '@//:modules/form/Button/Button'
+import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequence'
+import { Text } from '@chakra-ui/react'
 
 interface Props {
   query: SupporterPostContentButtonFragment$key
@@ -56,11 +57,11 @@ export default function SupporterPostContentButton ({
 
   const data = useFragment(Fragment, query)
 
+  const { state } = useSequenceContext()
+
   const [supporterContent, isSupportingContent] = useMutation<SupporterPostContentButtonMutation>(Mutation)
 
   const notify = useToast()
-
-  const { i18n } = useLingui()
 
   const onSupporterContent = (): void => {
     supporterContent({
@@ -85,28 +86,42 @@ export default function SupporterPostContentButton ({
   }
 
   if (postData.club.canCreateSupporterOnlyPosts && !data.isSupporterOnly) {
+    if (state.isEditing === true) {
+      return (
+        <Text maxW={140} textAlign='center' fontSize='sm' color='gray.300'>
+          <Trans>
+            Cannot create supporter only content when editing
+          </Trans>
+        </Text>
+      )
+    }
+
     return (
-      <IconButton
-        aria-label={i18n._(t`Set Supporter Only`)}
+      <Button
         onClick={onSupporterContent}
         isLoading={isSupportingContent}
-        size='md'
-        variant='ghost'
-        borderRadius='lg'
-        icon={<Icon w={8} h={8} icon={PremiumStarHollow} fill='gray.300' />}
-      />
+        leftIcon={<Icon w={3} h={3} icon={PremiumStar} fill='gray.100' />}
+        size='sm'
+        colorScheme='gray'
+      >
+        <Trans>
+          Set Supporter Only
+        </Trans>
+      </Button>
     )
   }
 
   return (
-    <IconButton
-      aria-label={i18n._(t`Set Free`)}
+    <Button
       onClick={onSupporterContent}
       isLoading={isSupportingContent}
-      size='md'
-      variant='ghost'
-      borderRadius='lg'
-      icon={<Icon w={8} h={8} icon={PremiumStar} fill='green.300' />}
-    />
+      size='sm'
+      variant='solid'
+      colorScheme='gray'
+    >
+      <Trans>
+        Set Free
+      </Trans>
+    </Button>
   )
 }

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<b72cd8e23722947c6a6e29a4991321ff>>
+ * @generated SignedSource<<1399731ae729573f053b5e626054cd9e>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -15,7 +15,7 @@ export type GridPaginationPostFragment$data = {
     readonly id: string;
     readonly " $fragmentSpreads": FragmentRefs<"GridPaginationPostContentFragment">;
   }>;
-  readonly " $fragmentSpreads": FragmentRefs<"PostLinkTileFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"MenuSimplePublicPostFragment" | "PostLinkTileFragment">;
   readonly " $fragmentType": "GridPaginationPostFragment";
 };
 export type GridPaginationPostFragment$key = {
@@ -56,12 +56,17 @@ const node: ReaderFragment = {
       "args": null,
       "kind": "FragmentSpread",
       "name": "PostLinkTileFragment"
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "MenuSimplePublicPostFragment"
     }
   ],
   "type": "Post",
   "abstractKey": null
 };
 
-(node as any).hash = "01cc74401abb9122117814598c03d5f1";
+(node as any).hash = "a46adda17c6c2267d2319141842760ba";
 
 export default node;

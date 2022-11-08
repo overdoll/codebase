@@ -252,6 +252,10 @@ msgstr ""
 #~ msgid "Drop your files to upload them"
 #~ msgstr ""
 
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostEditButton/PostEditButton.tsx:36
+msgid "Edit Post"
+msgstr ""
+
 #: src/common/components/ChangeCharacterName/ChangeCharacterNameForm/ChangeCharacterNameForm.tsx:116
 msgid "Enter a name"
 msgstr ""
@@ -312,7 +316,7 @@ msgstr ""
 msgid "Go Back"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Post/PreviewFooter/PreviewFooter.tsx:39
+#: src/modules/content/HookedComponents/Post/fragments/Post/PreviewFooter/PreviewFooter.tsx:41
 msgid "HD & CONTROLS"
 msgstr ""
 
@@ -610,7 +614,7 @@ msgid "Open Lock Info"
 msgstr ""
 
 #: src/modules/content/Interactables/SmallMenuButton/SmallMenuButton.tsx:18
-#: src/modules/content/ThemeComponents/Menu/Menu.tsx:57
+#: src/modules/content/ThemeComponents/Menu/Menu.tsx:58
 msgid "Open Menu"
 msgstr ""
 
@@ -1189,11 +1193,12 @@ msgstr ""
 msgid "View Details"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Post/fragments/Post/PreviewFooter/PreviewFooter.tsx:34
+#: src/modules/content/HookedComponents/Post/fragments/Post/PreviewFooter/PreviewFooter.tsx:36
 msgid "View Full Post"
 msgstr ""
 
-#: src/modules/content/HookedComponents/Filters/fragments/DiscoverClubsList/DiscoverClubsList.tsx:64
+#: src/modules/content/HookedComponents/Filters/fragments/DiscoverClubsList/DiscoverClubsList.tsx:88
+#: src/modules/content/HookedComponents/Filters/fragments/DiscoverClubsList/DiscoverClubsList.tsx:114
 msgid "View More Clubs"
 msgstr ""
 

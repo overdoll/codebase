@@ -1857,6 +1857,9 @@ type Club implements Node {
   """A URL pointing to the object's banner."""
   bannerMedia: Media
 
+  """A blurb for this club."""
+  blurb: String!
+
   """
   Whether creating supporter-only posts is enabled or disabled for this club.
   
@@ -1904,6 +1907,9 @@ type Club implements Node {
 
   """The amount of characters that this club can create."""
   charactersLimit: Int!
+
+  """A URL pointing to the object's header."""
+  header: Media
 
   """An ID pointing to this club."""
   id: ID!
@@ -4358,12 +4364,18 @@ type Mutation {
   """Update character title"""
   updateCharacterName(input: UpdateCharacterNameInput!): UpdateCharacterNamePayload
 
+  """Update the club's blurb (english-only for now)."""
+  updateClubBlurb(input: UpdateClubBlurbInput!): UpdateClubBlurbPayload
+
   """
   Set the amount of characters that a club can create.
   
   Staff+ only.
   """
   updateClubCharactersLimit(input: UpdateClubCharactersLimitInput!): UpdateClubCharactersLimitPayload
+
+  """Update the club header"""
+  updateClubHeader(input: UpdateClubHeaderInput!): UpdateClubHeaderPayload
 
   """Update the club's name (english-only for now)."""
   updateClubName(input: UpdateClubNameInput!): UpdateClubNamePayload
@@ -6523,6 +6535,25 @@ type UpdateCharacterNamePayload {
   character: Character
 }
 
+"""Update club blurb."""
+input UpdateClubBlurbInput {
+  """
+  The chosen blurb for the club.
+  
+  Validation: Max 1000 characters.
+  """
+  blurb: String!
+
+  """The club to update"""
+  id: ID!
+}
+
+"""Payload for updating the blurb"""
+type UpdateClubBlurbPayload {
+  """The club after update"""
+  club: Club
+}
+
 """Update club characters limit."""
 input UpdateClubCharactersLimitInput {
   """
@@ -6539,6 +6570,21 @@ input UpdateClubCharactersLimitInput {
 """Update club characters limit payload."""
 type UpdateClubCharactersLimitPayload {
   """The club after updating the characters limit."""
+  club: Club
+}
+
+"""Update club banner."""
+input UpdateClubHeaderInput {
+  """The header for the club."""
+  header: String!
+
+  """The club to update"""
+  id: ID!
+}
+
+"""Payload for updating the header"""
+type UpdateClubHeaderPayload {
+  """The club after update"""
   club: Club
 }
 
@@ -6755,7 +6801,7 @@ input UpdatePostDescriptionInput {
   """
   The description to update.
   
-  Validation: Max 280 characters. No links allowed.
+  Validation: Max 280 characters.
   """
   description: String!
 

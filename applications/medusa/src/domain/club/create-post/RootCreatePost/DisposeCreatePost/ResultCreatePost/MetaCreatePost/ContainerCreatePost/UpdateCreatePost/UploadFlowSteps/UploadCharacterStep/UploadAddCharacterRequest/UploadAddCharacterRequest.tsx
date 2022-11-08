@@ -1,17 +1,6 @@
-import {
-  Heading,
-  HStack,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalOverlay,
-  Stack,
-  useDisclosure
-} from '@chakra-ui/react'
+import { Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay, Stack } from '@chakra-ui/react'
 import { t, Trans } from '@lingui/macro'
 import { ComponentChoiceArguments } from '@//:modules/content/HookedComponents/Choice/types'
-import Button from '@//:modules/form/Button/Button'
 import CloseButton from '@//:modules/content/ThemeComponents/CloseButton/CloseButton'
 import {
   Form,
@@ -34,18 +23,16 @@ interface FormValues {
 }
 
 interface Props extends ComponentChoiceArguments<any> {
+  isOpen: boolean
+  onClose: () => void
 }
 
 export default function UploadAddCharacterRequest (props: Props): JSX.Element {
   const {
-    register
-  } = props
-
-  const {
+    register,
     isOpen,
-    onOpen,
     onClose
-  } = useDisclosure()
+  } = props
 
   const { i18n } = useLingui()
 
@@ -79,18 +66,6 @@ export default function UploadAddCharacterRequest (props: Props): JSX.Element {
 
   return (
     <>
-      <HStack justify='space-between' p={4} bg='gray.800' borderRadius='md' spacing={2}>
-        <Heading color='gray.200' fontSize='lg'>
-          <Trans>
-            The character I'm looking for isn't listed
-          </Trans>
-        </Heading>
-        <Button onClick={onOpen} size='sm' colorScheme='teal' variant='solid'>
-          <Trans>
-            Request Character
-          </Trans>
-        </Button>
-      </HStack>
       <Modal
         isOpen={isOpen}
         onClose={onClose}

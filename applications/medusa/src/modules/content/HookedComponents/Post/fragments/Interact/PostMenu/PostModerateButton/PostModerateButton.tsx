@@ -33,7 +33,6 @@ export default function PostModerateButton ({
           <Trans>
             Moderate
           </Trans>)}
-        colorScheme='purple'
         icon={LoginKeys}
       />
     </Can>

@@ -65,7 +65,6 @@ export default function PostArchiveButton ({
       isLoading={isInFlight}
       text={<Trans>Archive Post</Trans>}
       icon={ArchiveFile}
-      colorScheme='green'
     />
   )
 }

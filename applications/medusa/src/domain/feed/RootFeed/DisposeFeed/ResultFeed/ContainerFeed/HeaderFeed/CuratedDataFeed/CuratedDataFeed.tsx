@@ -41,7 +41,7 @@ export default function CuratedDataFeed (props: Props): JSX.Element {
     )
   }
 
-  const hasNewContent = viewerData.curatedPostsFeedData.viewedAt == null || isBefore(new Date(viewerData.curatedPostsFeedData.nextRegenerationTime), new Date())
+  const hasNewContent = viewerData.curatedPostsFeedData?.viewedAt == null || isBefore(new Date(viewerData.curatedPostsFeedData.nextRegenerationTime), new Date())
 
   return (
     <Stack spacing={2}>

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<b61cdf6c883cd5414dc465cb791f5e4a>>
- * @relayHash 16aa868c89c03969b4352202aa2660f5
+ * @generated SignedSource<<1b15bbc59144514aa6d3557588497557>>
+ * @relayHash d51ea245ae8b7cdc12d2d2644777e07c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 16aa868c89c03969b4352202aa2660f5
+// @relayRequestID d51ea245ae8b7cdc12d2d2644777e07c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -364,7 +364,7 @@ v34 = [
   {
     "kind": "Literal",
     "name": "first",
-    "value": 11
+    "value": 12
   }
 ],
 v35 = [
@@ -540,6 +540,13 @@ return {
                                 "args": null,
                                 "kind": "ScalarField",
                                 "name": "canSupport",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "viewerIsOwner",
                                 "storageKey": null
                               }
                             ],
@@ -736,6 +743,13 @@ return {
                               (v14/*: any*/)
                             ],
                             "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "state",
+                            "storageKey": null
                           }
                         ],
                         "storageKey": null
@@ -870,7 +884,7 @@ return {
                   },
                   (v33/*: any*/)
                 ],
-                "storageKey": "tags(first:11)"
+                "storageKey": "tags(first:12)"
               },
               {
                 "alias": null,
@@ -891,7 +905,7 @@ return {
     ]
   },
   "params": {
-    "id": "16aa868c89c03969b4352202aa2660f5",
+    "id": "d51ea245ae8b7cdc12d2d2644777e07c",
     "metadata": {},
     "name": "ClubPublicPostsPaginationQuery",
     "operationKind": "query",

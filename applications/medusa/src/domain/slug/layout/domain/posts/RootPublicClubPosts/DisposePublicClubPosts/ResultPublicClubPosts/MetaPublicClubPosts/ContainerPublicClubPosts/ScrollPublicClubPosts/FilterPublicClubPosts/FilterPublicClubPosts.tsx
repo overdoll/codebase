@@ -36,7 +36,7 @@ interface Props {
 const Fragment = graphql`
   fragment FilterPublicClubPostsFragment on Club
   @argumentDefinitions(
-    first: {type: Int, defaultValue: 11}
+    first: {type: Int, defaultValue: 12}
     after: {type: String}
   )
   @refetchable(queryName: "ClubPublicPostsTagsPaginationQuery" ) {

@@ -83,12 +83,14 @@ export default function UploadSearchTopicsSelector ({
     values: topicValues
   } = useChoice<ChoiceProps>({
     max: 1,
-    onChange: () => {
-      dispatch({
-        type: 'deepValue',
-        value: 'topic',
-        transform: 'SET'
-      })
+    onChange: (values) => {
+      if (Object.keys(values).length > 0) {
+        dispatch({
+          type: 'deepValue',
+          value: 'topic',
+          transform: 'SET'
+        })
+      }
     }
   })
 

@@ -56,6 +56,10 @@ msgstr ""
 msgid "Discover"
 msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/SuggestedHome/DiscoverClubsTiles/DiscoverClubsTiles.tsx:43
+msgid "Discover clubs"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/HeaderGrid/HeaderGrid.tsx:63
 msgid "Discover clubs posting content"
 msgstr ""
@@ -167,6 +171,10 @@ msgstr ""
 #~ msgid "Please review the <0>Community Guidelines</0> to make sure this doesn't happen again."
 #~ msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/SuggestedHome/PopularTagsCards/PopularTagsCards.tsx:39
+msgid "Popular tags"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:59
 msgid "Post Content"
 msgstr ""
@@ -232,6 +240,10 @@ msgstr ""
 msgid "See More Posts"
 msgstr ""
 
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/SuggestedHome/DiscoverClubsTiles/DiscoverClubsTiles.tsx:45
+msgid "See all"
+msgstr ""
+
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/BoxesHome/BoxesHome.tsx:239
 msgid "See all of your liked posts - a benefit of being a club supporter"
 msgstr ""
@@ -270,6 +282,10 @@ msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/components/Tiles/RouletteTile/RouletteTile.tsx:61
 msgid "Spin your way through rule34, hentai, furry, 3D porn videos and images and see how long you can last"
+msgstr ""
+
+#: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/SuggestedHome/RecommendedPostsGrid/RecommendedPostsGrid.tsx:38
+msgid "Suggested posts"
 msgstr ""
 
 #: src/domain/home/RootHome/DisposeHome/ResultHome/MetaHome/ContainerHome/TilesHome/fragments/GridContribute/GridContribute.tsx:117

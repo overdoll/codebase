@@ -1,10 +1,11 @@
 import { graphql, useFragment } from 'react-relay'
 import type { GridPaginationPostFragment$key } from '@//:artifacts/GridPaginationPostFragment.graphql'
-import { Flex, Grid, GridItem, GridProps, Heading } from '@chakra-ui/react'
+import { Box, Flex, Grid, GridItem, GridProps, Heading } from '@chakra-ui/react'
 import GridPaginationPostContent from './GridPaginationPostContent/GridPaginationPostContent'
 import PostLinkTile from '../../../../../../PageLayout/Display/fragments/Link/PostLinkTile/PostLinkTile'
 import React from 'react'
 import useFeatureFlag from '../../../../../../../hooks/useFeatureFlag'
+import MenuSimplePublicPost from '../../../../fragments/Interact/MenuSimplePublicPost/MenuSimplePublicPost'
 
 interface Props {
   query: GridPaginationPostFragment$key
@@ -17,6 +18,7 @@ const Fragment = graphql`
       ...GridPaginationPostContentFragment
     }
     ...PostLinkTileFragment
+    ...MenuSimplePublicPostFragment
   }
 `
 
@@ -107,6 +109,9 @@ export default function GridPaginationPost (props: Props): JSX.Element {
             </Flex>
           )}
         </PostLinkTile>
+        <Box position='absolute' top={1} right={1}>
+          <MenuSimplePublicPost postQuery={data} />
+        </Box>
       </Flex>
     )
   }
@@ -162,6 +167,9 @@ export default function GridPaginationPost (props: Props): JSX.Element {
           </Flex>
         )}
       </PostLinkTile>
+      <Box position='absolute' top={1} right={1}>
+        <MenuSimplePublicPost postQuery={data} />
+      </Box>
     </Flex>
   )
 }

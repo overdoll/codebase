@@ -1,8 +1,8 @@
 import { Menu } from '../../../../../ThemeComponents/Menu/Menu'
 import Can from '../../../../../../authorization/Can'
-import { ButtonProps } from '@chakra-ui/react'
+import { IconButtonProps } from '@chakra-ui/react'
 
-type Props = ButtonProps
+type Props = Omit<IconButtonProps, 'aria-label'>
 
 export default function PostMenu ({
   children,

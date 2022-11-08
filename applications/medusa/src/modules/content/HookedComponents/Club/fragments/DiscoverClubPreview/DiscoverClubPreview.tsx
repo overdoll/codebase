@@ -50,22 +50,24 @@ export default function DiscoverClubPreview (props: Props): JSX.Element {
           query: { slug: clubData.slug }
         }}
       >
-        <ClubBanner clubQuery={clubData} />
+        <Box h='100%' w='100%' position='relative'>
+          <ClubBanner clubQuery={clubData} />
+          <Box borderBottomRadius='md' bg='gray.800' p={2} right={0} bottom={0} left={0} position='absolute'>
+            <HStack spacing={2}>
+              <ClubIcon size='md' clubQuery={clubData} />
+              <Heading size='md' color='gray.00'>
+                {clubData.name}
+              </Heading>
+            </HStack>
+          </Box>
+        </Box>
       </LinkTile>
-      <Box borderBottomRadius='md' bg='gray.800' p={2} right={0} bottom={0} left={0} position='absolute'>
-        <HStack justify='space-between'>
-          <HStack spacing={2}>
-            <ClubIcon size='md' clubQuery={clubData} />
-            <Heading size='md' color='gray.00'>
-              {clubData.name}
-            </Heading>
-          </HStack>
-          {viewerData == null
-            ? <ClubJoinLoggedOutButton clubQuery={clubData} />
-            : (clubData.viewerMember == null
-                ? <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
-                : <></>)}
-        </HStack>
+      <Box position='absolute' bottom={1} right={1}>
+        {viewerData == null
+          ? <ClubJoinLoggedOutButton clubQuery={clubData} />
+          : (clubData.viewerMember == null
+              ? <ClubJoinButton clubQuery={clubData} viewerQuery={viewerData} />
+              : <></>)}
       </Box>
     </Flex>
   )

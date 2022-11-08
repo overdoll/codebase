@@ -27,7 +27,8 @@ describe('Post', () => {
   }
 
   const clickonReportPostMenuItem = (): void => {
-    cy.get('button[aria-label="Open Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true }).parent().findByText(/Report Post/iu).should('be.visible').click({ force: true })
+    cy.get('button[aria-label="Open Menu"]').first().should('be.visible').should('not.be.disabled').click({ force: true })
+    cy.findByText('Report Post').should('be.visible').click({ force: true })
   }
 
   it('club, character, category on post', () => {

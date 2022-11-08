@@ -11,6 +11,7 @@ import { useSequenceContext } from '@//:modules/content/HookedComponents/Sequenc
 interface Props {
   query: UpdateCharacterButtonFragment$key
   nextStep: () => void
+  isAtEnd: boolean
 }
 
 const Fragment = graphql`
@@ -54,7 +55,8 @@ const Mutation = graphql`
 `
 export default function UpdateCharacterButton ({
   query,
-  nextStep
+  nextStep,
+  isAtEnd
 }: Props): JSX.Element {
   const data = useFragment(Fragment, query)
 
@@ -92,6 +94,7 @@ export default function UpdateCharacterButton ({
         }
       },
       onCompleted () {
+        if (isAtEnd) return
         nextStep()
       },
       onError () {
@@ -111,6 +114,10 @@ export default function UpdateCharacterButton ({
         onClick={onUpdateCharacter}
       />
     )
+  }
+
+  if (isAtEnd && !buttonDisabled) {
+    return <></>
   }
 
   return (
