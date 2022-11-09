@@ -86,6 +86,10 @@ msgstr ""
 #~ msgid "Creating an account on overdoll means you agree to follow our <0>Community Guidelines</0> and understand our <1>Terms of Service</1>  and  <2>Privacy Policy</2>."
 #~ msgstr ""
 
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:50
+msgid "Don't have an account?"
+msgstr ""
+
 #: src/domain/join/Join/pages/Join/JoinForm/JoinForm.tsx:52
 #~ msgid "Email"
 #~ msgstr ""
@@ -135,6 +139,10 @@ msgstr ""
 msgid "Go back"
 msgstr ""
 
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:55
+msgid "Have an account already?"
+msgstr ""
+
 #: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:46
 #~ msgid "Have your content distributed across the platform"
 #~ msgstr ""
@@ -155,9 +163,13 @@ msgstr ""
 #~ msgid "If you lost access to your two-factor device, you can use one of the recovery codes you downloaded when you set up two-factor authentication."
 #~ msgstr ""
 
-#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:25
-msgid "Join overdoll."
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:36
+msgid "Join overdoll"
 msgstr ""
+
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:25
+#~ msgid "Join overdoll."
+#~ msgstr ""
 
 #: src/domain/join/RootJoin/DisposeJoin/ResultJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:95
 #~ msgid "Join the next digital adult content platform."
@@ -165,6 +177,10 @@ msgstr ""
 
 #: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/GrantAuthenticationTokenJoin/GrantAuthenticationTokenJoin.tsx:166
 msgid "Just a few seconds for us to log you in."
+msgstr ""
+
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:68
+msgid "Log in"
 msgstr ""
 
 #: src/domain/join/Join/pages/Grant/Grant.tsx:117
@@ -216,6 +232,14 @@ msgstr ""
 #: src/domain/join/Join/components/PlatformBenefitsAdvert/BenefitsTransition/BenefitsTransition.tsx:68
 #~ msgid "Save your favorite posts"
 #~ msgstr ""
+
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:31
+msgid "Sign in to overdoll"
+msgstr ""
+
+#: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/EmptyJoin/EmptyJoin.tsx:63
+msgid "Sign up"
+msgstr ""
 
 #: src/domain/join/RootJoin/DisposeJoin/ResultJoin/RootStartJoin/StartJoin/ViewAuthenticationTokenJoin/MultiFactorAuthenticationToken/RecoveryCodeAuthenticationToken/RecoveryCodeAuthenticationToken.tsx:216
 msgid "Submit"

@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<70a2ec4aab338120a1208af2c732d1c9>>
- * @relayHash 79b0fa6d3621f568a8765c5c72313d1f
+ * @generated SignedSource<<98c2132d62daa6b5d5e81e99c9a87481>>
+ * @relayHash 973d396fe7e2e7230370a15cff474066
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 79b0fa6d3621f568a8765c5c72313d1f
+// @relayRequestID 973d396fe7e2e7230370a15cff474066
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -268,6 +268,26 @@ v20 = {
   "concreteType": "ImageMediaAccess",
   "kind": "LinkedField",
   "name": "medium",
+  "plural": false,
+  "selections": (v11/*: any*/),
+  "storageKey": null
+},
+v21 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "banner",
+  "plural": false,
+  "selections": (v11/*: any*/),
+  "storageKey": null
+},
+v22 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "ImageMediaAccess",
+  "kind": "LinkedField",
+  "name": "smallBanner",
   "plural": false,
   "selections": (v11/*: any*/),
   "storageKey": null
@@ -538,7 +558,9 @@ return {
                             "selections": [
                               (v19/*: any*/),
                               (v15/*: any*/),
-                              (v20/*: any*/)
+                              (v20/*: any*/),
+                              (v21/*: any*/),
+                              (v22/*: any*/)
                             ],
                             "storageKey": null
                           },
@@ -605,7 +627,9 @@ return {
                             "plural": false,
                             "selections": (v11/*: any*/),
                             "storageKey": null
-                          }
+                          },
+                          (v21/*: any*/),
+                          (v22/*: any*/)
                         ],
                         "storageKey": null
                       },
@@ -695,6 +719,20 @@ return {
             "plural": false,
             "selections": (v14/*: any*/),
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "likes",
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "views",
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -766,7 +804,7 @@ return {
     ]
   },
   "params": {
-    "id": "79b0fa6d3621f568a8765c5c72313d1f",
+    "id": "973d396fe7e2e7230370a15cff474066",
     "metadata": {},
     "name": "ResultPublicPostQuery",
     "operationKind": "query",

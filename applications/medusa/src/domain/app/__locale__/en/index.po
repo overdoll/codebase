@@ -33,6 +33,10 @@ msgstr ""
 msgid "Add Content"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:54
+msgid "Analytics"
+msgstr ""
+
 #: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostArchiveButton/PostArchiveButton.tsx:66
 msgid "Archive Post"
 msgstr ""
@@ -428,6 +432,10 @@ msgstr ""
 msgid "Liked"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:101
+msgid "Likes"
+msgstr ""
+
 #: src/modules/content/ContentSelection/LoadMore/LoadMore.tsx:41
 #: src/modules/content/HookedComponents/Post/components/PaginationScroller/VerticalPaginationFooter/LoadMoreButton/LoadMoreButton.tsx:29
 msgid "Load More"
@@ -640,6 +648,10 @@ msgstr ""
 
 #: src/modules/validation/Totp.ts:13
 msgid "Please enter a 6-digit authentication code"
+msgstr ""
+
+#: src/modules/validation/ClubBlurb.ts:13
+msgid "Please enter a blurb"
 msgstr ""
 
 #: src/modules/validation/ClubSlug.ts:36
@@ -965,6 +977,14 @@ msgstr ""
 msgid "Tap anywhere or hit <0>ESC</0> to close"
 msgstr ""
 
+#: src/modules/validation/ClubBlurb.ts:15
+msgid "The blurb cannot exceed 1000 characters"
+msgstr ""
+
+#: src/modules/validation/ClubBlurb.ts:14
+msgid "The blurb must be at least 10 characters"
+msgstr ""
+
 #: src/modules/validation/ClubSlug.ts:39
 msgid "The club link can only contain numbers and letters."
 msgstr ""
@@ -1210,6 +1230,10 @@ msgstr ""
 msgid "View Translations"
 msgstr ""
 
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:92
+msgid "Views"
+msgstr ""
+
 #: src/common/components/PlatformPromoteAlert/PlatformPromoteAlert.tsx:39
 msgid "Want more content?"
 msgstr ""
@@ -1241,6 +1265,10 @@ msgstr ""
 #: src/modules/content/HookedComponents/Post/components/PaginationScroller/EmptyPaginationScroller/EmptyPaginationScroller.tsx:17
 #: src/modules/content/Placeholder/Empty/EmptyPosts/EmptyPosts.tsx:8
 msgid "We couldn't find any posts"
+msgstr ""
+
+#: src/modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton.tsx:82
+msgid "We don't have enough data about this post yet"
 msgstr ""
 
 #: src/modules/content/HookedComponents/Filters/fragments/DateOfBirthPreference/DateOfBirthPreference.tsx:79

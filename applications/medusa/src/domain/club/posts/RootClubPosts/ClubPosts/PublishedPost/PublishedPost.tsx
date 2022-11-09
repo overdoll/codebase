@@ -14,6 +14,8 @@ import PostViewButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostViewButton/PostViewButton'
 import PostEditButton
   from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostEditButton/PostEditButton'
+import PostAnalyticsButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton'
 
 interface Props {
   query: PublishedPostFragment$key
@@ -27,6 +29,7 @@ const Fragment = graphql`
     ...PostArchiveButtonFragment
     ...PostViewButtonFragment
     ...PostEditButtonFragment
+    ...PostAnalyticsButtonFragment
     club {
       slug
     }
@@ -49,6 +52,7 @@ export default function PublishedPost ({
         <PostMenu size='xs'>
           <PostViewButton query={data} />
           <PostEditButton query={data} />
+          <PostAnalyticsButton query={data} />
           <PostArchiveButton query={data} />
           <PostModerateButton query={data} />
         </PostMenu>

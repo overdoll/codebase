@@ -1,14 +1,21 @@
 import { useFragment } from 'react-relay/hooks'
 import { graphql } from 'react-relay'
 import { MenuPublicPostFragment$key } from '@//:artifacts/MenuPublicPostFragment.graphql'
-import PostArchiveButton from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostArchiveButton/PostArchiveButton'
-import PostModerateButton from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostModerateButton/PostModerateButton'
+import PostArchiveButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostArchiveButton/PostArchiveButton'
+import PostModerateButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostModerateButton/PostModerateButton'
 import PostMenu from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostMenu'
-import PostReportButton from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton'
-import PostUnArchiveButton from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostUnArchiveButton/PostUnArchiveButton'
+import PostReportButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostReportButton/PostReportButton'
+import PostUnArchiveButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostUnArchiveButton/PostUnArchiveButton'
 import { Flex } from '@chakra-ui/react'
 import useAbility from '@//:modules/authorization/useAbility'
-import PostEditButton from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostEditButton/PostEditButton'
+import PostEditButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostEditButton/PostEditButton'
+import PostAnalyticsButton
+  from '@//:modules/content/HookedComponents/Post/fragments/Interact/PostMenu/PostAnalyticsButton/PostAnalyticsButton'
 
 interface Props {
   postQuery: MenuPublicPostFragment$key
@@ -25,6 +32,7 @@ const PostFragment = graphql`
     ...PostModerateButtonFragment
     ...PostReportButtonFragment
     ...PostEditButtonFragment
+    ...PostAnalyticsButtonFragment
   }
 `
 
@@ -44,6 +52,9 @@ export default function MenuPublicPost (props: Props): JSX.Element {
         {(postData.club?.viewerIsOwner ||
           ability.can('edit', 'Post')) && (
             <PostEditButton query={postData} />
+        )}
+        {postData.club?.viewerIsOwner && (
+          <PostAnalyticsButton query={postData} />
         )}
         {postData.club?.viewerIsOwner
           ? (

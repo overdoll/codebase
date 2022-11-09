@@ -52,11 +52,13 @@ export default function ClubHome ({ query }: Props): JSX.Element {
 
   const number = (queryData?.club?.membersCount ?? 0).toLocaleString()
 
+  const title = `Manage ${queryData.club.name} - overdoll`
+
   return (
     <>
       <Head>
         <title>
-          Manage {queryData.club.name} - overdoll
+          {title}
         </title>
       </Head>
       <ClubInformationBanner query={queryData.club} />

@@ -3,11 +3,10 @@ import { ClubSettingsQuery } from '@//:artifacts/ClubSettingsQuery.graphql'
 import { Stack } from '@chakra-ui/react'
 import { NotFoundClub } from '@//:modules/content/Placeholder'
 import { PagePanelIcon, PagePanelText, PagePanelWrap } from '@//:modules/content/PageLayout'
-import { Barcode, SeriesIdentifier } from '@//:assets/icons'
+import { AddDescription, Barcode, CardPostsView, PictureIdentifier, SeriesIdentifier } from '@//:assets/icons'
 import { Trans } from '@lingui/macro'
 import { useRouter } from 'next/router'
 import ClubInformationBanner from '../../../../../../common/components/ClubInformationBanner/ClubInformationBanner'
-import ClubIcon from '@//:modules/content/PageLayout/Display/fragments/Icon/ClubIcon/ClubIcon'
 
 interface Props {
   query: PreloadedQuery<ClubSettingsQuery>
@@ -62,6 +61,19 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
         />
       </PagePanelWrap>
       <PagePanelWrap href={{
+        pathname: '/club/[slug]/settings/blurb',
+        query: { slug: slug as string }
+      }}
+      >
+        <PagePanelIcon icon={AddDescription} colorScheme='orange' />
+        <PagePanelText
+          title={
+            <Trans>Update Blurb</Trans>
+          }
+          description={<Trans>Update your club description</Trans>}
+        />
+      </PagePanelWrap>
+      <PagePanelWrap href={{
         pathname: '/club/[slug]/settings/aliases',
         query: { slug: slug as string }
       }}
@@ -79,12 +91,25 @@ export default function ClubSettings ({ query }: Props): JSX.Element {
         query: { slug: slug as string }
       }}
       >
-        <ClubIcon size='md' clubQuery={queryData.club} />
+        <PagePanelIcon icon={PictureIdentifier} colorScheme='purple' />
         <PagePanelText
           title={
             <Trans>Club Thumbnail</Trans>
           }
           description={<Trans>Update your club thumbnail</Trans>}
+        />
+      </PagePanelWrap>
+      <PagePanelWrap href={{
+        pathname: '/club/[slug]/settings/header',
+        query: { slug: slug as string }
+      }}
+      >
+        <PagePanelIcon icon={CardPostsView} colorScheme='primary' />
+        <PagePanelText
+          title={
+            <Trans>Club Header</Trans>
+          }
+          description={<Trans>Update your club header</Trans>}
         />
       </PagePanelWrap>
     </Stack>

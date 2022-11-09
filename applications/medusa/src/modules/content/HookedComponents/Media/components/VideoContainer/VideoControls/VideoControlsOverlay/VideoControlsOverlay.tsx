@@ -68,16 +68,14 @@ export default function VideoControlsOverlay (props: Props): JSX.Element {
         templateColumns='25% 50% 25%'
       >
         <GridItem area='header'>
-          <Flex align='flex-start' w='100%' h='100%' p={2}>
-            {controls !== 'none' && (
-              <VideoHeaderControls
-                isOpen={isOpen}
-                hasAudio={hasAudio}
-                duration={duration}
-                player={player}
-              />
-            )}
-          </Flex>
+          {controls !== 'none' && (
+            <VideoHeaderControls
+              isOpen={isOpen}
+              hasAudio={hasAudio}
+              duration={duration}
+              player={player}
+            />
+          )}
         </GridItem>
         <GridItem area='center'>
           <VideoCenterControls

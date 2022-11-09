@@ -79,12 +79,13 @@ export default function ClubMembers ({ query }: Props): JSX.Element {
       </Text>
     )
   }
+  const title = `${queryData.club.name}'s Members - overdoll`
 
   return (
     <>
       <Head>
         <title>
-          {queryData.club.name}'s Members - overdoll
+          {title}
         </title>
       </Head>
       <Stack>

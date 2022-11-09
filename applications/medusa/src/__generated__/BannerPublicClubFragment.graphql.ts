@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<96fb93343bbe1056165f665e4047c090>>
+ * @generated SignedSource<<8a429c2bed0c07f553b83b8653b27189>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -11,6 +11,9 @@
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
 export type BannerPublicClubFragment$data = {
+  readonly header: {
+    readonly __typename: string;
+  } | null;
   readonly posts: {
     readonly edges: ReadonlyArray<{
       readonly node: {
@@ -23,7 +26,7 @@ export type BannerPublicClubFragment$data = {
       };
     }>;
   };
-  readonly " $fragmentSpreads": FragmentRefs<"ClubIconFragment" | "MenuPublicClubFragment" | "SharePublicClubFragment">;
+  readonly " $fragmentSpreads": FragmentRefs<"ClubHeaderFragment" | "ClubIconFragment" | "MenuPublicClubFragment" | "SharePublicClubFragment">;
   readonly " $fragmentType": "BannerPublicClubFragment";
 };
 export type BannerPublicClubFragment$key = {
@@ -116,6 +119,29 @@ const node: ReaderFragment = {
       "storageKey": "posts(first:3,sortBy:\"TOP\")"
     },
     {
+      "alias": null,
+      "args": null,
+      "concreteType": null,
+      "kind": "LinkedField",
+      "name": "header",
+      "plural": false,
+      "selections": [
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "__typename",
+          "storageKey": null
+        }
+      ],
+      "storageKey": null
+    },
+    {
+      "args": null,
+      "kind": "FragmentSpread",
+      "name": "ClubHeaderFragment"
+    },
+    {
       "args": null,
       "kind": "FragmentSpread",
       "name": "ClubIconFragment"
@@ -135,6 +161,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "80d2de9de29f336c5a6e933a81cfd2f9";
+(node as any).hash = "a7a498a0c94c310f8b07e19650092c61";
 
 export default node;

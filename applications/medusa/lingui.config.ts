@@ -208,6 +208,14 @@ const ClubCatalog = [
   {
     path: 'src/domain/club/settings/thumbnail/__locale__/{locale}/index',
     include: ['src/domain/club/settings/thumbnail/']
+  },
+  {
+    path: 'src/domain/club/settings/banner/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/banner/']
+  },
+  {
+    path: 'src/domain/club/settings/blurb/__locale__/{locale}/index',
+    include: ['src/domain/club/settings/blurb/']
   }
 ]
 
