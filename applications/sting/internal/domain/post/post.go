@@ -669,8 +669,8 @@ func (p *Post) UpdateCategoriesRequest(requester *principal.Principal, categorie
 
 func (p *Post) CanDelete(requester *principal.Principal) error {
 
-	if p.state != Removed && p.state != Rejected && p.state != Discarded && p.state != Draft {
-		return domainerror.NewValidation("invalid deletion state for post: post must be draft, removed, rejected, discarded")
+	if p.state != Removed && p.state != Rejected && p.state != Discarded && p.state != Draft && p.state != Archived {
+		return domainerror.NewValidation("invalid deletion state for post: post must be draft, removed, rejected, discarded, archived")
 	}
 
 	if requester.IsStaff() {
