@@ -38,6 +38,8 @@ const Query = graphql`
   }
 `
 
+//
+
 export default function ResultCreatePost (props: Props): JSX.Element {
   const { query } = props
 
@@ -59,7 +61,7 @@ export default function ResultCreatePost (props: Props): JSX.Element {
   }
 
   // If the post was already submitted
-  if (queryData.post != null && queryData.post?.state !== 'DRAFT' && ((queryData.viewer?.isStaff) === false) && !(queryData.viewer?.isWorker)) {
+  if (queryData.post != null && queryData.post?.state !== 'DRAFT' && ((queryData.viewer?.isStaff) === false) && !(queryData.viewer?.isWorker) && !queryData?.club?.viewerIsOwner) {
     return (
       <MobileContainer pt={2}>
         <PostPlaceholder>
