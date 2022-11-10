@@ -261,7 +261,7 @@ func processImageWithSizes(target *media.Media, file *os.File, useHd bool) ([]*M
 
 	defer finalImageFile.Close()
 
-	palettes, _, err := createPreviewFromFile(finalImageFile, false)
+	palettes, _, err := createPreviewFromFile(finalImageFile, false, false)
 
 	if err != nil {
 		return nil, err

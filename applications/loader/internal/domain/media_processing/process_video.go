@@ -925,7 +925,7 @@ func processVideo(target *media.Media, file *os.File) (*ProcessResponse, error) 
 		}
 
 		_, _ = fileThumbnail.Seek(0, io.SeekStart)
-		_, _, err = createPreviewFromFile(fileThumbnail, false)
+		_, _, err = createPreviewFromFile(fileThumbnail, false, true)
 
 		if err != nil {
 			// fully black image - we want to find a different one
