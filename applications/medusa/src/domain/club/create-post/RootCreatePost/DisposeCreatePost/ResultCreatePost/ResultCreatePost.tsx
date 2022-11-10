@@ -38,6 +38,8 @@ const Query = graphql`
   }
 `
 
+//
+
 export default function ResultCreatePost (props: Props): JSX.Element {
   const { query } = props
 
