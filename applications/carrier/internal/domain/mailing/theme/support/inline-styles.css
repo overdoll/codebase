@@ -1,9 +1,9 @@
 body {
-    background-color: hsla(0, 0%, 7.5%, 1) !important;
+    background-color: #131313 !important;
 }
 
 .main-body {
-    background-color: hsla(0, 0%, 10%, 1) !important;
+    background-color: #1a1a1a !important;
     max-width: 600px;
     height: 100%;
     align-self: center;
@@ -102,30 +102,31 @@ h6 {
 }
 
 .gray td {
-    background-color: hsla(0, 0%, 14%, 1) !important;
+    background-color: #242424 !important;
 }
 
 .gray p {
-    background-color: hsla(0, 0%, 14%, 1) !important;
-    color: hsla(0, 0%, 100%, 1) !important;
+    background-color: #242424 !important;
+    color: #ffffff !important;
 }
 
 .gray a {
-    background-color: hsla(0, 0%, 14%, 1) !important;
-    color: hsla(0, 0%, 100%, 1) !important;
+    background-color: #242424 !important;
+    color: #ffffff !important;
 }
 
 .auth-code div {
     padding: 0.5rem;
-    background-color: hsla(0, 0%, 14%, 1) !important;
+    background-color: hsla(342, 100%, 58%, 1) !important;
     padding-left: 1.5rem !important;
     padding-right: 1.5rem !important;
     border-radius: 1rem !important;
 }
 
 .auth-code p {
-    color: hsla(0, 0%, 100%, 1) !important;
+    color: hsla(346, 90%, 15%, 1) !important;
     font-size: 2rem !important;
+    font-weight: bold;
 }
 
 .outline-primary td {
