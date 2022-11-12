@@ -1,7 +1,6 @@
 import RootCreateClubCharacter from './RootCreateClubCharacter/RootCreateClubCharacter'
 import CreateClubCharacterQuery from '@//:artifacts/CreateClubCharacterQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
-import ClubRedirect from '@//:modules/redirects/club'
 
 RootCreateClubCharacter.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -32,10 +31,6 @@ RootCreateClubCharacter.getLayout = (page) => {
       {page}
     </ClubLayout>
   )
-}
-
-RootCreateClubCharacter.getMiddleware = (ctx, data) => {
-  return ClubRedirect(data)
 }
 
 export default RootCreateClubCharacter

@@ -1,7 +1,6 @@
 import RootClubPayments from './RootClubPayments/RootClubPayments'
 import ClubPaymentsQuery from '@//:artifacts/ClubPaymentsQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
-import ClubRedirect from '@//:modules/redirects/club'
 
 RootClubPayments.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -28,10 +27,6 @@ RootClubPayments.getLayout = (page) => {
       {page}
     </ClubLayout>
   )
-}
-
-RootClubPayments.getMiddleware = (ctx, data) => {
-  return ClubRedirect(data)
 }
 
 export default RootClubPayments

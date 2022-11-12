@@ -1,8 +1,6 @@
 import RootCreatePost from './RootCreatePost/RootCreatePost'
 import ResultCreatePostQuery from '@//:artifacts/ResultCreatePostQuery.graphql'
 import ClubLayout from '../../../common/components/Layouts/ClubLayout/ClubLayout'
-import RootClubPosts from '../posts'
-import ClubRedirect from '@//:modules/redirects/club'
 
 RootCreatePost.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -35,10 +33,6 @@ RootCreatePost.getLayout = (page) => {
       {page}
     </ClubLayout>
   )
-}
-
-RootClubPosts.getMiddleware = (ctx, data) => {
-  return ClubRedirect(data)
 }
 
 export default RootCreatePost

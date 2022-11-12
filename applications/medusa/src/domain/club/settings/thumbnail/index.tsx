@@ -1,7 +1,6 @@
 import RootThumbnailClubSettings from './RootThumbnailClubSettings/RootThumbnailClubSettings'
 import ThumbnailClubSettingsQuery from '@//:artifacts/ThumbnailClubSettingsQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
-import ClubRedirect from '@//:modules/redirects/club'
 
 RootThumbnailClubSettings.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -28,10 +27,6 @@ RootThumbnailClubSettings.getLayout = (page) => {
       {page}
     </ClubLayout>
   )
-}
-
-RootThumbnailClubSettings.getMiddleware = (ctx, data) => {
-  return ClubRedirect(data)
 }
 
 export default RootThumbnailClubSettings

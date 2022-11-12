@@ -1,32 +1,33 @@
-const ClubRedirect = (data): any => {
+const ClubRedirect = (ctx, data): any => {
   if (data.clubHomeQuery == null) {
     return {}
+  }
+
+  const redirect = {
+    redirect: {
+      permanent: false,
+      destination: `/${ctx.query.slug as string}`
+    }
+  }
+
+  const rootData = data.rootQuery.response.data
+
+  if (rootData.viewer == null) {
+    return redirect
   }
 
   if (data.clubHomeQuery.response.data.club == null) {
     return {}
   }
 
-  const rootData = data.rootQuery.response.data
   const clubData = data.clubHomeQuery.response.data.club
 
-  const redirect = {
-    redirect: {
-      permanent: false,
-      destination: `/${clubData.slug as string}`
-    }
-  }
-
-  if (rootData.viewer == null) {
-    return redirect
-  }
-
-  if (rootData.isStaff === false) {
-    return redirect
-  }
-
-  if (clubData.isOwner === true) {
+  if (clubData.viewerIsOwner === true) {
     return {}
+  }
+
+  if (rootData.viewer.isStaff === false) {
+    return redirect
   }
 
   return redirect

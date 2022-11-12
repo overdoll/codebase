@@ -31,7 +31,7 @@ RootClubHome.getLayout = (page) => {
 }
 
 RootClubHome.getMiddleware = (ctx, data) => {
-  return ClubRedirect(data)
+  return ClubRedirect(ctx, data)
 }
 
 export default RootClubHome
