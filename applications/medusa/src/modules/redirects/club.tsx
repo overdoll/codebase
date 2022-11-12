@@ -1,4 +1,8 @@
 const ClubRedirect = (data): any => {
+  if (data.clubHomeQuery == null) {
+    return {}
+  }
+
   if (data.clubHomeQuery.response.data.club == null) {
     return {}
   }
