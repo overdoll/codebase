@@ -1,6 +1,7 @@
 import RootClubSettings from './RootClubSettings/RootClubSettings'
 import ClubSettingsQuery from '@//:artifacts/ClubSettingsQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
+import ClubRedirect from '@//:modules/redirects/club'
 
 RootClubSettings.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -27,6 +28,10 @@ RootClubSettings.getLayout = (page) => {
       {page}
     </ClubLayout>
   )
+}
+
+RootClubSettings.getMiddleware = (ctx, data) => {
+  return ClubRedirect(data)
 }
 
 export default RootClubSettings

@@ -1,6 +1,8 @@
 import RootBlurbClubSettings from './RootBlurbClubSettings/RootBlurbClubSettings'
 import BlurbClubSettingsQuery from '@//:artifacts/BlurbClubSettingsQuery.graphql'
 import ClubLayout from '../../../../common/components/Layouts/ClubLayout/ClubLayout'
+import RootAliasesClubSettings from '../aliases'
+import ClubRedirect from '@//:modules/redirects/club'
 
 RootBlurbClubSettings.getTranslationProps = async (ctx) => ({
   translations: await import(`./__locale__/${ctx.locale as string}/index`)
@@ -27,6 +29,10 @@ RootBlurbClubSettings.getLayout = (page) => {
       {page}
     </ClubLayout>
   )
+}
+
+RootBlurbClubSettings.getMiddleware = (ctx, data) => {
+  return ClubRedirect(data)
 }
 
 export default RootBlurbClubSettings
