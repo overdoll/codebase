@@ -1,6 +1,6 @@
 /**
- * @generated SignedSource<<62e3e15ba8eb06dd02863f020726a8f1>>
- * @relayHash 939cb7aa7f32a2cdf8f2d096edf82cfb
+ * @generated SignedSource<<60f1ccf4d0556e4b6aa6bab4b335dfd9>>
+ * @relayHash b514979160a396ec4665934777591c6c
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -9,7 +9,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
-// @relayRequestID 939cb7aa7f32a2cdf8f2d096edf82cfb
+// @relayRequestID b514979160a396ec4665934777591c6c
 
 import { ConcreteRequest, Query } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
@@ -20,6 +20,7 @@ export type ClubHomeQuery$data = {
   readonly club: {
     readonly membersCount: number;
     readonly name: string;
+    readonly slug: string;
     readonly viewerIsOwner: boolean;
     readonly " $fragmentSpreads": FragmentRefs<"ClubBalanceHeaderFragment" | "ClubInformationBannerFragment" | "ClubSupporterHeaderFragment" | "LargeClubHeaderFragment">;
   } | null;
@@ -65,31 +66,38 @@ v4 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "viewerIsOwner",
+  "name": "slug",
   "storageKey": null
 },
 v5 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "isStaff",
+  "name": "viewerIsOwner",
   "storageKey": null
 },
 v6 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
-  "name": "id",
+  "name": "isStaff",
   "storageKey": null
 },
 v7 = {
   "alias": null,
   "args": null,
   "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v8 = {
+  "alias": null,
+  "args": null,
+  "kind": "ScalarField",
   "name": "__typename",
   "storageKey": null
 },
-v8 = [
+v9 = [
   {
     "alias": null,
     "args": null,
@@ -112,7 +120,7 @@ v8 = [
     "storageKey": null
   }
 ],
-v9 = [
+v10 = [
   {
     "alias": null,
     "args": null,
@@ -160,7 +168,7 @@ v9 = [
         "kind": "LinkedField",
         "name": "icon",
         "plural": false,
-        "selections": (v8/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       },
       {
@@ -170,16 +178,16 @@ v9 = [
         "kind": "LinkedField",
         "name": "mini",
         "plural": false,
-        "selections": (v8/*: any*/),
+        "selections": (v9/*: any*/),
         "storageKey": null
       }
     ],
     "storageKey": null
   },
-  (v6/*: any*/)
+  (v7/*: any*/)
 ],
-v10 = [
-  (v6/*: any*/)
+v11 = [
+  (v7/*: any*/)
 ];
 return {
   "fragment": {
@@ -199,6 +207,7 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
+          (v5/*: any*/),
           {
             "args": null,
             "kind": "FragmentSpread",
@@ -230,7 +239,7 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v5/*: any*/)
+          (v6/*: any*/)
         ],
         "storageKey": null
       }
@@ -255,7 +264,8 @@ return {
           (v2/*: any*/),
           (v3/*: any*/),
           (v4/*: any*/),
-          (v6/*: any*/),
+          (v5/*: any*/),
+          (v7/*: any*/),
           {
             "alias": null,
             "args": null,
@@ -264,14 +274,14 @@ return {
             "name": "thumbnailMedia",
             "plural": false,
             "selections": [
-              (v7/*: any*/),
+              (v8/*: any*/),
               {
                 "kind": "TypeDiscriminator",
                 "abstractKey": "__isMedia"
               },
               {
                 "kind": "InlineFragment",
-                "selections": (v9/*: any*/),
+                "selections": (v10/*: any*/),
                 "type": "ImageMedia",
                 "abstractKey": null
               },
@@ -285,17 +295,17 @@ return {
                     "kind": "LinkedField",
                     "name": "cover",
                     "plural": false,
-                    "selections": (v9/*: any*/),
+                    "selections": (v10/*: any*/),
                     "storageKey": null
                   },
-                  (v6/*: any*/)
+                  (v7/*: any*/)
                 ],
                 "type": "VideoMedia",
                 "abstractKey": null
               },
               {
                 "kind": "InlineFragment",
-                "selections": (v10/*: any*/),
+                "selections": (v11/*: any*/),
                 "type": "RawMedia",
                 "abstractKey": null
               }
@@ -318,17 +328,17 @@ return {
                 "name": "payoutMethod",
                 "plural": false,
                 "selections": [
-                  (v7/*: any*/),
+                  (v8/*: any*/),
                   {
                     "kind": "InlineFragment",
-                    "selections": (v10/*: any*/),
+                    "selections": (v11/*: any*/),
                     "type": "AccountPaxumPayoutMethod",
                     "abstractKey": null
                   }
                 ],
                 "storageKey": null
               },
-              (v6/*: any*/)
+              (v7/*: any*/)
             ],
             "storageKey": null
           },
@@ -393,7 +403,7 @@ return {
             "name": "suspension",
             "plural": false,
             "selections": [
-              (v7/*: any*/),
+              (v8/*: any*/),
               {
                 "alias": null,
                 "args": null,
@@ -412,7 +422,7 @@ return {
             "name": "termination",
             "plural": false,
             "selections": [
-              (v7/*: any*/)
+              (v8/*: any*/)
             ],
             "storageKey": null
           }
@@ -427,15 +437,15 @@ return {
         "name": "viewer",
         "plural": false,
         "selections": [
-          (v5/*: any*/),
-          (v6/*: any*/)
+          (v6/*: any*/),
+          (v7/*: any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "id": "939cb7aa7f32a2cdf8f2d096edf82cfb",
+    "id": "b514979160a396ec4665934777591c6c",
     "metadata": {},
     "name": "ClubHomeQuery",
     "operationKind": "query",
@@ -444,7 +454,7 @@ return {
 };
 })();
 
-(node as any).hash = "4bb67a89aa3ae7206511347c3f866b63";
+(node as any).hash = "13dc51e17420f950ca775c342c1d13e7";
 
 import { PreloadableQueryRegistry } from 'relay-runtime';
 PreloadableQueryRegistry.set(node.params.id, node);
