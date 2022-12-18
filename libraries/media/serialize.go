@@ -117,6 +117,7 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 	if day > 15 {
 		if month == time.December {
 			month = time.January
+			year += 1
 		} else {
 			month += 1
 		}
