@@ -55,7 +55,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220210151621-f4118a5b28e2
 	golang.org/x/image v0.0.0-20220902085622-e7cb96979f69
 	golang.org/x/sync v0.0.0-20220722155255-886fb9371eb4
-	golang.org/x/text v0.3.8
+	golang.org/x/text v0.7.0
 	google.golang.org/grpc v1.47.0
 	google.golang.org/protobuf v1.28.0
 	jaytaylor.com/html2text v0.0.0-20211105163654-bc68cce691ba
@@ -133,8 +133,8 @@ require (
 	go.opentelemetry.io/otel/metric v0.27.0 // indirect
 	go.uber.org/atomic v1.9.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
-	golang.org/x/net v0.0.0-20220923203811-8be639271d50 // indirect
-	golang.org/x/sys v0.0.0-20221013171732-95e765b1cc43 // indirect
+	golang.org/x/net v0.7.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
 	golang.org/x/time v0.0.0-20220210224613-90d013bbcef8 // indirect
 	golang.org/x/xerrors v0.0.0-20220517211312-f3a8303e98df // indirect
 	google.golang.org/genproto v0.0.0-20220602131408-e326c6e8e9c8 // indirect
