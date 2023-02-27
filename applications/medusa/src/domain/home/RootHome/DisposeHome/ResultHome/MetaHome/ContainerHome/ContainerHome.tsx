@@ -16,9 +16,7 @@ interface Props {
 }
 
 const LazyBanner = dynamic(
-  async () => {
-    return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
-  },
+  async () => await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner'),
   { suspense: true }
 )
 
