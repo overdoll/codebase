@@ -165,7 +165,7 @@ func fromResponse(res *http.Response) (*Passport, error) {
 	value := gjson.Get(string(bd), bodyKey)
 
 	res.Body = ioutil.NopCloser(&buf)
-	res.Header.Set("Content-Encoding", "")
+	res.Header.Del("Content-Encoding")
 
 	if value.Exists() {
 		pass, err := unserializeFromString(value.String())
