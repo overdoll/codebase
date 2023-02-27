@@ -117,6 +117,7 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 	if day > 15 {
 		if month == time.December {
 			month = time.January
+			year += 1
 		} else {
 			month += 1
 		}
@@ -148,7 +149,7 @@ func (c *Serializer) createSignedUrl(policy SerializerPolicy) (string, error) {
 		signedUrl, err = c.signer.Sign(policy.URI, newTimestamp)
 
 		if err != nil {
-			return "", errors.Wrap(err, "could not generate signed url with canned policy")
+			return "", errors.Wrap(err, "could not generate signed url with canned policies")
 		}
 	}
 

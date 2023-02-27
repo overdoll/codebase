@@ -57,6 +57,10 @@ export const middleware: Middleware = async (request, event) => {
     return NextResponse.redirect(new URL('/join', request.url))
   }
 
+  if (request.nextUrl.pathname.startsWith('/club/') && request.nextUrl.pathname.endsWith('/home')) {
+    return NextResponse.next()
+  }
+
   if (request.nextUrl.pathname.startsWith('/club/')) {
     if (ability.can('configure', 'Club') || ability.can('create', 'Post')) return NextResponse.next()
 

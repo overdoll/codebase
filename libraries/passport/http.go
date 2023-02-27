@@ -141,7 +141,7 @@ func fromRequest(r *http.Request) *Passport {
 // read passport from an HTTP response
 func fromResponse(res *http.Response) (*Passport, error) {
 
-	// only parse JSON responses
+	// only parse JSON response
 	if res.Header.Get("Content-Type") != "application/json; charset=utf-8" && res.Header.Get("Content-Type") != "application/json" {
 		return nil, nil
 	}
@@ -165,7 +165,7 @@ func fromResponse(res *http.Response) (*Passport, error) {
 	value := gjson.Get(string(bd), bodyKey)
 
 	res.Body = ioutil.NopCloser(&buf)
-	res.Header.Set("Content-Encoding", "")
+	res.Header.Del("Content-Encoding")
 
 	if value.Exists() {
 		pass, err := unserializeFromString(value.String())

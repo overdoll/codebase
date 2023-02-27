@@ -22,6 +22,7 @@ const Query = graphql`
     club(slug: $slug) {
       name
       membersCount
+      slug
       viewerIsOwner
       ...LargeClubHeaderFragment
       ...ClubBalanceHeaderFragment

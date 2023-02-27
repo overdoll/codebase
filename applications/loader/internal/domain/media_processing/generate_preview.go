@@ -11,7 +11,7 @@ import (
 	"overdoll/libraries/media/proto"
 )
 
-func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, image.Image, error) {
+func createPreviewFromFile(r io.Reader, isPng bool, returnError bool) ([]*proto.ColorPalette, image.Image, error) {
 
 	var img image.Image
 	var err error
@@ -35,7 +35,21 @@ func createPreviewFromFile(r io.Reader, isPng bool) ([]*proto.ColorPalette, imag
 	cols, err = prominentcolor.KmeansWithArgs(prominentcolor.ArgumentDefault, img)
 
 	if err != nil {
-		return nil, nil, err
+
+		isNonAlphaError := err.Error() == "Failed, no non-alpha pixels found (either fully transparent image, or the ColorBackgroundMask removed all pixels)"
+
+		if returnError {
+			return nil, nil, err
+		}
+
+		if isNonAlphaError {
+			cols, err = prominentcolor.KmeansWithAll(prominentcolor.DefaultK, img, prominentcolor.ArgumentDefault, prominentcolor.DefaultSize, nil)
+			if err != nil {
+				return nil, nil, err
+			}
+		} else {
+			return nil, nil, err
+		}
 	}
 
 	totalPixels := 0
