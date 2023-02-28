@@ -5,7 +5,6 @@ import (
 	"github.com/oschwald/geoip2-golang"
 	"net"
 	"overdoll/applications/eva/internal/domain/location"
-	"overdoll/libraries/errors"
 )
 
 type LocationMaxmindRepository struct {
@@ -20,7 +19,16 @@ func (r LocationMaxmindRepository) GetLocationFromIp(ctx context.Context, ip str
 	record, err := r.reader.City(net.ParseIP(ip))
 
 	if err != nil {
-		return nil, errors.Wrap(err, "failed to get city from ip")
+		return location.UnmarshalLocationFromDatabase(
+			"",
+			"US",
+			"",
+			"",
+			0,
+			0,
+			"",
+		), nil
+		//return nil, errors.Wrap(err, "failed to get city from ip")
 	}
 
 	subdivision := ""
