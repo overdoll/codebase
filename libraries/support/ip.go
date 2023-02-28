@@ -1,6 +1,7 @@
 package support
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 )
@@ -9,6 +10,7 @@ func GetIPFromRequest(req *http.Request) string {
 	ip := ""
 
 	forwarded := req.Header.Get("X-FORWARDED-FOR")
+	fmt.Println(forwarded)
 	if forwarded != "" {
 
 		splits := strings.Split(forwarded, ",")
