@@ -1,11 +1,9 @@
-import { graphql, useFragment } from 'react-relay'
 import type { GridPaginationPostFragment$key } from '@//:artifacts/GridPaginationPostFragment.graphql'
 import { Box, Flex, Grid, GridItem, GridProps, Heading } from '@chakra-ui/react'
-import GridPaginationPostContent from './GridPaginationPostContent/GridPaginationPostContent'
+import { graphql, useFragment } from 'react-relay'
 import PostLinkTile from '../../../../../../PageLayout/Display/fragments/Link/PostLinkTile/PostLinkTile'
-import React from 'react'
-import useFeatureFlag from '../../../../../../../hooks/useFeatureFlag'
 import MenuSimplePublicPost from '../../../../fragments/Interact/MenuSimplePublicPost/MenuSimplePublicPost'
+import GridPaginationPostContent from './GridPaginationPostContent/GridPaginationPostContent'
 
 interface Props {
   query: GridPaginationPostFragment$key
@@ -28,8 +26,6 @@ export default function GridPaginationPost (props: Props): JSX.Element {
   } = props
 
   const data = useFragment(Fragment, query)
-
-  const flag = useFeatureFlag('grid-post')
 
   const displayContent = data.content.slice(0, 4)
 
@@ -66,55 +62,55 @@ export default function GridPaginationPost (props: Props): JSX.Element {
     return singleGridProps
   }
 
-  if (flag === 'one-image') {
-    return (
-      <Flex
-        bg='gray.800'
-        position='relative'
-        overflow='hidden'
-        borderRadius='md'
-        w='100%'
-        h='100%'
-        justify='center'
-        align='center'
-      >
-        <PostLinkTile
-          query={data}
-        >
-          <Grid
-            height='100%'
-            width='100%'
-            position='relative'
-            templateColumns='1fr'
-            templateRows='1fr'
-            gap={0}
-          >
-            <GridPaginationPostContent isSmall={false} postContentQuery={displayContent[0]} />
-          </Grid>
-          {displayContent.length > 1 && (
-            <Flex
-              bg='dimmers.500'
-              px={2}
-              py={1}
-              borderRadius='full'
-              align='center'
-              justify='center'
-              position='absolute'
-              bottom={1}
-              right={1}
-            >
-              <Heading color='gray.00' fontSize='sm'>
-                {displayContent.length}
-              </Heading>
-            </Flex>
-          )}
-        </PostLinkTile>
-        <Box position='absolute' top={1} right={1}>
-          <MenuSimplePublicPost postQuery={data} />
-        </Box>
-      </Flex>
-    )
-  }
+  // if (flag === 'one-image') {
+  //   return (
+  //     <Flex
+  //       bg='gray.800'
+  //       position='relative'
+  //       overflow='hidden'
+  //       borderRadius='md'
+  //       w='100%'
+  //       h='100%'
+  //       justify='center'
+  //       align='center'
+  //     >
+  //       <PostLinkTile
+  //         query={data}
+  //       >
+  //         <Grid
+  //           height='100%'
+  //           width='100%'
+  //           position='relative'
+  //           templateColumns='1fr'
+  //           templateRows='1fr'
+  //           gap={0}
+  //         >
+  //           <GridPaginationPostContent isSmall={false} postContentQuery={displayContent[0]} />
+  //         </Grid>
+  //         {displayContent.length > 1 && (
+  //           <Flex
+  //             bg='dimmers.500'
+  //             px={2}
+  //             py={1}
+  //             borderRadius='full'
+  //             align='center'
+  //             justify='center'
+  //             position='absolute'
+  //             bottom={1}
+  //             right={1}
+  //           >
+  //             <Heading color='gray.00' fontSize='sm'>
+  //               {displayContent.length}
+  //             </Heading>
+  //           </Flex>
+  //         )}
+  //       </PostLinkTile>
+  //       <Box position='absolute' top={1} right={1}>
+  //         <MenuSimplePublicPost postQuery={data} />
+  //       </Box>
+  //     </Flex>
+  //   )
+  // }
 
   return (
     <Flex

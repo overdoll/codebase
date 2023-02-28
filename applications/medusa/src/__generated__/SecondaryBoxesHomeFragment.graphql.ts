@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<a99b896a761844f93b9861b76a64d14c>>
+ * @generated SignedSource<<d832a16637cd113def1bc5b3f3abfc70>>
  * @lightSyntaxTransform
  * @nogrep
  */
@@ -10,20 +10,20 @@
 
 import { Fragment, ReaderFragment } from 'relay-runtime';
 import { FragmentRefs } from "relay-runtime";
-export type BoxesHomeFragment$data = {
+export type SecondaryBoxesHomeFragment$data = {
   readonly hasClubSupporterSubscription: boolean;
-  readonly " $fragmentType": "BoxesHomeFragment";
+  readonly " $fragmentType": "SecondaryBoxesHomeFragment";
 };
-export type BoxesHomeFragment$key = {
-  readonly " $data"?: BoxesHomeFragment$data;
-  readonly " $fragmentSpreads": FragmentRefs<"BoxesHomeFragment">;
+export type SecondaryBoxesHomeFragment$key = {
+  readonly " $data"?: SecondaryBoxesHomeFragment$data;
+  readonly " $fragmentSpreads": FragmentRefs<"SecondaryBoxesHomeFragment">;
 };
 
 const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "BoxesHomeFragment",
+  "name": "SecondaryBoxesHomeFragment",
   "selections": [
     {
       "alias": null,
@@ -37,6 +37,6 @@ const node: ReaderFragment = {
   "abstractKey": null
 };
 
-(node as any).hash = "1cdeea4deb334b77b8beeb7da117d983";
+(node as any).hash = "109120815f25e5798072f3e907f57787";
 
 export default node;
