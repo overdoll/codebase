@@ -11,7 +11,7 @@ type AccountEmailByEmail struct {
 	// the principal that is requesting this email
 	Principal *principal.Principal
 
-	// the account email that is being requested - information
+	// the account email that is being requested - informations
 	AccountId string
 	Email     string
 }
