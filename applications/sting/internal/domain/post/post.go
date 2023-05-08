@@ -547,10 +547,6 @@ func (p *Post) RemoveContentRequest(requester *principal.Principal, contentIds [
 		return nil, err
 	}
 
-	if p.state != Draft && !requester.IsStaff() {
-		return nil, domainerror.NewValidation("cannot remove content from a published post")
-	}
-
 	var removedMedia []*media.Media
 
 	var actualContent []*Content
