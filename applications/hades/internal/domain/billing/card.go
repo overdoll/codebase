@@ -12,7 +12,12 @@ func NewCard(bin, btype, last4, expiration string) (*Card, error) {
 	parsedType, err := CardTypeFromString(btype)
 
 	if err != nil {
-		return nil, err
+		return &Card{
+			bin:        "",
+			btype:      Other,
+			last4:      "",
+			expiration: "",
+		}, nil
 	}
 
 	return &Card{
