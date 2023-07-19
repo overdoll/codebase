@@ -84,6 +84,7 @@ func CCBillRenewalSuccess(ctx workflow.Context, input CCBillRenewalSuccessInput)
 			AccountId:            subscriptionDetails.AccountId,
 			ClubId:               subscriptionDetails.ClubId,
 			AccountTransactionId: uniqueTransactionId,
+      IdempotencyKey:       uniqueTransactionId,
 			Timestamp:            input.Timestamp,
 			Amount:               input.AccountingAmount,
 			Currency:             input.AccountingCurrency,
