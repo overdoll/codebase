@@ -12,19 +12,20 @@ import { Trans } from '@lingui/macro'
 import { MagicWand } from '@//:assets/icons'
 import PrepareGridSuggestedPosts from './PrepareGridSuggestedPosts/PrepareGridSuggestedPosts'
 import dynamic from 'next/dynamic'
+import StickerPromoteBanner from '@//:common/components/StickerPromoteBanner/StickerPromoteBanner'
 
 const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { suspense: true }
+  { suspense: true },
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { suspense: true }
+  { suspense: true },
 )
 
 interface Props {
@@ -53,7 +54,7 @@ const ViewerFragment = graphql`
 export default function ContainerPublicPost (props: Props): JSX.Element {
   const {
     postQuery,
-    viewerQuery
+    viewerQuery,
   } = props
 
   const postData = useFragment(PostFragment, postQuery)
@@ -78,6 +79,7 @@ export default function ContainerPublicPost (props: Props): JSX.Element {
       <ContentContainer pt={2}>
         <Stack spacing={16}>
           <DescriptionPublicPost postQuery={postData} viewerQuery={viewerData} />
+          <StickerPromoteBanner />
           <Stack spacing={4}>
             <PageHeader icon={MagicWand} title={<Trans>Recommended content</Trans>} />
             <PrepareGridSuggestedPosts postQuery={postData} />

@@ -103,7 +103,7 @@ export default function BoxesHome (): JSX.Element {
             <BoxHomeLink
               icon={RandomizeDice}
               href='/random'
-              colorScheme='primary'
+              colorScheme='teal'
               header={<Trans>RANDOM</Trans>}
               footer={<Trans>Randomly browse rule34, hentai, furry and 3d porn</Trans>}
               variants={(
