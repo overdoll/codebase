@@ -18,14 +18,14 @@ const LazyBanner = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner')
   },
-  { suspense: true },
+  { suspense: true }
 )
 
 const LazyModal = dynamic(
   async () => {
     return await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseModal/JoinBrowseModal')
   },
-  { suspense: true },
+  { suspense: true }
 )
 
 interface Props {
@@ -54,7 +54,7 @@ const ViewerFragment = graphql`
 export default function ContainerPublicPost (props: Props): JSX.Element {
   const {
     postQuery,
-    viewerQuery,
+    viewerQuery
   } = props
 
   const postData = useFragment(PostFragment, postQuery)

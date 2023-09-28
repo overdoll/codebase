@@ -37,7 +37,7 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     hasNext,
     loadNext,
     isLoadingNext,
-    limit,
+    limit
   } = props
 
   const data = useFragment(PostConnectionFragment, postConnectionQuery)
@@ -45,12 +45,12 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
   const {
     hasError,
     onLoadNext,
-    isPending,
+    isPending
   } = usePaginationScroller({
     loadNext,
     isLoadingNext,
     limit,
-    currentCount: data.edges.length,
+    currentCount: data.edges.length
   })
 
   if (data?.edges.length < 1) {

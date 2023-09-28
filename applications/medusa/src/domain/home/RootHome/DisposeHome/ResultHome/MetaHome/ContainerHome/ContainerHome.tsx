@@ -18,7 +18,7 @@ interface Props {
 
 const LazyBanner = dynamic(
   async () => await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner'),
-  { suspense: true },
+  { suspense: true }
 )
 
 const Fragment = graphql`
@@ -34,7 +34,7 @@ const Fragment = graphql`
 
 export default function ContainerHome (props: Props): JSX.Element {
   const {
-    rootQuery,
+    rootQuery
   } = props
 
   const data = useFragment(Fragment, rootQuery)
