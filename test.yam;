@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  generation: 1
+  labels:
+    app.kubernetes.io/instance: orca
+    app.kubernetes.io/managed-by: tilt
+    app.kubernetes.io/name: orca
+    app.kubernetes.io/version: 1.16.0
+    helm.sh/chart: default-service-0.1.0
+  name: orca
+  namespace: default
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: orca
+      app.kubernetes.io/name: orca
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app.kubernetes.io/instance: orca
+        app.kubernetes.io/managed-by: tilt
+        app.kubernetes.io/name: orca
+    spec:
+      containers:
+      - image: localhost:37393/orca:test
+        imagePullPolicy: IfNotPresent
+        name: orca
+        ports:
+        - containerPort: 8080
+          name: grpc
+          protocol: TCP
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        resources: {}
+        env:
+        - name: SUPERGRAPH_PATH
+          value: "applications/orca/schema/schema.graphql"
+        - name: CONFIGURATION_PATH
+          value: "applications/orca/router.yaml"
+        - name: REDIS_HOST
+          value: "redis-master"
+        - name: APP_DEBUG
+          value: "true"

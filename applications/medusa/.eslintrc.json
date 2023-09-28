@@ -61,7 +61,7 @@
       "configFile": ".babelrc"
     },
     "project": [
-      "./tsconfig.json"
+      "./tsconfig.eslint.json"
     ],
     "ecmaFeatures": {
       "jsx": true

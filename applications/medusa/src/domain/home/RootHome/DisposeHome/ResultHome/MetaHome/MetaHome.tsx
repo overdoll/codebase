@@ -17,7 +17,7 @@ const Fragment = graphql`
 
 export default function MetaHome (props: Props): JSX.Element {
   const {
-    rootQuery
+    rootQuery,
   } = props
 
   const data = useFragment(Fragment, rootQuery)

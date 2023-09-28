@@ -25,8 +25,8 @@ kubectl wait --for condition=established crd/certificates.cert-manager.io crd/is
 kubectl -n cert-manager rollout status deployment.apps/cert-manager-webhook
 
 # Apply elasticsearch operator
-kubectl create -f https://download.elastic.co/downloads/eck/2.2.0/crds.yaml
-kubectl apply -f https://download.elastic.co/downloads/eck/2.2.0/operator.yaml
+#kubectl create -f https://download.elastic.co/downloads/eck/2.2.0/crds.yaml
+#kubectl apply -f https://download.elastic.co/downloads/eck/2.2.0/operator.yaml
 
 # Apply scylla operator & wait
 kubectl apply -f https://raw.githubusercontent.com/scylladb/scylla-operator/master/examples/common/operator.yaml
@@ -41,16 +41,16 @@ kubectl -n scylla-operator rollout status deployment.apps/webhook-server
 kubectl apply -f issuer.yaml
 kubectl apply -f certificate.yaml
 
-kubectl create namespace scylla
+#kubectl create namespace scylla
 
-kubectl create configmap scylla-config -n scylla --from-file=scylla-config.yaml
+#kubectl create configmap scylla-config -n scylla --from-file=scylla-config.yaml
 
 # Apply scylla cluster
 kubectl apply -f scylla-cluster.yaml
 
-kubectl wait --for=condition=Ready --timeout=500s -n scylla pod/simple-cluster-us-east-1-us-east-1a-0
-kubectl wait --for=condition=Ready --timeout=500s -n scylla pod/simple-cluster-us-east-1-us-east-1a-1
-kubectl wait --for=condition=Ready --timeout=500s -n scylla pod/simple-cluster-us-east-1-us-east-1a-2
+kubectl wait --for=condition=Ready --timeout=50000s -n scylla pod/simple-cluster-us-east-1-us-east-1a-0
+kubectl wait --for=condition=Ready --timeout=50000s -n scylla pod/simple-cluster-us-east-1-us-east-1a-1
+kubectl wait --for=condition=Ready --timeout=50000s -n scylla pod/simple-cluster-us-east-1-us-east-1a-2
 
 # Apply redis
 kubectl apply -f redis.yaml

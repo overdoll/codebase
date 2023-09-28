@@ -10,6 +10,7 @@ import MemoKey from '../MemoKey/MemoKey'
 import usePaginationScroller from '../usePaginationScroller'
 import LoadMoreObserver from '../LoadMoreObserver/LoadMoreObserver'
 import { PreviewPost } from '../../../index'
+import StickerPromoteBanner from '@//:common/components/StickerPromoteBanner/StickerPromoteBanner'
 
 interface Props {
   postConnectionQuery: VerticalPaginationScrollerFragment$key
@@ -36,7 +37,7 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
     hasNext,
     loadNext,
     isLoadingNext,
-    limit
+    limit,
   } = props
 
   const data = useFragment(PostConnectionFragment, postConnectionQuery)
@@ -44,12 +45,12 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
   const {
     hasError,
     onLoadNext,
-    isPending
+    isPending,
   } = usePaginationScroller({
     loadNext,
     isLoadingNext,
     limit,
-    currentCount: data.edges.length
+    currentCount: data.edges.length,
   })
 
   if (data?.edges.length < 1) {
@@ -72,6 +73,11 @@ export default function VerticalPaginationScroller (props: Props): JSX.Element {
               <PreviewPost
                 postQuery={item.node}
               />
+              {(index % 10 === 0 && index > 0) && (
+                <Box mt={4}>
+                  <StickerPromoteBanner />
+                </Box>
+              )}
             </Box>
           </MemoKey>
         </Fragment>

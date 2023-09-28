@@ -1,6 +1,6 @@
 import {
   ControlPlayButton, RandomizeDice,
-  SearchBar
+  SearchBar,
 } from '@//:assets/icons'
 import { DEFAULT_SEED } from '@//:modules/constants/theme'
 import hash from '@//:modules/utilities/hash'
@@ -22,68 +22,68 @@ export default function BoxesHome (): JSX.Element {
       {
         small: 'https://static.dollycdn.net/banners/boxes/0_0/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/0_0/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/0_0/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/0_0/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/0_1/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/0_1/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/0_1/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/0_1/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/0_2/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/0_2/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/0_2/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/0_2/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/0_3/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/0_3/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/0_3/large.jpg'
-      }
+        large: 'https://static.dollycdn.net/banners/boxes/0_3/large.jpg',
+      },
     ],
     SEARCH: [
       {
         small: 'https://static.dollycdn.net/banners/boxes/1_0/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/1_0/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/1_0/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/1_0/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/1_1/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/1_1/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/1_1/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/1_1/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/1_2/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/1_2/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/1_2/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/1_2/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/1_3/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/1_3/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/1_3/large.jpg'
-      }
+        large: 'https://static.dollycdn.net/banners/boxes/1_3/large.jpg',
+      },
     ],
     ROULETTE: [
       {
         small: 'https://static.dollycdn.net/banners/boxes/2_0/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/2_0/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/2_0/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/2_0/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/2_1/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/2_1/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/2_1/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/2_1/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/2_2/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/2_2/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/2_2/large.jpg'
+        large: 'https://static.dollycdn.net/banners/boxes/2_2/large.jpg',
       },
       {
         small: 'https://static.dollycdn.net/banners/boxes/2_3/small.jpg',
         medium: 'https://static.dollycdn.net/banners/boxes/2_3/medium.jpg',
-        large: 'https://static.dollycdn.net/banners/boxes/2_3/large.jpg'
-      }
-    ]
+        large: 'https://static.dollycdn.net/banners/boxes/2_3/large.jpg',
+      },
+    ],
   }
 
   const chosen = useMemo(() => memoized.nextInt32([0, 3]), [postSeed ?? DEFAULT_SEED])
@@ -95,7 +95,7 @@ export default function BoxesHome (): JSX.Element {
         columnGap={20}
         templateColumns={{
           base: 'repeat(1, minmax(150px, 1fr))',
-          md: 'repeat(2, minmax(150px, 1fr))'
+          md: 'repeat(2, minmax(150px, 1fr))',
         }}
       >
         <GridItem>
@@ -103,7 +103,7 @@ export default function BoxesHome (): JSX.Element {
             <BoxHomeLink
               icon={RandomizeDice}
               href='/random'
-              colorScheme='primary'
+              colorScheme='teal'
               header={<Trans>RANDOM</Trans>}
               footer={<Trans>Randomly browse rule34, hentai, furry and 3d porn</Trans>}
               variants={(
