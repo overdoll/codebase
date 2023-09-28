@@ -1,5 +1,6 @@
 import { ContainerHomeFragment$key } from '@//:artifacts/ContainerHomeFragment.graphql'
 import { ContentContainer } from '@//:modules/content/PageLayout'
+import StickerPromoteBanner from '@//:common/components/StickerPromoteBanner/StickerPromoteBanner'
 import dynamic from 'next/dynamic'
 import { Suspense } from 'react'
 import { graphql } from 'react-relay'
@@ -17,7 +18,7 @@ interface Props {
 
 const LazyBanner = dynamic(
   async () => await import('@//:modules/content/HookedComponents/Filters/components/JoinBrowseBanner/JoinBrowseBanner'),
-  { suspense: true }
+  { suspense: true },
 )
 
 const Fragment = graphql`
@@ -33,18 +34,21 @@ const Fragment = graphql`
 
 export default function ContainerHome (props: Props): JSX.Element {
   const {
-    rootQuery
+    rootQuery,
   } = props
 
   const data = useFragment(Fragment, rootQuery)
 
   return (
     <ContentContainer pt={2}>
-      <Stack spacing={36} mb={36}>
-        <BoxesHome />
-        <SuggestedHome rootQuery={data} />
-        <SecondaryBoxesHome viewerQuery={data.viewer} />
-        <SecondarySuggestedHome rootQuery={data} />
+      <Stack spacing={12}>
+        <StickerPromoteBanner />
+        <Stack spacing={36} mb={36}>
+          <BoxesHome />
+          <SuggestedHome rootQuery={data} />
+          <SecondaryBoxesHome viewerQuery={data.viewer} />
+          <SecondarySuggestedHome rootQuery={data} />
+        </Stack>
       </Stack>
       <UrlCurationProfile viewerQuery={data.viewer} />
       <Suspense fallback={<></>}>
