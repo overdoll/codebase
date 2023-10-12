@@ -1,48 +1,49 @@
+/* eslint-disable react/jsx-no-target-blank */
 import { useMemo } from 'react'
 import { Random } from '@//:modules/utilities/random'
 import hash from '@//:modules/utilities/hash'
 import { Box, Heading, useToken, Text, Flex } from '@chakra-ui/react'
-import { ExternalLink } from '@//:modules/routing'
 import { SHOP_LINK } from '@//:modules/constants/links'
 import { Trans } from '@lingui/macro'
 import Button from '@//:modules/form/Button/Button'
 import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 
 export default function StickerPromoteBanner (): JSX.Element {
-  const memoized = useMemo(() => new Random(hash(`${(new Date()).toString()}`)), [])
-
-  const [shadow] = useToken(
-    'colors',
-    ['primary.600', 'primary.400']
+  const memoized = useMemo(
+    () => new Random(hash(`${new Date().toString()}`)),
+    []
   )
 
-  const stickers = [{
-    nsfw: 'https://static.dollycdn.net/stickers/omegaozone_1_nsfw.png',
-    sfw: 'https://static.dollycdn.net/stickers/omegaozone_1_sfw.png'
-  },
-  {
-    nsfw: 'https://static.dollycdn.net/stickers/oppaiforge_1_nsfw.png',
-    sfw: 'https://static.dollycdn.net/stickers/oppaiforge_1_sfw.png'
-  }]
+  const [shadow] = useToken('colors', ['primary.600', 'primary.400'])
+
+  const stickers = [
+    {
+      nsfw: 'https://static.dollycdn.net/stickers/omegaozone_1_nsfw.png',
+      sfw: 'https://static.dollycdn.net/stickers/omegaozone_1_sfw.png'
+    },
+    {
+      nsfw: 'https://static.dollycdn.net/stickers/oppaiforge_1_nsfw.png',
+      sfw: 'https://static.dollycdn.net/stickers/oppaiforge_1_sfw.png'
+    }
+  ]
 
   const chosen = useMemo(() => memoized.nextInt32([0, 2]), [])
   return (
-    <Box p={2} position='relative' mt={8} bg='gray.900' borderRadius='md' w='100%'>
-      <ExternalLink href={SHOP_LINK}>
-        <Flex
-          right={0}
-          bottom={0}
-          position='absolute'
-        >
+    <Box
+      p={2}
+      position='relative'
+      mt={8}
+      bg='gray.900'
+      borderRadius='md'
+      w='100%'
+    >
+      <a target='_blank' href={SHOP_LINK}>
+        <Flex right={0} bottom={0} position='absolute'>
           <Flex mb={4} h={28}>
-            <StaticImageCover
-              url={stickers[chosen].sfw}
-            />
+            <StaticImageCover url={stickers[chosen].sfw} />
           </Flex>
           <Flex mb={2} h={36}>
-            <StaticImageCover
-              url={stickers[chosen].nsfw}
-            />
+            <StaticImageCover url={stickers[chosen].nsfw} />
           </Flex>
         </Flex>
         <Box
@@ -67,9 +68,7 @@ export default function StickerPromoteBanner (): JSX.Element {
             fontSize='4xl'
             color='gray.00'
           >
-            <Trans>
-              NEW
-            </Trans>
+            <Trans>NEW</Trans>
           </Heading>
           <Text
             textShadow='1px 1px 2px #000'
@@ -81,21 +80,29 @@ export default function StickerPromoteBanner (): JSX.Element {
             pb={4}
             fontSize='lg'
           >
-            <Text as='b'>
-              Limited Edition
-            </Text>
-            {' '}
-            <Text textShadow='' p={1} borderRadius='lg' bg='white' color='primary.500' as='b'>
+            <Text as='b'>Limited Edition</Text>{' '}
+            <Text
+              textShadow=''
+              p={1}
+              borderRadius='lg'
+              bg='white'
+              color='primary.500'
+              as='b'
+            >
               NSFW and SFW
-            </Text>
-            {' '}
+            </Text>{' '}
             stickers from your favorite artists
           </Text>
-          <Button color='gray.00' position='relative' borderRadius='full' colorScheme='primary'>
+          <Button
+            color='gray.00'
+            position='relative'
+            borderRadius='full'
+            colorScheme='primary'
+          >
             Go to Shop
           </Button>
         </Box>
-      </ExternalLink>
+      </a>
     </Box>
   )
 }
