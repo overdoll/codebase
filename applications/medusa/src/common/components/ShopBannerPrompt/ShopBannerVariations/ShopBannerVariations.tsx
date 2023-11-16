@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-no-target-blank */
 import { useMemo } from 'react'
 import { Heading, HStack, Flex } from '@chakra-ui/react'
@@ -33,7 +34,7 @@ export const MotionHeadingComponent = ({ text }): JSX.Element => {
       <Flex alignItems='center' left={{ base: '-75%', md: '-25%' }} justifyContent='center' position='absolute' display='flex'>
         {[...Array(4)].map((_, i) => (
           <MotionHeading
-            key={text}
+            key={i}
             fontSize={{ base: 'xl', md: 'xl' }}
             fontWeight='normal'
             color='primary.100'
@@ -72,10 +73,6 @@ export default function ShopBannerVariations (): JSX.Element {
         return { bannerText: 'THE NSFW STICKER SHOP THAT DOESN’T CENSOR', buttonText: 'Shop Now' }
     }
   }, [flag])
-
-  //   if (flag == null) {
-  //     return <></>
-  //   }
 
   return (
     <HStack overflow='hidden' w='100%' h='100%' justify='space-between' spacing={2}>
