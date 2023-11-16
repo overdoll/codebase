@@ -11,6 +11,7 @@ export default function ShopBannerPrompt (): JSX.Element {
   const onClick = (): void => {
     posthog?.capture('click-shop-sticky-banner')
   }
+  //
 
   const [isClosedShopBanner, setClosedShopBanner] = useSessionStorage('closedShopBanner', false)
 
