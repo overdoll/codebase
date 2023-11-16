@@ -37,7 +37,7 @@
     "nprogress": "^0.2.0",
     "numbro": "^2.3.2",
     "path-to-regexp": "1.7.0",
-    "posthog-js": "^1.32.2",
+    "posthog-js": "^1.91.1",
     "query-string": "^7.0.1",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.0.0",
