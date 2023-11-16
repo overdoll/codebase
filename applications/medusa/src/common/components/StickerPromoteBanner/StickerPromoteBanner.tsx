@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-target-blank */
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, keyframes, useToken } from '@chakra-ui/react'
 import { SHOP_LINK } from '@//:modules/constants/links'
 import { StaticImageCover } from '@//:modules/content/HookedComponents/Media'
 import posthog from 'posthog-js'
@@ -9,11 +9,23 @@ export default function StickerPromoteBanner (): JSX.Element {
   const onClick = (): void => {
     posthog?.capture('click-shop-static-banner')
   }
+  const purpleColor: string = useToken('colors', 'purple.300')
+
+  const glowAnimation = keyframes`
+    from {
+      box-shadow: 0 0 4px ${purpleColor};
+    }
+    to {
+      box-shadow: 0 0 16px ${purpleColor};
+    }
+  `
 
   return (
     <Box
       position='relative'
       mt={8}
+      animation={`${glowAnimation} 1.5s ease-in-out infinite alternate`}
+      boxShadow={`0 0 5px ${purpleColor}`}
       borderWidth={2}
       borderColor='gray.800'
       bg='gray.900'
