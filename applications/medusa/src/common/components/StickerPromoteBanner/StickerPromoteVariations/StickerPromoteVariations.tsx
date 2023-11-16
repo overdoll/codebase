@@ -4,7 +4,7 @@ import Button from '@//:modules/form/Button/Button'
 import useFeatureFlag from '@//:modules/hooks/useFeatureFlag'
 
 export default function StickerPromoteVariations (): JSX.Element {
-  const flag = useFeatureFlag('shop-sticky-header-ad')
+  const flag = useFeatureFlag('site-shop-post-ad')
 
   if (flag === 'banner_variant_limited') {
     return (
