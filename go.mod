@@ -42,12 +42,12 @@ require (
 	github.com/shurcooL/graphql v0.0.0-20200928012149-18c5c3165e3a
 	github.com/spf13/cobra v1.4.0
 	github.com/spf13/viper v1.7.1
-	github.com/stretchr/testify v1.8.0
+	github.com/stretchr/testify v1.9.0
 	github.com/tidwall/gjson v1.12.1
 	github.com/tidwall/sjson v1.2.3
 	github.com/tus/tusd v1.9.0
 	github.com/u2takey/ffmpeg-go v0.4.0
-	github.com/vektah/gqlparser/v2 v2.5.1
+	github.com/vektah/gqlparser/v2 v2.5.14
 	github.com/yuin/goldmark v1.4.13
 	go.temporal.io/api v1.8.0
 	go.temporal.io/sdk v1.15.0
@@ -119,7 +119,7 @@ require (
 	github.com/spf13/jwalterweatherman v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/ssor/bom v0.0.0-20170718123548-6386211fdfcf // indirect
-	github.com/stretchr/objx v0.4.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/subosito/gotenv v1.2.0 // indirect
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.0 // indirect
