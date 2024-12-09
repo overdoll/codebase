@@ -36,7 +36,7 @@
     "next-build-id": "^3.0.0",
     "nprogress": "^0.2.0",
     "numbro": "^2.3.2",
-    "path-to-regexp": "1.7.0",
+    "path-to-regexp": "1.9.0",
     "posthog-js": "^1.91.1",
     "query-string": "^7.0.1",
     "react": "^18.2.0",
